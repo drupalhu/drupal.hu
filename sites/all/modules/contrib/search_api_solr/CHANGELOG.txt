@@ -1,0 +1,30 @@
+Search API Solr search 1.0, dev (xx/xx/xxxx):
+---------------------------------------------
+
+Search API Solr search 1.0, Beta 3 (06/06/2011):
+------------------------------------------------
+- #1111852 by miiimooo, drunken monkey: Added a 'More like this' feature.
+- #1153306 by JoeMcGuire, drunken monkey: Added spellchecking support.
+- #1138230 by becw, drunken monkey: Added increased flexibility to the service
+  class.
+- #1127038 by drunken monkey: Fixed handling of date facets.
+- #1110820 by becw, drunken monkey: Added support for the Luke request handler.
+- #1095956 by drunken monkey: Added Solr-specific index alter hook.
+
+Search API Solr search 1.0, Beta 2 (03/04/2011):
+------------------------------------------------
+- #1071894 by drunken monkey: Fixed incorrect handling of boolean facets.
+- #1071796: Add additional help for Solr-specific extensions.
+- #1056018: Better document Solr config customization options.
+- #1049900: Field values are sometimes not escaped properly.
+- #1043586: Allow Solr server URL to be altered.
+- #1010610 by mikejoconnor: Fix hook_requirements().
+- #1024146: Don't use file_get_contents() for contacting the Solr server.
+- #1010610: More helpful error message when SolrPhpClient is missing.
+- #915174: Remove unnecessary files[] declarations from .info file.
+- #984134: Add Solr-specific query alter hooks.
+
+Search API Solr search 1.0, Beta 1 (11/29/2010):
+------------------------------------------------
+Basic functionality is in place and quite well-tested, including support for
+facets and for multi-index searches.
