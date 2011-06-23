@@ -128,7 +128,7 @@ function content_migrate_filefield_data_record_alter(&$record, $field, $instance
         unset($record[$field['field_name'] . '_description']);
       }
 
-      if (isset($record[$field['field_name'] . '_list')) {
+      if (isset($record[$field['field_name'] . '_list'])) {
         $record[$field['field_name'] . '_display'] = $record[$field['field_name'] . '_list'];
         unset($record[$field['field_name'] . '_list');
       }
