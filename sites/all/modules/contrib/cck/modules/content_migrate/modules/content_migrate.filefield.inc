@@ -130,7 +130,7 @@ function content_migrate_filefield_data_record_alter(&$record, $field, $instance
 
       if (isset($record[$field['field_name'] . '_list'])) {
         $record[$field['field_name'] . '_display'] = $record[$field['field_name'] . '_list'];
-        unset($record[$field['field_name'] . '_list');
+        unset($record[$field['field_name'] . '_list']);
       }
 
       // Copies imagefield data from the old 'files' table into 'files_managed' and sets file_usage
