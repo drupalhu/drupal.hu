@@ -1,0 +1,12 @@
+name = Unique field
+description = "Provides content validation requirement that a node's author, language, taxonomy terms, or other fields are unique."
+core = 7.x
+files[] = unique_field.module
+files[] = unique_field.install
+
+; Information added by drupal.org packaging script on 2011-06-11
+version = "7.x-1.0-beta2"
+core = "7.x"
+project = "unique_field"
+datestamp = "1307831520"
+
