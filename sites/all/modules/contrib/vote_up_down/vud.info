@@ -1,0 +1,6 @@
+name = Vote Up/Down
+description = "Provides a configurable up/down voting widget for other modules to use."
+dependencies[] = votingapi
+dependencies[] = ctools
+package = Voting
+core = 7.x
