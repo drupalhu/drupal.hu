@@ -1,7 +1,8 @@
-name = Libraries
-description = Allows version dependent and shared usage of external libraries.
+name = Libraries test module
+description = Tests library detection and loading.
 core = 7.x
-files[] = tests/libraries.test
+dependencies[] = libraries
+hidden = TRUE
 
 ; Information added by drupal.org packaging script on 2011-06-22
 version = "7.x-2.x-dev"

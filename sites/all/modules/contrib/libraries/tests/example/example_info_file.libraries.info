@@ -1,7 +1,7 @@
-name = Libraries
-description = Allows version dependent and shared usage of external libraries.
-core = 7.x
-files[] = tests/libraries.test
+
+; This is an example info file of a library used for testing purposes.
+name = Example info file
+
 
 ; Information added by drupal.org packaging script on 2011-06-22
 version = "7.x-2.x-dev"
