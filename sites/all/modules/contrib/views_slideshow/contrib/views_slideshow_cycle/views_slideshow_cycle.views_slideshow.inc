@@ -45,7 +45,7 @@ function views_slideshow_cycle_views_slideshow_option_definition() {
       // Action
       'pause' => array('default' => 1),
       'pause_on_click' => array('default' => 0),
-      'transition_advanced' => array('default' => 0),
+      'action_advanced' => array('default' => 0),
       'start_paused' => array('default', 0),
       'remember_slide' => array('default' => 0),
       'remember_slide_days' => array('default' => 1),

@@ -81,14 +81,17 @@ function views_slideshow_cycle_help($path, $arg) {
  * the associated function in theme.inc.
  */
 
+// Trying to make sure the theme.inc get's loaded.
+include_once('theme/views_slideshow_cycle.theme.inc');
+
 function template_preprocess_views_slideshow_cycle_main_frame(&$vars) {
-  _views_slideshow_preprocess_views_slideshow_cycle_main_frame($vars);
+  _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame($vars);
 }
 
 function template_preprocess_views_slideshow_cycle_main_frame_row(&$vars) {
-  _views_slideshow_preprocess_views_slideshow_cycle_main_frame_row($vars);
+  _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame_row($vars);
 }
 
 function template_preprocess_views_slideshow_cycle_main_frame_row_item(&$vars) {
-  _views_slideshow_preprocess_views_slideshow_cycle_main_frame_row_item($vars);
+  _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame_row_item($vars);
 }

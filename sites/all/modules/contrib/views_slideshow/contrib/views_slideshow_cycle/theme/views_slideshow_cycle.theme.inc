@@ -11,7 +11,7 @@
  * @ingroup themeable
  */
 
-function _views_slideshow_preprocess_views_slideshow_cycle_main_frame(&$vars) {
+function _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame(&$vars) {
   $settings = $vars['settings'];
   $rows = $vars['rows'];
   $view = $vars['view'];
@@ -130,7 +130,7 @@ function _views_slideshow_preprocess_views_slideshow_cycle_main_frame(&$vars) {
  *
  * @ingroup themeable
  */
-function _views_slideshow_preprocess_views_slideshow_cycle_main_frame_row(&$vars) {
+function _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame_row(&$vars) {
   $current = $vars['count'] + 1;
   $vars['classes_array'][] = 'views_slideshow_cycle_slide';
   $vars['classes_array'][] = 'views_slideshow_slide views-row-' . $current;
@@ -146,7 +146,7 @@ function _views_slideshow_preprocess_views_slideshow_cycle_main_frame_row(&$vars
   }
 }
 
-function _views_slideshow_preprocess_views_slideshow_cycle_main_frame_row_item(&$vars) {
+function _views_slideshow_cycle_preprocess_views_slideshow_cycle_main_frame_row_item(&$vars) {
   $vars['classes_array'][] = 'views-row views-row-' . $vars['item_count'];
   if (!$vars['item_count']) {
     $vars['classes_array'][] = 'views-row-first';

@@ -409,6 +409,9 @@ function views_slideshow_views_slideshow_option_definition() {
  * the associated function in theme.inc.
  */
 
+// Trying to make sure the theme.inc get's loaded.
+include_once('theme/views_slideshow.theme.inc');
+
 function template_preprocess_views_slideshow(&$vars) {
   _views_slideshow_preprocess_views_slideshow($vars);
 }
