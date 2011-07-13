@@ -41,15 +41,21 @@ class Entity {
       throw new Exception('Cannot created an instance of Entity without a specified entity type.');
     }
     $this->entityType = $entityType;
-    $this->entityInfo = entity_get_info($entityType);
-    $this->idKey = $this->entityInfo['entity keys']['id'];
-    $this->nameKey = isset($this->entityInfo['entity keys']['name']) ? $this->entityInfo['entity keys']['name'] : $this->idKey;
-    $this->statusKey = empty($info['entity keys']['status']) ? 'status' : $info['entity keys']['status'];
-
+    $this->setUp();
     // Set initial values.
     foreach ($values as $key => $value) {
       $this->$key = $value;
     }
+  }
+
+  /**
+   * Set up the object instance on construction or unserializiation.
+   */
+  protected function setUp() {
+    $this->entityInfo = entity_get_info($this->entityType);
+    $this->idKey = $this->entityInfo['entity keys']['id'];
+    $this->nameKey = isset($this->entityInfo['entity keys']['name']) ? $this->entityInfo['entity keys']['name'] : $this->idKey;
+    $this->statusKey = empty($info['entity keys']['status']) ? 'status' : $info['entity keys']['status'];
   }
 
   /**
@@ -205,6 +211,24 @@ class Entity {
    */
   public function buildContent($view_mode = 'full', $langcode = NULL) {
     return entity_get_controller($this->entityType)->buildContent($this, $view_mode, $langcode);
+  }
+
+  /**
+   * Magic method to only serialize what's necessary.
+   */
+  public function __sleep() {
+    $vars = get_object_vars($this);
+    unset($vars['entityInfo'], $vars['idKey'], $vars['nameKey'], $vars['statusKey']);
+    // Also key the returned array with the variable names so the method may
+    // be easily overridden and customized.
+    return drupal_map_assoc(array_keys($vars));
+  }
+
+  /**
+   * Magic method to invoke setUp() on unserialization.
+   */
+  public function __wakeup() {
+    $this->setUp();
   }
 }
 

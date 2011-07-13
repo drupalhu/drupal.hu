@@ -61,6 +61,7 @@ function entity_metadata_field_default_property_callback(&$info, $entity_type, $
       'translatable' => !empty($field['translatable']),
       // Specify that this property stems from a field.
       'field' => TRUE,
+      'required' => $instance['required'],
     );
     // For field types of the list module add in the options list callback.
     if (strpos($field['type'], 'list') === 0) {

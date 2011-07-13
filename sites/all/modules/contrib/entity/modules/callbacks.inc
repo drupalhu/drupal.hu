@@ -390,7 +390,7 @@ function entity_metadata_field_property_set($entity, $name, $value, $langcode, $
   $field = field_info_field($name);
   $columns = array_keys($field['columns']);
   $langcode = isset($langcode) ? $langcode : LANGUAGE_NONE;
-  $values = $field['cardinality'] == 1 ? array($value) : $value;
+  $values = $field['cardinality'] == 1 ? array($value) : (array) $value;
 
   $items = array();
   foreach ($values as $delta => $value) {
@@ -441,7 +441,7 @@ function entity_metadata_field_verbatim_get($entity, array $options, $name, $ent
 function entity_metadata_field_verbatim_set($entity, $name, $items, $langcode) {
   $field = field_info_field($name);
   $langcode = isset($langcode) ? $langcode : LANGUAGE_NONE;
-  $value = $field['cardinality'] == 1 ? array($items) : $items;
+  $value = $field['cardinality'] == 1 ? array($items) : (array) $items;
   // Filter out any items set to NULL.
   $entity->{$name}[$langcode] = array_filter($value);
 
@@ -502,13 +502,18 @@ function entity_metadata_field_file_create_item($property_name, $context) {
 /**
  * Callback for validating file field $items.
  */
-function entity_metadata_field_file_validate_item($item, $context) {
-  // File-field items require a valid file.
-  if (!isset($item['fid']) || !file_load($item['fid'])) {
-    return FALSE;
-  }
-  if (isset($context['property info']['display']) && !isset($item['display'])) {
-    return FALSE;
+function entity_metadata_field_file_validate_item($items, $context) {
+  // Stream-line $items for multiple vs non-multiple fields.
+  $items = !entity_property_list_extract_type($context['type']) ? array($items) : (array) $items;
+
+  foreach ($items as $item) {
+    // File-field items require a valid file.
+    if (!isset($item['fid']) || !file_load($item['fid'])) {
+      return FALSE;
+    }
+    if (isset($context['property info']['display']) && !isset($item['display'])) {
+      return FALSE;
+    }
   }
   return TRUE;
 }

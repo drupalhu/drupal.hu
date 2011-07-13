@@ -105,10 +105,19 @@ interface EntityAPIControllerInterface extends DrupalEntityControllerInterface {
    * @param $langcode
    *   (optional) A language code to use for rendering. Defaults to the global
    *   content language of the current request.
+   * @param $page
+   *   (optional) If set will control if the entity is rendered: if TRUE
+   *   the entity will be rendered without its title, so that it can be embeded
+   *   in another context. If FALSE the entity will be displayed with its title
+   *   in a mode suitable for lists.
+   *   If unset, the page mode will be enabled if the current path is the URI
+   *   of the entity, as returned by entity_uri().
+   *   This parameter is only supported for entities which controller is a
+   *   EntityAPIControllerInterface.
    * @return
    *   The renderable array, keyed by entity name or numeric id.
    */
-  public function view($entities, $view_mode = 'full', $langcode = NULL);
+  public function view($entities, $view_mode = 'full', $langcode = NULL, $page = NULL);
 }
 
 /**
@@ -271,17 +280,15 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
         }
       }
     }
-    // Invoke the hook. If rules is there, use the rule funtion so that a rules
-    // event is invoked too.
-    if (module_exists('rules')) {
-      rules_invoke_all($this->entityType . '_' . $hook, $entity);
-    }
-    else {
-      module_invoke_all($this->entityType . '_' . $hook, $entity);
-    }
+    // Invoke the hook.
+    module_invoke_all($this->entityType . '_' . $hook, $entity);
     // Invoke the respective entity level hook.
     if ($hook == 'presave' || $hook == 'insert' || $hook == 'update' || $hook == 'delete') {
       module_invoke_all('entity_' . $hook, $entity, $this->entityType);
+    }
+    // Invoke rules.
+    if (module_exists('rules')) {
+      rules_invoke_event($this->entityType . '_' . $hook, $entity);
     }
   }
 
@@ -439,7 +446,7 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
   /**
    * Implements EntityAPIControllerInterface.
    */
-  public function view($entities, $view_mode = 'full', $langcode = NULL) {
+  public function view($entities, $view_mode = 'full', $langcode = NULL, $page = NULL) {
     // For Field API and entity_prepare_view, the entities have to be keyed by
     // (numeric) id.
     $entities = entity_key_array_by_property($entities, $this->idKey);
@@ -461,6 +468,7 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
         '#entity' => $entity,
         '#view_mode' => $view_mode,
         '#language' => $langcode,
+        '#page' => $page,
       );
       // Allow modules to modify the structured entity.
       drupal_alter(array($this->entityType . '_view', 'entity_view'), $build, $this->entityType);
@@ -691,7 +699,7 @@ class EntityAPIControllerExportable extends EntityAPIController {
     if (entity_has_status($this->entityType, $entity, ENTITY_IN_CODE) && empty($entity->is_rebuild)) {
       $entity->{$this->statusKey} |= ENTITY_CUSTOM;
     }
-    parent::save($entity, $transaction);
+    return parent::save($entity, $transaction);
   }
 
   /**
@@ -709,8 +717,8 @@ class EntityAPIControllerExportable extends EntityAPIController {
   /**
    * Implements EntityAPIControllerInterface.
    */
-  public function view($entities, $view_mode = 'full', $langcode = NULL) {
-    $view = parent::view($entities, $view_mode, $langcode);
+  public function view($entities, $view_mode = 'full', $langcode = NULL, $page = NULL) {
+    $view = parent::view($entities, $view_mode, $langcode, $page);
 
     // Re-key the view array to be keyed by name.
     $key = isset($entity->{$this->nameKey}) ? $entity->{$this->nameKey} : NULL;

@@ -375,7 +375,7 @@ class EntityMetadataTestCase extends DrupalWebTestCase {
     $this->assertEqual('<b>Is it bold?<b>', $wrapper->title->value(), 'Getting a field value.');
     $this->assertEqual($node->title, $wrapper->title->raw(), 'Getting a raw property value.');
 
-    // Test chaining
+    // Test chaining.
     $this->assertEqual($account->mail, $wrapper->author->mail->value(), 'Testing chained usage.');
     $this->assertEqual($account->name, $wrapper->author->name->value(), 'Testing chained usage with callback and sanitizing.');
 
@@ -384,7 +384,7 @@ class EntityMetadataTestCase extends DrupalWebTestCase {
     $this->assertEqual(check_plain('<b>Is it bold?<b>'), $wrapper->title->value($options), 'Getting sanitized field.');
     $this->assertEqual(filter_xss($node->name), $wrapper->author->name->value($options), 'Getting sanitized property with getter callback.');
 
-    // Test getting an not existing property
+    // Test getting an not existing property.
     try {
       echo $wrapper->dummy;
       $this->fail('Getting an not existing property.');
@@ -412,6 +412,14 @@ class EntityMetadataTestCase extends DrupalWebTestCase {
     }
     catch (EntityMetadataWrapperException $e) {
       $this->pass('Setting an invalid mail address throws exception.');
+    }
+    // Test unsetting a required property.
+    try {
+      $wrapper->author = NULL;
+      $this->fail('The required node author has been unset.');
+    }
+    catch (EntityMetadataWrapperException $e) {
+      $this->pass('Unsetting the required node author throws an exception.');
     }
 
     // Test setting a referenced entity by id.
@@ -553,6 +561,14 @@ class EntityMetadataTestCase extends DrupalWebTestCase {
 
     $wrapper = entity_metadata_wrapper('list<taxonomy_term>', $ids);
     $this->assertTrue($wrapper[0]->name->value() == 'term 1', 'Created a list of entities with ids.');
+
+    // Test with a list of generic entities. The list is expected to be a list
+    // of entity wrappers, otherwise the entity type is unknown.
+    $node = $this->drupalCreateNode(array('title' => 'node 1'));
+    $list = array();
+    $list[] = entity_metadata_wrapper('node', $node);
+    $wrapper = entity_metadata_wrapper('list<entity>', $list);
+    $this->assertEqual($wrapper[0]->title->value(), 'node 1', 'Wrapped node was found in generic list of entities.');
   }
 
   /**
@@ -863,6 +879,36 @@ class EntityMetadataIntegrationTestCase extends DrupalWebTestCase {
     // Test setting tags by using ids.
     $wrapper->field_tags->set(array(2));
     $this->assertEqual($wrapper->field_tags[0]->tid->value(), 2, 'Specified tags by a list of term ids.');
+
+    // Test unsetting all tags.
+    $wrapper->field_tags = NULL;
+    $this->assertFalse($wrapper->field_tags->value(), 'Unset all tags from a node.');
+
+    // Test setting entity references to NULL.
+    // Create a taxonomy term field for that purpose.
+    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $field = array('field_name' => $field_name, 'type' => 'taxonomy_term_reference', 'cardinality' => 1);
+    $field = field_create_field($field);
+    $field_id = $field['id'];
+    $field_instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'label' => $this->randomName() . '_label',
+      'description' => $this->randomName() . '_description',
+      'weight' => mt_rand(0, 127),
+      'widget' => array(
+        'type' => 'options_select',
+        'label' => 'Test term field',
+      )
+    );
+    field_create_instance($field_instance);
+    $term_field[LANGUAGE_NONE][0]['tid'] = $term->tid;
+    $node = $this->drupalCreateNode(array('title' => 'foo', 'type' => 'article', $field_name => $term_field));
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $wrapper->$field_name->set(NULL);
+    $termref = $wrapper->$field_name->value();
+    $this->assertNull($termref, 'Unset of a term reference successful.');
   }
 
   /**
@@ -1094,6 +1140,10 @@ class EntityMetadataIntegrationTestCase extends DrupalWebTestCase {
     catch (EntityMetadataWrapperException $e) {
       $this->pass('Not valid file-field item has thrown an exception.');
     }
+
+    // Test remove all file-field items.
+    $wrapper->field_file = NULL;
+    $this->assertFalse($wrapper->field_file->value(), 'Removed multiple file-field items.');
   }
 
   /**

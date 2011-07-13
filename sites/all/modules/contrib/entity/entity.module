@@ -369,17 +369,26 @@ function entity_id($entity_type, $entity) {
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
+ * @param $page
+ *   (optional) If set will control if the entity is rendered: if TRUE
+ *   the entity will be rendered without its title, so that it can be embeded
+ *   in another context. If FALSE the entity will be displayed with its title
+ *   in a mode suitable for lists.
+ *   If unset, the page mode will be enabled if the current path is the URI
+ *   of the entity, as returned by entity_uri().
+ *   This parameter is only supported for entities which controller is a
+ *   EntityAPIControllerInterface.
  * @return
  *   The renderable array, keyed by name key if existing or by numeric id else.
  *   If there is no information on how to view an entity, FALSE is returned.
  */
-function entity_view($entity_type, $entities, $view_mode = 'full', $langcode = NULL) {
+function entity_view($entity_type, $entities, $view_mode = 'full', $langcode = NULL, $page = NULL) {
   $info = entity_get_info($entity_type);
   if (isset($info['view callback'])) {
     return $info['view callback']($entities, $view_mode, $langcode, $entity_type);
   }
   elseif (in_array('EntityAPIControllerInterface', class_implements($info['controller class']))) {
-    return entity_get_controller($entity_type)->view($entities, $view_mode, $langcode);
+    return entity_get_controller($entity_type)->view($entities, $view_mode, $langcode, $page);
   }
   return FALSE;
 }
@@ -801,9 +810,16 @@ function template_preprocess_entity(&$variables) {
   $info = entity_get_info($entity_type);
 
   $variables['title'] = check_plain(entity_label($entity_type, $entity));
-  $uri = entity_uri($entity_type, $entity);
-  $variables['url'] = $uri ? url($uri['path'], $uri['options']) : FALSE;
-  $variables['page'] = $uri && $uri['path'] == $_GET['q'];
+  if (isset($variables['elements']['#page'])) {
+    // If set by the caller, respect the page property.
+    $variables['page'] = $variables['elements']['#page'];
+  }
+  else {
+    // Else, try to automatically detect it.
+    $uri = entity_uri($entity_type, $entity);
+    $variables['url'] = $uri ? url($uri['path'], $uri['options']) : FALSE;
+    $variables['page'] = $uri && $uri['path'] == $_GET['q'];
+  }
 
   // Helpful $content variable for templates.
   $variables['content'] = array();
