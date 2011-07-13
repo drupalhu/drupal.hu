@@ -131,7 +131,7 @@ function colorbox_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Enable Colorbox load'),
     '#default_value' => variable_get('colorbox_load', 0),
-    '#description' => t('This enables custom links that can open forms and paths in a Colorbox. Add the class "colorbox-load" to the link and build the url like this for forms "/colorbox/form/[form_id]?destination=some_path&width=500&height=500" and like this for paths "[path]?width=500&height=500&iframe=true". If you do not want the box to persist set iframe to false. Other modules may activate this for easy Colorbox integration.'),
+    '#description' => t('This enables custom links that can open forms and paths in a Colorbox. Add the class "colorbox-load" to the link and build the url like this for forms "/colorbox/form/[form_id]?destination=some_path&width=500&height=500" and like this for paths "[path]?width=500&height=500&iframe=true" or "[path]?width=500&height=500" if you don\'t want an iframe. Other modules may activate this for easy Colorbox integration.'),
   );
   $form['colorbox_extra_settings']['colorbox_inline'] = array(
     '#type' => 'checkbox',
@@ -194,7 +194,7 @@ function colorbox_admin_settings() {
     '#type' => 'select',
     '#title' => t('Opacity'),
     '#options' => drupal_map_assoc(array('0', '0.10', '0.15', '0.20', '0.25', '0.30', '0.35', '0.40', '0.45', '0.50', '0.55', '0.60', '0.65', '0.70', '0.75', '0.80', '0.85', '0.90', '0.95', '1')),
-    '#default_value' => variable_get('colorbox_opacity', '0.90'),
+    '#default_value' => variable_get('colorbox_opacity', '0.85'),
     '#description' => t('The overlay opacity level. Range: 0 to 1.'),
   );
   $form['colorbox_custom_settings']['colorbox_text_current'] = array(

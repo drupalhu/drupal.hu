@@ -5,29 +5,27 @@ Drupal.behaviors.initColorboxLoad = {
     if (!$.isFunction($.colorbox)) {
       return;
     }
-    $.urlParam = function(name, url){
-      var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
-      if (!results) { return ''; }
-      return results[1] || '';
-    };
-    $('a, area, input', context).filter('.colorbox-load').once('init-colorbox-load-processed').colorbox({
-      transition:settings.colorbox.transition,
-      speed:settings.colorbox.speed,
-      opacity:settings.colorbox.opacity,
-      close:settings.colorbox.close,
-      overlayClose:settings.colorbox.overlayClose,
-      maxWidth:settings.colorbox.maxWidth,
-      maxHeight:settings.colorbox.maxHeight,
-      innerWidth:function(){
-        return $.urlParam('width', $(this).attr('href'));
-      },
-      innerHeight:function(){
-        return $.urlParam('height', $(this).attr('href'));
-      },
-      iframe:function(){
-        return $.urlParam('iframe', $(this).attr('href'));
+    $.urlParams = function (url) {
+      var p = [],
+          e,
+          a = /\+/g,  // Regex for replacing addition symbol with a space
+          r = /([^&=]+)=?([^&]*)/g,
+          d = function (s) { return decodeURIComponent(s.replace(a, ' ')); },
+          q = url.split('?');
+      while (e = r.exec(q[1])) {
+        if (e[1] == 'width') { e[1] = 'innerWidth'; }
+        if (e[1] == 'height') { e[1] = 'innerHeight'; }
+        p[d(e[1])] = d(e[2]);
       }
-    });
+      return p;
+    };
+    $('a, area, input', context)
+      .filter('.colorbox-load')
+      .once('init-colorbox-load-processed', function () {
+        var params = $.urlParams($(this).attr('href'));
+        $.extend(settings.colorbox, params);
+      })
+      .colorbox(settings.colorbox);
   }
 };
 

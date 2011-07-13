@@ -53,7 +53,11 @@ function colorbox_theme() {
  * Implements hook_init().
  */
 function colorbox_init() {
-  _colorbox_doheader();
+  // Do not load colorbox during the Drupal installation process, e.g. if part
+  // of installation profiles.
+  if (!drupal_installation_attempted()) {
+    _colorbox_doheader();
+  }
 }
 
 /**
@@ -169,7 +173,7 @@ function _colorbox_doheader() {
     $js_settings = array(
       'transition' => variable_get('colorbox_transition_type', 'elastic'),
       'speed' => variable_get('colorbox_transition_speed', 350),
-      'opacity' => variable_get('colorbox_opacity', '0.9'),
+      'opacity' => variable_get('colorbox_opacity', '0.85'),
       'slideshow' => variable_get('colorbox_slideshow', 0) ? TRUE : FALSE,
       'slideshowAuto' => variable_get('colorbox_slideshowauto', 1) ? TRUE : FALSE,
       'slideshowSpeed' => variable_get('colorbox_slideshowspeed', 2500),
@@ -186,19 +190,11 @@ function _colorbox_doheader() {
   }
   else {
     $js_settings = array(
-      'transition' => 'elastic',
-      'speed' => 350,
       'opacity' => '0.85',
-      'slideshow' => FALSE,
-      'slideshowAuto' => FALSE,
-      'slideshowSpeed' => 2500,
-      'slideshowStart' => '',
-      'slideshowStop' => '',
       'current' => t('{current} of {total}'),
       'previous' => t('« Prev'),
       'next' => t('Next »'),
       'close' => t('Close'),
-      'overlayClose' => TRUE,
       'maxWidth' => '100%',
       'maxHeight' => '100%',
     );
