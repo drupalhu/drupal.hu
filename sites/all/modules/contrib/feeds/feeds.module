@@ -444,9 +444,15 @@ function feeds_feeds_plugins() {
  * Implements hook_entity_load().
  */
 function feeds_entity_load($entities, $type) {
-  $feed_nids = db_query("SELECT entity_id, feed_nid FROM {feeds_item} WHERE entity_type = :type AND entity_id IN (:ids)", array(':type' => $type, ':ids' => array_keys($entities)))->fetchAllKeyed();
-  foreach ($feed_nids as $id => $feed_nid) {
-    $entities[$id]->feed_nid = $feed_nid;
+  try {
+    $feed_nids = db_query("SELECT entity_id, feed_nid FROM {feeds_item} WHERE entity_type = :type AND entity_id IN (:ids)", array(':type' => $type, ':ids' => array_keys($entities)))->fetchAllKeyed();
+    foreach ($feed_nids as $id => $feed_nid) {
+      $entities[$id]->feed_nid = $feed_nid;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('feeds', $e);
+    // Do not re-throw $e.
   }
 }
 

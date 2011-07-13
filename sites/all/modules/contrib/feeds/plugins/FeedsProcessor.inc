@@ -197,7 +197,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
     }
     foreach ($messages as $message) {
       drupal_set_message($message['message']);
-      $source->log('import', $message, array(), isset($message['level']) ? $message['level'] : WATCHDOG_INFO);
+      $source->log('import', $message['message'], array(), isset($message['level']) ? $message['level'] : WATCHDOG_INFO);
     }
   }
 
