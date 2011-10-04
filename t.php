@@ -1,4 +1,7 @@
 <?php
+exit();
+//mivel nem törli a script ezért kell ez bele.
+
 define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
