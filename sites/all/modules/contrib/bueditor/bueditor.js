@@ -43,7 +43,7 @@ BUE.instance = function (T, tplid) {
   E.tpl = BUE.templates[tplid];
   E.bindex = null;
   E.safeToPreview = T.value.indexOf('<') == -1;
-  E.UI = BUE.$html(BUE.theme(tplid).replace(/\%n/g, i)).insertBefore(T);
+  E.UI = BUE.$html(BUE.theme(tplid).replace(/\%n/g, i)).insertBefore(T).bind('keydown.bue', BUE.eUIKeydown);
   E.buttons = $('.bue-button', E.UI).each(function(i, B) {
     var arr = B.id.split('-');
     $($.extend(B, {eindex: arr[1], bid: arr[3], bindex: i})).bind('click.bue', BUE.eButtonClick);
@@ -81,9 +81,9 @@ BUE.theme = function (tplid) {
     var surl = (new Image()).src = sprite.url, sunit = sprite.unit, sx1 = sprite.x1;
     $(document.body).append('<style type="text/css" media="all">.bue-'+ tplid +' .bue-sprite-button {background-image: url('+ surl +'); width: '+ sunit +'px; height: '+ sunit +'px;}</style>');
   }
-  var access = $.browser.mozilla && 'Shift + Alt' || $.browser.msie && 'Alt', title, content, icon, key, func;
+  var access = $.browser.mozilla && 'Shift + Alt' || ($.browser.msie || window.chrome) && 'Alt', title, content, icon, key, func;
   // Create html for buttons. B(0-title, 1-content, 2-icon or caption, 3-accesskey) and 4-function for js buttons
-  for (var B, isimg, src, type, btype, attr, i = 0, s = 0; B = tpl.buttons[i]; i++) {
+  for (var B, isimg, src, type, btype, attr, alt, i = 0, s = 0; B = tpl.buttons[i]; i++) {
     // Empty button.
     if (B.length == 0) {
       s++;
@@ -106,20 +106,22 @@ BUE.theme = function (tplid) {
       type = 'button', btype = 'text', attr = 'value="'+ icon +'"';
     }
     else {
-      type = 'image', attr = 'alt="'+ icon +'"';
+      type = 'image';
       // Sprite button
       if (sprite) {
-        btype = 'sprite', attr += ' src="'+ sx1 +'" style="background-position: -'+ (s * sunit) +'px 0;"';
+        btype = 'sprite', attr = 'src="'+ sx1 +'" style="background-position: -'+ (s * sunit) +'px 0;"';
         s++;
       }
       // Image button
       else {
-        btype = 'image', attr += ' src="'+ tpl.iconpath +'/'+ icon +'"';
+        btype = 'image', attr = 'src="'+ tpl.iconpath +'/'+ icon +'"';
       }
     }
-    html += '<input type="'+ type +'" title="'+ title + (access && key ? ' ('+ access +' + '+ key +')' : '') +'" accesskey="'+ key +'" id="bue-%n-button-'+ i +'" class="bue-button bue-'+ btype +'-button editor-'+ btype +'-button" '+ attr +' tabindex="-1" />';
+    alt = title + (key ? '('+ key +')' : '');
+    title += access && key ? ' ('+ access +' + '+ key +')' : '';
+    html += '<input type="'+ type +'" alt="'+ alt +'" title="'+ title +'" accesskey="'+ key +'" id="bue-%n-button-'+ i +'" class="bue-button bue-'+ btype +'-button editor-'+ btype +'-button" '+ attr +' tabindex="'+ (i ? -1 : 0) +'" />';
   }
-  return tpl.html = '<div class="bue-ui bue-'+ tplid +' editor-container clearfix" id="bue-ui-%n">'+ html +'</div>';
+  return tpl.html = '<div class="bue-ui bue-'+ tplid +' editor-container clearfix" id="bue-ui-%n" role="toolbar">'+ html +'</div>';
 };
 
 // Cross browser selection handling. 0-1=All, 2=IE, 3=Opera
@@ -180,12 +182,22 @@ BUE.eFixEnter = function(e) {
 // Button click handler
 BUE.eButtonClick = function(e) {
   return !(BUE.enterKeyTime && new Date() - BUE.enterKeyTime < 500) && BUE.buttonClick(this.eindex, this.bindex);
-}
+};
 
 // Textarea focus handler
 BUE.eTextareaFocus = function(e) {
   this.bue && !this.bue.dialog.esp && this.bue.activate();
-}
+};
+
+// UI keydown handler
+BUE.eUIKeydown = function(e) {
+  if (e.keyCode != 37 && e.keyCode != 39) return;
+  var len, E = BUE.instances[this.id.split('-').pop()];
+  if (E && (len = E.buttons.length)) {
+    var A = document.activeElement, i = Math.max(-1, (A && A.eindex == E.index ? A.bindex : -1) + e.keyCode - 38) + len;
+    E.buttons[i % len].focus();
+  }
+};
 
 // Html 2 jquery. Faster than $(html)
 BUE.$html = function(s){
