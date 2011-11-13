@@ -80,7 +80,7 @@ function drush_colorbox_plugin() {
   }
 
   $args = func_get_args();
-  if ($args[0]) {
+  if (!empty($args[0])) {
     $path = $args[0];
   }
   else {
