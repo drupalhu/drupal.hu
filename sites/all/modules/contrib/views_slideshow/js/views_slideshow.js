@@ -90,10 +90,10 @@
         var uniqueID = $(this).attr('id').replace('views_slideshow_controls_text_pause_', '');
         $(this).click(function() {
           if (Drupal.settings.viewsSlideshow[uniqueID].paused) {
-            Drupal.viewsSlideshow.action({ "action": 'play', "slideshowID": uniqueID });
+            Drupal.viewsSlideshow.action({ "action": 'play', "slideshowID": uniqueID, "force": true });
           }
           else {
-            Drupal.viewsSlideshow.action({ "action": 'pause', "slideshowID": uniqueID });
+            Drupal.viewsSlideshow.action({ "action": 'pause', "slideshowID": uniqueID, "force": true });
           }
           return false;
         });
@@ -257,13 +257,22 @@
         // Add the activate and pause on pager hover event to each pager item.
         if (Drupal.settings.viewsSlideshowPagerFields[uniqueID][location].activatePauseOnHover) {
           $(this).children().each(function(index, pagerItem) {
-            $(pagerItem).hover(function() {
+            var mouseIn = function() {
               Drupal.viewsSlideshow.action({ "action": 'goToSlide', "slideshowID": uniqueID, "slideNum": index });
               Drupal.viewsSlideshow.action({ "action": 'pause', "slideshowID": uniqueID });
-            },
-            function() {
+            }
+            
+            var mouseOut = function() {
               Drupal.viewsSlideshow.action({ "action": 'play', "slideshowID": uniqueID });
-            });
+            }
+          
+            if (jQuery.fn.hoverIntent) {
+              $(pagerItem).hoverIntent(mouseIn, mouseOut);
+            }
+            else {
+              $(pagerItem).hover(mouseIn, mouseOut);
+            }
+            
           });
         }
         else {
@@ -389,9 +398,24 @@
     // If we are using pause or play switch paused state accordingly.
     if (options.action == 'pause') {
       Drupal.settings.viewsSlideshow[options.slideshowID].paused = 1;
+      // If the calling method is forcing a pause then mark it as such.
+      if (options.force) {
+        Drupal.settings.viewsSlideshow[options.slideshowID].pausedForce = 1;
+      }
     }
     else if (options.action == 'play') {
-      Drupal.settings.viewsSlideshow[options.slideshowID].paused = 0;
+      // If the slideshow isn't forced pause or we are forcing a play then play
+      // the slideshow.
+      // Otherwise return telling the calling method that it was forced paused.
+      if (!Drupal.settings.viewsSlideshow[options.slideshowID].pausedForce || options.force) {
+        Drupal.settings.viewsSlideshow[options.slideshowID].paused = 0;
+        Drupal.settings.viewsSlideshow[options.slideshowID].pausedForce = 0;
+      }
+      else {
+        status.value = false;
+        status.text += ' ' + Drupal.t('This slideshow is forced paused.');
+        return status;
+      }
     }
 
     // We use a switch statement here mainly just to limit the type of actions
