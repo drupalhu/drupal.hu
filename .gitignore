@@ -5,3 +5,8 @@ sites/*/settings*.php
 files
 sites/*/files
 sites/*/private
+
+
+#dhu.node host (Den)
+dhu.node
+
