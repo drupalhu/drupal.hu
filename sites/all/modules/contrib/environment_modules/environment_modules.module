@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * Allows additional modules to be enabled via $conf.
+ */
+
+/**
+ * If there was ever a reason to have a love hate relationship with drupal_static().
+ * @implements hook_boot().
+ */
+function environment_modules_boot() {
+  // Never, ever set $conf['environment_modules'] in the settings.php on your
+  // production site. This should only be used in a staging.settings.php or
+  // dev.settings.php (or equivalent) to enable modules needed there.
+  // If you have modules only enabled in production ur doin' it wrong.
+  if (variable_get('environment_modules')) {
+    // During hook_boot(), system_list('module_enabled'); has not run yet.
+    // It can only run once, so do that here.
+    system_list('module_enabled');
+
+    // Get a copy of the system_list static cache.
+    $lists = &drupal_static('system_list');
+
+    foreach (variable_get('environment_modules') as $module => $filename) {
+      // Add the module to the list of enabled modules.
+      $lists['module_enabled'][] = $module;
+
+      // Prime the drupal_get_filename() static cache, same as system_list().
+      drupal_get_filename('module', $module, $filename);
+
+      // Since the drupal_get_filename() static cache has been primed, use
+      // drupal_load() to load the module as usual.
+      drupal_load('module', $module);
+
+      // Now invoke hook boot for the module. We're already in hook_boot() and
+      // it's not going to run again.
+      // @todo: support module weight, maybe.
+      $function = $module . '_boot';
+      if (function_exists($function)) {
+        $function();
+      }
+    }
+  }
+}
+
+/**
+ * @implements hook_init().
+ */
+function environment_modules_init() {
+
+  // Check that we have environment modules to enable
+  if($envmodules = variable_get('environment_modules')){
+
+    // Crosscheck w/already enabled modules
+    $modules = module_list();
+    foreach($modules as $id => $module){
+      unset($envmodules[$id]);
+    }
+
+    // If the module is not installed/enabled yet enable it
+    if(!empty($envmodules)){
+      module_enable(array_keys($envmodules));
+      menu_rebuild();
+    }
+  }
+}
