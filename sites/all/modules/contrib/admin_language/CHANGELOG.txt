@@ -1,0 +1,7 @@
+Administration language x.x-x.x, xxxx-xx-xx
+-------------------------------------------
+
+Administration language 7.x-1.x, xxxx-xx-xx
+-------------------------------------------
+
+Merged changed from latest 6.x-1.x branch.

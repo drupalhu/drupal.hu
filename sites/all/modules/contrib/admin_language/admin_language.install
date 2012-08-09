@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * Update functions for Administration language.
+ */
+
+/* --- HOOKS ---------------------------------------------------------------- */
+
+/**
+ * Implements hook_install().
+ */
+function admin_language_install() {
+  db_query("UPDATE {system} SET weight = -1 WHERE name = 'admin_language'");
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function admin_language_uninstall() {
+  variable_del('admin_language_default');
+  variable_del('admin_language_force_default');
+  variable_del('admin_language_force_neutral');
+  variable_del('admin_language_hide_node');
+  variable_del('admin_language_hide_user');
+  variable_del('admin_language_pages');
+  variable_del('admin_language_translate_admin_menu');
+  variable_del('admin_language_translate_toolbar');
+  variable_del('admin_language_visibility');
+}

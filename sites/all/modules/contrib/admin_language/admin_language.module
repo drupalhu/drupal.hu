@@ -1,0 +1,621 @@
+<?php
+/**
+ * @file
+ * Makes sure all admin pages are displayed in the preferred language of the
+ * administrator.
+ */
+
+define('ADMIN_LANGUAGE_DEFAULT_PAGES', "admin\nadmin/*\nadmin_menu/*\nnode/add/*\nnode/*/edit\nnode/*/devel\nnode/*/translate");
+define('ADMIN_LANGUAGE_BLACKLIST', 0);
+define('ADMIN_LANGUAGE_WHITELIST', 1);
+
+/* --- HOOKS ---------------------------------------------------------------- */
+
+/**
+ * Implements hook_help().
+ */
+function admin_language_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/regional/language':
+      return '<p>' . t('Use the <em>admin</em> column to select the default language for all administration pages. The language you select must be enabled. You can configure the !settings-url to control where the administration language is used.', array('!settings-url' => l(t('administration language settings'), 'admin/config/regional/language/admin_language'))) . '</p>';
+      break;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function admin_language_permission() {
+  return array(
+    'display admin pages in another language' => array(
+      'title' => t('Select administration language'),
+      'description' => t('Show all administration pages using a different language than the rest of the site.'),
+    ),
+    'use all enabled languages' => array(
+      'title' => t('Use all enabled languages'),
+      'description' => t('Select any enabled language for use as the administration language'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function admin_language_menu() {
+  $items = array();
+
+  $items['admin/config/regional/language/admin_language'] = array(
+    'title' => 'Administration language',
+    'description' => 'Select which parts of the site should use the selected administration language.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('admin_language_settings'),
+    'access arguments' => array('administer site configuration'),
+    'weight' => 42,
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_link_alter().
+ */
+function admin_language_menu_link_alter(&$item) {
+  if ('management' == $item['menu_name'] || 'user/logout' == $item['link_path']) {
+    $item['options']['alter'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_translated_menu_link_alter().
+ */
+function admin_language_translated_menu_link_alter(&$item, $map) {
+  if ('management' == $item['menu_name'] || 'user/logout' == $item['link_path']) {
+    if (variable_get('admin_language_translate_admin_menu', 0)) {
+      global $language, $_admin_language;
+
+      // save the current language and activate the administration language...
+      $current_language = $language;
+      $language = $_admin_language;
+
+      // ...modify the menu item...
+      _menu_item_localize($item, $map, TRUE);
+      if ('user/logout' == $item['link_path']) {
+        $item['title'] = t('Log out');
+      }
+
+      // ...and restore the previous language
+      $language = $current_language;
+    }
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function admin_language_init() {
+  if (user_access('display admin pages in another language') && drupal_multilingual()) {
+    global $_admin_language;
+
+    $languages = language_list('enabled');
+    $languages = $languages[1];
+
+    $admin_language = variable_get('admin_language_default', 'en');
+    $_admin_language = $languages[$admin_language];
+
+    if (_admin_language_switch_language()) {
+      global $user;
+
+      if (isset($user->admin_language)) {
+        switch ($user->admin_language) {
+          case 'admin':
+            // nothing to do, use default value of $admin_language
+            break;
+          case 'default':
+            $default = language_default();
+            $admin_language = $default->language;
+            break;
+          default:
+            if (isset($languages[$user->admin_language])) {
+              $admin_language = $user->admin_language;
+            }
+        }
+      }
+
+      global $language;
+      $language = $languages[$admin_language];
+    }
+  }
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function admin_language_node_presave($node) {
+  if (!user_access('use all enabled languages')) {
+    if (variable_get('admin_language_force_default', 0)) {
+      // force the use of the default site language
+      $default = language_default();
+      $node->language = $default->language;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function admin_language_node_insert($node) {
+  if (variable_get('admin_language_force_neutral', 0)) {
+    unset($node->language);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function admin_language_node_update($node) {
+  if (variable_get('admin_language_force_neutral', 0)) {
+    unset($node->language);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function admin_language_form_alter(&$form, $form_state, $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
+    if (module_exists('translation') && variable_get('admin_language_hide_node', 0)) {
+      if (isset($form['language'])) {
+        // init #after_build if it doesn't exist
+        if (!isset($form['#after_build'])) {
+          $form['#after_build'] = array();
+        }
+
+        // add a callback for cleaning up the language select widget
+        $form['#after_build'][] = 'admin_language_modify_language_element';
+      }
+    }
+  }
+
+  if ('user_profile_form' == $form_id) {
+    if ('account' == $form['#user_category'] && user_access('display admin pages in another language')) {
+      _admin_language_user_form_add_language_select($form);
+    }
+
+    if (variable_get('admin_language_hide_user', 0) && !user_access('administer site configuration')) {
+      $form['#after_build'][] = '_admin_language_user_form_remove_admin_language';
+    }
+  }
+
+  if ('user_register_form' == $form_id) {
+    if (user_access('administer users')) {
+      _admin_language_user_form_add_language_select($form);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function admin_language_form_locale_languages_overview_form_alter(&$form, &$form_state) {
+  // use the same options as the default language selector...
+  $options = $form['enabled']['#options'];
+
+  // ...but use a different default value for the admin language
+  $form['admin_language'] = array(
+    '#type' => 'radios',
+    '#options' => $options,
+    '#default_value' => variable_get('admin_language_default', 'en'),
+  );
+
+  // override the default theme function to render the extra field
+  $form['#theme'] = 'admin_language_languages_overview_form';
+
+  // add validate and submit handlers to handle the new field
+  $form['#validate'][] = 'admin_language_languages_overview_form_validate';
+  $form['#submit'][] = 'admin_language_languages_overview_form_submit';
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function admin_language_block_info() {
+  $block = array();
+
+  $block['admin_language_switcher'] = array(
+    'info' => t('Language switcher (User interface text, without administration language)'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function admin_language_block_view($type) {
+  $block = array();
+
+  if ('admin_language_switcher' == $type && drupal_multilingual()) {
+    $language_negotiation = variable_get('language_negotiation_language', array());
+    if (!empty($language_negotiation['locale-url'])) {
+      $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
+      $languages = language_list('enabled');
+      $admin_language = variable_get('admin_language_default', 'en');
+      $links = array();
+      foreach ($languages[1] as $language) {
+        if ($language->language != $admin_language) {
+          $links[$language->language] = array(
+            'href' => $path,
+            'title' => $language->native,
+            'language' => $language,
+            'attributes' => array('class' => array('language-link')),
+          );
+        }
+      }
+
+      // modify links to point at translated versions when available.
+      // same behavior as translation_translation_link_alter() but we don't
+      // remove links when a translation is unavailable.
+      if (module_exists('translation')) {
+        if ($paths = translation_path_get_translations($path)) {
+          $node = node_load(arg(1));
+          $translations = translation_node_get_translations($node->tnid);
+          foreach ($links as $langcode => $link) {
+            if (isset($paths[$langcode]) && $translations[$langcode]->status) {
+              // Translation in a different node.
+              $links[$langcode]['href'] = $paths[$langcode];
+            }
+          }
+        }
+      }
+
+      $block['subject'] = t('Languages');
+      $block['content'] = theme('links', array('links' => $links));
+    }
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function admin_language_theme() {
+  return array(
+    'admin_language_languages_overview_form' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_toolbar().
+ */
+function admin_language_preprocess_toolbar(&$variables) {
+  global $language, $_admin_language;
+
+  if (variable_get('admin_language_translate_toolbar', 0)) {
+    // save the current language and activate the administration language...
+    $current_language = $language;
+    $language = $_admin_language;
+
+    // ...rebuild the toolbar...
+    $toolbar = toolbar_view();
+    $variables['toolbar'] = array_merge($variables['toolbar'], $toolbar);
+
+    // ...and the shortcuts...
+    if (module_exists('shortcut')) {
+      $shortcut_set = shortcut_current_displayed_set();
+      menu_cache_clear($shortcut_set->set_name);
+
+      $shortcuts = shortcut_renderable_links();
+      foreach (element_children($variables['toolbar']['toolbar_drawer'][0]['shortcuts']) as $index) {
+        if (!empty($shortcuts[$index])) {
+          $variables['toolbar']['toolbar_drawer'][0]['shortcuts'][$index] = $shortcuts[$index];
+        }
+      }
+
+      $variables['toolbar']['toolbar_drawer'][0]['configure']['#title'] = t('Edit shortcuts');
+    }
+
+    // ...and restore the previous language
+    $language = $current_language;
+  }
+}
+
+/* --- FORMS ---------------------------------------------------------------- */
+
+/**
+ * Settings form.
+ */
+function admin_language_settings() {
+  $form = array();
+
+  $options = array(
+    ADMIN_LANGUAGE_BLACKLIST => t('Use administration language on every page except the listed pages.'),
+    ADMIN_LANGUAGE_WHITELIST => t('Use administration language on only the listed pages.'),
+  );
+  $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %admin for the admin dashboard and %admin-wildcard for all administration pages. %front is the front page.", array('%admin' => 'admin', '%admin-wildcard' => 'admin/*', '%front' => '<front>'));
+
+  $form['admin_language']['admin_language_visibility'] = array(
+    '#type' => 'radios',
+    '#title' => t('Use administration language on specific pages'),
+    '#options' => $options,
+    '#default_value' => variable_get('admin_language_visibility', ADMIN_LANGUAGE_WHITELIST),
+  );
+  $form['admin_language']['admin_language_pages'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Pages'),
+    '#default_value' => variable_get('admin_language_pages', ADMIN_LANGUAGE_DEFAULT_PAGES),
+    '#description' => $description,
+  );
+
+  $form['admin_language_hide_user'] = array(
+    '#type' => 'radios',
+    '#title' => t('Hide administration language on user form'),
+    '#description' => t('Select this option if you want to exclude the admin language from the language selection widget on the user edit form.'),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#default_value' => variable_get('admin_language_hide_user', 0),
+  );
+  $form['admin_language_hide_node'] = array(
+    '#type' => 'radios',
+    '#title' => t('Hide administration language on node form'),
+    '#description' => t('Select this option if you want to exclude the admin language from the language selection widget on the node edit form.'),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#default_value' => variable_get('admin_language_hide_node', 0),
+  );
+  $form['admin_language_force_default'] = array(
+    '#type' => 'radios',
+    '#title' => t('Force use of default language'),
+    '#description' => t('Select this option if you want to force the use of the default language on the node edit form. This setting overrides the <em>Hide admin language on user form</em> setting.'),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#default_value' => variable_get('admin_language_force_default', 0),
+  );
+
+  $form['admin_language_force_neutral'] = array(
+    '#type' => 'radios',
+    '#title' => t('Force language neutral aliases'),
+    '#description' => t('Select this option if you want to force the use of language neutral URL aliases. In some cases (i.e. if you only use an administration language and a site language) this can help make aliases more consistent.'),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#default_value' => variable_get('admin_language_force_neutral', 0),
+  );
+
+  if (module_exists('admin_menu')) {
+    $form['admin_language_translate_admin_menu'] = array(
+      '#type' => 'radios',
+      '#title' => t('Use administration language in the administration menu'),
+      '#description' => t('Select this option if you want to display the administration menu using the administration language on all pages.'),
+      '#options' => array(t('Disabled'), t('Enabled')),
+      '#default_value' => variable_get('admin_language_translate_admin_menu', 0),
+    );
+  }
+
+  if (module_exists('toolbar')) {
+    $form['admin_language_translate_toolbar'] = array(
+      '#type' => 'radios',
+      '#title' => t('Use administration language for the core toolbar'),
+      '#description' => t('Select this option if you want to display the core toolbar using the administration language on all pages.'),
+      '#options' => array(t('Disabled'), t('Enabled')),
+      '#default_value' => variable_get('admin_language_translate_toolbar', 0),
+    );
+  }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Validation handler for the augmented language overview form.
+ */
+function admin_language_languages_overview_form_validate($form, &$form_state) {
+  $admin_language = $form_state['values']['admin_language'];
+  $enabled = $form_state['values']['enabled'][$admin_language];
+  $default = language_default();
+  if (($admin_language != $default->language) && !$enabled) {
+    form_set_error('', t('Only enabled languages can be chosen as the admin language.'));
+  }
+}
+
+/**
+ * Submit handler for the augmented language overview form.
+ */
+function admin_language_languages_overview_form_submit($form, &$form_state) {
+  $admin_language = $form_state['values']['admin_language'];
+  variable_set('admin_language_default', $admin_language);
+}
+
+/**
+ * #after_build callback which modifies the language select widget on the node
+ * add/edit form.
+ */
+function admin_language_modify_language_element($form, &$form_state) {
+  if (!user_access('use all enabled languages')) {
+    // remove the administration language from the list of available languages
+    if (isset($form['language']['#options']) && count($form['language']['#options']) > 2) {
+      $language = variable_get('admin_language_default', 'en');
+      unset($form['language']['#options'][$language]);
+    }
+
+    // hide the language selector if we're forcing a default language
+    if (isset($form['language']) && variable_get('admin_language_force_default', 0)) {
+      $form['language']['#access'] = FALSE;
+    }
+  }
+
+  return $form;
+}
+
+/* --- THEME ---------------------------------------------------------------- */
+
+/**
+ * Theme the language overview form.
+ *
+ * This is just theme_locale_languages_overview_form() with support for the
+ * admin language radio buttons.
+ */
+// TODO: compare with current version of this function
+function theme_admin_language_languages_overview_form($variables) {
+  $form = $variables['form'];
+
+  $default = language_default();
+  foreach ($form['name'] as $key => $element) {
+    if (is_array($element) && element_child($key)) {
+      if ($key == $default->language) {
+        $form['enabled'][$key]['#attributes']['disabled'] = 'disabled';
+      }
+      $rows[] = array(
+        'data' => array(
+          '<strong>' . drupal_render($form['name'][$key]) . '</strong>',
+          drupal_render($form['native'][$key]),
+          check_plain($key),
+          drupal_render($form['direction'][$key]),
+          array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
+          drupal_render($form['site_default'][$key]),
+          drupal_render($form['admin_language'][$key]),
+          drupal_render($form['weight'][$key]),
+          l(t('edit'), 'admin/config/regional/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/config/regional/language/delete/' . $key) : '')
+        ),
+        'class' => array('draggable'),
+      );
+    }
+  }
+  $header = array(array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Code')), array('data' => t('Direction')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Admin')), array('data' => t('Weight')), array('data' => t('Operations')));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'language-order')));
+  $output .= drupal_render_children($form);
+
+  drupal_add_tabledrag('language-order', 'order', 'sibling', 'language-order-weight');
+
+  return $output;
+}
+
+/* --- UTILITY -------------------------------------------------------------- */
+
+/**
+ * Determine the preferred language of the given user.
+ */
+function admin_language_preferred($account) {
+  $language_list = drupal_map_assoc(array('admin', 'default'));
+  $language_list += language_list();
+  if (isset($account->admin_language) && isset($language_list[$account->admin_language])) {
+    return $account->admin_language;
+  }
+  else {
+    return 'admin';
+  }
+}
+
+/**
+ * Determine whether the language needs to be switched on the current path.
+ *
+ * @return boolean
+ *   TRUE to switch to the selected administration language or FALSE to use the
+ *   default language.
+ */
+function _admin_language_switch_language() {
+  $switch = FALSE;
+
+  $visibility = variable_get('admin_language_visibility', ADMIN_LANGUAGE_WHITELIST);
+  $pages = variable_get('admin_language_pages', ADMIN_LANGUAGE_DEFAULT_PAGES);
+
+  if ($pages) {
+    $path = drupal_get_path_alias($_GET['q']);
+    $switch = drupal_match_path($path, $pages);
+    if ($path != $_GET['q']) {
+      $switch = $switch || drupal_match_path($_GET['q'], $pages);
+    }
+    $switch = !($visibility xor $switch);
+  }
+  else {
+    $switch = TRUE;
+    $switch = ($visibility xor $switch);
+  }
+
+  return $switch;
+}
+
+/**
+ * Form alter callback which adds the administration language select widget
+ * to the user profile and user registration forms.
+ */
+function _admin_language_user_form_add_language_select(&$form) {
+  global $user;
+
+  $languages = language_list('enabled');
+  $languages = $languages[1];
+
+  $default = language_default();
+
+  $admin_langcode = variable_get('admin_language', 'en');
+
+  if (isset($languages[$admin_langcode])) {
+    $lang = $languages[$admin_langcode];
+    $admin_language_name = t($lang->name) . ($lang->native != t($lang->name) ? ' (' . $lang->native . ')' : '');
+  }
+  else {
+    $admin_language_name = t('Not enabled');
+  }
+
+  $names = array(
+    'admin' => t('Default administration language, currently !language', array('!language' => $admin_language_name)),
+    'default' => t('Default site language, currently !language', array('!language' => t($default->name) . ($default->native != t($default->name) ? ' (' . $default->native . ')' : ''))),
+  );
+  if (user_access('use all enabled languages')) {
+    foreach ($languages as $langcode => $item) {
+      $name = t($item->name);
+      $names[$langcode] = $name . ($item->native != $name ? ' (' . $item->native . ')' : '');
+    }
+  }
+
+  $form['admin_language'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Administration language'),
+  );
+  $form['admin_language']['admin_language'] = array(
+    '#type' => count($names) <= 5 ? 'radios' : 'select',
+    '#title' => t('Default administration language'),
+    '#default_value' => admin_language_preferred($user),
+    '#options' => $names,
+    '#description' => t('Select the default language to use for all administration pages. See the !settings-url for a list of affected pages.', array('!settings-url' => l(t('administration language settings'), 'admin/settings/language/admin_language'))),
+  );
+}
+
+/**
+ * After build callback which removes the administration language from the list
+ * of available languages on the user profile form.
+ */
+function _admin_language_user_form_remove_admin_language($form) {
+  global $user;
+
+  $admin_language = variable_get('admin_language_default', 'en');
+
+  // remove the admin language from the available options
+  unset($form['locale']['language'][$admin_language]);
+
+  // at this point, the element has been expanded, so we grab all child elements
+  $languages = element_children($form['locale']['language']);
+
+  // make sure that the default value is available on the form
+  $default_value = $form['locale']['language']['#default_value'];
+  if (!isset($form['locale']['language'][$default_value])) {
+    if (!empty($languages)) {
+      $default_language = $languages[0];
+      foreach ($languages as $language) {
+        $form['locale']['language'][$language]['#value'] = $default_language;
+      }
+    }
+  }
+
+  // if that leaves us with only one language, we replace the select element
+  // with a value element and hide the language fieldset
+  if (count($languages) == 1) {
+    $default_language = array_shift($languages);
+
+    $form['locale']['language'] = array(
+      '#type' => 'value',
+      '#value' => $default_language,
+    );
+    $form['locale']['#access'] = FALSE;
+  }
+
+  return $form;
+}
