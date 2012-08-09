@@ -5,6 +5,14 @@ sites/*/settings*.php
 files
 sites/*/files
 sites/*/private
-.idea
+
+#dhu.node host (Den)
+dhu.node
+
+#my local .htaccess (oG)
 .htaccess.loc
+
+
+#phpstorm files
+.idea
 

@@ -1,0 +1,11 @@
+name = "Features tools"
+description = "Provides feature management auto download button."
+core = 7.x
+dependencies[] = "features"
+package = "Features"
+; Information added by drupal.org packaging script on 2012-05-15
+version = "7.x-1.5"
+core = "7.x"
+project = "ftools"
+datestamp = "1337098556"
+
