@@ -10,3 +10,6 @@ sites/*/private
 #dhu.node host (Den)
 dhu.node
 
+#phpstorm files
+.idea
+
