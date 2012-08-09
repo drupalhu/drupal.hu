@@ -1,0 +1,47 @@
+name = Demon
+description = Theme for drupal.hu site.
+package = Core
+version = 0624-1.0 beta
+core = 7.x
+
+logo = logo.jpg
+
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/text.css
+stylesheets[all][] = css/960_24_col.css
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/voteupdown.css
+
+scripts[] = colorbox_register.js
+
+regions[header] = Header
+regions[help] = Help
+;regions[page_top] = Page top
+;regions[page_bottom] = Page bottom
+
+regions[front_highlighted] = Front Highlighted
+regions[front_left] = Front Left Content
+regions[front_middle_left] = Front Middle-Left Content
+regions[front_middle_right] = Front Middle-Right Content
+regions[front_right] = Front Right Content
+
+; we do not use this
+;regions[featured] = Featured
+
+regions[content] = Content
+
+regions[sidebar_first] = Sidebar first
+; we do not use this
+; regions[sidebar_second] = Sidebar second
+
+regions[triptych_first] = Triptych first
+regions[triptych_middle] = Triptych middle
+regions[triptych_last] = Triptych last
+
+regions[footer_firstcolumn] = Footer first column
+regions[footer_secondcolumn] = Footer second column
+regions[footer_thirdcolumn] = Footer third column
+; we do not use this
+;regions[footer_fourthcolumn] = Footer fourth column
+
+regions[footer] = Footer

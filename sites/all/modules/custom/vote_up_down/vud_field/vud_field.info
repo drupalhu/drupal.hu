@@ -1,0 +1,9 @@
+name = Vote Up/Down field
+description = Defines field type which contains a voting widget.
+core = 7.x
+dependencies[] = vud
+dependencies[] = field
+package = Fields
+
+files[] = vud_field.module
+files[] = vud_field.install
