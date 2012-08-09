@@ -66,9 +66,9 @@ function ctools_context_handler_get_render_handler($task, $subtask, $handlers, $
       // If not, if it's a 'context' type handler, use the default tester.
       if ($plugin['handler type'] == 'context') {
         $test = ctools_context_handler_default_test($handler, $contexts, $args);
-      }
-      if ($test) {
-        return $id;
+        if ($test) {
+          return $id;
+        }
       }
     }
   }
@@ -148,7 +148,7 @@ function ctools_context_handler_render_handler($task, $subtask, $handler, $conte
       case 305:
       case 307:
         $info += array(
-          'query' => '',
+          'query' => array(),
           'fragment' => '',
         );
         $options = array(
@@ -157,6 +157,42 @@ function ctools_context_handler_render_handler($task, $subtask, $handler, $conte
         );
         return drupal_goto($info['destination'], $options, $info['response code']);
       // @todo -- should other response codes be supported here?
+    }
+  }
+
+  $plugin = page_manager_get_task_handler($handler->handler);
+
+  if (module_exists('contextual') && user_access('access contextual links') && isset($handler->task)) {
+    // Provide a contextual link to edit this, if we can:
+    $callback = isset($plugin['contextual link']) ? $plugin['contextual link'] : 'ctools_task_handler_default_contextual_link';
+    if ($callback && function_exists($callback)) {
+      $links = $callback($handler, $plugin, $contexts, $args);
+    }
+
+    if (!empty($links) && is_array($links)) {
+      $build = array(
+        '#theme_wrappers' => array('container'),
+        '#attributes' => array('class' => array('contextual-links-region')),
+      );
+
+      if (!is_array($info['content'])) {
+        $build['content']['#markup'] = $info['content'];
+      }
+      else {
+        $build['content'] = $info['content'];
+      }
+
+      $build['contextual_links'] = array(
+        '#prefix' => '<div class="contextual-links-wrapper">',
+        '#suffix' => '</div>',
+        '#theme' => 'links__contextual',
+        '#links' => $links,
+        '#attributes' => array('class' => array('contextual-links')),
+        '#attached' => array(
+          'library' => array(array('contextual', 'contextual-links')),
+        ),
+      );
+      $info['content'] = $build;
     }
   }
 
@@ -180,34 +216,44 @@ function ctools_context_handler_render_handler($task, $subtask, $handler, $conte
 }
 
 /**
+ * Default function to provide contextual link for a task as defined by the handler.
+ *
+ * This provides a simple link to th main content operation and is suitable
+ * for most normal handlers. Setting 'contextual link' to a function overrides
+ * this and setting it to FALSE will prevent a contextual link from appearing.
+ */
+function ctools_task_handler_default_contextual_link($handler, $plugin, $contexts, $args) {
+  if (!user_access('administer page manager')) {
+    return;
+  }
+
+  $task = page_manager_get_task($handler->task);
+
+  $title = !empty($task['tab title']) ? $task['tab title'] : t('Edit @type', array('@type' => $plugin['title']));
+  $trail = array();
+  if (!empty($plugin['tab operation'])) {
+    if (is_array($plugin['tab operation'])) {
+      $trail = $plugin['tab operation'];
+    }
+    else if (function_exists($plugin['tab operation'])) {
+      $trail = $plugin['tab operation']($handler, $contexts, $args);
+    }
+  }
+  $path = page_manager_edit_url(page_manager_make_task_name($handler->task, $handler->subtask), $trail);
+
+  $links = array(array(
+    'href' => $path,
+    'title' => $title,
+    'query' => drupal_get_destination(),
+  ));
+
+  return $links;
+}
+
+/**
  * Called to execute actions that should happen before a handler is rendered.
  */
-function ctools_context_handler_pre_render($handler, $contexts, $args) {
-  $plugin = page_manager_get_task_handler($handler->handler);
-
-  if (user_access('administer page manager') && isset($handler->task)) {
-    // Provide a tab to edit this context:
-    ctools_include('menu');
-    $task = page_manager_get_task($handler->task);
-
-    $title = !empty($task['tab title']) ? $task['tab title'] : t('Edit @type', array('@type' => $plugin['title']));
-    $trail = array();
-    if (!empty($plugin['tab operation'])) {
-      if (is_array($plugin['tab operation'])) {
-        $trail = $plugin['tab operation'];
-      }
-      else if (function_exists($plugin['tab operation'])) {
-        $trail = $plugin['tab operation']($handler, $contexts, $args);
-      }
-    }
-
-    ctools_menu_add_tab(array(
-      'title' => $title,
-      'href' => page_manager_edit_url(page_manager_make_task_name($handler->task, $handler->subtask), $trail),
-      'type' => MENU_LOCAL_ACTION
-    ));
-  }
-}
+function ctools_context_handler_pre_render($handler, $contexts, $args) { }
 
 /**
  * Compare arguments to contexts for selection purposes.

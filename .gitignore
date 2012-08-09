@@ -2,17 +2,5 @@
 sites/*/settings*.php
 
 # Ignore paths that contain user-generated content.
-files
 sites/*/files
 sites/*/private
-
-#dhu.node host (Den)
-dhu.node
-
-#my local .htaccess (oG)
-.htaccess.loc
-
-
-#phpstorm files
-.idea
-

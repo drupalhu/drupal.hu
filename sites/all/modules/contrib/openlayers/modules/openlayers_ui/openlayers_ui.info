@@ -3,12 +3,13 @@ description = "Provides a user interface to manage OpenLayers maps."
 core = "7.x"
 package = "OpenLayers"
 dependencies[] = "openlayers"
-; Core files
+
+configure = admin/structure/openlayers
 files[] = openlayers_ui.module
 
-; Information added by drupal.org packaging script on 2011-06-15
-version = "7.x-2.x-dev"
+; Information added by drupal.org packaging script on 2012-08-04
+version = "7.x-2.0-beta1+56-dev"
 core = "7.x"
 project = "openlayers"
-datestamp = "1308140035"
+datestamp = "1344040584"
 

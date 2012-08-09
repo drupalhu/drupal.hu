@@ -1,26 +1,29 @@
 
-Drupal core is maintained by the community.  To participate, go to
-
-  http://drupal.org/contribute
-
-The people listed here have agreed to do more quality assurance work for
-particular areas of Drupal.  All of them are subject to change.
-
+Drupal core is built and maintained by the Drupal project community. Everyone is
+encouraged to submit issues and changes (patches) to improve Drupal, and to
+contribute in other ways -- see http://drupal.org/contribute to find out how.
 
 Branch maintainers
 ------------------
 
-Drupal 7
+The Drupal Core branch maintainers oversee the development of Drupal as a whole.
+The branch maintainers for Drupal 7 are:
+
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
 - Angela Byron 'webchick' <http://drupal.org/user/24967>
+- David Rothstein 'David_Rothstein' <http://drupal.org/user/124982>
 
 
 Component maintainers
 ---------------------
 
+The Drupal Core component maintainers oversee the development of Drupal
+subsystems. See http://drupal.org/contribute/core-maintainers for more
+information on their responsibilities, and to find out how to become a component
+maintainer. Current component maintainers for Drupal 7:
+
 Ajax system
 - Alex Bronstein 'effulgentsia' <http://drupal.org/user/78040>
-- Randy Fay 'rfay' <http://drupal.org/user/30906>
 - Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
 
 Base system
@@ -56,8 +59,10 @@ Database system
 
 Database update system
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
+- Ashok Modi 'btmash' <http://drupal.org/user/60422>
 
 Entity system
+- Wolfgang Ziegler 'fago' <http://drupal.org/user/16747>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 - Franz Heinzmann 'Frando' <http://drupal.org/user/21850>
 
@@ -80,7 +85,7 @@ Install system
 - David Rothstein 'David_Rothstein' <http://drupal.org/user/124982>
 
 JavaScript
-- ?
+- Théodore Biadala 'nod_' <http://drupal.org/user/598310>
 
 Language system
 - Francesco Placella 'plach' <http://drupal.org/user/183211>
@@ -127,10 +132,9 @@ Topic coordinators
 
 Accessibility
 - Everett Zufelt 'Everett Zufelt' <http://drupal.org/user/406552>
-- Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
+- Brandon Bowersox-Johnson 'bowersox' <http://drupal.org/user/186415>
 
 Documentation
-- Ariane Khachatourians 'arianek' <http://drupal.org/user/158886>
 - Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 
 Security
@@ -143,6 +147,10 @@ User experience and usability
 - Roy Scholten 'yoroy' <http://drupal.org/user/41502>
 - Bojhan Somers 'Bojhan' <http://drupal.org/user/87969>
 
+Node Access
+- Moshe Weitzman 'moshe weitzman' <http://drupal.org/user/23>
+- Ken Rickard 'agentrickard' <http://drupal.org/user/20975>
+- Jess Myrbo 'xjm' <http://drupal.org/user/65776>
 
 Module maintainers
 ------------------
@@ -225,7 +233,7 @@ PHP module
 - ?
 
 Poll module
-- ?
+- Andrei Mateescu 'amateescu' <http://drupal.org/user/729614>
 
 Profile module
 - ?
@@ -245,7 +253,7 @@ Simpletest module
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Statistics module
-- Dave Reid 'davereid' <http://drupal.org/user/53892>
+- Tim Millwood 'timmillwood' <http://drupal.org/user/227849>
 
 Syslog module
 - Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
@@ -254,6 +262,7 @@ System module
 - ?
 
 Taxonomy module
+- Jess Myrbo 'xjm' <http://drupal.org/user/65776>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 - Benjamin Doherty 'bangpound' <http://drupal.org/user/100456>
 

@@ -1,11 +1,11 @@
 /**
- * Unique field module for Drupal (unique_field)
+ * Unique Field module for Drupal (unique_field)
  * Compatible with Drupal 7.x
  *
  * By Joe Turgeon [http://arithmetric.com]
  */
 
-The unique field module provides a way to require that specified fields
+The Unique Field module provides a way to require that specified fields
 or characteristics of a node are unique. This includes the node's title,
 author, language, taxonomy terms, and other fields.
 

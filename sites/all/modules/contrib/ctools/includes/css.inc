@@ -285,7 +285,8 @@ function ctools_css_disassemble($css) {
   // Remove comments.
   $css = preg_replace("/\/\*(.*)?\*\//Usi", "", $css);
   // Split out each statement
-  $statements = explode("}", $css);
+  $statements = preg_split('/[;}]/', $css);
+
   // If we have any statements, parse them.
   if (!empty($statements)) {
     // Iterate through all of the statements.
@@ -306,7 +307,10 @@ function ctools_css_disassemble($css) {
       }
 
       // Disassemble the declaration, check it and tuck it into an array.
-      $disassembled_css[$selector_str] = _ctools_css_disassemble_declaration($declaration);
+      if (!isset($disassembled_css[$selector_str])) {
+        $disassembled_css[$selector_str] = array();
+      }
+      $disassembled_css[$selector_str] += _ctools_css_disassemble_declaration($declaration);
     }
   }
   return $disassembled_css;
@@ -556,7 +560,7 @@ function ctools_css_flush_caches() {
   // @see http://drupal.org/node/573292
   // file_unmanaged_delete_recursive('public://render');
   $filedir = file_default_scheme() . '://ctools/css';
-  if (drupal_realpath($filedir)) {
+  if (drupal_realpath($filedir) && file_exists($filedir)) {
     // We use the @ because it's possible that files created by the webserver
     // cannot be deleted while using drush to clear the cache. We don't really
     // care that much about that, to be honest, so we use the @ to suppress

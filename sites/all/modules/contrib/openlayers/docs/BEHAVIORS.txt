@@ -60,21 +60,21 @@ Here's what you'll write for this behavior:
         return array(
         );
       }
-    
+
       function options_form($defaults) {
         return array(
           'filteredlayer' => array(
             '#type' => 'select',
             '#options' => $this->map['layers'],
             '#description' => t('Select layer to filter'),
-            '#default_value' => isset($defaults['filteredlayer']) ? 
+            '#default_value' => isset($defaults['filteredlayer']) ?
               $defaults['filteredlayer'] : NULL
           ),
         );
       }
-    
+
       function render(&$map) {
-        drupal_add_js(drupal_get_path('module', 'mybehavior') 
+        drupal_add_js(drupal_get_path('module', 'mybehavior')
           .'/includes/behaviors/js/openlayers_behavior_mybehavior.js');
         return $this->options;
       }
@@ -100,7 +100,7 @@ There's quite a bit of Javascript to write for this behavior:
       if (data && data.map.behaviors['openlayers_behavior_mybehavior']) {
         behavior = data.map.behaviors['openlayers_behavior_mybehavior'];
         layer = data.openlayers.getLayersBy(
-          'drupalID', 
+          'drupalID',
           behavior.filteredlayer)[0];
           // Do things with this feature, etc.
         });
@@ -119,6 +119,6 @@ This code demonstrates a few core concepts of behavior-writing:
 
 * The OpenLayers [Map object](http://dev.openlayers.org/releases/OpenLayers-2.8/doc/apidocs/files/OpenLayers/Map-js.html)
   is accessible via `$(context).data('openlayers').openlayers`
-* The [jQuery Data function](http://api.jquery.com/jQuery.data/) is used in the 
+* The [jQuery Data function](http://api.jquery.com/jQuery.data/) is used in the
   OpenLayers module to simplify variable scope and avoid the possibility of
   memory leaks.

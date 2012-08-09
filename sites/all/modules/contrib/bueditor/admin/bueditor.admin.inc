@@ -544,7 +544,7 @@ function bueditor_button_import_form() {
  * Button import form submission.
  */
 function bueditor_button_import_submit($form, &$form_state) {
-  if ($file = file_save_upload('importcsv', array(), 'temporary://')) {
+  if ($file = file_save_upload('importcsv', array('file_validate_extensions' => array('csv')), 'temporary://')) {
     $_SESSION['bueimport'] = drupal_realpath($file->uri);
   }
   elseif ($code = $form_state['values']['importcode']) {

@@ -61,7 +61,11 @@ class SearchApiViewsHandlerFilterFulltext extends SearchApiViewsHandlerFilterTex
    */
   public function query() {
     while (is_array($this->value)) {
-      $this->value = $this->value ? array_shift($this->value) : NULL;
+      $this->value = $this->value ? reset($this->value) : '';
+    }
+    // Catch empty strings entered by the user, but not "0".
+    if ($this->value === '') {
+      return;
     }
     $fields = $this->options['fields'];
     $fields = $fields ? $fields : array_keys($this->getFulltextFields());
@@ -116,7 +120,7 @@ class SearchApiViewsHandlerFilterFulltext extends SearchApiViewsHandlerFilterTex
     $fields = array();
     $index = search_api_index_load(substr($this->table, 17));
     if (!empty($index->options['fields'])) {
-      $f = $index->options['fields'];
+      $f = $index->getFields();
       foreach ($index->getFulltextFields() as $name) {
         $fields[$name] = $f[$name]['name'];
       }

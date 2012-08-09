@@ -6,7 +6,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  *
  * Deletes all module variables and then clears the variables cache.
  */

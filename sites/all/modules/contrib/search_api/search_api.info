@@ -8,9 +8,15 @@ package = Search
 files[] = search_api.test
 files[] = includes/callback.inc
 files[] = includes/callback_add_aggregation.inc
+files[] = includes/callback_add_hierarchy.inc
 files[] = includes/callback_add_url.inc
 files[] = includes/callback_add_viewed_entity.inc
 files[] = includes/callback_bundle_filter.inc
+files[] = includes/callback_language_control.inc
+files[] = includes/callback_node_access.inc
+files[] = includes/datasource.inc
+files[] = includes/datasource_entity.inc
+files[] = includes/datasource_external.inc
 files[] = includes/exception.inc
 files[] = includes/index_entity.inc
 files[] = includes/processor.inc
@@ -24,9 +30,9 @@ files[] = includes/service.inc
 
 configure = admin/config/search/search_api
 
-; Information added by drupal.org packaging script on 2011-06-20
-version = "7.x-1.0-beta10"
+; Information added by drupal.org packaging script on 2012-07-06
+version = "7.x-1.2"
 core = "7.x"
 project = "search_api"
-datestamp = "1308562319"
+datestamp = "1341612141"
 

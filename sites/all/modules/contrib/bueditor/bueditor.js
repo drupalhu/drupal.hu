@@ -201,7 +201,9 @@ BUE.eUIKeydown = function(e) {
 
 // Html 2 jquery. Faster than $(html)
 BUE.$html = function(s){
-  return $(document.createElement('div')).html(s).children();
+  var div = document.createElement('div');
+  div.innerHTML = s;
+  return $(div.childNodes);
 };
 
 // Backward compatibility.

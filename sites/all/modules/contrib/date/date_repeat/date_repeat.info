@@ -4,13 +4,12 @@ dependencies[] = date_api
 package = Date/Time
 core = 7.x
 php = 5.2
-files[] = date_repeat_calc.inc
-files[] = date_repeat_form.inc
-files[] = date_repeat.install
-files[] = date_repeat.module
-; Information added by drupal.org packaging script on 2011-04-26
-version = "7.x-2.0-alpha3"
+files[] = tests/date_repeat.test
+files[] = tests/date_repeat_form.test
+
+; Information added by drupal.org packaging script on 2012-04-19
+version = "7.x-2.5"
 core = "7.x"
 project = "date"
-datestamp = "1303821715"
+datestamp = "1334835098"
 

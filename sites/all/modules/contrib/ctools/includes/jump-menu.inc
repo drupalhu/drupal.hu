@@ -91,6 +91,7 @@ function ctools_jump_menu($form, &$form_state, $select, $options = array()) {
     $form['go'] = array(
       '#type' => 'submit',
       '#value' => $options['button'],
+      '#submit' => array('ctools_jump_menu_submit'),
       '#attributes' => array(
         'class' => array('ctools-jump-menu-button'),
       ),
@@ -116,7 +117,22 @@ function ctools_jump_menu($form, &$form_state, $select, $options = array()) {
  * This is normally only invoked upon submit without javascript enabled.
  */
 function ctools_jump_menu_submit($form, &$form_state) {
-  $redirect = $form_state['values']['jump'];
+  if ($form_state['values']['jump'] === '') {
+    // We have nothing to do when the user has not selected any value.
+    return;
+  }
+
+  // If the path we are redirecting to contains the string :: then treat the
+  // the string after the double colon as the path to redirect to.
+  // This allows duplicate paths to be used in jump menus for multiple options.
+  $redirect_array = explode("::", $form_state['values']['jump']);
+
+  if(isset($redirect_array[1]) && !empty($redirect_array[1])){
+    $redirect = $redirect_array[1];
+  }
+  else {
+    $redirect = $form_state['values']['jump'];
+  }
 
   // If the path we are redirecting to starts with the base path (for example,
   // "/somepath/node/1"), we need to strip the base path off before passing it
@@ -129,5 +145,6 @@ function ctools_jump_menu_submit($form, &$form_state) {
   // Parse the URL so that query strings and fragments are preserved in the
   // redirect.
   $redirect = drupal_parse_url($redirect);
+  $redirect['path'] = urldecode($redirect['path']);
   $form_state['redirect'] = array($redirect['path'], $redirect);
 }

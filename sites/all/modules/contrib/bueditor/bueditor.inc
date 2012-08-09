@@ -200,7 +200,7 @@ function bueditor_user_eids($user) {
   }
   // Other users
   foreach ($roles as $rid => $role) {
-    if (isset($user->roles[$rid])) {
+    if (isset($user->roles[$rid]) && ($role['editor'] || $role['alt'])) {
       return array($role['editor'], $role['alt']);
     }
   }
@@ -222,7 +222,7 @@ function bueditor_check_page($page, $editor) {
     }
     if (arg(0) == 'node' && arg(2) == 'edit') {
       $node = node_load(arg(1));
-      if ($node && drupal_match_path('node/add/' . $node->type, $editor->pages)) {
+      if ($node && drupal_match_path('node/add/' . str_replace('_', '-', $node->type), $editor->pages)) {
         return $editor;
       }
     }

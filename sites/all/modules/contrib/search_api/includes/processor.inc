@@ -29,7 +29,7 @@ interface SearchApiProcessorInterface {
    *
    * This can be used for hiding the processor on the index's "Workflow" tab. To
    * avoid confusion, you should only use criteria that are immutable, such as
-   * the index's entity type. Also, since this is only used for UI purposes, you
+   * the index's item type. Also, since this is only used for UI purposes, you
    * should not completely rely on this to ensure certain index configurations
    * and at least throw an exception with a descriptive error message if this is
    * violated on runtime.
@@ -117,7 +117,7 @@ interface SearchApiProcessorInterface {
    *
    * @param array $response
    *   An array containing the search results. See the return value of
-   *   SearchApiQueryInterface->execute() for the detailled format.
+   *   SearchApiQueryInterface->execute() for the detailed format.
    * @param SearchApiQuery $query
    *   The object representing the executed query.
    */
@@ -160,16 +160,16 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
   public function configurationForm() {
     $form['#attached']['css'][] = drupal_get_path('module', 'search_api') . '/search_api.admin.css';
 
-    $fields = empty($this->index->options['fields']) ? _search_api_admin_get_fields($this->index, $this->index->entityWrapper()) : $this->index->options;
-    $fields = $fields['fields'];
+    $fields = $this->index->getFields();
     $field_options = array();
-    $default_fields = isset($this->options['fields']) ? $this->options['fields'] : array();
+    $default_fields = array();
+    if (isset($this->options['fields'])) {
+      $default_fields = drupal_map_assoc(array_keys($this->options['fields']));
+    }
     foreach ($fields as $name => $field) {
-      if ($field['indexed']) {
-        $field_options[$name] = $field['name'];
-        if (!isset($this->options['fields']) && $this->testField($name, $field)) {
-          $default_fields[$name] = $name;
-        }
+      $field_options[$name] = $field['name'];
+      if (!empty($default_fields[$name]) || (!isset($this->options['fields']) && $this->testField($name, $field))) {
+        $default_fields[$name] = $name;
       }
     }
 
@@ -184,7 +184,13 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
     return $form;
   }
 
-  public function configurationFormValidate(array $form, array &$values, array &$form_state) { }
+  public function configurationFormValidate(array $form, array &$values, array &$form_state) {
+    $fields = array_filter($values['fields']);
+    if ($fields) {
+      $fields = array_combine($fields, array_fill(0, count($fields), TRUE));
+    }
+    $values['fields'] = $fields;
+  }
 
   public function configurationFormSubmit(array $form, array &$values, array &$form_state) {
     $this->options = $values;
@@ -263,7 +269,7 @@ abstract class SearchApiAbstractProcessor implements SearchApiProcessorInterface
       }
     }
     else {
-        $this->processFieldValue($value);
+      $this->processFieldValue($value);
     }
     if (is_array($value)) {
       $type = 'tokens';

@@ -16,7 +16,7 @@ $plugin = array(
   'required context' => new ctools_context_required(t('Node'), 'node'),
   'context' => 'ctools_terms_from_node_context',
   'edit form' => 'ctools_terms_from_node_settings_form',
-  'defaults' => array('vid' => array(), 'concatenator' => ','),
+  'defaults' => array('vocabulary' => array(), 'concatenator' => ','),
 );
 
 /**
@@ -29,18 +29,25 @@ function ctools_terms_from_node_context($context, $conf) {
   }
 
   // Collect all terms for the chosen vocabulary and concatenate them.
-  if (isset($context->data->taxonomy)) {
-    $terms = array();
-    foreach ($context->data->taxonomy as $term) {
-      if (in_array($term->vid, $conf['vid'])) {
-        $terms[] = $term->tid;
+  $node = $context->data;
+  $terms = array();
+  
+  $fields = field_info_instances('node', $node->type);
+  foreach ($fields as $name => $info) {
+    $field_info = field_info_field($name);
+    if ($field_info['type'] == 'taxonomy_term_reference' && (empty($conf['vocabulary']) || $conf['vocabulary'][$field_info['settings']['allowed_values'][0]['vocabulary']])) {
+      $items = field_get_items('node', $node, $name);
+      if (is_array($items)) {
+        foreach ($items as $item) {
+          $terms[] = $item['tid'];
+        }
       }
     }
-
-    if (!empty($terms)) {
-      $all_terms = ctools_break_phrase(implode($conf['concatenator'], $terms));
-      return ctools_context_create('terms', $all_terms);
-    }
+  }
+  
+  if (!empty($terms)) {
+    $all_terms = ctools_break_phrase(implode($conf['concatenator'], $terms));
+    return ctools_context_create('terms', $all_terms);
   }
 }
 
@@ -51,14 +58,14 @@ function ctools_terms_from_node_settings_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
   $options = array();
-  foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
-    $options[$vid] = $vocabulary->name;
+  foreach (taxonomy_vocabulary_get_names() as $name => $vocabulary) {
+    $options[$name] = $vocabulary->name;
   }
-  $form['vid'] = array(
+  $form['vocabulary'] = array(
     '#title' => t('Vocabulary'),
     '#type' => 'checkboxes',
     '#options' => $options,
-    '#default_value' => $conf['vid'],
+    '#default_value' => $conf['vocabulary'],
     '#prefix' => '<div class="clearfix">',
     '#suffix' => '</div>',
   );

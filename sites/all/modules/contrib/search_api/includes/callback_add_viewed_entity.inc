@@ -5,8 +5,17 @@
  */
 class SearchApiAlterAddViewedEntity extends SearchApiAbstractAlterCallback {
 
+  /**
+   * Only support indexes containing entities.
+   *
+   * @see SearchApiAlterCallbackInterface::supportsIndex()
+   */
+  public function supportsIndex(SearchApiIndex $index) {
+    return (bool) entity_get_info($index->item_type);
+  }
+
   public function configurationForm() {
-    $info = entity_get_info($this->index->entity_type);
+    $info = entity_get_info($this->index->item_type);
     $view_modes = array();
     foreach ($info['view modes'] as $key => $mode) {
       $view_modes[$key] = $mode['label'];
@@ -51,7 +60,7 @@ class SearchApiAlterAddViewedEntity extends SearchApiAbstractAlterCallback {
     $original_user = $GLOBALS['user'];
     $GLOBALS['user'] = drupal_anonymous_user();
 
-    $type = $this->index->entity_type;
+    $type = $this->index->item_type;
     $mode = empty($this->options['mode']) ? 'full' : $this->options['mode'];
     foreach ($items as $id => &$item) {
       // Since we can't really know what happens in entity_view() and render(),

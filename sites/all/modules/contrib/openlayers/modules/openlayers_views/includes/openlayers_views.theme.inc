@@ -16,9 +16,9 @@ function theme_openlayers_views_group_display_item($args) {
   // Build output
   return ((!empty($args['name'])) ?
     '<h2 class="point-title openlayers-views-group-feature-name">'
-    . $args['name'] 
+    . $args['name']
     . '</h2>' : '') .
-    (!empty($args['description']) ? 
+    (!empty($args['description']) ?
     '<div class="point-content openlayers-views-group-feature-description">'
     . $args['description']
     . '</div>' : '');

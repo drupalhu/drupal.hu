@@ -7,11 +7,11 @@
 class SearchApiAlterBundleFilter extends SearchApiAbstractAlterCallback {
 
   public function supportsIndex(SearchApiIndex $index) {
-    return self::hasBundles(entity_get_info($index->entity_type));
+    return ($info = entity_get_info($index->item_type)) && self::hasBundles($info);
   }
 
   public function alterItems(array &$items) {
-    $info = entity_get_info($this->index->entity_type);
+    $info = entity_get_info($this->index->item_type);
     if (self::hasBundles($info) && isset($this->options['bundles'])) {
       $bundles = array_flip($this->options['bundles']);
       $default = (bool) $this->options['default'];
@@ -25,7 +25,7 @@ class SearchApiAlterBundleFilter extends SearchApiAbstractAlterCallback {
   }
 
   public function configurationForm() {
-    $info = entity_get_info($this->index->entity_type);
+    $info = entity_get_info($this->index->item_type);
     if (self::hasBundles($info)) {
       $options = array();
       foreach ($info['bundles'] as $bundle => $bundle_info) {
@@ -37,8 +37,8 @@ class SearchApiAlterBundleFilter extends SearchApiAbstractAlterCallback {
           '#title' => t('Which items should be indexed?'),
           '#default_value' => isset($this->options['default']) ? $this->options['default'] : 1,
           '#options' => array(
-            1 => t('All but those from one of the listed bundles.'),
-            0 => t('Only those from the listed bundles.'),
+            1 => t('All but those from one of the selected bundles'),
+            0 => t('Only those from the selected bundles'),
           ),
         ),
         'bundles' => array(

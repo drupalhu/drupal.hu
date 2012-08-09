@@ -5,8 +5,8 @@ This module provides a framework for easily creating searches on any entity
 known to Drupal, using any kind of search engine. For site administrators, it is
 a great alternative to other search solutions, since it already incorporates
 facetting support and the ability to use the Views module for displaying search
-results, filters, etc. Also, with the Apache Solr integration [1], a high-performance
-search engine is available for use with the Search API.
+results, filters, etc. Also, with the Apache Solr integration [1], a
+high-performance search engine is available for use with the Search API.
 
 If you need help with the module, please post to the project's issue queue [2].
 
@@ -35,11 +35,15 @@ Terms as used in this module.
   e.g. be some tables in a database, a connection to a Solr server or other
   external services, etc.
 - Index:
-  One set of data for searching a specific entity. What and how data is
-  indexed is determined by its settings. Also keeps track of which items still
-  need to be indexed (or re-indexed, if they were updated). Needs to lie on a
-  server in order to be really used (although configuration is independent of a
-  server).
+  A configuration object for indexing data of a specific type. What and how data
+  is indexed is determined by its settings. Also keeps track of which items
+  still need to be indexed (or re-indexed, if they were updated). Needs to lie
+  on a server in order to be really used (although configuration is independent
+  of a server).
+- Item type:
+  A type of data which can be indexed (i.e., for which indexes can be created).
+  Most entity types (like Content, User, Taxonomy term, etc.) are available, but
+  possibly also other types provided by contrib modules.
 - Entity:
   One object of data, usually stored in the database. Might for example
   be a node, a user or a file.
@@ -80,6 +84,26 @@ Terms as used in this module.
 Information for users
 ---------------------
 
+IMPORTANT: Access checks
+  In general, the Search API doesn't contain any access checks for search
+  results. It is your responsibility to ensure that only accessible search
+  results are displayed – either by only indexing such items, or by filtering
+  appropriately at search time.
+  For search on general site content (item type "Node"), this is already
+  supported by the Search API. To enable this, go to the index's "Workflow" tab
+  and activate the "Node access" data alteration. This will add the necessary
+  field, "Node access information", to the index (which you have to leave as
+  "indexed"). If both this field and "Published" are set to be indexed, access
+  checks will automatically be executed at search time, showing only those
+  results that a user can view. Some search types (e.g., search views) also
+  provide the option to disable these access checks for individual searches.
+  Please note, however, that these access checks use the indexed data, while
+  usually the current data is displayed to users. Therefore, users might still
+  see inappropriate content as long as items aren't indexed in their latest
+  state. If you can't allow this for your site, please use the index's "Index
+  immediately" feature (explained below) or possibly custom solutions for
+  specific search types, if available.
+
 As stated above, you will need at least one other module to use the Search API,
 namely one that defines a service class (e.g. search_api_db ("Database search"),
 provided with this module).
@@ -117,22 +141,18 @@ indexed again. You can also select a server that is at the moment disabled, or
 choose to let the index lie on no server at all, for the time being. Note,
 however, that you can only create enabled indexes on an enabled server. Also,
 disabling a server will disable all indexes that lie on it.
-Lastly, the cron limit option allows you to set whether, and how many, items
-will be indexed for this index when cron runs (and the index is enabled). Items
-can also be indexed manually, so even if this is set to 0, the index can still
-be used.
-
-- Index workflow
-  (Configuration > Search API > [Index name] > Workflow)
-
-This page lets you customize how the created index works, and what metadata will
-be available, by selecting data alterations and processors (see the glossary for
-further explanations).
-Data alterations usually only add one or more fields to the entity and their
-order is mostly irrelevant.
-The order of processors, however, often is important. Read the processors'
-descriptions or consult their documentation for determining how to use them most
-effectively.
+The "Index items immediately" option specifies that you want items to be
+directly re-indexed after being changed, instead of waiting for the next cron
+run. Use this if it is important that users see no stale data in searches, and
+only when your setup enables relatively fast indexing.
+Lastly, the "Cron batch size" option allows you to set whether items will be
+indexed when cron runs (as long as the index is enabled), and how many items
+will be indexed in a single batch. The best value for this setting depends on
+how time-consuming indexing is for your setup, which in turn depends mostly on
+the server used and the enabled data alterations. You should set it to a number
+of items which can easily be indexed in 10 seconds' time. Items can also be
+indexed manually, or directly when they are changed, so even if this is set to
+0, the index can still be used.
 
 - Indexed fields
   (Configuration > Search API > [Index name] > Fields)
@@ -149,6 +169,18 @@ form at the bottom of the page. For instance, you might want to index the
 author's username to the indexed data of a node, and you need to add the "Body"
 entity to the node when you want to index the actual text it contains.
 
+- Index workflow
+  (Configuration > Search API > [Index name] > Workflow)
+
+This page lets you customize how the created index works, and what metadata will
+be available, by selecting data alterations and processors (see the glossary for
+further explanations).
+Data alterations usually only add one or more fields to the entity and their
+order is mostly irrelevant.
+The order of processors, however, often is important. Read the processors'
+descriptions or consult their documentation for determining how to use them most
+effectively.
+
 - Index status
   (Configuration > Search API > [Index name] > Status)
 
@@ -156,7 +188,7 @@ On this page you can view how much of the entities are already indexed and also
 control indexing. With the "Index now" button (displayed only when there are
 still unindexed items) you can directly index a certain number of "dirty" items
 (i.e., items not yet indexed in their current state). Setting "-1" as the number
-will index all of those items, similar to the cron limit setting.
+will index all of those items, similar to the cron batch size setting.
 When you change settings that could affect indexing, and the index is not
 automatically marked for re-indexing, you can do this manually with the
 "Re-index content" button. All items in the index will be marked as dirty and be
@@ -169,6 +201,13 @@ index. Use this only if completely wrong data has been indexed. It is also done
 automatically when the index scheme or server settings change too drastically to
 keep on using the old data.
 
+- Hidden settings
+
+search_api_index_worker_callback_runtime:
+  By changing this variable, you can determine the time (in seconds) the Search
+  API will spend indexing (for all indexes combined) in each cron run. The
+  default is 15 seconds.
+
 
 Information for developers
 --------------------------
@@ -178,6 +217,7 @@ Information for developers
  | searchable with the Search API, your module will need to implement
  | hook_entity_property_info() in addition to the normal hook_entity_info().
  | hook_entity_property_info() is documented in the entity module.
+ | For making certain non-entities searchable, see "Item type" below.
  | For custom field types to be available for indexing, provide a
  | "property_type" key in hook_field_info(), and optionally a callback at the
  | "property_callbacks" key.
@@ -187,7 +227,7 @@ Information for developers
 
 Apart from improving the module itself, developers can extend search
 capabilities provided by the Search API by providing implementations for one (or
-several) of the following classes. Detailled documentation on the methods that
+several) of the following classes. Detailed documentation on the methods that
 need to be implemented are always available as doc comments in the respective
 interface definition (all found in their respective files in the includes/
 directory). The details for hooks can be looked up in the search_api.api.php
@@ -229,17 +269,53 @@ For the query class to become available (other than through manual creation),
 you need a custom service class where you override the query() method to return
 an instance of your query class.
 
+- Item type
+  Interface: SearchApiDataSourceControllerInterface
+  Base class: SearchApiAbstractDataSourceController
+  Hook: hook_search_api_item_type_info()
+
+If you want to index some data which is not defined as an entity, you can
+specify it as a new item type here. For defining a new item type, you have to
+create a data source controller for the type and track new, changed and deleted
+items of the type by calling the search_api_track_item_*() functions.
+An instance of the data source controller class will then be used by indexes
+when handling items of your newly-defined type.
+
+If you want to make external data that is indexed on some search server
+available to the Search API, there is a handy base class for your data source
+controller (SearchApiExternalDataSourceController in
+includes/datasource_external.inc) which you can extend. For a minimal use case,
+you will then only have to define the available fields that can be retrieved by
+the server.
+
+- Data type
+  Hook: hook_search_api_data_type_info()
+
+You can specify new data types for indexing fields. These new types can then be
+selected on indexes' „Fields“ tabs. You just have to implement the hook,
+returning some information on your data type, and specify in your module's
+documentation the format of your data type and how it should be used.
+
+For a custom data type to have an effect, in most cases the server's service
+class has to support that data type. A service class can advertize its support
+of a data type by declaring support for the "search_api_data_type_TYPE" feature
+in its supportsFeature() method. If this support isn't declared, a fallback data
+type is automatically used instead of the custom one.
+
+If a field is indexed with a custom data type, its entry in the index's options
+array will have the selected type in "real_type", while "type" contains the
+fallback type (which is always one of the default data types, as returned by
+search_api_default_field_types().
+
 - Data-alter callbacks
-  Documented in example_random_alter() in the search_api.api.php file
+  Interface: SearchApiAlterCallbackInterface
+  Base class: SearchApiAbstractAlterCallback
   Hook: hook_search_api_alter_callback_info()
 
-Data alter callbacks aren't objects, but simple functions that take an index
-object and the items to alter (by reference) as parameters and should return
-information on all added fields in the format expected by
-hook_entity_property_info(). They are only called when indexing, or when
-selecting the fields to index (in the latter case, with an empty array). For
-adding additional information to search results, you have to use a processor.
-See the data-alter callbacks in search_api.module for examples.
+Data alter callbacks can be used to change the field data of indexed items, or
+to prevent certain items from being indexed. They are only used when indexing,
+or when selecting the fields to index. For adding additional information to
+search results, you have to use a processor.
 Data-alter callbacks are called "data alterations" in the UI.
 
 - Processors
@@ -271,11 +347,14 @@ Included components
 
   * URL field
     Provides a field with the URL for displaying the entity.
-  * Fulltext field
-    Offers the ability to add additional fulltext fields to the entity,
-    containing the data from one or more other fields. Use this, e.g., to have a
-    single field containing all data that should be searchable, or to make the
-    text from a string field, like a taxonomy term, also fulltext-searchable.
+  * Aggregated fields
+    Offers the ability to add additional fields to the entity, containing the
+    data from one or more other fields. Use this, e.g., to have a single field
+    containing all data that should be searchable, or to make the text from a
+    string field, like a taxonomy term, also fulltext-searchable.
+    The type of aggregation can be selected from a set of values: you can, e.g.,
+    collect the text data of all contained fields, or add them up, count their
+    values, etc.
   * Bundle filter
     Enables the admin to prevent entities from being indexed based on their
     bundle (content type for nodes, vocabulary for taxonomy terms, etc.).
@@ -284,6 +363,11 @@ Included components
     on the site. The view mode used can be selected.
     Note, however, that this might not work for entities of all types. All core
     entities except files are supported, though.
+  * Index hierarchy
+    Allows to index a hierarchical field along with all its parents. Most
+    importantly, this can be used to index taxonomy term references along with
+    all parent terms. This way, when an item, e.g., has the term "New York", it
+    will also be matched when filtering for "USA" or "North America".
 
 - Processors
 
@@ -300,6 +384,10 @@ Included components
     This processor allows you to specify how indexed fulltext content is split
     into seperate tokens – which characters are ignored and which treated as
     white-space that seperates words.
+  * Stopwords
+    Enables the admin to specify a stopwords file, the words contained in which
+    will be filtered out of the text data indexed. This can be used to exclude
+    too common words from indexing, for servers not supporting this natively.
 
 - Additional modules
 

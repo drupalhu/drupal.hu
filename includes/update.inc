@@ -410,15 +410,18 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE data IS NOT NULL")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE data LIKE :block", array(
+        ':block' => '%' . db_like(serialize('block')) . '%',
+      ))
+      ->fetchField();
   }
   // Now do the batch update of the user-specific block visibility settings.
   $limit = 100;
   $result = db_select('users', 'u')
     ->fields('u', array('uid', 'data'))
     ->condition('uid', $sandbox['last_user_processed'], '>')
+    ->condition('data', '%' . db_like(serialize('block')) . '%', 'LIKE')
     ->orderBy('uid', 'ASC')
-    ->where('data IS NOT NULL')
     ->range(0, $limit)
     ->execute();
   foreach ($result as $row) {
@@ -746,7 +749,7 @@ function update_fix_d7_requirements() {
     // Rename 'site_offline_message' variable to 'maintenance_mode_message'
     // and 'site_offline' variable to 'maintenance_mode'.
     // Old variable is removed in update for system.module, see
-    // system_update_7036().
+    // system_update_7072().
     if ($message = variable_get('site_offline_message', NULL)) {
       variable_set('maintenance_mode_message', $message);
     }
@@ -814,9 +817,6 @@ function update_fix_d7_install_profile() {
       'php' => DRUPAL_MINIMUM_PHP,
       'files' => array(),
     );
-
-    // The install profile is always required.
-    $file->info['required'] = TRUE;
 
     $values = array(
       'filename' => $filename,
@@ -1486,5 +1486,5 @@ function update_retrieve_dependencies() {
  */
 
 /**
- * @} End of "defgroup update-api-6.x-to-7.x"
+ * @} End of "defgroup update-api-6.x-to-7.x".
  */

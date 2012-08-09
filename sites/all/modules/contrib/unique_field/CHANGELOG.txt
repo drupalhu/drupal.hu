@@ -2,6 +2,11 @@
  * Revisions log for unique_field
  */
 
+version 7.x-1.0-rc1 (2011/07/25)
+-- #1163924 by derhasi: fixing support for multilingual fields
+-- #1185904: reworking query code to use EntityFieldQuery
+-- #1185902: adding functional tests for core functionality
+
 version 2011/06/11 (7.x-1.0-beta2)
 -- #1037904 by Boobaa: fixing compatibility with localized content
 

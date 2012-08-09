@@ -65,20 +65,24 @@ function ctools_search_result_content_type_render($subtype, $conf, $panel_args, 
 
   $results = '';
 
-    // Only search if there are keywords or non-empty conditions.
-    if ($keys || !empty($conditions)) {
+  // Only search if there are keywords or non-empty conditions.
+  if ($keys || !empty($conditions)) {
 
-      // Collect the search results.
-      $results = search_data($keys, $info['module'], $conditions);
+    // Collect the search results.
+    $results = search_data($keys, $info['module'], $conditions);
+
+    // A workaround for ApacheSolr.
+    // @todo see http://drupal.org/node/1343142#comment-5495248
+    // This workaround is to be removed when a better one can be written.
+    if (!empty($results['search_results']['#results'])) {
+      $results['#results'] = $results['search_results']['#results'];
     }
+  }
 
   if (!empty($conf['log'])) {
     // Log the search keys:
     watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), $_GET['q']));
   }
-
-  // Collect the search results:
-  $results = search_data($keys, $conf['type'], $conditions);
 
   if (!empty($results['#results'])) {
     $output = "<ol class=\"search-results $conf[type]-results\">\n";

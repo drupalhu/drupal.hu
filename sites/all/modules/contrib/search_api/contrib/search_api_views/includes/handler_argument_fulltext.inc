@@ -17,7 +17,7 @@ class SearchApiViewsHandlerArgumentFulltext extends SearchApiViewsHandlerArgumen
   /**
    * Extend the options form a bit.
    */
-  public function options_form(array &$form, array &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $index = search_api_index_load(substr($this->table, 17));

@@ -33,7 +33,12 @@ interface SearchApiQueryInterface {
    *     implementation to use.
    *   - 'search id': A string that will be used as the identifier when storing
    *     this search in the Search API's static cache.
-   *   All options are optional.
+   *   - search_api_access_account: The account which will be used for entity
+   *     access checks, if available and enabled for the index.
+   *   - search_api_bypass_access: If set to TRUE, entity access checks will be
+   *     skipped, even if enabled for the index.
+   *   All options are optional. Third-party modules might define and use other
+   *   options not listed here.
    *
    * @throws SearchApiException
    *   If a search on that index (or with those options) won't be possible.
@@ -127,7 +132,7 @@ interface SearchApiQueryInterface {
    *
    * @param $field
    *   The field to sort by. The special fields 'search_api_relevance' (sort by
-   *   relevance) and 'search_api_id' (sort by entity id) may be used.
+   *   relevance) and 'search_api_id' (sort by item id) may be used.
    * @param $order
    *   The order to sort items in - either 'ASC' or 'DESC'.
    *
@@ -170,10 +175,10 @@ interface SearchApiQueryInterface {
    *       already ready-to-use. This allows search engines (or postprocessors)
    *       to store extracted fields so other modules don't have to extract them
    *       again. This fields should always be checked by modules that want to
-   *       use field contents of the result entities.
-   *     - entity: (optional) If set, the fully loaded entity. This field should
-   *       always be used by modules using search results, to avoid duplicate
-   *       entity loads.
+   *       use field contents of the result items.
+   *     - entity: (optional) If set, the fully loaded result item. This field
+   *       should always be used by modules using search results, to avoid
+   *       duplicate item loads.
    *     - excerpt: (optional) If set, an HTML text containing highlighted
    *       portions of the fulltext that match the query.
    *   - warnings: A numeric array of translated warning messages that may be
@@ -191,6 +196,25 @@ interface SearchApiQueryInterface {
    *   and 'result' always have to be set, all other entries are optional.
    */
   public function execute();
+
+  /**
+   * Prepares the query object for the search.
+   *
+   * This method should always be called by execute() and contain all necessary
+   * operations before the query is passed to the server's search() method.
+   */
+  public function preExecute();
+
+  /**
+   * Postprocess the search results before they are returned.
+   *
+   * This method should always be called by execute() and contain all necessary
+   * operations after the results are returned from the server.
+   *
+   * @param array $results
+   *   The results returned by the server, which may be altered.
+   */
+  public function postExecute(array &$results);
 
   /**
    * @return SearchApiIndex
@@ -356,7 +380,12 @@ class SearchApiQuery implements SearchApiQueryInterface {
    *     implementation to use.
    *   - 'search id': A string that will be used as the identifier when storing
    *     this search in the Search API's static cache.
-   *   All options are optional.
+   *   - search_api_access_account: The account which will be used for entity
+   *     access checks, if available and enabled for the index.
+   *   - search_api_bypass_access: If set to TRUE, entity access checks will be
+   *     skipped, even if enabled for the index.
+   *   All options are optional. Third-party modules might define and use other
+   *   options not listed here.
    *
    * @throws SearchApiException
    *   If a search on that index (or with those options) won't be possible.
@@ -371,7 +400,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
     if (isset($options['parse mode'])) {
       $modes = $this->parseModes();
       if (!isset($modes[$options['parse mode']])) {
-        throw new SearchApiException(t('Unknown parse mode: !mode.', array('!mode' => $options['parse mode'])));
+        throw new SearchApiException(t('Unknown parse mode: @mode.', array('@mode' => $options['parse mode'])));
       }
     }
     $this->index = $index;
@@ -439,7 +468,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
             continue;
           }
           if ($quoted) {
-            if ($v[drupal_strlen($v)-1] == '"') {
+            if (substr($v, -1) == '"') {
               $v = substr($v, 0, -1);
               $str .= ' ' . $v;
               $ret[$k] = $str;
@@ -451,7 +480,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
             }
           }
           elseif ($v[0] == '"') {
-            $len = drupal_strlen($v);
+            $len = strlen($v);
             if ($len > 1 && $v[$len-1] == '"') {
               $ret[$k] = substr($v, 1, -1);
             }
@@ -520,7 +549,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
   public function fields(array $fields) {
     $fulltext_fields = $this->index->getFulltextFields();
     foreach (array_diff($fields, $fulltext_fields) as $field) {
-      throw new SearchApiException(t('Trying to search on field !field which is no indexed fulltext field.', array('!field' => $field)));
+      throw new SearchApiException(t('Trying to search on field @field which is no indexed fulltext field.', array('@field' => $field)));
     }
     $this->fields = $fields;
     return $this;
@@ -571,7 +600,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
    *
    * @param $field
    *   The field to sort by. The special fields 'search_api_relevance' (sort by
-   *   relevance) and 'search_api_id' (sort by entity id) may be used.
+   *   relevance) and 'search_api_id' (sort by item id) may be used.
    * @param $order
    *   The order to sort items in - either 'ASC' or 'DESC'.
    *
@@ -588,11 +617,11 @@ class SearchApiQuery implements SearchApiQueryInterface {
       'search_api_id' => array('type' => 'integer'),
     );
     if (empty($fields[$field])) {
-      throw new SearchApiException(t('Trying to sort on unknown field !field.', array('!field' => $field)));
+      throw new SearchApiException(t('Trying to sort on unknown field @field.', array('@field' => $field)));
     }
     $type = $fields[$field]['type'];
     if (search_api_is_list_type($type) || search_api_is_text_type($type)) {
-      throw new SearchApiException(t('Trying to sort on field !field of illegal type !type.', array('!field' => $field, '!type' => $type)));
+      throw new SearchApiException(t('Trying to sort on field @field of illegal type @type.', array('@field' => $field, '@type' => $type)));
     }
     $order = strtoupper(trim($order)) == 'DESC' ? 'DESC' : 'ASC';
     $this->sort[$field] = $order;
@@ -635,10 +664,10 @@ class SearchApiQuery implements SearchApiQueryInterface {
    *       already ready-to-use. This allows search engines (or postprocessors)
    *       to store extracted fields so other modules don't have to extract them
    *       again. This fields should always be checked by modules that want to
-   *       use field contents of the result entities.
-   *     - entity: (optional) If set, the fully loaded entity. This field should
-   *       always be used by modules using search results, to avoid duplicate
-   *       entity loads.
+   *       use field contents of the result items.
+   *     - entity: (optional) If set, the fully loaded result item. This field
+   *       should always be used by modules using search results, to avoid
+   *       duplicate item loads.
    *     - excerpt: (optional) If set, an HTML text containing highlighted
    *       portions of the fulltext that match the query.
    *   - warnings: A numeric array of translated warning messages that may be
@@ -658,24 +687,8 @@ class SearchApiQuery implements SearchApiQueryInterface {
   public final function execute() {
     $start = microtime(TRUE);
 
-    // Add filter for languages.
-    if (isset($this->options['languages'])) {
-      $this->addLanguages($this->options['languages']);
-    }
-
-    // Add fulltext fields, unless set
-    if ($this->fields === NULL) {
-      $this->fields = $this->index->getFulltextFields();
-    }
-
-    // Call pre-execute hook.
+    // Prepare the query for execution by the server.
     $this->preExecute();
-
-    // Preprocess query.
-    $this->index->preprocessSearchQuery($this);
-
-    // Let modules alter the query.
-    drupal_alter('search_api_query', $this);
 
     $pre_search = microtime(TRUE);
 
@@ -684,11 +697,8 @@ class SearchApiQuery implements SearchApiQueryInterface {
 
     $post_search = microtime(TRUE);
 
-    // Call post-execute hook.
+    // Postprocess the search results.
     $this->postExecute($response);
-
-    // Postprocess results.
-    $this->index->postprocessSearchResults($response, $this);
 
     $end = microtime(TRUE);
     $response['performance']['complete'] = $end - $start;
@@ -720,7 +730,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
             unset($langs_to_add[$lang]);
           }
           else {
-            throw new SearchApiException(t('Impossible combination of filters and languages. There is a filter for "!language", but allowed languages are: "!languages".', array('!language' => $lang, '!languages' => implode('", "', $languages))));
+            throw new SearchApiException(t('Impossible combination of filters and languages. There is a filter for "@language", but allowed languages are: "@languages".', array('@language' => $lang, '@languages' => implode('", "', $languages))));
           }
         }
       }
@@ -745,17 +755,42 @@ class SearchApiQuery implements SearchApiQueryInterface {
   }
 
   /**
-   * Pre-execute hook for modifying search behaviour.
+   * Prepares the query object for the search.
+   *
+   * This method should always be called by execute() and contain all necessary
+   * operations before the query is passed to the server's search() method.
    */
-  protected function preExecute() {}
+  public function preExecute() {
+    // Add filter for languages.
+    if (isset($this->options['languages'])) {
+      $this->addLanguages($this->options['languages']);
+    }
+
+    // Add fulltext fields, unless set
+    if ($this->fields === NULL) {
+      $this->fields = $this->index->getFulltextFields();
+    }
+
+    // Preprocess query.
+    $this->index->preprocessSearchQuery($this);
+
+    // Let modules alter the query.
+    drupal_alter('search_api_query', $this);
+  }
 
   /**
-   * Post-execute hook for modifying search behaviour.
+   * Postprocess the search results before they are returned.
+   *
+   * This method should always be called by execute() and contain all necessary
+   * operations after the results are returned from the server.
    *
    * @param array $results
    *   The results returned by the server, which may be altered.
    */
-  protected function postExecute(array &$results) {}
+  public function postExecute(array &$results) {
+    // Postprocess results.
+    $this->index->postprocessSearchResults($results, $this);
+  }
 
   /**
    * @return SearchApiIndex

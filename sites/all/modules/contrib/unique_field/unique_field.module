@@ -5,7 +5,7 @@
  * Provides content validation requirement that a node's author,
  * language, taxonomy terms, or other fields are unique.
  *
- * Unique field module
+ * Unique Field module
  * Compatible with Drupal 7.x
  *
  * By Joe Turgeon [http://arithmetric.com]
@@ -35,13 +35,13 @@ define('UNIQUE_FIELD_SHOW_MATCHES', 'show_matches');
 function unique_field_help($path, $arg) {
   switch ($path) {
     case 'admin/help#unique_field':
-      $output = '<p>' . t("The Unique Field module allows administrators to require that content supplied for specified fields is unique. For example, you may require that each node has a unique title or a different author. For configuration options, please see the <em>Unique field restrictions</em> section of a content type's administration page.") . '</p>';
+      $output = '<p>' . t("The Unique Field module allows administrators to require that content supplied for specified fields is unique. For example, you may require that each node has a unique title or a different author. For configuration options, please see the <em>Unique Field restrictions</em> section of a content type's administration page.") . '</p>';
       return $output;
   }
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function unique_field_permission() {
   return array(
@@ -57,7 +57,7 @@ function unique_field_permission() {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function unique_field_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id === 'node_type_form' && user_access('unique_field_perm_admin') && isset($form['#node_type'])) {
@@ -72,7 +72,7 @@ function unique_field_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implement hook_node_validate().
+ * Implements hook_node_validate().
  */
 function unique_field_node_validate($node, $form) {
   // skip validation if deleting a node or if override value is set
@@ -109,10 +109,11 @@ function unique_field_node_validate($node, $form) {
         else {
           // Ensure that the field content exists. For example, if field
           // permissions are enabled, the field may be missing for some users.
-          if (!isset($node->{$field}[$node->language]) || !is_array($node->{$field}[$node->language])) {
+          // Make sure to use the field API function, e.g. to respect language.
+          $fvalues = field_get_items('node', $node, $field);
+          if (empty($fvalues)) {
             continue;
           }
-          $fvalues = $node->{$field}[$node->language];
           $field_info = field_info_field($field);
           $field_keys = array_keys($field_info['columns']);
           foreach ($fvalues as $index => $value) {
@@ -156,10 +157,11 @@ function unique_field_node_validate($node, $form) {
         else {
           // Ensure that the field content exists. For example, if field
           // permissions are enabled, the field may be missing for some users.
-          if (!isset($node->{$field}[$node->language]) || !is_array($node->{$field}[$node->language])) {
+          // Make sure to use the field API function, e.g. to respect language.
+          $fvalues = field_get_items('node', $node, $field);
+          if (empty($fvalues)) {
             continue;
           }
-          $fvalues = $node->{$field}[$node->language];
           foreach ($fvalues as $index => $value) {
             if (!is_numeric($index) || !is_array($value)) {
               unset($fvalues[$index]);
@@ -246,83 +248,62 @@ function unique_field_node_validate($node, $form) {
  * Find nodes with a matching field value within a given scope.
  */
 function unique_field_match_value($field, $values, $scope, $ntype = NULL, $nlanguage = NULL) {
-  // initialize query variables
-  $qtbl = NULL;
-  $qwhere = db_and();
+  // Initialize EntityFieldQuery
+  $entity_type = 'node';
+  $efq = new EntityFieldQuery();
+  $efq->entityCondition('entity_type', $entity_type);
 
-  // generate query where clause for title field
+  // Add query conditions depending on the type of field
   if ($field === UNIQUE_FIELD_FIELDS_TITLE) {
-    $qwhere->condition('node.title', $values);
+    // Query condition for bundle title property
+    $efq->propertyCondition('title', $values);
   }
-
-  // generate query where clause for author field
   elseif ($field === UNIQUE_FIELD_FIELDS_AUTHOR) {
-    $qwhere->condition('node.uid', $values);
+    // Query condition for bundle author property
+    $efq->propertyCondition('uid', $values);
   }
-
-  // generate query where clause for language field
   elseif ($field === UNIQUE_FIELD_FIELDS_LANGUAGE) {
-    $qwhere->condition('node.language', $values);
+    // Query condition for bundle language property
+    $efq->propertyCondition('language', $values);
   }
-
-  // generate query where clause for a CCK field
   else {
-    $f = field_info_field($field);
-    $qtbl = 'field_data_' . $field;
-    $qfwhere = db_or();
-    $queriable = FALSE;
-
-    // check all entries in the field
+    // Query condition for other fields
+    $field_info = field_info_field($field);
+    // Check all items/values
     foreach ($values as $index => $value) {
-      $qwhere_val = db_and();
-      // check all fields/columns in the entry
+      // Check all columns
       foreach ($value as $key => $val) {
-        // skip values that are not stored in the database
-        if (!isset($f['columns'][$key]) || !is_array($f['columns'][$key])) {
+        // Skip values that are not stored in the database
+        if (!isset($field_info['columns'][$key]) || !is_array($field_info['columns'][$key])) {
           continue;
         }
-        // skip if the value is an empty string or is not a scalar
+        // Skip if the value is an empty string or is not a scalar
         if (!strlen($val) || !is_scalar($val)) {
           continue;
         }
-        // generate comparison statement depending on field type
-        $dbfield = $qtbl . '.' . $field . '_' . $key;
-        $qwhere_val->condition($dbfield, $val);
-        $queriable = TRUE;
+        $efq->fieldCondition($field, $key, $val);
       }
-      $qfwhere->condition($qwhere_val);
     }
-
-    // if no values can be queried, then return no matches
-    if (!$queriable) {
-      return array();
-    }
-
-    $qwhere->condition($qfwhere);
   }
 
-  // add query where clause if scope is limited to content type
-  if ($scope === UNIQUE_FIELD_SCOPE_TYPE && is_string($ntype) && !empty($ntype)) {
-    $qwhere->condition('node.type', $ntype);
+  // Add query conditions for the scope setting
+  if ($scope === UNIQUE_FIELD_SCOPE_TYPE && !empty($ntype)) {
+    // Query condition for the bundle (content type) scope
+    $efq->entityCondition('bundle', $ntype);
+  }
+  elseif ($scope === UNIQUE_FIELD_SCOPE_LANGUAGE && !empty($nlanguage)) {
+    // Query condition for the language scope
+    $efq->propertyCondition('language', $nlanguage);
   }
 
-  // add query where clause if scope is limited to same language
-  elseif ($scope === UNIQUE_FIELD_SCOPE_LANGUAGE && is_string($nlanguage)) {
-    $qwhere->condition('node.language', $nlanguage);
-  }
-
-  // do query
-  $query = db_select('node');
-  $query->addField('node', 'nid');
-  if (!empty($qtbl)) {
-    $onclause = 'node.vid = ' . $qtbl . '.revision_id';
-    $query->join($qtbl, $qtbl, $onclause);
-  }
-  $result = $query->condition($qwhere)->execute()->fetchAll();
+  // Execute query and collect results
+  $result = $efq->execute();
   $nids = array();
-  foreach ($result as $obj) {
-    if ($obj && $obj->nid) {
-      $nids[] = $obj->nid;
+  if (isset($result[$entity_type]) && is_array($result[$entity_type])) {
+    foreach ($result[$entity_type] as $item) {
+      if (!empty($item->nid)) {
+        $nids[] = $item->nid;
+      }
     }
   }
   return array_unique($nids);
@@ -351,7 +332,7 @@ function unique_field_node_settings_form(&$form) {
   // build the form
   $form['unique_field'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Unique field restrictions'),
+    '#title' => t('Unique Field restrictions'),
     '#weight' => 1,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
