@@ -15,4 +15,4 @@ sites/*/private
 #Den
 dhu.node
 .ht-php-error.log
-
+.htaccess.loc
