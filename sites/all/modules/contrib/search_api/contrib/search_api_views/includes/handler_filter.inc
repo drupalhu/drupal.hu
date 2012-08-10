@@ -60,10 +60,10 @@ class SearchApiViewsHandlerFilter extends views_handler_filter {
    */
   public function query() {
     while (is_array($this->value)) {
-      $this->value = $this->value ? array_shift($this->value) : NULL;
+      $this->value = $this->value ? reset($this->value) : NULL;
     }
     if ($this->value) {
-      $this->query->condition($this->real_field, $this->value, $this->operator);
+      $this->query->condition($this->real_field, $this->value, $this->operator, $this->options['group']);
     }
   }
 

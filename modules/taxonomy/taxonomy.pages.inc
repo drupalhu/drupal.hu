@@ -77,10 +77,51 @@ function taxonomy_term_feed($term) {
 }
 
 /**
- * Helper function for autocompletion
+ * Page callback: Outputs JSON for taxonomy autocomplete suggestions.
+ *
+ * Path: taxonomy/autocomplete
+ *
+ * This callback outputs term name suggestions in response to Ajax requests
+ * made by the taxonomy autocomplete widget for taxonomy term reference
+ * fields. The output is a JSON object of plain-text term suggestions, keyed by
+ * the user-entered value with the completed term name appended.  Term names
+ * containing commas are wrapped in quotes.
+ *
+ * For example, suppose the user has entered the string 'red fish, blue' in the
+ * field, and there are two taxonomy terms, 'blue fish' and 'blue moon'. The
+ * JSON output would have the following structure:
+ * @code
+ *   {
+ *     "red fish, blue fish": "blue fish",
+ *     "red fish, blue moon": "blue moon",
+ *   };
+ * @endcode
+ *
+ * @param $field_name
+ *   The name of the term reference field.
+ * @param $tags_typed
+ *   (optional) A comma-separated list of term names entered in the
+ *   autocomplete form element. Only the last term is used for autocompletion.
+ *   Defaults to '' (an empty string).
+ *
+ * @see taxonomy_menu()
+ * @see taxonomy_field_widget_info()
  */
 function taxonomy_autocomplete($field_name, $tags_typed = '') {
-  $field = field_info_field($field_name);
+  // If the request has a '/' in the search text, then the menu system will have
+  // split it into multiple arguments, recover the intended $tags_typed.
+  $args = func_get_args();
+  // Shift off the $field_name argument.
+  array_shift($args);
+  $tags_typed = implode('/', $args);
+
+  // Make sure the field exists and is a taxonomy field.
+  if (!($field = field_info_field($field_name)) || $field['type'] !== 'taxonomy_term_reference') {
+    // Error string. The JavaScript handler will realize this is not JSON and
+    // will display it as debugging information.
+    print t('Taxonomy field @field_name not found.', array('@field_name' => $field_name));
+    exit;
+  }
 
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
   $tags_typed = drupal_explode_tags($tags_typed);

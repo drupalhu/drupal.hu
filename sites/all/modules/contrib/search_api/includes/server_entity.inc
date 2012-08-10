@@ -11,36 +11,50 @@ class SearchApiServer extends Entity {
   /* Database values that will be set when object is loaded: */
 
   /**
+   * The primary identifier for a server.
+   *
    * @var integer
    */
   public $id = 0;
 
   /**
+   * The displayed name for a server.
+   *
    * @var string
    */
   public $name = '';
 
   /**
+   * The machine name for a server.
+   *
    * @var string
    */
   public $machine_name = '';
 
   /**
+   * The displayed description for a server.
+   *
    * @var string
    */
   public $description = '';
 
   /**
+   * The id of the service class to use for this server.
+   *
    * @var string
    */
   public $class = '';
 
   /**
+   * The options used to configure the service object.
+   *
    * @var array
    */
   public $options = array();
 
   /**
+   * A flag indicating whether the server is enabled.
+   *
    * @var integer
    */
   public $enabled = 1;
@@ -116,7 +130,7 @@ class SearchApiServer extends Entity {
         $this->proxy = new $class['class']($this);
       }
       if (!($this->proxy instanceof SearchApiServiceInterface)) {
-        throw new SearchApiException(t('Search server with machine name !name specifies illegal service class !class.', array('!name' => $this->machine_name, '!class' => $this->class)));
+        throw new SearchApiException(t('Search server with machine name @name specifies illegal service class @class.', array('@name' => $this->machine_name, '@class' => $this->class)));
       }
     }
   }

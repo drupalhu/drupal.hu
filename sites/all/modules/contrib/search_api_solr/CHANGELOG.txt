@@ -1,5 +1,45 @@
-Search API Solr search 1.0, dev (xx/xx/xxxx):
+Search API Solr search 1.x, dev (xx/xx/xxxx):
 ---------------------------------------------
+
+Search API Solr search 1.0, RC 2 (05/23/2012):
+----------------------------------------------
+- Fixed escaping of error messages.
+- #1480170 by kotnik: Fixed return value of hook_requirements().
+- #1500210 by ezra-g, acrollet, jsacksick: Fixed errors when installing with
+  non-default installation profiles.
+- #1444432 by Damien Tournoud, jsacksick: Added field-level boosting.
+- #1302406 by Steven Jones: Fixed autoload problem during installation.
+- #1340244 by drunken monkey, alanomaly: Added more helpful error messages.
+
+Search API Solr search 1.0, RC 1 (11/10/2011):
+----------------------------------------------
+- #1308638 by drunken monkey: Adapted to new structure of field settings.
+- #1308498 by zenlan, drunken monkey: Added flexibility for facet fields.
+- #1319544 by drunken monkey: Fixed never delete contents of read-only indexes.
+- #1309650 by jonhattan, drunken monkey: Added support for the Libraries API.
+
+Search API Solr search 1.0, Beta 4 (09/08/2011):
+------------------------------------------------
+- #1230536 by thegreat, drunken monkey: Added support for OR facets.
+- #1184002 by drunken monkey: Fixed support of the latest SolrPhpClient version.
+- #1032848 by das-peter, drunken monkey: Added possibility to save SolrPhpClient
+  to the libraries directory.
+- #1225926 by drunken monkey, fago: Fixed performance problems in indexing
+  workflow.
+- #1219310 by drunken monkey: Adapted to recent API change.
+- #1203680 by klausi: Fixed use of taxonomy terms for "More like this".
+- #1181260 by klausi: Fixed mlt.maxwl in solrconfig.xml.
+- #1116896 by drunken monkey: Adapted to newer Solr versions.
+- #1190462 by drunken monkey: Added option to directly highlight retrieved data
+  from Solr.
+- #1196514 by drunken monkey, klausi: Fixed case sensitivity of input keys for
+  autocomplete.
+- #1192654 by drunken monkey: Added support for the Autocomplete module.
+- #1177648 by drunken monkey: Added option to use Solr's built-in highlighting.
+- #1154116 by drunken monkey: Added option for retrieving search results data
+  directly from Solr.
+- #1184002 by drunken monkey: Fixed INSTALL.txt to reflect that the module
+  doesn't work with the latest Solr PHP Client version.
 
 Search API Solr search 1.0, Beta 3 (06/06/2011):
 ------------------------------------------------

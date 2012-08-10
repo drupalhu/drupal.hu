@@ -80,7 +80,7 @@ interface SearchApiAlterCallbackInterface {
    * unpublished nodes or comments).
    *
    * @param array $items
-   *   An array of entities to be altered, keyed by entity ID.
+   *   An array of items to be altered, keyed by item IDs.
    */
   public function alterItems(array &$items);
 

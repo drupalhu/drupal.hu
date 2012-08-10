@@ -1,8 +1,121 @@
-Search API 1.0, dev (xx/xx/xxxx):
+Search API 1.x, dev (xx/xx/xxxx):
 ---------------------------------
 
+Search API 1.2 (07/07/2012):
+----------------------------
+- #1368548 by das-peter: Do not index views results by entity id.
+- #1422750 by drunken monkey, sepgil: Fixed illegal modification of entity
+  objects.
+- #1363114 by nbucknor: Fixed inclusion of upper bound in range facets.
+- #1580780 by drunken monkey: Fixed default regexps of the Tokenizer.
+- #1468678 by znerol: Fixed erroneous use of Drupal multibyte wrapper functions.
+- #1600986 by DamienMcKenna: Fixed dependencies of exported search servers.
+- #1569874 by cpliakas: Fixed removal/adding of facets when indexed fields are
+  changed.
+- #1528436 by jsacksick, drunken monkey: Fixed handling of exportable entities.
+
+Search API 1.1 (05/23/2012):
+----------------------------
+- Fixed escaping of error messages.
+- #1330506 by drunken monkey: Removed the old Facets module.
+- #1504318 by peximo: Fixed Views pager offset.
+- #1141488 by moonray, drunken monkey: Added option to use multiple values with
+  contextual filters.
+- #1535726 by bojanz, joelpittet: Fixed arguments for
+  $service->configurationFormValidate() for empty forms.
+- #1400882 by mh86: Fixed "Index hierarchy" for "All parents".
+
+Search API 1.0 (12/15/2011):
+----------------------------
+- #1350322 by drunken monkey: Fixed regressions introduced with cron queue
+  indexing.
+- #1352292 by das-peter, drunken monkey: Use Search API specific table groups in
+  Views integration.
+- #1351524 by das-peter: Made Views result row indexing more robust.
+- #1194362 by Damien Tournoud: Fixed click sort added to non-existent Views
+  fields.
+- #1347150 by drunken monkey: Fixed fields access of Views facets block display.
+- #1345972 by Krasnyj, drunken monkey: Added handling of large item amounts to
+  trackItemInsert().
+- #1324182 by dereine, drunken monkey: Fixed indexing author when node access is
+  enabled.
+- #1215526 by cpliakas, drunken monkey: Added support for the "Bundle" facet
+  dependency plugin.
+- #1337292 by drunken monkey: Fixed facet dependency system.
+
+Search API 1.0, RC 1 (11/10/2011):
+----------------------------------
+API changes:
+- #1260834 by drunken monkey: Added a way to define custom data types.
+- #1308638 by drunken monkey: Reduce size of stored index settings.
+- #1291346 by drunken monkey: Expose SearchApiQuery::preExecute() and
+  postExecute().
+- #955088 by dereine, drunken monkey: Provide (additional) access functionality.
+- #1064884 by drunken monkey: Added support for indexing non-entities.
+
+Others:
+- #1304026 by drunken monkey: Utilize Facet API's 'include default facets' key
+  in searcher definitions.
+- #1231512 by drunken monkey: Use real Relationships instead of level magic in
+  Views integration.
+- #1260768 by drunken monkey: Move "Search pages" into its own project.
+- #1260812 by drunken monkey: Move "Database search" into its own project.
+- #1287602 by drunken monkey: Fixed „Index items immediately“ to delay indexing
+  on insert, too.
+- #1319500 by drunken monkey: Remove items after unsuccessful loads.
+- #1297958 by drunken monkey: Fixed wrong facet operator used for range facets.
+- #1305736 by drunken monkey: Fixed notice for unset Views group operator.
+- #1263214 by drunken monkey: Fixed indexing with „Index items immediately“
+  indexes old entity state.
+- #1228726 by drunken monkey, mh86: Increased size of 'options' fields in
+  database.
+- #1295144 by katbailey: Added alter hook for Facet API search keys.
+- #1294828 by drunken monkey: Fixed accidental presence of good OOP coding
+  standards in Views integration.
+- #1291376 by drunken monkey: Expose
+  SearchApiFacetapiAdapter::getCurrentSearch().
+- #1198764 by morningtime, drunken monkey: Fixed handling of Views filter
+  groups.
+- #1286500 by drunken monkey: Fixed „Search IDs” setting for facets not saved.
+- #1278780 by dereine, drunken monkey: Fixed status field requirement for node
+  access.
+- #1182614 by katbailey, cpliakas, drunken monkey, thegreat, das-peter: Added
+  Facet API integration.
+- #1278592 by das-peter: Fixed default view mode for non-entites or entities
+  without view modes.
+- #1251674 by Nick_vh: Fixed handling of empty fulltext keys in Views.
+- #1145306 by Nick_vh, drunken monkey: Fixed handling of multiple filters in the
+  database service class.
+- #1264164 by das-peter: Fixed the definition of the external data source
+  controller's trackItemChange() method.
+- #1262362 by drunken monkey: Fixed error handling for orphaned facets.
+- #1233426 by atlea: Fixed dirty and queued items don't get removed from the
+  tracking table when deleted.
+- #1258240 by drunken monkey: Fixed more overlooked entity type assumptions.
+- #1213698 by drunken monkey: Added a data alteration for indexing complete
+  hierarchies.
+- #1252208 by tedfordgif: Fixed superfluous query chars in active facet links.
+- #1224564 by drunken monkey: Added user language as a filter in Views.
+- #1242614 by jsacksick: Fixed division by zero in drush_search_api_status().
+- #1250168 by drunken monkey: Fixed deleted items aren't removed from servers.
+- #1236642 by jsacksick, drunken monkey: Fixed stale static cache of
+  search_api_get_item_type_info().
+- #1237348 by drunken monkey: Added a "Language control" data alteration.
+- #1214846 by drunken monkey, Kender: Fixed overlong table names when DB prefix
+  is used.
+- #1232478 by Damien Tournoud, drunken monkey: Fixed update of field type
+  settings for DB backend and index.
+- #1229772 by drunken monkey: Fixed order in which items are indexed.
+- #946624 by drunken monkey: Adapted to use a cron queue for indexing.
+- #1217702 by Amitaibu, drunken monkey: Added documentation on facet URLs.
+- #1214862 by drunken monkey: Added bundle-specific fields for related entities.
+- #1204964 by klausi: Fixed default index status is not overridden on saving.
+- #1191442 by drunken monkey: Fixed facets block view showing only tid.
+- #1161532 by drunken monkey: Fixed discerning between delete and revert in
+  hook_*_delete().
+
 Search API 1.0, Beta 10 (06/20/2011):
-------------------------------------
+-------------------------------------
 API changes:
 - #1068342 by drunken monkey: Added a 'fields to run on' option for processors.
 

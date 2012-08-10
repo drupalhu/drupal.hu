@@ -85,10 +85,6 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
    */
   public function value_form(&$form, &$form_state) {
     $options = array();
-    if (empty($form_state['exposed'])) {
-      // Add a select all option to the value form.
-      $options = array('all' => t('Select all'));
-    }
     if (!empty($this->options['expose']['reduce']) && !empty($form_state['exposed'])) {
       $options += $this->reduce_value_options($form_state);
     }
@@ -108,7 +104,7 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
   /**
    * Provides a summary of this filter's value for the admin UI.
    */
-  function admin_summary() {
+  public function admin_summary() {
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }
@@ -131,7 +127,7 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
     if (count($this->value) == 0) {
       return $this->operator == '=' ? t('none') : t('any');
     }
-    else if (count($this->value) == 1) {
+    elseif (count($this->value) == 1) {
       // If there is only a single value, use just the plain operator, = or <>.
       $operator = check_plain($this->operator);
       $values = check_plain($this->definition['options'][reset($this->value)]);
@@ -157,12 +153,12 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
    */
   public function query() {
     while (is_array($this->value) && count($this->value) == 1) {
-      $this->value = array_shift($this->value);
+      $this->value = reset($this->value);
     }
     if (is_scalar($this->value) && $this->value !== '') {
-      $this->query->condition($this->real_field, $this->value, $this->operator);
+      $this->query->condition($this->real_field, $this->value, $this->operator, $this->options['group']);
     }
-    elseif($this->value) {
+    elseif ($this->value) {
       if ($this->operator == '=') {
         $filter = $this->query->createFilter('OR');
         // $filter will be NULL if there were errors in the query.
@@ -170,12 +166,12 @@ class SearchApiViewsHandlerFilterOptions extends SearchApiViewsHandlerFilter {
           foreach ($this->value as $v) {
             $filter->condition($this->real_field, $v, '=');
           }
-          $this->query->filter($filter);
+          $this->query->filter($filter, $this->options['group']);
         }
       }
       else {
         foreach ($this->value as $v) {
-          $this->query->condition($this->real_field, $v, $this->operator);
+          $this->query->condition($this->real_field, $v, $this->operator, $this->options['group']);
         }
       }
     }

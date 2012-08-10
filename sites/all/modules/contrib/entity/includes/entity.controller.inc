@@ -192,6 +192,20 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
       }
     }
 
+    // Support the entitycache module if activated.
+    if (!empty($this->entityInfo['entity cache']) && !$revision_id && $ids && !$conditions) {
+      $cached_entities = EntityCacheControllerHelper::entityCacheGet($this, $ids, $conditions);
+      // If any entities were loaded, remove them from the ids still to load.
+      $ids = array_diff($ids, array_keys($cached_entities));
+      $entities += $cached_entities;
+
+      // Add loaded entities to the static cache if we are not loading a
+      // revision.
+      if ($this->cache && !empty($cached_entities) && !$revision_id) {
+        $this->cacheSet($cached_entities);
+      }
+    }
+
     // Load any remaining entities from the database. This is the case if $ids
     // is set to FALSE (so we load all entities), if there are any ids left to
     // load or if loading a revision.
@@ -203,18 +217,20 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
           continue;
         }
 
-        // Take care of serialized columns.
-        $schema = drupal_get_schema($this->entityInfo['base table']);
+        // For DB-based entities take care of serialized columns.
+        if (!empty($this->entityInfo['base table'])) {
+          $schema = drupal_get_schema($this->entityInfo['base table']);
 
-        foreach ($schema['fields'] as $field => $info) {
-          if (!empty($info['serialize']) && isset($record->$field)) {
-            $record->$field = unserialize($record->$field);
-            // Support automatic merging of 'data' fields into the entity.
-            if (!empty($info['merge']) && is_array($record->$field)) {
-              foreach ($record->$field as $key => $value) {
-                $record->$key = $value;
+          foreach ($schema['fields'] as $field => $info) {
+            if (!empty($info['serialize']) && isset($record->$field)) {
+              $record->$field = unserialize($record->$field);
+              // Support automatic merging of 'data' fields into the entity.
+              if (!empty($info['merge']) && is_array($record->$field)) {
+                foreach ($record->$field as $key => $value) {
+                  $record->$key = $value;
+                }
+                unset($record->$field);
               }
-              unset($record->$field);
             }
           }
         }
@@ -229,6 +245,12 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
     if (!empty($queried_entities)) {
       $this->attachLoad($queried_entities, $revision_id);
       $entities += $queried_entities;
+    }
+
+    // Entitycache module support: Add entities to the entity cache if we are
+    // not loading a revision.
+    if (!empty($this->entityInfo['entity cache']) && !empty($queried_entities) && !$revision_id) {
+      EntityCacheControllerHelper::entityCacheSet($this, $queried_entities);
     }
 
     if ($this->cache) {
@@ -256,6 +278,10 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
   public function resetCache(array $ids = NULL) {
     $this->cacheComplete = FALSE;
     parent::resetCache($ids);
+    // Support the entitycache module.
+    if (!empty($this->entityInfo['entity cache'])) {
+      EntityCacheControllerHelper::resetEntityCache($this, $ids);
+    }
   }
 
   /**
@@ -266,7 +292,8 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
       $function($this->entityType, $entity);
     }
 
-    if (isset($this->entityInfo['bundle of']) && $type = $this->entityInfo['bundle of']) {
+    if (!empty($this->entityInfo['bundle of']) && entity_type_is_fieldable($this->entityInfo['bundle of'])) {
+      $type = $this->entityInfo['bundle of'];
       // Call field API bundle attachers for the entity we are a bundle of.
       if ($hook == 'insert') {
         field_attach_create_bundle($type, $entity->{$this->bundleKey});
@@ -274,10 +301,8 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
       elseif ($hook == 'delete') {
         field_attach_delete_bundle($type, $entity->{$this->bundleKey});
       }
-      elseif ($hook == 'update' && $id = $entity->{$this->nameKey}) {
-        if ($entity->original->{$this->bundleKey} != $entity->{$this->bundleKey}) {
-          field_attach_rename_bundle($type, $entity->original->{$this->bundleKey}, $entity->{$this->bundleKey});
-        }
+      elseif ($hook == 'update' && $entity->original->{$this->bundleKey} != $entity->{$this->bundleKey}) {
+        field_attach_rename_bundle($type, $entity->original->{$this->bundleKey}, $entity->{$this->bundleKey});
       }
     }
     // Invoke the hook.
@@ -428,6 +453,10 @@ class EntityAPIController extends DrupalDefaultEntityController implements Entit
 
     // Add in fields.
     if (!empty($this->entityInfo['fieldable'])) {
+      // Perform the preparation tasks if they have not been performed yet.
+      // An internal flag prevents the operation from running twice.
+      $key = isset($entity->{$this->idKey}) ? $entity->{$this->idKey} : NULL;
+      field_attach_prepare_view($this->entityType, array($key => $entity), $view_mode);
       $entity->content += field_attach_view($this->entityType, $entity, $view_mode, $langcode);
     }
     // Invoke hook_ENTITY_view() to allow modules to add their additions.
@@ -522,10 +551,6 @@ class EntityAPIControllerExportable extends EntityAPIController {
    */
   public function load($ids = array(), $conditions = array()) {
     $entities = array();
-    // For exportable entities, make sure the defaults have been built.
-    if (!empty($this->entityInfo['exportable']) && empty($GLOBALS['conf']['entity_defaults_built'][$this->entityType])) {
-      _entity_defaults_rebuild($this->entityType);
-    }
 
     // Only do something if loaded by names.
     if (!$ids || $this->nameKey == $this->idKey || is_numeric(reset($ids))) {
@@ -688,6 +713,46 @@ class EntityAPIControllerExportable extends EntityAPIController {
   }
 
   /**
+   * Overridden to care about reverted bundle entities and to skip Rules.
+   */
+  public function invoke($hook, $entity) {
+    if ($hook == 'delete') {
+      // To ease figuring out whether this is a revert, make sure that the
+      // entity status is updated in case the providing module has been
+      // disabled.
+      if (entity_has_status($this->entityType, $entity, ENTITY_IN_CODE) && !module_exists($entity->{$this->moduleKey})) {
+        $entity->{$this->statusKey} = ENTITY_CUSTOM;
+      }
+      $is_revert = entity_has_status($this->entityType, $entity, ENTITY_IN_CODE);
+    }
+
+    if (!empty($this->entityInfo['fieldable']) && function_exists($function = 'field_attach_' . $hook)) {
+      $function($this->entityType, $entity);
+    }
+
+    if (isset($this->entityInfo['bundle of']) && $type = $this->entityInfo['bundle of']) {
+      // Call field API bundle attachers for the entity we are a bundle of.
+      if ($hook == 'insert') {
+        field_attach_create_bundle($type, $entity->{$this->bundleKey});
+      }
+      elseif ($hook == 'delete' && !$is_revert) {
+        field_attach_delete_bundle($type, $entity->{$this->bundleKey});
+      }
+      elseif ($hook == 'update' && $id = $entity->{$this->nameKey}) {
+        if ($entity->original->{$this->bundleKey} != $entity->{$this->bundleKey}) {
+          field_attach_rename_bundle($type, $entity->original->{$this->bundleKey}, $entity->{$this->bundleKey});
+        }
+      }
+    }
+    // Invoke the hook.
+    module_invoke_all($this->entityType . '_' . $hook, $entity);
+    // Invoke the respective entity level hook.
+    if ($hook == 'presave' || $hook == 'insert' || $hook == 'update' || $hook == 'delete') {
+      module_invoke_all('entity_' . $hook, $entity, $this->entityType);
+    }
+  }
+
+  /**
    * Overridden to care exportables that are overridden.
    */
   public function save($entity, DatabaseTransaction $transaction = NULL) {
@@ -720,9 +785,15 @@ class EntityAPIControllerExportable extends EntityAPIController {
   public function view($entities, $view_mode = 'full', $langcode = NULL, $page = NULL) {
     $view = parent::view($entities, $view_mode, $langcode, $page);
 
-    // Re-key the view array to be keyed by name.
-    $key = isset($entity->{$this->nameKey}) ? $entity->{$this->nameKey} : NULL;
-    $view[$this->entityType][$key] = reset($view[$this->entityType]);
+    if ($this->nameKey != $this->idKey) {
+      // Re-key the view array to be keyed by name.
+      $return = array();
+      foreach ($view[$this->entityType] as $id => $content) {
+        $key = isset($content['#entity']->{$this->nameKey}) ? $content['#entity']->{$this->nameKey} : NULL;
+        $return[$this->entityType][$key] = $content;
+      }
+      $view = $return;
+    }
     return $view;
   }
 }

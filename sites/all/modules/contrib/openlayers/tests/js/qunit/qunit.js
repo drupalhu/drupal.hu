@@ -1,6 +1,6 @@
 /*
  * QUnit - A JavaScript Unit Testing Framework
- * 
+ *
  * http://docs.jquery.com/QUnit
  *
  * Copyright (c) 2009 John Resig, Jörn Zaefferer
@@ -685,7 +685,7 @@ QUnit.equiv = function () {
     function hoozit(o) {
         if (QUnit.is("String", o)) {
             return "string";
-            
+
         } else if (QUnit.is("Boolean", o)) {
             return "boolean";
 
@@ -707,7 +707,7 @@ QUnit.equiv = function () {
         // consider: typeof [] === object
         } else if (QUnit.is( "Array", o)) {
             return "array";
-        
+
         // consider: typeof new Date() === object
         } else if (QUnit.is( "Date", o)) {
             return "date";
@@ -740,7 +740,7 @@ QUnit.equiv = function () {
             }
         }
     }
-    
+
     var callbacks = function () {
 
         // for string, boolean, number and null
@@ -960,7 +960,7 @@ QUnit.jsDump = (function() {
 			this.parsers[name] = parser;
 		},
 		// The next 3 are exposed so you can use them
-		quote:quote, 
+		quote:quote,
 		literal:literal,
 		join:join,
 		//

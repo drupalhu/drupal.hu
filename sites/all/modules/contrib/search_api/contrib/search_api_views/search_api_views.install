@@ -1,11 +1,8 @@
 <?php
-
 /**
- * Implements hook_uninstall().
+ * @file
+ * Install, update and uninstall functions for the search_api_views module.
  */
-function search_api_views_uninstall() {
-  variable_del('search_api_views_max_fields_depth');
-}
 
 /**
  * Updates all Search API views to use the new, specification-compliant identifiers.
@@ -90,4 +87,11 @@ function _search_api_views_update_7101_helper(&$field, array $fields) {
     return TRUE;
   }
   return FALSE;
+}
+
+/**
+ * Delete the now unnecessary "search_api_views_max_fields_depth" variable.
+ */
+function search_api_views_update_7102() {
+  variable_del('search_api_views_max_fields_depth');
 }

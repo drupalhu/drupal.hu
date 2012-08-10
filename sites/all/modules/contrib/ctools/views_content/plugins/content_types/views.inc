@@ -147,6 +147,10 @@ function views_content_views_content_type_render($subtype, $conf, $panel_args, $
         $arg = ctools_context_convert_context($contexts[$cid], $converter);
         array_splice($args, $count, 0, array($arg));
       }
+      else {
+        // Make sure we put an argument in even if it was not there.
+        $arg = NULL;
+      }
     }
   }
 
@@ -427,6 +431,8 @@ function views_content_views_content_type_admin_info($subtype, $conf, $contexts)
   }
 
   $display = empty($conf['display']) ? $view->current_display : $conf['display'];
+  $block = new stdClass();
+
   $block->title = t('View information');
 
   $block->content = '<ul>';

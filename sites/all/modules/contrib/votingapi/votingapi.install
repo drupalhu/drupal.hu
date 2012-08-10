@@ -1,5 +1,4 @@
 <?php
-// $Id: votingapi.install,v 1.21.4.11.2.5 2011/01/11 16:00:18 eaton Exp $
 
 /**
  * @file
@@ -70,4 +69,20 @@ function votingapi_update_7201() {
   db_change_field('votingapi_cache', 'content_id', 'entity_id', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
 
   return t('Updated VotingAPI table structure.');
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function votingapi_uninstall() {
+  // Delete variables created by voteapi module.
+  $variables = array(
+    'votingapi_last_cron',
+    'votingapi_anonymous_window',
+    'votingapi_calculation_schedule',
+  );
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
 }

@@ -9,20 +9,38 @@
  * Map Form Values Behavior
  */
 class openlayers_behavior_geofield extends openlayers_behavior {
+
   /**
    * Provide initial values for options.
    */
   function options_init() {
-    //TODO: use the field name and the delta in naming these items so we don't get conflicts
     return array(
-        'wkt' => '#geofield_wkt',
-        'geo_type' => '#geofield_geo_type',
-        'lat' => '#geofield_lat',
-        'lon' => '#geofield_lon',
-        'left' => '#geofield_left',
-        'bottom' => '#geofield_bottom',
-        'right' => '#geofield_right',
-        'top' => '#geofield_top',
+      'feature_types' => array(),
+      'allow_edit' => 1,
+    );
+  }
+
+  function options_form($defaults = array()) {
+    $features = array(
+      'point' => t('Point'),
+      'path' => t('Path'),
+      'polygon' => t('Polygon'),
+    );
+
+    return array(
+      'feature_types' => array(
+        '#title' => t('Available Features'),
+        '#type' => 'checkboxes',
+        '#options' => $features,
+        '#description' => t('Select what features are available to draw.'),
+        '#default_value' => isset($defaults['feature_types']) ? $defaults['feature_types'] : array(),
+      ),
+      'allow_edit' => array(
+        '#title' => t('Allow shape modification'),
+        '#type' => 'checkbox',
+        '#description' => t('Can you edit and delete shapes.'),
+        '#default_value' => isset($defaults['allow_edit']) ? $defaults['allow_edit'] : 1,
+      ),
     );
   }
 
@@ -30,8 +48,8 @@ class openlayers_behavior_geofield extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'geofield') .'/includes/behaviors/js/openlayers_behavior_geofield.js');
-    drupal_add_css(drupal_get_path('module', 'geofield') .'/includes/behaviors/css/openlayers_behavior_geofield.css');
+    $geopath = drupal_get_path('module', 'geofield');
+    drupal_add_js($geopath . '/includes/behaviors/js/openlayers_behavior_geofield.js');
     return $this->options;
   }
 }

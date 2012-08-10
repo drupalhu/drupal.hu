@@ -27,11 +27,11 @@ class SearchApiViewsHandlerFilterDate extends SearchApiViewsHandlerFilter {
    */
   public function query() {
     while (is_array($this->value)) {
-      $this->value = $this->value ? array_shift($this->value) : NULL;
+      $this->value = $this->value ? reset($this->value) : NULL;
     }
     $v = is_numeric($this->value) ? $this->value : strtotime($this->value, REQUEST_TIME);
     if ($v !== FALSE) {
-      $this->query->condition($this->real_field, $v, $this->operator);
+      $this->query->condition($this->real_field, $v, $this->operator, $this->options['group']);
     }
   }
 

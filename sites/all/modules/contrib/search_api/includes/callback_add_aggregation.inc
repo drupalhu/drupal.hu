@@ -8,8 +8,7 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   public function configurationForm() {
     $form['#attached']['css'][] = drupal_get_path('module', 'search_api') . '/search_api.admin.css';
 
-    $fields = empty($this->index->options['fields']) ? _search_api_admin_get_fields($this->index, $this->index->entityWrapper()) : $this->index->options;
-    $fields = $fields['fields'];
+    $fields = $this->index->getFields(FALSE);
     $field_options = array();
     foreach ($fields as $name => $field) {
       $field_options[$name] = $field['name'];
@@ -68,7 +67,7 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
         '#type' => 'checkboxes',
         '#title' => t('Contained fields'),
         '#options' => $field_options,
-        '#default_value' => $field['fields'],
+        '#default_value' => drupal_map_assoc($field['fields']),
         '#attributes' => array('class' => array('search-api-alter-add-aggregation-fields')),
         '#required' => TRUE,
       );
@@ -102,11 +101,14 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   }
 
   public function configurationFormValidate(array $form, array &$values, array &$form_state) {
+    unset($values['actions']);
     if (empty($values['fields'])) {
       return;
     }
     foreach ($values['fields'] as $name => $field) {
-      if ($field['name'] && !$field['fields']) {
+      $fields = $values['fields'][$name]['fields'] = array_values(array_filter($field['fields']));
+      unset($values['fields'][$name]['actions']);
+      if ($field['name'] && !$fields) {
         form_error($form['fields'][$name]['fields'], t('You have to select at least one field to aggregate. If you want to remove an aggregated field, please delete its name.'));
       }
     }
@@ -114,11 +116,15 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
 
   public function configurationFormSubmit(array $form, array &$values, array &$form_state) {
     if (empty($values['fields'])) {
-      return;
+      return array();
     }
+    $index_fields = $this->index->getFields(FALSE);
     foreach ($values['fields'] as $name => $field) {
       if (!$field['name']) {
         unset($values['fields'][$name]);
+      }
+      else {
+        $values['fields'][$name]['description'] = $this->fieldDescription($field, $index_fields);
       }
     }
     $this->options = $values;
@@ -134,21 +140,22 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
       foreach ($items as $item) {
         $wrapper = $this->index->entityWrapper($item);
         foreach ($this->options['fields'] as $name => $field) {
-          $required_fields = array();
-          foreach ($field['fields'] as $f) {
-            if (!isset($required_fields[$f])) {
-              $required_fields[$f]['type'] = $types[$field['type']];
-            }
-          }
-          $fields = search_api_extract_fields($wrapper, $required_fields);
-          $values = array();
-          foreach ($fields as $f) {
-            if (isset($f['value'])) {
-              $values[] = $f['value'];
-            }
-          }
-          $values = $this->flattenArray($values);
           if ($field['name']) {
+            $required_fields = array();
+            foreach ($field['fields'] as $f) {
+              if (!isset($required_fields[$f])) {
+                $required_fields[$f]['type'] = $types[$field['type']];
+              }
+            }
+            $fields = search_api_extract_fields($wrapper, $required_fields);
+            $values = array();
+            foreach ($fields as $f) {
+              if (isset($f['value'])) {
+                $values[] = $f['value'];
+              }
+            }
+            $values = $this->flattenArray($values);
+
             $this->reductionType = $field['type'];
             $item->$name = array_reduce($values, array($this, 'reduce'), NULL);
             if ($field['type'] == 'count' && !$item->$name) {
@@ -206,7 +213,7 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
       foreach ($this->options['fields'] as $name => $field) {
         $ret[$name] = array(
           'label' => $field['name'],
-          'description' => $this->fieldDescription($field),
+          'description' => empty($field['description']) ? '' : $field['description'],
           'type' => $types[$field['type']],
         );
       }
@@ -217,12 +224,10 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   /**
    * Helper method for creating a field description.
    */
-  protected function fieldDescription(array $field) {
+  protected function fieldDescription(array $field, array $index_fields) {
     $fields = array();
     foreach ($field['fields'] as $f) {
-      if ($f !== 0) {
-        $fields[] = isset($this->index->options['fields'][$f]) ? $this->index->options['fields'][$f]['name'] : $f;
-      }
+      $fields[] = isset($index_fields[$f]) ? $index_fields[$f]['name'] : $f;
     }
     $type = $this->getTypes();
     $type = $type[$field['type']];
@@ -232,8 +237,10 @@ class SearchApiAlterAddAggregation extends SearchApiAbstractAlterCallback {
   /**
    * Helper method for getting all available aggregation types.
    *
-   * @param $descriptions
-   *   If TRUE, get type descriptions instead of names.
+   * @param $info (optional)
+   *   One of "name", "type" or "description", to indicate what values should be
+   *   returned for the types. Defaults to "name".
+   *
    */
   protected function getTypes($info = 'name') {
     switch ($info) {

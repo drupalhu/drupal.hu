@@ -1,10 +1,10 @@
 
-Raw layers are an addition to OpenLayers post-alpha7 which allow users to 
-manually add points to a layer type. In comparison to the layer_type 
-method of pulling in custom data, this allows you to 'push' data into the 
-layer data array itself. In any case where reusability is a priority, 
-layer_types should be utilized (as documented in LAYER_TYPES.txt). However, 
-this is a quick method for success that may be more accessible to more 
+Raw layers are an addition to OpenLayers post-alpha7 which allow users to
+manually add points to a layer type. In comparison to the layer_type
+method of pulling in custom data, this allows you to 'push' data into the
+layer data array itself. In any case where reusability is a priority,
+layer_types should be utilized (as documented in LAYER_TYPES.txt). However,
+this is a quick method for success that may be more accessible to more
 developers.
 
 A brief, example-only implementation of an arbitrary layer is below.
@@ -23,9 +23,9 @@ function geolocator_ctools_plugin_api($module, $api) {
 }
 
 /**
- * One can have the 'features' => element point to a function 
- * or be built on the fly within the _layers method. However, 
- * close attention must be paid to ctools caching in order to 
+ * One can have the 'features' => element point to a function
+ * or be built on the fly within the _layers method. However,
+ * close attention must be paid to ctools caching in order to
  * insure that dynamic data stays dynamic
  */
 function geolocator_openlayers_layers() {
@@ -42,7 +42,7 @@ function geolocator_openlayers_layers() {
       array(
       "wkt"=> "POINT(65 33)",
       "projection"=> "4326",
-      "attributes"=> 
+      "attributes"=>
         array(
           "name"=> "Afghanistan",
           "description"=> "248"

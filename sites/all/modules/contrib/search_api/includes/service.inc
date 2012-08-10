@@ -60,8 +60,14 @@ interface SearchApiServiceInterface {
    * Determines whether this service class implementation supports a given
    * feature. Features are optional extensions to Search API functionality and
    * usually defined and used by third-party modules.
-   * Currently, the only feature specified directly in the search_api project is
-   * "search_api_facets", defined by the module of the same name.
+   *
+   * There are currently three features defined directly in the Search API
+   * project:
+   * - "search_api_facets", by the search_api_facetapi module.
+   * - "search_api_facets_operator_or", also by the search_api_facetapi module.
+   * - "search_api_mlt", by the search_api_views module.
+   * Other contrib modules might define additional features. These should always
+   * be properly documented in the module by which they are defined.
    *
    * @param string $feature
    *   The name of the optional feature.
@@ -155,8 +161,8 @@ interface SearchApiServiceInterface {
    *   array with the following keys:
    *   - type: One of the data types recognized by the Search API, or the
    *     special type "tokens" for fulltext fields.
-   *   - original_type: The original type of the property as defined through a
-   *     hook_entity_property_info().
+   *   - original_type: The original type of the property, as defined by the
+   *     datasource controller for the index's item type.
    *   - value: The value to index.
    *
    *   The special field "search_api_language" contains the item's language and
@@ -167,11 +173,11 @@ interface SearchApiServiceInterface {
    *   - value: The word that the token represents.
    *   - score: A score for the importance of that word.
    *
-   * @throws SearchApiException
-   *   If indexing was prevented by a fundamental configuration error.
-   *
    * @return array
    *   An array of the ids of all items that were successfully indexed.
+   *
+   * @throws SearchApiException
+   *   If indexing was prevented by a fundamental configuration error.
    */
   public function indexItems(SearchApiIndex $index, array $items);
 
@@ -201,11 +207,11 @@ interface SearchApiServiceInterface {
    *   Associative array of options configuring this query. See
    *   SearchApiQueryInterface::__construct().
    *
-   * @throws SearchApiException
-   *   If the server is currently disabled.
-   *
    * @return SearchApiQueryInterface
    *   An object for searching the given index.
+   *
+   * @throws SearchApiException
+   *   If the server is currently disabled.
    */
   public function query(SearchApiIndex $index, $options = array());
 
@@ -215,12 +221,12 @@ interface SearchApiServiceInterface {
    * @param $query
    *   The SearchApiQueryInterface object to execute.
    *
-   * @throws SearchApiException
-   *   If an error prevented the search from completing.
-   *
    * @return array
    *   An associative array containing the search results, as required by
    *   SearchApiQueryInterface::execute().
+   *
+   * @throws SearchApiException
+   *   If an error prevented the search from completing.
    */
   public function search(SearchApiQueryInterface $query);
 
@@ -310,8 +316,14 @@ abstract class SearchApiAbstractService implements SearchApiServiceInterface {
    * Determines whether this service class implementation supports a given
    * feature. Features are optional extensions to Search API functionality and
    * usually defined and used by third-party modules.
-   * Currently, the only feature specified directly in the search_api project is
-   * "search_api_facets", defined by the module of the same name.
+   *
+   * There are currently three features defined directly in the Search API
+   * project:
+   * - "search_api_facets", by the search_api_facetapi module.
+   * - "search_api_facets_operator_or", also by the search_api_facetapi module.
+   * - "search_api_mlt", by the search_api_views module.
+   * Other contrib modules might define additional features. These should always
+   * be properly documented in the module by which they are defined.
    *
    * @param string $feature
    *   The name of the optional feature.
@@ -444,11 +456,11 @@ abstract class SearchApiAbstractService implements SearchApiServiceInterface {
    *   Associative array of options configuring this query. See
    *   SearchApiQueryInterface::__construct().
    *
-   * @throws SearchApiException
-   *   If the server is currently disabled.
-   *
    * @return SearchApiQueryInterface
    *   An object for searching the given index.
+   *
+   * @throws SearchApiException
+   *   If the server is currently disabled.
    */
   public function query(SearchApiIndex $index, $options = array()) {
     return new SearchApiQuery($index, $options);

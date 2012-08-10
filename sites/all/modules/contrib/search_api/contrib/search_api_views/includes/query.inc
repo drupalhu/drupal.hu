@@ -41,20 +41,37 @@ class SearchApiViewsQuery extends views_plugin_query {
   protected $search_api_results = array();
 
   /**
-   * Array of all encountered errors. Each of these is fatal, meaning that a
-   * non-empty $errors property will result in an empty result being returned.
+   * Array of all encountered errors.
+   *
+   * Each of these is fatal, meaning that a non-empty $errors property will
+   * result in an empty result being returned.
    *
    * @var array
    */
   protected $errors;
 
   /**
-   * The names of all fields whose value is required by a handler. The format
-   * follows the same as Search API field identifiers (parent:child).
+   * The names of all fields whose value is required by a handler.
+   *
+   * The format follows the same as Search API field identifiers (parent:child).
    *
    * @var array
    */
   protected $fields;
+
+  /**
+   * The query's sub-filters representing the different Views filter groups.
+   *
+   * @var array
+   */
+  protected $filters = array();
+
+  /**
+   * The conjunction with which multiple filter groups are combined.
+   *
+   * @var string
+   */
+  public $group_operator = 'AND';
 
   /**
    * Create the basic query object and fill with default values.
@@ -93,13 +110,99 @@ class SearchApiViewsQuery extends views_plugin_query {
   }
 
   /**
+   * Add a sort to the query.
+   *
+   * @param $selector
+   *   The field to sort on. All indexed fields of the index are valid values.
+   *   In addition, the special fields 'search_api_relevance' (sort by
+   *   relevance) and 'search_api_id' (sort by item id) may be used.
+   * @param $order
+   *   The order to sort items in - either 'ASC' or 'DESC'. Defaults to 'ASC'.
+   */
+  public function add_selector_orderby($selector, $order = 'ASC') {
+    $this->query->sort($selector, $order);
+  }
+
+  /**
+   * Defines the options used by this query plugin.
+   *
+   * Adds an option to bypass access checks.
+   */
+  public function option_definition() {
+    return parent::option_definition() + array(
+      'search_api_bypass_access' => array(
+        'default' => FALSE,
+      ),
+    );
+  }
+
+  /**
+   * Add settings for the UI.
+   *
+   * Adds an option for bypassing access checks.
+   */
+  public function options_form(&$form, &$form_state) {
+    parent::options_form($form, $form_state);
+
+    $form['search_api_bypass_access'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Bypass access checks'),
+      '#description' => t('If the underlying search index has access checks enabled, this option allows to disable them for this view.'),
+      '#default_value' => $this->options['search_api_bypass_access'],
+    );
+  }
+
+  /**
    * Builds the necessary info to execute the query.
    */
   public function build(&$view) {
-    $view->init_pager();
+    $this->view = $view;
 
-    // Let the pager modify the query to add limits.
+    // Setup the nested filter structure for this query.
+    if (!empty($this->where)) {
+      // If the different groups are combined with the OR operator, we have to
+      // add a new OR filter to the query to which the filters for the groups
+      // will be added.
+      if ($this->group_operator === 'OR') {
+        $base = $this->query->createFilter('OR');
+        $this->query->filter($base);
+      }
+      else {
+        $base = $this->query;
+      }
+      // Add a nested filter for each filter group, with its set conjunction.
+      foreach ($this->where as $group_id => $group) {
+        if (!empty($group['conditions']) || !empty($group['filters'])) {
+          // For filters without a group, we want to always add them directly to
+          // the query.
+          $filter = ($group_id === '') ? $this->query : $this->query->createFilter($group['type']);
+          if (!empty($group['conditions'])) {
+            foreach ($group['conditions'] as $condition) {
+              list($field, $value, $operator) = $condition;
+              $filter->condition($field, $value, $operator);
+            }
+          }
+          if (!empty($group['filters'])) {
+            foreach ($group['filters'] as $nested_filter) {
+              $filter->filter($nested_filter);
+            }
+          }
+          // If no group was given, the filters were already set on the query.
+          if ($group_id !== '') {
+            $base->filter($filter);
+          }
+        }
+      }
+    }
+
+    // Initialize the pager and let it modify the query to add limits.
+    $view->init_pager();
     $this->pager->query();
+
+    // Add the "search_api_bypass_access" option to the query, if desired.
+    if (!empty($this->options['search_api_bypass_access'])) {
+      $this->query->setOption('search_api_bypass_access', TRUE);
+    }
   }
 
   /**
@@ -134,6 +237,9 @@ class SearchApiViewsQuery extends views_plugin_query {
 
       // Store the results.
       $this->pager->total_items = $view->total_rows = $results['result count'];
+      if (!empty($this->pager->options['offset'])) {
+        $this->pager->total_items -= $this->pager->options['offset'];
+      }
       $this->pager->update_page_info();
       $view->result = array();
       if (!empty($results['results'])) {
@@ -157,16 +263,15 @@ class SearchApiViewsQuery extends views_plugin_query {
   protected function addResults(array $results, $view) {
     $rows = array();
     $missing = array();
-    $entities = array();
-    $entity_type = $this->index->entity_type;
+    $items = array();
 
     // First off, we try to gather as much field values as possible without
-    // loading any entities.
+    // loading any items.
     foreach ($results as $id => $result) {
-      $row = array('search_api_views_entity_type' => $entity_type);
+      $row = array();
 
-      // Include the loaded entity for this result row, if present, or the
-      // entity ID.
+      // Include the loaded item for this result row, if present, or the item
+      // ID.
       if (!empty($result['entity'])) {
         $row['entity'] = $result['entity'];
       }
@@ -174,22 +279,20 @@ class SearchApiViewsQuery extends views_plugin_query {
         $row['entity'] = $id;
       }
 
-      $row['search_api_relevance'] = $result['score'];
-      if (!empty($this->fields['search_api_excerpt'])) {
-        $row['search_api_excerpt'] = empty($result['excerpt']) ? '' : $result['excerpt'];
-      }
+      $row['_entity_properties']['search_api_relevance'] = $result['score'];
+      $row['_entity_properties']['search_api_excerpt'] = empty($result['excerpt']) ? '' : $result['excerpt'];
 
       // Gather any fields from the search results.
       if (!empty($result['fields'])) {
-        $row += $result['fields'];
+        $row['_entity_properties'] += $result['fields'];
       }
 
-      // Check whether we need to extract any properties from the Drupal entity.
+      // Check whether we need to extract any properties from the result item.
       $missing_fields = array_diff_key($this->fields, $row);
-      if (!empty($missing_fields)) {
+      if ($missing_fields) {
         $missing[$id] = $missing_fields;
         if (is_object($row['entity'])) {
-          $entities[$id] = $row['entity'];
+          $items[$id] = $row['entity'];
         }
         else {
           $ids[] = $id;
@@ -197,32 +300,32 @@ class SearchApiViewsQuery extends views_plugin_query {
       }
 
       // Save the row values for adding them to the Views result afterwards.
-      $rows[$id] = $row;
+      $rows[$id] = (object) $row;
     }
 
-    // Load entities of those rows which haven't got all field values, yet.
+    // Load items of those rows which haven't got all field values, yet.
     if (!empty($ids)) {
-      $entities += entity_load($entity_type, $ids);
-      // $entities now includes loaded entities, and those already passed in the
+      $items += $this->index->loadItems($ids);
+      // $items now includes loaded items, and those already passed in the
       // search results.
-      foreach ($entities as $id => $entity) {
-        // Extract entity properties.
-        $wrapper = entity_metadata_wrapper($entity_type, $entity);
-        $rows[$id] += $this->extractFields($wrapper, $missing[$id]);
-        $rows[$id]['entity'] = $entity;
+      foreach ($items as $id => $item) {
+        // Extract item properties.
+        $wrapper = $this->index->entityWrapper($item, FALSE);
+        $rows[$id]->_entity_properties += $this->extractFields($wrapper, $missing[$id]);
+        $rows[$id]->entity = $item;
       }
     }
 
     // Finally, add all rows to the Views result set.
-    foreach ($rows as $id => $row) {
-      $view->result[$id] = (object) $row;
-    }
+    $view->result = array_values($rows);
   }
 
   /**
-   * Helper function for extracting all necessary fields from an entity.
+   * Helper function for extracting all necessary fields from a result item.
+   *
+   * Usually, this method isn't needed anymore as the properties are now
+   * extracted by the field handlers themselves.
    */
-  // @todo Optimize
   protected function extractFields(EntityMetadataWrapper $wrapper, array $all_fields) {
     $fields = array();
     foreach ($all_fields as $key => $true) {
@@ -237,11 +340,85 @@ class SearchApiViewsQuery extends views_plugin_query {
   }
 
   /**
+   * Returns the according entity objects for the given query results.
+   *
+   * This is necessary to support generic entity handlers and plugins with this
+   * query backend.
+   *
+   * If the current query isn't based on an entity type, the method will return
+   * an empty array.
+   */
+  public function get_result_entities($results, $relationship = NULL, $field = NULL) {
+    list($type, $wrappers) = $this->get_result_wrappers($results, $relationship, $field);
+    $return = array();
+    foreach ($wrappers as $id => $wrapper) {
+      try {
+        $return[$id] = $wrapper->value();
+      }
+      catch (EntityMetadataWrapperException $e) {
+        // Ignore.
+      }
+    }
+    return array($type, $return);
+  }
+
+  /**
+   * Returns the according metadata wrappers for the given query results.
+   *
+   * This is necessary to support generic entity handlers and plugins with this
+   * query backend.
+   */
+  public function get_result_wrappers($results, $relationship = NULL, $field = NULL) {
+    $is_entity = (boolean) entity_get_info($this->index->item_type);
+    $wrappers = array();
+    $load_entities = array();
+    foreach ($results as $row_index => $row) {
+      if ($is_entity && isset($row->entity)) {
+        // If this entity isn't load, register it for pre-loading.
+        if (!is_object($row->entity)) {
+          $load_entities[$row->entity] = $row_index;
+        }
+
+        $wrappers[$row_index] = $this->index->entityWrapper($row->entity);
+      }
+    }
+
+    // If the results are entities, we pre-load them to make use of a multiple
+    // load. (Otherwise, each result would be loaded individually.)
+    if (!empty($load_entities)) {
+      $entities = entity_load($this->index->item_type, array_keys($load_entities));
+      foreach ($entities as $entity_id => $entity) {
+        $wrappers[$load_entities[$entity_id]] = $this->index->entityWrapper($entity);
+      }
+    }
+
+    // Apply the relationship, if necessary.
+    $type = $this->index->item_type;
+    $selector_suffix = '';
+    if ($field && ($pos = strrpos($field, ':'))) {
+      $selector_suffix = substr($field, 0, $pos);
+    }
+    if ($selector_suffix || ($relationship && !empty($this->view->relationship[$relationship]))) {
+      // Use EntityFieldHandlerHelper to compute the correct data selector for
+      // the relationship.
+      $handler = (object) array(
+        'view' => $this->view,
+        'relationship' => $relationship,
+        'real_field' => '',
+      );
+      $selector = EntityFieldHandlerHelper::construct_property_selector($handler);
+      $selector .= ($selector ? ':' : '') . $selector_suffix;
+      list($type, $wrappers) = EntityFieldHandlerHelper::extract_property_multiple($wrappers, $selector);
+    }
+
+    return array($type, $wrappers);
+  }
+
+  /**
    * API function for accessing the raw Search API query object.
    *
    * @return SearchApiQueryInterface
-   *   An associative array containing the search results, as specified by
-   *   SearchApiQueryInterface::execute().
+   *   The search query object used internally by this handler.
    */
   public function getSearchApiQuery() {
     return $this->query;
@@ -282,16 +459,28 @@ class SearchApiViewsQuery extends views_plugin_query {
     return $this;
   }
 
-  public function filter(SearchApiQueryFilterInterface $filter) {
+  /**
+   * Adds a nested filter to the search query object.
+   *
+   * If $group is given, the filter is added to the relevant filter group
+   * instead.
+   */
+  public function filter(SearchApiQueryFilterInterface $filter, $group = NULL) {
     if (!$this->errors) {
-      $this->query->filter($filter);
+      $this->where[$group]['filters'][] = $filter;
     }
     return $this;
   }
 
-  public function condition($field, $value, $operator = '=') {
+  /**
+   * Set a condition on the search query object.
+   *
+   * If $group is given, the condition is added to the relevant filter group
+   * instead.
+   */
+  public function condition($field, $value, $operator = '=', $group = NULL) {
     if (!$this->errors) {
-      $this->query->condition($field, $value, $operator);
+      $this->where[$group]['conditions'][] = array($field, $value, $operator);
     }
     return $this;
   }

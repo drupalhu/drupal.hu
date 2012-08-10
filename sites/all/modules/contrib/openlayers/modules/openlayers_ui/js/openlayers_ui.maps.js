@@ -7,7 +7,7 @@
  */
 
 /**
- * Test whether function exists, 
+ * Test whether function exists,
  * even if it is the child of another object
  * @param head the function name as a string,
  *  optionally with dots for invoking children
@@ -36,50 +36,14 @@ function _function_exists(head, f) {
  */
 Drupal.behaviors.openlayers_ui = {
   'attach': function(context, settings) {
-    
-    // TODO: Review the following
-    /*
-    // Automatic options.  We do it here, instead of in Form API because
-    // Form API enforces the disabled
-    $("#edit-options-automatic-options:not(.openlayers-ui-processed)").each(function() {
-      $(this).addClass('openlayers-ui-processed');
-      $(this).change(function() {
-        var $thisCheck = $(this);
-        var $autoOptions = $thisCheck.parent()
-          .parent()
-          .parent()
-          .find('input:not("#edit-options-automatic-options")');
-        if ($thisCheck.is(':checked')) {
-          $autoOptions.attr('disabled', 'disabled');
-        }
-        else {
-          $autoOptions.removeAttr('disabled');
-        }
-      });
-  
-      // When form is submitted, if disabled, FAPI does not read values   
-      $(this).parents('form').submit(function() {
-        $("#edit-options-automatic-options").attr('checked', false).trigger('change');
-      });
-      $(this).trigger('change');
-    });
-  
-    // Update map positioning when text fields are changed.
-    $("#edit-center-lat:not(.openlayers-ui-processed), #edit-center-lon:not(.openlayers-ui-processed), #edit-center-zoom:not(.openlayers-ui-processed)").each(function() {
-      $(this).addClass('openlayers-ui-processed');
-      $(this).change(function() {
-        Drupal.openlayers_ui.updateMapCenter();
-      });
-    });
-    */
-  
+
     // mark openlayers dependencies as valid or invalid
     $('.openlayers-dependency-flag').each(function() {
       if (!function_exists($(this).find('.openlayers-dependency-value').text())) {
         $(this).find('.openlayers-dependency-broken').show();
       }
     });
-    
+
     // Since CTools dependency is not working
     $('#edit-behaviors:not(.openlayers-behaviors-checks-processed)').each(function () {
       $('#edit-behaviors').addClass('openlayers-behaviors-checks-processed');
@@ -91,21 +55,21 @@ Drupal.behaviors.openlayers_ui = {
           $thisBehavior.siblings().show();
         }
         else {
-          $thisBehavior.siblings().hide(); 
+          $thisBehavior.siblings().hide();
         }
-        
+
         $thisCheck.click(function() {
           if ($thisCheck.attr('checked')) {
             $thisBehavior.siblings().show();
           }
           else {
-            $thisBehavior.siblings().hide(); 
+            $thisBehavior.siblings().hide();
           }
         });
-      
+
       });
     });
-  
+
     // Run once on load.
     Drupal.openlayers_ui.updateMapCenter();
   }
@@ -161,7 +125,7 @@ Drupal.openlayers_ui = {
   },
 
   /**
-   * Event callback for updating center form field values when map 
+   * Event callback for updating center form field values when map
    * is dragged or zoomed.
    */
   'updateCenterFormValues': function() {

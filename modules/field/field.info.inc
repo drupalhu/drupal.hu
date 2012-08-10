@@ -13,6 +13,9 @@
  * The Field Info API exposes information about field types, fields,
  * instances, bundles, widget types, display formatters, behaviors,
  * and settings defined by or with the Field API.
+ *
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -24,6 +27,7 @@
  */
 function field_info_cache_clear() {
   drupal_static_reset('field_view_mode_settings');
+  drupal_static_reset('field_available_languages');
 
   // @todo: Remove this when field_attach_*_bundle() bundle management
   // functions are moved to the entity API.
@@ -602,13 +606,15 @@ function field_info_fields() {
  *
  * @param $field_name
  *   The name of the field to retrieve. $field_name can only refer to a
- *   non-deleted, active field. Use field_read_fields() to retrieve information
- *   on deleted or inactive fields.
+ *   non-deleted, active field. For deleted fields, use
+ *   field_info_field_by_id(). To retrieve information about inactive fields,
+ *   use field_read_fields().
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an
  *   additional element 'bundles', whose value is an array of all the bundles
- *   this field belongs to keyed by entity type.
+ *   this field belongs to keyed by entity type. NULL if the field was not
+ *   found.
  *
  * @see field_info_field_by_id()
  */
@@ -624,7 +630,7 @@ function field_info_field($field_name) {
  *
  * @param $field_id
  *   The id of the field to retrieve. $field_id can refer to a
- *   deleted field.
+ *   deleted field, but not an inactive one.
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an
@@ -675,16 +681,16 @@ function field_info_field_by_ids() {
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
-  if (!isset($entity_type)) {
+
+  if (isset($entity_type) && isset($bundle_name)) {
+    return isset($info['instances'][$entity_type][$bundle_name]) ? $info['instances'][$entity_type][$bundle_name] : array();
+  }
+  elseif (isset($entity_type)) {
+    return isset($info['instances'][$entity_type]) ? $info['instances'][$entity_type] : array();
+  }
+  else {
     return $info['instances'];
   }
-  if (!isset($bundle_name)) {
-    return $info['instances'][$entity_type];
-  }
-  if (isset($info['instances'][$entity_type][$bundle_name])) {
-    return $info['instances'][$entity_type][$bundle_name];
-  }
-  return array();
 }
 
 /**
@@ -885,5 +891,5 @@ function field_info_storage_settings($type) {
 }
 
 /**
- * @} End of "defgroup field_info"
+ * @} End of "defgroup field_info".
  */

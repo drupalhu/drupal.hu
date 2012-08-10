@@ -44,6 +44,7 @@ function search_api_schema() {
       'options' => array(
         'description' => 'The options used to configure the service object.',
         'type' => 'text',
+        'size' => 'medium',
         'serialize' => TRUE,
         'not null' => TRUE,
       ),
@@ -109,8 +110,8 @@ function search_api_schema() {
         'length' => 50,
         'not null' => FALSE,
       ),
-      'entity_type' => array(
-        'description' => 'The entity type of items stored in this index.',
+      'item_type' => array(
+        'description' => 'The type of items stored in this index.',
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
@@ -118,6 +119,7 @@ function search_api_schema() {
       'options' => array(
         'description' => 'An array of additional arguments configuring this index.',
         'type' => 'text',
+        'size' => 'medium',
         'serialize' => TRUE,
         'not null' => TRUE,
       ),
@@ -150,7 +152,7 @@ function search_api_schema() {
       ),
     ),
     'indexes' => array(
-      'entity_type' => array('entity_type'),
+      'item_type' => array('item_type'),
       'server' => array('server'),
       'enabled' => array('enabled'),
     ),
@@ -178,7 +180,7 @@ function search_api_schema() {
       'changed' => array(
         'description' => 'Either a flag or a timestamp to indicate if or when the item was changed since it was last indexed.',
         'type' => 'int',
-        'unsigned' => TRUE,
+        'size' => 'big',
         'not null' => TRUE,
         'default' => 1,
       ),
@@ -210,7 +212,7 @@ function search_api_install() {
     'machine_name' => preg_replace('/[^a-z0-9]+/', '_', drupal_strtolower($name)),
     'description' => t('An automatically created search index for indexing node data. Might be configured to specific needs.'),
     'server' => NULL,
-    'entity_type' => 'node',
+    'item_type' => 'node',
     'options' => array(
       'cron_limit' => '50',
       'data_alter_callbacks' => array(
@@ -259,162 +261,40 @@ function search_api_install() {
         ),
       ),
       'fields' => array(
-        'nid' => array(
-          'name' => 'Node ID',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'vid' => array(
-          'name' => 'Revision ID',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'tnid' => array(
-          'name' => 'Translation set ID',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'uid' => array(
-          'name' => 'User ID',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'is_new' => array(
-          'name' => 'Is new',
-          'type' => 'boolean',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
         'type' => array(
-          'name' => 'Content type',
           'type' => 'string',
-          'boost' => '1.0',
-          'indexed' => 1,
-        ),
-        'type_name' => array(
-          'name' => 'Content type name',
-          'type' => 'string',
-          'boost' => '1.0',
-          'indexed' => 0,
         ),
         'title' => array(
-          'name' => 'Title',
           'type' => 'text',
           'boost' => '5.0',
-          'indexed' => 1,
-        ),
-        'language' => array(
-          'name' => 'Language',
-          'type' => 'string',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'url' => array(
-          'name' => 'URL',
-          'type' => 'uri',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'edit_url' => array(
-          'name' => 'Edit URL',
-          'type' => 'uri',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'status' => array(
-          'name' => 'Published',
-          'type' => 'boolean',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'promote' => array(
-          'name' => 'Promoted to frontpage',
           'type' => 'boolean',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'sticky' => array(
-          'name' => 'Sticky in lists',
           'type' => 'boolean',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'created' => array(
-          'name' => 'Date created',
           'type' => 'date',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'changed' => array(
-          'name' => 'Date changed',
           'type' => 'date',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'author' => array(
-          'name' => 'Author',
           'type' => 'integer',
           'entity_type' => 'user',
-          'boost' => '1.0',
-          'indexed' => 1,
-        ),
-        'log' => array(
-          'name' => 'Revision log message',
-          'type' => 'text',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'revision' => array(
-          'name' => 'Creates revision',
-          'type' => 'boolean',
-          'boost' => '1.0',
-          'indexed' => 0,
-        ),
-        'comment' => array(
-          'name' => 'Comments allowed',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
         ),
         'comment_count' => array(
-          'name' => 'Comment count',
           'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 1,
-        ),
-        'comment_count_new' => array(
-          'name' => 'New comment count',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
         ),
         'search_api_language' => array(
-          'name' => 'Item language',
           'type' => 'string',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'search_api_fulltext' => array(
-          'name' => 'Fulltext',
           'type' => 'text',
-          'boost' => '1.0',
-          'indexed' => 1,
         ),
         'body:value' => array(
-          'name' => 'Body » Text',
           'type' => 'text',
-          'boost' => '1.0',
-          'indexed' => 1,
-        ),
-        'body:format' => array(
-          'name' => 'Body » Text format',
-          'type' => 'integer',
-          'boost' => '1.0',
-          'indexed' => 0,
         ),
       ),
     ),
@@ -425,64 +305,19 @@ function search_api_install() {
 
 /**
  * Implements hook_enable().
+ *
+ * Mark all items as "dirty", since we can't know whether they are.
  */
 function search_api_enable() {
-  // Mark all items as "dirty", since we can't know whether they are.
-  db_delete('search_api_item')
-    ->execute();
   $types = array();
   foreach (search_api_index_load_multiple(FALSE) as $index) {
-    $types[$index->entity_type][] = $index->id;
+    if ($index->enabled) {
+      $types[$index->item_type][] = $index;
+    }
   }
-  if (!$types) {
-    return;
-  }
-  $insert = db_insert('search_api_item')
-    ->fields(array('item_id', 'index_id', 'changed'));
   foreach ($types as $type => $indexes) {
-    // Partly copied from SearchApiIndex::queueItems().
-
-    $entity_info = entity_get_info($type);
-
-    // If the entity info specifies a base table, use that to add all items
-    // directly in an INSERT ... SELECT. Otherwise, use entity_load() and add
-    // the values to the outer $insert query.
-    if (!empty($entity_info['base table'])) {
-      // Use a subselect, which will probably be much faster than entity_load().
-
-      // Assumes that all entities use the "base table" property and the
-      // "entity keys[id]" in the same way as the default controller.
-      $id_field = $entity_info['entity keys']['id'];
-      $table = $entity_info['base table'];
-
-      // Select all entity ids and all relevant indexes.
-      $query = db_select($table, 't');
-      $query->join('search_api_index', 'i', 'i.entity_type = :type AND i.read_only = :read_only AND i.enabled = :enabled',
-          array(':type' => $type, ':read_only' => 0, ':enabled' => 1));
-      $query->addField('t', $id_field, 'item_id');
-      $query->addField('i', 'id', 'index_id');
-      $query->addExpression('1', 'changed');
-
-      // INSERT ... SELECT ...
-      db_insert('search_api_item')
-        ->from($query)
-        ->execute();
-    }
-    else {
-      foreach (entity_load($type) as $id => $entity) {
-        foreach ($indexes as $index_id) {
-          $insert->values(array(
-            'item_id' => $id,
-            'index_id' => $index_id,
-            'changed' => 1,
-          ));
-        }
-      }
-    }
-  }
-  // Only execute this query if we added any values to it.
-  if (isset($index_id)) {
-    $insert->execute();
+    $controller = search_api_get_datasource_controller($type);
+    $controller->startTracking($indexes);
   }
 }
 
@@ -490,8 +325,14 @@ function search_api_enable() {
  * Implements hook_disable().
  */
 function search_api_disable() {
-  db_delete('search_api_item')
-    ->execute();
+  $types = array();
+  foreach (search_api_index_load_multiple(FALSE) as $index) {
+    $types[$index->item_type][] = $index;
+  }
+  foreach ($types as $type => $indexes) {
+    $controller = search_api_get_datasource_controller($type);
+    $controller->stopTracking($indexes);
+  }
 }
 
 /**
@@ -499,6 +340,7 @@ function search_api_disable() {
  */
 function search_api_uninstall() {
   variable_del('search_api_tasks');
+  variable_del('search_api_index_worker_callback_runtime');
 }
 
 /**
@@ -574,7 +416,7 @@ function search_api_update_7101() {
     catch (Exception $e1) {
       // Ignore.
     }
-    throw new DrupalUpdateException(t('An exception occurred during the update: !msg.', array('!msg' => $e->getMessage())));
+    throw new DrupalUpdateException(t('An exception occurred during the update: @msg.', array('@msg' => $e->getMessage())));
   }
 }
 
@@ -815,4 +657,161 @@ function search_api_update_7108() {
  */
 function search_api_update_7109() {
   cache_clear_all('entity_info:', 'cache', TRUE);
+}
+
+/**
+ * Rename the "entity_type" field to "item_type" in the {search_api_index} table.
+ */
+function search_api_update_7110() {
+  $table = 'search_api_index';
+  // This index isn't used anymore.
+  db_drop_index($table, 'entity_type');
+  // Rename the "item_type" field (and change the description).
+  $item_type = array(
+    'description' => 'The type of items stored in this index.',
+    'type' => 'varchar',
+    'length' => 50,
+    'not null' => TRUE,
+  );
+  // Also add the new "item_type" index, while we're at it.
+  $keys_new['indexes']['item_type'] = array('item_type');
+  db_change_field($table, 'entity_type', 'item_type', $item_type, $keys_new);
+  // Mark all indexes in code as "OVERRIDDEN".
+  db_update($table)
+    ->fields(array(
+      'status' => 0x03,
+    ))
+    ->condition('status', 0x02)
+    ->execute();
+  // Clear entity info caches.
+  cache_clear_all('*', 'cache', TRUE);
+}
+
+/**
+ * Change the definition of the {search_api_item}.changed field.
+ */
+function search_api_update_7111() {
+  $spec = array(
+    'description' => 'Either a flag or a timestamp to indicate if or when the item was changed since it was last indexed.',
+    'type' => 'int',
+    'size' => 'big',
+    'not null' => TRUE,
+    'default' => 1,
+  );
+  db_change_field('search_api_item', 'changed', 'changed', $spec);
+}
+
+/**
+ * Changes the size of the {search_api_index}.options and {search_api_server}.options fields to "medium".
+ */
+function search_api_update_7112() {
+  $spec = array(
+    'description' => 'The options used to configure the service object.',
+    'type' => 'text',
+    'size' => 'medium',
+    'serialize' => TRUE,
+    'not null' => TRUE,
+  );
+  db_change_field('search_api_server', 'options', 'options', $spec);
+  $spec = array(
+    'description' => 'An array of additional arguments configuring this index.',
+    'type' => 'text',
+    'size' => 'medium',
+    'serialize' => TRUE,
+    'not null' => TRUE,
+  );
+  db_change_field('search_api_index', 'options', 'options', $spec);
+}
+
+/**
+ * Removes superfluous data from the stored index options.
+ */
+function search_api_update_7113() {
+  $indexes = db_select('search_api_index', 'i')
+    ->fields('i')
+    ->execute();
+  foreach ($indexes as $index) {
+    $options = unserialize($index->options);
+    // Weed out fields settings.
+    if (!empty($options['fields'])) {
+      foreach ($options['fields'] as $key => $field) {
+        if (isset($field['indexed']) && !$field['indexed']) {
+          unset($options['fields'][$key]);
+          continue;
+        }
+        unset($options['fields'][$key]['name'], $options['fields'][$key]['indexed']);
+        if (isset($field['boost']) && $field['boost'] == '1.0') {
+          unset($options['fields'][$key]['boost']);
+        }
+      }
+    }
+    // Weed out processor settings.
+    if (!empty($options['processors'])) {
+      // Only weed out settings for our own processors.
+      $processors = array('search_api_case_ignore', 'search_api_html_filter', 'search_api_tokenizer', 'search_api_stopwords');
+      foreach ($processors as $key) {
+        if (empty($options['processors'][$key])) {
+          continue;
+        }
+        $processor = $options['processors'][$key];
+        if (empty($processor['settings']['fields'])) {
+          continue;
+        }
+        $fields = array_filter($processor['settings']['fields']);
+        if ($fields) {
+          $fields = array_combine($fields, array_fill(0, count($fields), TRUE));
+        }
+        $options['processors'][$key]['settings']['fields'] = $fields;
+      }
+    }
+    // Weed out settings for the „Aggregated fields“ data alteration.
+    if (!empty($options['data_alter_callbacks']['search_api_alter_add_aggregation']['settings']['fields'])) {
+      unset($options['data_alter_callbacks']['search_api_alter_add_aggregation']['settings']['actions']);
+      $aggregated_fields = &$options['data_alter_callbacks']['search_api_alter_add_aggregation']['settings']['fields'];
+      foreach ($aggregated_fields as $key => $field) {
+        unset($aggregated_fields[$key]['actions']);
+        if (!empty($field['fields'])) {
+          $aggregated_fields[$key]['fields'] = array_values(array_filter($field['fields']));
+        }
+      }
+    }
+    $options = serialize($options);
+    if ($options != $index->options) {
+      // Mark the entity as overridden, in case it has been defined in code
+      // only.
+      $index->status |= 0x01;
+      db_update('search_api_index')
+        ->fields(array(
+          'options' => $options,
+          'status' => $index->status,
+        ))
+        ->condition('id', $index->id)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Sanitize watchdog messages.
+ */
+function search_api_update_7114() {
+  if (db_table_exists('watchdog')) {
+    try {
+      $entries = db_select('watchdog', 'w')
+        ->fields('w', array('wid', 'message'))
+        ->condition('type', 'search_api')
+        ->execute();
+      foreach ($entries as $entry) {
+        db_update('watchdog')
+          ->fields(array(
+            'message' => check_plain($entry->message),
+          ))
+          ->condition('wid', $entry->wid)
+          ->execute();
+      }
+    }
+    catch (Exception $e) {
+      throw new DrupalUpdateException(t('An exception occurred during the update: @msg.', array('@msg' => $e->getMessage())));
+    }
+  }
 }

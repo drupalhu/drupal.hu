@@ -178,6 +178,33 @@ function system_list($type) {
           $lists['filepaths'][] = array('type' => $record->type, 'name' => $record->name, 'filepath' => $record->filename);
         }
       }
+      foreach ($lists['theme'] as $key => $theme) {
+        if (!empty($theme->info['base theme'])) {
+          // Make a list of the theme's base themes.
+          $lists['theme'][$key]->base_themes = drupal_find_base_themes($lists['theme'], $key);
+          // Don't proceed if there was a problem with the root base theme.
+          if (!current($lists['theme'][$key]->base_themes)) {
+            continue;
+          }
+          // Determine the root base theme.
+          $base_key = key($lists['theme'][$key]->base_themes);
+          // Add to the list of sub-themes for each of the theme's base themes.
+          foreach (array_keys($lists['theme'][$key]->base_themes) as $base_theme) {
+            $lists['theme'][$base_theme]->sub_themes[$key] = $lists['theme'][$key]->info['name'];
+          }
+          // Add the base theme's theme engine info.
+          $lists['theme'][$key]->info['engine'] = isset($lists['theme'][$base_key]->info['engine']) ? $lists['theme'][$base_key]->info['engine'] : 'theme';
+        }
+        else {
+          // A plain theme is its own engine.
+          $base_key = $key;
+          if (!isset($lists['theme'][$key]->info['engine'])) {
+            $lists['theme'][$key]->info['engine'] = 'theme';
+          }
+        }
+        // Set the theme engine prefix.
+        $lists['theme'][$key]->prefix = ($lists['theme'][$key]->info['engine'] == 'theme') ? $base_key : $lists['theme'][$key]->info['engine'];
+      }
       cache_set('system_list', $lists, 'cache_bootstrap');
     }
     // To avoid a separate database lookup for the filepath, prime the
@@ -425,6 +452,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
+      // Update the theme registry to include it.
+      drupal_theme_rebuild();
       // Clear entity cache.
       entity_info_cache_clear();
 
@@ -539,12 +568,15 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
+    entity_info_cache_clear();
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
+    // Update the theme registry to remove the newly-disabled module.
+    drupal_theme_rebuild();
   }
 
   // If there remains no more node_access module, rebuilding will be
@@ -952,10 +984,24 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
       }
       // If any modules implement one of the extra hooks that do not implement
       // the primary hook, we need to add them to the $modules array in their
-      // appropriate order.
+      // appropriate order. module_implements() can only return ordered
+      // implementations of a single hook. To get the ordered implementations
+      // of multiple hooks, we mimic the module_implements() logic of first
+      // ordering by module_list(), and then calling
+      // drupal_alter('module_implements').
       if (array_diff($extra_modules, $modules)) {
-        // Order the modules by the order returned by module_list().
+        // Merge the arrays and order by module_list().
         $modules = array_intersect(module_list(), array_merge($modules, $extra_modules));
+        // Since module_implements() already took care of loading the necessary
+        // include files, we can safely pass FALSE for the array values.
+        $implementations = array_fill_keys($modules, FALSE);
+        // Let modules adjust the order solely based on the primary hook. This
+        // ensures the same module order regardless of whether this if block
+        // runs. Calling drupal_alter() recursively in this way does not result
+        // in an infinite loop, because this call is for a single $type, so we
+        // won't end up in this code block again.
+        drupal_alter('module_implements', $implementations, $hook);
+        $modules = array_keys($implementations);
       }
       foreach ($modules as $module) {
         // Since $modules is a merged array, for any given module, we do not
@@ -1003,4 +1049,3 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $function($data, $context1, $context2);
   }
 }
-

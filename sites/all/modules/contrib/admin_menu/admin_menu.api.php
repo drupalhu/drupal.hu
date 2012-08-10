@@ -1,5 +1,4 @@
 <?php
-// $Id: admin_menu.api.php,v 1.6 2011/01/06 23:27:40 sun Exp $
 
 /**
  * @file
@@ -20,8 +19,6 @@
  *   product of all arguments). The expansion values may be empty; that is, you
  *   do not need to insert logic to skip map items for which no values exist,
  *   since Administration menu will take care of that.
- * - hide: (optional) Used to hide another menu path, usually a superfluous
- *   "List" item.
  *
  * @see admin_menu.map.inc
  */
@@ -31,9 +28,6 @@ function hook_admin_menu_map() {
   $map['admin/structure/types/manage/%node_type'] = array(
     // Link generated items directly to the "Content types" item.
     'parent' => 'admin/structure/types',
-    // Hide the "List" item, as this expansion will expose all available
-    // options.
-    'hide' => 'admin/structure/types/list',
     // Create expansion arguments for the '%node_type' placeholder.
     'arguments' => array(
       array(
@@ -45,23 +39,39 @@ function hook_admin_menu_map() {
 }
 
 /**
- * Alter content in Administration menu bar before it is rendered.
+ * Add to the administration menu content before it is rendered.
  *
- * @param $content
- *   A structured array suitable for drupal_render(), at the very least
- *   containing the keys 'menu' and 'links'.  Most implementations likely want
- *   to alter or add to 'links'.
+ * @param array $content
+ *   A structured array suitable for drupal_render(), containing:
+ *   - menu: The administrative menu of links below the path 'admin/*'.
+ *   - icon: The icon menu.
+ *   - user: The user items and links.
+ *   Passed by reference.
  *
- * $content['menu'] contains the HTML representation of the 'admin_menu' menu
- * tree.
- * @see admin_menu_menu_alter()
- *
- * $content['links'] contains additional top-level links in the Administration
- * menu, such as the icon menu or the logout link. You can add more items here
- * or play with the #weight attribute to customize them.
- * @see theme_admin_menu_links()
+ * @see hook_admin_menu_output_alter()
+ * @see admin_menu_links_menu()
  * @see admin_menu_links_icon()
  * @see admin_menu_links_user()
+ * @see theme_admin_menu_links()
+ */
+function hook_admin_menu_output_build(&$content) {
+}
+
+/**
+ * Change the administration menu content before it is rendered.
+ *
+ * @param array $content
+ *   A structured array suitable for drupal_render(), containing:
+ *   - menu: The administrative menu of links below the path 'admin/*'.
+ *   - icon: The icon menu.
+ *   - user: The user items and links.
+ *   Passed by reference.
+ *
+ * @see hook_admin_menu_output_build()
+ * @see admin_menu_links_menu()
+ * @see admin_menu_links_icon()
+ * @see admin_menu_links_user()
+ * @see theme_admin_menu_links()
  */
 function hook_admin_menu_output_alter(&$content) {
   // Add new top-level item.
@@ -86,3 +96,27 @@ function hook_admin_menu_output_alter(&$content) {
   );
 }
 
+/**
+ * Inform about additional module-specific caches that can be cleared.
+ *
+ * Administration menu uses this hook to gather information about available
+ * caches that can be flushed individually. Each returned item forms a separate
+ * menu link below the "Flush all caches" link in the icon menu.
+ *
+ * @return array
+ *   An associative array whose keys denote internal identifiers for a
+ *   particular caches (which can be freely defined, but should be in a module's
+ *   namespace) and whose values are associative arrays containing:
+ *   - title: The name of the cache, without "cache" suffix. This label is
+ *     output as link text, but also for the "!title cache cleared."
+ *     confirmation message after flushing the cache; make sure it works and
+ *     makes sense to users in both locations.
+ *   - callback: The name of a function to invoke to flush the individual cache.
+ */
+function hook_admin_menu_cache_info() {
+  $caches['update'] = array(
+    'title' => t('Update data'),
+    'callback' => '_update_cache_clear',
+  );
+  return $caches;
+}

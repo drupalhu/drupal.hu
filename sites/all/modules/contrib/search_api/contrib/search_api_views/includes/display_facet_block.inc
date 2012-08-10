@@ -21,6 +21,7 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
 
     $options['linked_path'] = array('default' => '');
     $options['facet_field'] = '';
+    $options['hide_block'] = FALSE;
 
     return $options;
   }
@@ -56,6 +57,15 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
           '#value' => $this->get_option('use_more_always'),
         );
         break;
+      case 'hide_block':
+        $form['hide_block'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Hide block'),
+          '#description' => t('Hide this block, but still execute the search. ' .
+              'Can be used to show native Facet API facet blocks linking to the search page specified above.'),
+          '#default_value' => $this->get_option('hide_block'),
+        );
+        break;
     }
   }
 
@@ -75,6 +85,9 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
       case 'facet_field':
         $this->set_option('facet_field', $form_state['values']['facet_field']);
         break;
+      case 'hide_block':
+        $this->set_option('hide_block', $form_state['values']['hide_block']);
+        break;
     }
   }
 
@@ -92,6 +105,11 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
       'title' => t('Facet field'),
       'value' => $this->get_option('facet_field') ? $field_options[$this->get_option('facet_field')] : t('None'),
     );
+    $options['hide_block'] = array(
+      'category' => 'block',
+      'title' => t('Hide block'),
+      'value' => $this->get_option('hide_block') ? t('Yes') : t('No'),
+    );
   }
 
   protected $field_options = NULL;
@@ -102,16 +120,14 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
       if (!($index_id && ($index = search_api_index_load($index_id)))) {
         $table = views_fetch_data($this->view->base_table);
         $table = empty($table['table']['base']['title']) ? $this->view->base_table : $table['table']['base']['title'];
-        throw new SearchApiException(t('The "Facets block" display cannot be used with a view for !basetable. ' .
+        throw new SearchApiException(t('The "Facets block" display cannot be used with a view for @basetable. ' .
             'Please only use this display with base tables representing search indexes.',
-            array('!basetable' => $table)));
+            array('@basetable' => $table)));
       }
       $this->field_options = array();
       if (!empty($index->options['fields'])) {
-        foreach ($index->options['fields'] as $key => $field) {
-          if ($field['indexed']) {
-            $this->field_options[$key] = $field['name'];
-          }
+        foreach ($index->getFields() as $key => $field) {
+          $this->field_options[$key] = $field['name'];
         }
       }
     }
@@ -152,50 +168,92 @@ class SearchApiViewsFacetsBlockDisplay extends views_plugin_display_block {
     $this->view->build();
     $limit = empty($this->view->query->pager->options['items_per_page']) ? 10 : $this->view->query->pager->options['items_per_page'];
     $query_options = &$this->view->query->getOptions();
-    $query_options['search_api_facets']['search_api_views_facets_block'] = array(
-      'field' => $facet_field,
-      'limit' => $limit,
-      'missing' => FALSE,
-      'min_count' => 1,
-    );
+    if (!$this->get_option('hide_block')) {
+      // If we hide the block, we don't need this extra facet.
+      $query_options['search_api_facets']['search_api_views_facets_block'] = array(
+        'field' => $facet_field,
+        'limit' => $limit,
+        'missing' => FALSE,
+        'min_count' => 1,
+      );
+    }
     $query_options['search id'] = 'search_api_views:' . $this->view->name . '-facets_block';
+    $query_options['search_api_base_path'] = $base_path;
     $this->view->query->range(0, 0);
 
     $this->view->execute();
+
+    if ($this->get_option('hide_block')) {
+      return NULL;
+    }
+
     $results = $this->view->query->getSearchApiResults();
 
     if (empty($results['search_api_facets']['search_api_views_facets_block'])) {
       return NULL;
     }
+    $terms = $results['search_api_facets']['search_api_views_facets_block'];
 
-    $facet = new SearchApiFacet(array(
-      'index_id' => substr($this->view->base_table, 17),
-      'field' => $facet_field,
-      'options' => array(),
-    ));
-    _search_api_facets_refresh_type($facet, $facet->options);
-    $facet->options += array('options' => array());
+    $filters = array();
+    foreach ($terms as $term) {
+      $filter = $term['filter'];
+      if ($filter[0] == '"') {
+        $filter = substr($filter, 1, -1);
+      }
+      elseif ($filter != '!') {
+        // This is a range filter.
+        $filter = substr($filter, 1, -1);
+        $pos = strpos($filter, ' ');
+        if ($pos !== FALSE) {
+          $filter = '[' . substr($filter, 0, $pos) . ' TO ' . substr($filter, $pos + 1) . ']';
+        }
+      }
+      $filters[$term['filter']] = $filter;
+    }
 
-    $theme_suffix  = '';
-    $theme_suffix .= '__' . preg_replace('/\W+/', '_', $this->view->query->getIndex()->entity_type);
-    $theme_suffix .= '__' . preg_replace('/\W+/', '_', $facet_field);
-    $theme_suffix .= '__search_api_views_facets_block';
-    $info['content']['facets'] = array(
-      '#theme'  => 'search_api_facets_list' . $theme_suffix,
-      '#terms'  => array(),
-    );
-    foreach ($results['search_api_facets']['search_api_views_facets_block'] as $term) {
-      $query = array();
-      $query['filter'][$facet_field][0] = $term['filter'];
-      $info['content']['facets']['#terms'][] = array(
-        '#theme'   => 'search_api_facets_facet' . $theme_suffix,
-        '#name'    => _search_api_create_filter_name($term['filter'], $facet->options['type'], $facet->options['options']),
-        '#count'   => $term['count'],
-        '#path'    => $base_path,
-        '#options' => array('query' => $query),
-        '#active'  => FALSE,
+    $index = $this->view->query->getIndex();
+    $options['field'] = $index->options['fields'][$facet_field];
+    $options['field']['key'] = $facet_field;
+    $options['index id'] = $index->machine_name;
+    $options['value callback'] = '_search_api_facetapi_facet_create_label';
+    $map = search_api_facetapi_facet_map_callback($filters, $options);
+
+    $facets = array();
+    $prefix = rawurlencode($facet_field) . ':';
+    foreach ($terms as $term) {
+      $name = $filter = $filters[$term['filter']];
+      if (isset($map[$filter])) {
+        $name = $map[$filter];
+      }
+      $query['f'][0] = $prefix . $filter;
+
+      // Initializes variables passed to theme hook.
+      $variables = array(
+        'text' => $name,
+        'path' => $base_path,
+        'count' => $term['count'],
+        'options' => array(
+          'attributes' => array('class' => 'facetapi-inactive'),
+          'html' => FALSE,
+          'query' => $query,
+        ),
+      );
+
+      // Themes the link, adds row to facets.
+      $facets[] = array(
+        'class' => array('leaf'),
+        'data' => theme('facetapi_link_inactive', $variables),
       );
     }
+
+    if (!$facets) {
+      return NULL;
+    }
+
+    $info['content']['facets'] = array(
+      '#theme'  => 'item_list',
+      '#items'  => $facets,
+    );
     $info['content']['more'] = $this->render_more_link();
     $info['subject'] = filter_xss_admin($this->view->get_title());
     return $info;

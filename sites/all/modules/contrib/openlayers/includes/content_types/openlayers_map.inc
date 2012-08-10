@@ -54,7 +54,7 @@ function openlayers_map_content_type_render($subtype, $conf, $args, $context) {
   $block = new stdClass();
   $block->title = $map->title;
   $block->content = openlayers_render_map($map);
-  
+
   return $block;
 }
 

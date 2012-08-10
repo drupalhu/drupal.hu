@@ -1,4 +1,3 @@
-/* $Id: admin_menu.js,v 1.32 2010/02/20 23:44:00 sun Exp $ */
 (function($) {
 
 Drupal.admin = Drupal.admin || {};
@@ -36,11 +35,13 @@ Drupal.behaviors.adminMenu = {
     if (!$adminMenu.length && settings.admin_menu.hash) {
       Drupal.admin.getCache(settings.admin_menu.hash, function (response) {
           if (typeof response == 'string' && response.length > 0) {
-            $('body', context).prepend(response);
+            $('body', context).append(response);
           }
           var $adminMenu = $('#admin-menu:not(.admin-menu-processed)', context);
           // Apply our behaviors.
           Drupal.admin.attachBehaviors(context, settings, $adminMenu);
+          // Allow resize event handlers to recalculate sizes/positions.
+          $(window).triggerHandler('resize');
       });
     }
     // If the menu is in the output already, this means there is a new version.
@@ -71,7 +72,7 @@ Drupal.behaviors.adminMenuCollapsePermissions = {
       // Freeze width of first column to prevent jumping.
       $('#permissions th:first', context).css({ width: $('#permissions th:first', context).width() });
       // Attach click handler.
-      $('#permissions tr:has(td.module)', context).once('admin-menu-tweak-permissions', function () {
+      $modules = $('#permissions tr:has(td.module)', context).once('admin-menu-tweak-permissions', function () {
         var $module = $(this);
         $module.bind('click.admin-menu', function () {
           // @todo Replace with .nextUntil() in jQuery 1.4.
@@ -83,7 +84,11 @@ Drupal.behaviors.adminMenuCollapsePermissions = {
             $row.toggleClass('element-hidden');
           });
         });
-      }).trigger('click.admin-menu');
+      });
+      // Get fragment from current URL.
+      var fragment = window.location.hash || '#';
+      // Collapse all but the targeted permission rows set.
+      $modules.not(':has(' + fragment + ')').trigger('click.admin-menu');
     }
   }
 };
@@ -126,7 +131,23 @@ Drupal.admin.getCache = function (hash, onSuccess) {
       Drupal.admin.hashes.hash = status;
     }
   });
-}
+};
+
+/**
+ * TableHeader callback to determine top viewport offset.
+ *
+ * @see toolbar.js
+ */
+Drupal.admin.height = function() {
+  var $adminMenu = $('#admin-menu');
+  var height = $adminMenu.outerHeight();
+  // In IE, Shadow filter adds some extra height, so we need to remove it from
+  // the returned height.
+  if ($adminMenu.css('filter') && $adminMenu.css('filter').match(/DXImageTransform\.Microsoft\.Shadow/)) {
+    height -= $adminMenu.get(0).filters.item("DXImageTransform.Microsoft.Shadow").strength;
+  }
+  return height;
+};
 
 /**
  * @defgroup admin_behaviors Administration behaviors.
@@ -160,9 +181,13 @@ Drupal.admin.behaviors.positionFixed = function (context, settings, $adminMenu) 
  */
 Drupal.admin.behaviors.pageTabs = function (context, settings, $adminMenu) {
   if (settings.admin_menu.tweak_tabs) {
-    $('ul.tabs.primary li', context).addClass('admin-menu-tab').appendTo('#admin-menu-wrapper > ul');
-    $('ul.tabs.secondary', context).appendTo('#admin-menu-wrapper > ul > li.admin-menu-tab.active').removeClass('secondary');
-    $('ul.tabs.primary', context).remove();
+    var $tabs = $(context).find('ul.tabs.primary');
+    $adminMenu.find('#admin-menu-wrapper > ul').eq(1)
+      .append($tabs.find('li').addClass('admin-menu-tab'));
+    $(context).find('ul.tabs.secondary')
+      .appendTo('#admin-menu-wrapper > ul > li.admin-menu-tab.active')
+      .removeClass('secondary');
+    $tabs.remove();
   }
 };
 
@@ -173,7 +198,7 @@ Drupal.admin.behaviors.replacements = function (context, settings, $adminMenu) {
   for (var item in settings.admin_menu.replacements) {
     $(item, $adminMenu).html(settings.admin_menu.replacements[item]);
   }
-}
+};
 
 /**
  * Inject destination query strings for current page.
@@ -184,7 +209,7 @@ Drupal.admin.behaviors.destination = function (context, settings, $adminMenu) {
       this.search += (!this.search.length ? '?' : '&') + Drupal.settings.admin_menu.destination;
     });
   }
-}
+};
 
 /**
  * Apply JavaScript-based hovering behaviors.

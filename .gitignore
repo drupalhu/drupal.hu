@@ -1,15 +1,18 @@
 # Ignore configuration files that may contain sensitive information.
+files/*
 sites/*/settings*.php
 
 # Ignore paths that contain user-generated content.
-files
 sites/*/files
 sites/*/private
 
 
-#dhu.node host (Den)
-dhu.node
+#idea - PhpStorm
 
-#phpstorm files
 .idea
+
+
+#Den
+dhu.node
+.ht-php-error.log
 

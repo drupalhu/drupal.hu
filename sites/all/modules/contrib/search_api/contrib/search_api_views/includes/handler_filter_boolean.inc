@@ -15,7 +15,7 @@ class SearchApiViewsHandlerFilterBoolean extends SearchApiViewsHandlerFilter {
   /**
    * Provide a form for setting the filter value.
    */
-  public function value_form(array &$form, array &$form_state) {
+  public function value_form(&$form, &$form_state) {
     while (is_array($this->value)) {
       $this->value = $this->value ? array_shift($this->value) : NULL;
     }

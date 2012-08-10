@@ -51,8 +51,8 @@ function hook_openlayers_map_alter(&$map = array()) {
  *   being a unique string identifier key which corresponds to the
  *   layers' types.  The next level being an array of key/value
  *   pairs:
- *   - "description": 
- *   - "layer_type": 
+ *   - "description":
+ *   - "layer_type":
  */
 function hook_openlayers_layer_types() {
   // Take from openlayers.layer_types.inc
@@ -77,10 +77,10 @@ function hook_openlayers_layer_types() {
  * IMPORTANT:
  *
  * In order to support styles, maps, and layers in an external module,
- * one must notify the CTools module that that module provides implementations 
+ * one must notify the CTools module that that module provides implementations
  * of the hooks for styles, maps, and/or layers.
  *
- * This function is just an example implementation of 
+ * This function is just an example implementation of
  * hook_ctools_plugin_api() and should be alter according to
  * your module's name.
  *
@@ -124,12 +124,12 @@ function openlayers_example_ctools_plugin_api($module, $api) {
  * of translatable string.
  *
  * @return
- *   Return an associative array with index being a unique string 
+ *   Return an associative array with index being a unique string
  *   identifier, and simple objects with the following properties:
- *   - "api_version": 
- *   - "name": 
- *   - "title": 
- *   - "data": 
+ *   - "api_version":
+ *   - "name":
+ *   - "title":
+ *   - "data":
  */
 function hook_openlayers_layers() {
   // Taken from openlayers.layers.inc
@@ -148,7 +148,7 @@ function hook_openlayers_layers() {
   );
   $layers[$layer->name] = $layer;
   return $layers;
-  
+
   // Extra code to support potx extractors
   $potx = array(
     t('Google Maps Satellite'),
@@ -169,11 +169,11 @@ function hook_openlayers_layers() {
  *   Return a nested associative array with the top level
  *   being a unique string identifier, and the nested array
  *   containing the following key/pairs:
- *   - "title": 
- *   - "description": 
- *   - "file": 
- *   - "type": 
- *   - "behavior": 
+ *   - "title":
+ *   - "description":
+ *   - "file":
+ *   - "type":
+ *   - "behavior":
  */
 function hook_openlayers_behaviors() {
   // Taken from openlayers.behaviors.inc
@@ -203,11 +203,11 @@ function hook_openlayers_behaviors() {
  * @see openlayers_example_ctools_plugin_api().
  *
  * @return
- *   Return an associative array with index being a unique string 
+ *   Return an associative array with index being a unique string
  *   identifier, and simple objects with the following properties:
- *   - "api_version": 
- *   - "name": 
- *   - "title": 
+ *   - "api_version":
+ *   - "name":
+ *   - "title":
  *   - "data":
  */
 function hook_openlayers_styles() {
@@ -238,11 +238,11 @@ function hook_openlayers_styles() {
  * Define map objects.
  *
  * @return
- *   Return an associative array with index being a unique string 
+ *   Return an associative array with index being a unique string
  *   identifier, and simple objects with the following properties:
- *   - "api_version": 
- *   - "name": 
- *   - "title": 
+ *   - "api_version":
+ *   - "name":
+ *   - "title":
  *   - "data":
  */
 function hook_openlayers_maps() {
