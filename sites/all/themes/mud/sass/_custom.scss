@@ -61,7 +61,7 @@
 
 @mixin standard-link {
   &:link {
-    color: #0678BE;
+    color: $light_navy_blue;
   }
 
   &:hover {
@@ -74,10 +74,10 @@
 
   &:hover,
   &:focus {
-    color: #53B0EB;
+    color: $navy_blue;
   }
 
   &:active {
-    color: #4ceb69;
+    color: $light_yellow;
   }
 }

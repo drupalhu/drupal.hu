@@ -143,15 +143,15 @@ body {
  */
 /* line 63, ../sass/_custom.scss */
 a:link {
-  color: #0678BE;
+  color: #0d7dc1;
 }
 /* line 76, ../sass/_custom.scss */
 a:hover, a:focus {
-  color: #53B0EB;
+  color: #064771;
 }
 /* line 80, ../sass/_custom.scss */
 a:active {
-  color: #4ceb69;
+  color: #e6fcb6;
 }
 
 /*
