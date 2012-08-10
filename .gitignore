@@ -16,3 +16,7 @@ sites/*/private
 dhu.node
 .ht-php-error.log
 
+
+#sass cache dirs
+.sass-cache
+
