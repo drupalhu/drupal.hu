@@ -12,8 +12,8 @@
 ; page at admin/appearance.
 
 screenshot  = screenshot.png
-name        = Mud Drupal.hu theme
-description = Zen Responsive Sub-theme
+name        = Zen Sub-theme Starter Kit
+description = Read the <a href="http://drupal.org/node/873778">online docs</a> or the included README.txt on how to create a theme with Zen.
 
 
 
