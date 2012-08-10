@@ -57,3 +57,27 @@
     }
   }
 }
+
+
+@mixin standard-link {
+  &:link {
+    color: #0678BE;
+  }
+
+  &:hover {
+
+  }
+
+
+  a:visited {
+  }
+
+  &:hover,
+  &:focus {
+    color: #53B0EB;
+  }
+
+  &:active {
+    color: #4ceb69;
+  }
+}

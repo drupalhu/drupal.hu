@@ -154,17 +154,8 @@ body {
  * http://meyerweb.com/eric/thoughts/2007/06/11/who-ordered-the-link-states
  */
 
-a:link {
-}
-
-a:visited {
-}
-
-a:hover,
-a:focus {
-}
-
-a:active {
+a {
+  @include standard-link();
 }
 
 /*
