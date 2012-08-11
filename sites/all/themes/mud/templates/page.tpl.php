@@ -71,7 +71,7 @@
 ?>
 
 <div id="page">
-
+<div id="header-wrapper">
   <header id="header" role="banner">
 
     <?php if ($logo): ?>
@@ -111,6 +111,7 @@
     <?php print render($page['header']); ?>
 
   </header>
+</div>
 
   <div id="main">
 

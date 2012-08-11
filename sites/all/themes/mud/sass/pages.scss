@@ -45,7 +45,9 @@ body {
  * Header
  */
 
-#header {
+#header-wrapper {
+  background-color: $pale_yellow;
+  border-bottom: 1px solid $dark_blue;
 }
 
 #logo { /* Wrapping link for logo */
