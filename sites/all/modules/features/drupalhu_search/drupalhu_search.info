@@ -1,0 +1,12 @@
+name = Drupal.hu Search
+core = 7.x
+package = Features
+dependencies[] = comment
+dependencies[] = dhu
+dependencies[] = search_api
+dependencies[] = search_api_solr
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = dhu_search_comment
+features[views_view][] = dhu_search

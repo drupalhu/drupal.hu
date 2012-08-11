@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function dhu_preprocess_views_view(&$vars) {
+  if ((($vars['name'] == 'dhu_search') && ($vars['display_id'] == 'page')) || (($vars['name'] == 'dhu_search_comment') && ($vars['display_id'] == 'page'))) {
+    $vars['header'] = render(views_block_view('-exp-' . $vars['name'] . '-' . $vars['display_id']));
+  }
+}
