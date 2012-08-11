@@ -1,6 +1,6 @@
 name = Drupal.hu Search
 core = 7.x
-package = Features
+package = Drupalhu
 dependencies[] = comment
 dependencies[] = dhu
 dependencies[] = search_api
