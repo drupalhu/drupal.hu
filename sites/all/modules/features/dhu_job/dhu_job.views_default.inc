@@ -416,6 +416,9 @@ function dhu_job_views_default_views() {
 
   /* Display: Munkaajánlatok oldal */
   $handler = $view->new_display('page', 'Munkaajánlatok oldal', 'page');
+  $handler->display->display_options['defaults']['use_more'] = FALSE;
+  $handler->display->display_options['use_more_always'] = TRUE;
+  $handler->display->display_options['use_more_text'] = 'Összes munkaajánlat megtekintése';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Mező: Tartalom: Van új tartalma */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
