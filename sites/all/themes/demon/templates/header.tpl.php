@@ -1,7 +1,7 @@
 <div id="page-wrapper"><div id="page">
 
   <div id="header" class="<?php print $secondary_menu ? 'with-secondary-menu ': 'without-secondary-menu '; ?>container-24"><div class="section clearfix">
-	
+
 	<?php if ($secondary_menu): /* positioned to top-right corner of header, that is why we print this here */ ?>
       <div id="secondary-menu" class="navigation">
         <?php print theme('links__system_secondary_menu', array(
@@ -55,7 +55,7 @@
       <?php print render($page['header']); ?>
     </div>
     <?php if ($main_menu): ?>
-      <div id="main-menu" class="navigation grid-16 prefix-1 suffix-1">
+      <div id="main-menu" class="navigation grid-17 prefix-1 ">
         <?php print theme('links__system_main_menu', array(
           'links' => $main_menu,
           'attributes' => array(

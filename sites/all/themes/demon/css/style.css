@@ -178,7 +178,7 @@ pre {
 
 #main-menu ul li a {
   display: inline-block;
-  padding: 0 30px;
+  padding: 0 25px;
   height: 60px;
   line-height: 60px;
   vertical-align: middle;
@@ -746,6 +746,7 @@ body.node-type-forum div.node-forum {
 #sidebar-first #block-search-api-facets-current-search {
 	padding-top: 1em;
 }
+
 #sidebar-first .block-search-api-facets h2 {
 	font-size: 1.4em;
 }
@@ -796,7 +797,26 @@ body.node-type-forum div.node-forum {
   padding: 0.5em;
 }
 
+#sidebar-first .view-job .views-row {
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #E3E2E2;
+}
 
+#sidebar-first .view-job .views-row-last {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+#sidebar-first .view-job .views-field-created span {
+  font-size: 10px;
+  color: #888;
+}
+
+#sidebar-first .more-link {
+  padding-top: 2em;
+}
 
 
 li.search-result {
@@ -889,11 +909,13 @@ li.search-result h3 {
 #hetvege2011-hir span.reg {
 	font-size: 16px;
 }
+
 #hetvege2011-akciok {
 	float: right;
 	width: 525px;
 	height: 302px;
 }
+
 #hetvege2011-akciok a {
 	font-size: 20px;
 	line-height: normal;
@@ -901,6 +923,7 @@ li.search-result h3 {
 	background: transparent url(../images/hetvege2011-button-bg.jpg) repeat-x scroll left top;
 	position: relative;
 }
+
 #hetvege2011-akciok a span.button {
 	font-size: 14px;
 	position: absolute;
