@@ -1132,7 +1132,7 @@ function dhu_job_field_default_fields() {
       'bundle' => 'job',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'A munkaajánlat pár szavas összegzése. Listákban fog megjelenni.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -1309,6 +1309,7 @@ function dhu_job_field_default_fields() {
   t('A mezőt kötelező kitölteni, magánszemély esetén írd be, hogy magánszemély.');
   t('A munka jellege');
   t('A munka részletes leírása, amely alapján az érdeklődő pontosan megtudhatja, hogy mit kell elvégezni, vagy milyen munkakörbe keresnek embert.');
+  t('A munkaajánlat pár szavas összegzése. Listákban fog megjelenni.');
   t('A munkavállaló számára tudja megadni az idő beosztását.');
   t('Amit a kiíró nyújt');
   t('Az kapcsolat e-mail cím megadása kötelező, mert az érdeklődők erre a címre fogják a leveleiket küldeni.');

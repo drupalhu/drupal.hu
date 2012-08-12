@@ -36,7 +36,7 @@ function dhu_job_node_info() {
       'description' => t('Munkaajánlat.'),
       'has_title' => '1',
       'title_label' => t('Ajánlat megnevezése'),
-      'help' => t('Munkaajánlat rövid megnevezése.
+      'help' => t('Munkaajánlatok feladása oldalunkra. Töltsd ki a megfelelő mezőket, minél pontosabban. A munkaajánlatokra a válaszok a megadott e-mail címre fognak megérkezni.
 '),
     ),
   );

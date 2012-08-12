@@ -81,7 +81,7 @@ function dhu_job_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Munka jellege',
+    'label' => '',
     'weight' => '1',
     'children' => array(
       0 => 'body',
@@ -96,7 +96,7 @@ function dhu_job_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'label' => 'Munka jellege',
+      'label' => '',
       'instance_settings' => array(
         'required_fields' => 0,
         'classes' => '',
