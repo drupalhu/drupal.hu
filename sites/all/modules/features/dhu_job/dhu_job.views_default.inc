@@ -101,6 +101,11 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
   $handler->display->display_options['style_options']['empty_table'] = 0;
+  /* Fejléc: Általános: Szövegdoboz */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['empty'] = FALSE;
   /* Mező: Tartalom: Van új tartalma */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
@@ -419,6 +424,89 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['defaults']['use_more'] = FALSE;
   $handler->display->display_options['use_more_always'] = TRUE;
   $handler->display->display_options['use_more_text'] = 'Összes munkaajánlat megtekintése';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'timestamp' => 'timestamp',
+    'field_job_remotely' => 'field_job_remotely',
+    'field_job_timing' => 'field_job_timing',
+    'created' => 'created',
+    'title' => 'title',
+    'field_job_due_date' => 'field_job_due_date',
+    'nothing' => 'nothing',
+  );
+  $handler->display->display_options['style_options']['default'] = 'created';
+  $handler->display->display_options['style_options']['info'] = array(
+    'timestamp' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_job_remotely' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_job_timing' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'created' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_job_due_date' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['override'] = 1;
+  $handler->display->display_options['style_options']['sticky'] = 0;
+  $handler->display->display_options['style_options']['empty_table'] = 0;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Fejléc: Általános: Szövegdoboz */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['empty'] = TRUE;
+  $handler->display->display_options['header']['area']['content'] = '<a href="/node/add/job" class="button-action">Új munkaajánlat hozzáadása</a>';
+  $handler->display->display_options['header']['area']['format'] = '1';
+  $handler->display->display_options['header']['area']['tokenize'] = 0;
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* Megjelenés, ha nincs eredmény: Általános: Szövegdoboz */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = FALSE;
+  $handler->display->display_options['empty']['area']['content'] = 'Nincs megjeleníthető munkaajánlat.';
+  $handler->display->display_options['empty']['area']['format'] = '1';
+  $handler->display->display_options['empty']['area']['tokenize'] = 0;
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Mező: Tartalom: Van új tartalma */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
@@ -634,6 +722,8 @@ function dhu_job_views_default_views() {
     t('tovább'),
     t('Munkavégzés helye'),
     t('Munkaajánlatok oldal'),
+    t('<a href="/node/add/job" class="button-action">Új munkaajánlat hozzáadása</a>'),
+    t('Nincs megjeleníthető munkaajánlat.'),
     t('Egyedi szöveg'),
     t('[field_job_timing], [field_job_remotely]'),
     t('Feed'),
