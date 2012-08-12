@@ -175,6 +175,9 @@ pre {
   border-right: 0;
 }
 
+#main-menu-links {
+  text-align: right;
+}
 
 #main-menu ul li a {
   display: inline-block;
@@ -186,6 +189,9 @@ pre {
   text-decoration: none;
 }
 
+#main-menu ul li.last a {
+  padding-right: 5px;
+}
 #main-menu ul li a:hover {
   color: #555;
 }
@@ -455,8 +461,10 @@ ul.action-links li {
   display: inline-block;
   margin-left: 10px;
 }
+
+.view-header a.button-action,
 ul.action-links li a {
-  padding-left: 15px;
+  padding-left: 18px;
   background: url(../images/add.png) no-repeat left center;
   margin: 0 10px 0 0;
 }
@@ -533,6 +541,7 @@ h1#page-title {
   margin-right: 10px;
 }
 
+.view-header a.button-action,
 #main ul.action-links a,
 #main ul.links a {
   background-color: #F6F6F2;
@@ -540,6 +549,7 @@ h1#page-title {
   padding: 3px 10px;
 }
 
+.view-header a.button-action,
 #main ul.action-links a {
   padding-left: 18px;
 }
@@ -795,6 +805,12 @@ body.node-type-forum div.node-forum {
 
 #jump-to-top a {
   padding: 0.5em;
+}
+
+/* job */
+
+.views-exposed-form .views-widget-filter-field_job_remotely_value {
+  padding-bottom: 2em;
 }
 
 #sidebar-first .view-job .views-row {
