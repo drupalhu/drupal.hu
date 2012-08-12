@@ -20,3 +20,6 @@ dhu.node
 .sass-cache
 
 .htaccess.loc
+
+# sajat fejlesztoi gepen modulok
+sites/all/modules/dev
