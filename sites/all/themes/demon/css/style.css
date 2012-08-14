@@ -256,10 +256,12 @@ pre {
   margin: 0 10px;
 }
 
+#triptych #block-views-exp-dhusearch-page div.form-type-textfield input.form-text,
 #triptych .block-search-api-page div.form-type-textfield input.form-text {
   width: 100px;
 }
 
+#triptych #block-views-exp-dhusearch-page input.form-submit,
 #triptych .block-search-api-page input.form-submit {
   font-size: 11px;
 }
