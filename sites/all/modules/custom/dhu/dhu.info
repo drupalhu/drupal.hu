@@ -1,3 +1,4 @@
 name = Custom hacks for drupal.hu
 description = Custom hacks for drupal.hu.
+package = Drupal.hu
 core = 7.x
