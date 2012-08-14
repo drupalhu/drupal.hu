@@ -245,13 +245,16 @@ pre {
 
 #block-drupalorg-scraper-releases h2 { margin: 10px 30px 0 0; }
 
+#triptych #block-views-exp-dhusearch-page h2,
 #triptych .block-search-api-page h2,
+#triptych #block-views-exp-dhusearch-page div,
 #triptych .block-search-api-page div,
 #block-drupalorg-scraper-releases h2,
 #block-drupalorg-scraper-releases div{
   float: left;
 }
 
+#triptych #block-views-exp-dhusearch-page div.form-item,
 #triptych .block-search-api-page div.form-item {
   margin: 0 10px;
 }
