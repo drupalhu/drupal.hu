@@ -255,6 +255,15 @@ pre {
   float: left;
 }
 
+#triptych .views-exposed-widgets {
+  margin: 0;
+}
+
+#triptych .views-exposed-form .views-exposed-widget {
+  margin: 0;
+  padding: 0;
+}
+
 #triptych #block-views-exp-dhusearch-page div.form-item,
 #triptych .block-search-api-page div.form-item {
   margin: 0 10px;
