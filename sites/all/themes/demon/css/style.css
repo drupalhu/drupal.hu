@@ -264,6 +264,10 @@ pre {
   padding: 0;
 }
 
+#triptych .views-exposed-form .views-exposed-widget .form-submit {
+  margin-top: 2px;
+}
+
 #triptych #block-views-exp-dhusearch-page div.form-item,
 #triptych .block-search-api-page div.form-item {
   margin: 0 10px;
