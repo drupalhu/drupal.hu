@@ -852,6 +852,9 @@ body.node-type-forum div.node-forum {
 #sidebar-first .more-link {
   padding-top: 2em;
 }
+.node-job .field {
+  margin-bottom: 10px;
+}
 
 
 li.search-result {
