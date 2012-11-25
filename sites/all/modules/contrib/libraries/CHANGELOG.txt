@@ -1,7 +1,4 @@
 
-Libraries 7.x-2.x, xxxx-xx-xx
------------------------------
-
 Libraries 7.x-2.0, 2012-07-29
 -----------------------------
 #1606018 by chemical: Tests fail if the module is downloaded from Drupal.org.
