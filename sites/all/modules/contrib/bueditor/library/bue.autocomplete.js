@@ -77,7 +77,7 @@ E.ACAdd = function(prefix, suffix) {
 
 //Remove an AC pair at runtime
 E.ACRemove = function(prefix) {
-  var E = this;
+  var E = this, len = prefix.length;
   var trigger = prefix.charAt(len-1);
   if (E.AC && E.AC[trigger]) {
     if (typeof E.AC[trigger] == 'object') {

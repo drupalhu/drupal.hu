@@ -51,7 +51,8 @@ function bueditor_sprite_icons($icons) {
   $first_icon = $icons[0];
   $sprite = new stdClass();
   $sprite->dir = bueditor_sprites_dir();
-  $sprite->name = 'sprite_' . md5(implode(' ', $icons)) . substr($first_icon, strrpos($first_icon, '.'));
+  $sizes = @array_map('filesize', $icons);
+  $sprite->name = 'sprite_' . md5(implode(' ', array_merge($icons, $sizes))) . substr($first_icon, strrpos($first_icon, '.'));
   $sprite->source = $sprite->dir . '/' . $sprite->name;
   if (file_exists($sprite->source)) {
     return $sprite->name;

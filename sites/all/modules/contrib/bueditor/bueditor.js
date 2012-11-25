@@ -3,8 +3,8 @@
 var BUE = window.BUE = window.BUE || {preset: {}, templates: {}, instances: [], preprocess: {}, postprocess: {}};
 
 // Get editor settings from Drupal.settings and process preset textareas.
-BUE.behavior = function(context, settings) {
-  var set = settings.BUE || null, tpls = BUE.templates, pset = BUE.preset;
+Drupal.behaviors.BUE = {attach: function(context, settings) {
+  var set = settings.BUE, tpls = BUE.templates, pset = BUE.preset;
   if (set) {
     $.each(set.templates, function (id, tpl) {
       tpls[id] = tpls[id] || $.extend({}, tpl);
@@ -18,7 +18,7 @@ BUE.behavior = function(context, settings) {
   });
   // Fix enter key on textfields triggering button click.
   $('input:text', context).bind('keydown.bue', BUE.eFixEnter);
-};
+}};
 
 // Integrate editor template into textarea T
 BUE.processTextarea = function (T, tplid) {
@@ -125,7 +125,7 @@ BUE.theme = function (tplid) {
 };
 
 // Cross browser selection handling. 0-1=All, 2=IE, 3=Opera
-BUE.mode = (window.getSelection || document.getSelection) ? ($.browser.opera ? 3 : 1) : (document.selection && document.selection.createRange ? 2 : 0 );
+BUE.mode = document.createElement('textarea').setSelectionRange ? ($.browser.opera ? 3 : 1) : (document.selection && document.selection.createRange ? 2 : 0);
 
 // New line standardization. At least make them represented by a single char.
 BUE.text = BUE.processText = BUE.mode < 2 ? function (s) {return s.toString()} : function (s) {return s.toString().replace(/\r\n/g, '\n')};
@@ -142,9 +142,10 @@ BUE.mode == 3 ? function (T, start, end) {
   var text = BUE.text(T.value), i = text.substring(0, start).split('\n').length, j = text.substring(start, end).split('\n').length;
   T.setSelectionRange(start + i -1 , end + i + j - 2);
 } :
-function (T, start, end) {
+BUE.mode == 1 ? function (T, start, end) {
   T.setSelectionRange(start, end);
-};
+} :
+function (T, start, end) {};
 
 // Return the selection coordinates in a textarea
 BUE.selPos = BUE.mode == 2 ? function (T) {
@@ -208,12 +209,6 @@ BUE.$html = function(s){
 
 // Backward compatibility.
 window.editor = window.editor || BUE;
-
-// Initiate bueditor
-$(document).ready(function () {
-  var b = Drupal.behaviors.BUE = {};
-  (b.attach = BUE.behavior)(document, Drupal.settings);
-});
 
 })(jQuery);
 

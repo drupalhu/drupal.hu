@@ -15,7 +15,7 @@ function bueditor_admin() {
   $path = 'admin/config/content/bueditor';
   $editors = bueditor_editors('all');
   $token = drupal_get_token(date('ymd'));
-  $header = array(t('Editor name'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Editor name'), t('Operations'));
   $rows = array();
   foreach ($editors as $eid => $editor) {
     $rows[] = array(
@@ -26,12 +26,11 @@ function bueditor_admin() {
       l(t('Export'), $path, array('attributes' => array('class' => array('eop-export')), 'query' => array('eop' => 'export', 'eid' => $eid, 'token' => $token)))
     );
   }
-  $rows[] = array(
-    '',
+  $rows[] = array(array('data' => 
     l(t('Add new editor'), $path . '/new') . ' | ' .
     l(t('Import editor'), $path . '/import') . ' | ' .
     l(t('Add the default editor'), $path, array('attributes' => array('class' => array('eop-add-default'), 'name' => 'default editor'), 'query' => array('eop' => 'add_default', 'token' => $token)))
-  );
+  , 'colspan' => 2));
   $output['title'] = array(
     '#markup' => '<h2 class="title">' . t('Available editors') . '</h2>'
   );

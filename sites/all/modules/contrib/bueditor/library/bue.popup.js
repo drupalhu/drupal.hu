@@ -1,4 +1,3 @@
-
 //Introduces editor popups: E.dialog & E.quickPop
 //Requires: none
 (function(E, $) {
@@ -6,7 +5,7 @@
 BUE.popups = BUE.popups || {};
 
 //default template for editor popups or dialogs. Use table wrapper against various positioning bugs in IE.
-BUE.popHtml = '<table class="bue-popup" style="display: none;"><tbody class="bue-zero"><tr class="bue-zero"><td class="bue-zero"><div class="bue-popup-head clearfix"><div class="bue-popup-title"></div><div class="bue-popup-close">x</div></div><div class="bue-popup-body"><div class="bue-popup-content clearfix"></div></div></td></tr></tbody></table>';
+BUE.popHtml = '<table class="bue-popup" style="display: none;" role="dialog"><tbody class="bue-zero"><tr class="bue-zero"><td class="bue-zero"><div class="bue-popup-head clearfix"><div class="bue-popup-title"></div><button class="bue-popup-close" type="button">x</button></div><div class="bue-popup-body"><div class="bue-popup-content clearfix"></div></div></td></tr></tbody></table>';
 
 //open popup.
 BUE.openPopup = function (id, title, content, opt) {
@@ -82,7 +81,7 @@ BUE.createPopup = function (id, title, content) {
   //add tabindex. make focusable
   $P.attr('tabindex', 0);
   //close-button
-  $P.find('.bue-popup-close').click(P.closenfocus);
+  $P.find('.bue-popup-close').click(P.closenfocus)[0].title = Drupal.t('Close');
   //close on ESC
   $P.keydown(function(e) {
     if (e.keyCode == 27) {

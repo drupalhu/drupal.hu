@@ -61,6 +61,7 @@
   padding: 0.2em 0.5em;
   border: 1px solid #bbb;
   font-size: 0.9em;
+  background: transparent;
 }
 .bue-popup-close:hover {
   background-color: #f5f5fa;
@@ -68,10 +69,10 @@
 .bue-popup-body {
   background-color: #f5f5fa;
   border: 1px solid #999;
-  overflow: hidden;
 }
 .bue-popup-content {
   margin: 0.5em;
+  overflow: hidden;
 }
 .bue-popup-content table {
   margin: 0em;

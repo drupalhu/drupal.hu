@@ -1,4 +1,3 @@
-
 //Miscellaneous methods used in default editor: E.wrapLines(), E.toggleTag(), E.help(), E.tagChooser(), E.tagDialog()
 //Requires: bue.popup.js, bue.markup.js
 (function(E, $) {
@@ -63,7 +62,7 @@ E.tagDialog = function(tag, fields, opt) {
       n--;
       continue;
     }
-    rows[n] = [field.title, fhtml(field)];
+    rows[n] = [BUE.html('label', field.title, {'for': field.attributes.id}), fhtml(field)];
     while (field.getnext && (field = fields[++i])) {
       rows[n][1] += fhtml(fproc(field, obj, sel));
     }
@@ -115,7 +114,11 @@ var fproc = function(f, obj, sel) {
   f.fname = 'attr_' + f.name;
   f.type = f.value.indexOf('\n') > -1 ? 'textarea' : (f.type || 'text');
   f.attributes = $.extend({name: f.fname, id: f.fname, 'class': ''}, f.attributes);
-  f.attributes['class'] += ' form-' + f.type + (f.required ? ' required' : '');
+  f.attributes['class'] += ' form-' + f.type;
+  if (f.required) {
+    f.attributes['class'] += ' required';
+    f.attributes['title'] = Drupal.t('This field is required.');
+  }
   return f;
 };
 
