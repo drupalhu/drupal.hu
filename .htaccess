@@ -7,6 +7,10 @@
   Order allow,deny
 </FilesMatch>
 
+<FilesMatch "drupalhu.make">
+  Order deny,allow
+</FilesMatch>
+
 # Don't show directory listings for URLs which map to a directory.
 Options -Indexes
 
@@ -15,6 +19,12 @@ Options +FollowSymLinks
 
 # Make Drupal handle any 404 errors.
 ErrorDocument 404 /index.php
+
+# Force simple error message for requests for non-existent favicon.ico.
+<Files favicon.ico>
+  # There is no end quote below, for compatibility with Apache 1.3.
+  ErrorDocument 404 "The requested file favicon.ico was not found.
+</Files>
 
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
@@ -31,6 +41,7 @@ DirectoryIndex index.php index.html index.htm
   php_flag session.auto_start               off
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass
+  php_value max_execution_time              100
   php_flag mbstring.encoding_translation    off
 </IfModule>
 
@@ -96,6 +107,48 @@ DirectoryIndex index.php index.html index.htm
   # If your site is running in a VirtualDocumentRoot at http://example.com/,
   # uncomment the following line:
   # RewriteBase /
+
+ # Dobjuk at a felhasznalot, ha nem a megfelelo hosztra jott!
+  RewriteCond %{HTTP_HOST} ^(drupal\.)?weblabor\.hu$|^weblabor\.hu$|^www\.drupal\.hu$ [NC]
+  RewriteRule ^(.*)$ http://drupal.hu/$1 [R=301,L]
+
+  # A levelezolistak megszuntek, iranyitsuk a mailman URL-ekrol a nepet az infora.
+  RewriteRule ^mailman(/.+)?$ /levelezolistak [R=301,L]
+
+  # Illemszabaly atiranyitas
+  RewriteRule ^illik.html$ http://weblabor.hu/levlistak/illemszabaly [L]
+
+  # Korabbi webcim atiranyitasa
+  RewriteRule ^drupal-hasznalok$ http://drupal.hu/linkek [R=301,L]
+  RewriteRule ^drupal-linkek$ http://drupal.hu/linkek [R=301,L]
+  RewriteRule ^email$ http://drupal.hu/kapcsolat [R=301,L]
+  RewriteRule ^csapatok$ http://drupal.hu/levelezolistak [R=301,L]
+  RewriteRule ^modules/conference/banner.png$ http://drupal.hu/sites/all/modules/conference/banner-468x60.png [R=301,L]
+  RewriteRule ^modules/conference/(.*)$ http://drupal.hu/sites/all/modules/conference/$1 [R=301,L]
+  RewriteRule ^kezikonyv/telepites-simitasok$ http://drupal.hu/kezikonyv/telepites/simitasok [R=301,L]
+  RewriteRule ^kezikonyv/letoltes/cvs$ http://drupal.hu/kezikonyv/kiegeszitesek/cvs [R=301,L]
+  RewriteRule ^kezikonyv/letoltes$ http://drupal.hu/kezikonyv/telepites [R=301,L]
+  RewriteRule ^kezikonyv/eletrekeltes$ http://drupal.hu/kezikonyv/telepites [R=301,L]
+
+  # Nem letezo dolgok
+  RewriteRule ^themes/(ddothu|drupalhu)(.*)$ - [G]
+  RewriteRule ^misc/icons(.*)$ - [G]
+  RewriteRule ^misc/buttons(.*)$ - [G]
+  RewriteRule ^forditas/forditasdrupalhu/forditas/forrasok(.*)$ - [G]
+
+  # forditasi (informaciok), forditas (SVN checkout), filebrowser (szep felulet)
+  RewriteRule ^forditasi(.*)$ http://drupal.hu/kezikonyv/forditas [R=301,L]
+  RewriteRule ^forditas(.*)$ - [G]
+  RewriteRule ^filebrowser(.*)$ - [G]
+
+  # Porno spam, ami bekerult a google cache-be, ne tolja tele a logot a rengeteg 404.
+  RewriteRule ^node/(3439|3440)$ - [G]
+
+  # English blog elkoltozott
+  RewriteRule ^english(.*)$ http://hojtsy.hu$1 [R=301,L]
+
+  # Smink elkoltozott
+  RewriteRule ^themes/bodzang(.*)$ http://drupal.hu/sites/all/themes/bodzang$1 [R=301,L]
 
   # Pass all requests not referring directly to files in the filesystem to
   # index.php. Clean URLs are handled in drupal_environment_initialize().
