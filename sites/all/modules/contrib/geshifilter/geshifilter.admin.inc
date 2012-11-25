@@ -83,13 +83,9 @@ function geshifilter_admin_general_settings($form, &$form_state) {
     $form['geshifilter_library']['geshi_language_definition_caching']['flush_geshi_language_definition_cache'] = array(
       '#type' => 'button',
       '#value' => t(GESHIFILTER_FLUSH_LANGUAGE_DEFINITION_CACHE_TEXT),
+      '#executes_submit_callback' => TRUE,
+      '#submit' => array('_geshifilter_flush_language_definition_cache'),
     );
-    // Handle the button for flushing the GeSHi language definition cache.
-    // This is done here instead of in a submit handler because the button is
-    // not a submitting button.
-    if (isset($form_state['post']['op']) && $form_state['post']['op'] == t(GESHIFILTER_FLUSH_LANGUAGE_DEFINITION_CACHE_TEXT)) {
-      _geshifilter_flush_language_definition_cache();
-    }
 
     // GeSHi filter tags and delimiters options
     $form['geshifilter_tag_options'] = array(
@@ -253,8 +249,7 @@ function geshifilter_admin_general_settings_submit($form, &$form_state) {
 /**
  * Menu callback for per language settings.
  */
-function geshifilter_admin_per_language_settings($form_state, $view = 'enabled') {
-  $form = array();
+function geshifilter_admin_per_language_settings($form, &$form_state, $view = 'enabled') {
   // check if GeSHi library is available
   $geshi_library = libraries_load('geshi');
   if (!$geshi_library['loaded']) {
@@ -421,13 +416,13 @@ function geshifilter_per_language_settings($format, $view, $add_checkbox, $add_t
     else {
       $form['languages'][$language]['fullname'] = array(
         '#type' => 'markup',
-        '#value' => $language_data['fullname'],
+        '#markup' => $language_data['fullname'],
       );
     }
     // language code
     $form['languages'][$language]['name'] = array(
       '#type' => 'markup',
-      '#value' => $language,
+      '#markup' => $language,
     );
     // add a textfield for tags
     if ($add_tag_option) {

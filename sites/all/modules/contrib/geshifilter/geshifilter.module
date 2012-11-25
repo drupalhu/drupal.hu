@@ -120,7 +120,7 @@ function geshifilter_menu() {
   $items['admin/config/content/formats/geshifilter/languages/all'] = array(
     'title' => 'All',
     'description' => 'Show all the available languages',
-    'page arguments' => array('geshifilter_admin_per_language_settings', 4),
+    'page arguments' => array('geshifilter_admin_per_language_settings', 'all'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
@@ -128,7 +128,7 @@ function geshifilter_menu() {
   $items['admin/config/content/formats/geshifilter/languages/disabled'] = array(
     'title' => 'Disabled',
     'description' => 'Show the disabled languages',
-    'page arguments' => array('geshifilter_admin_per_language_settings', 4),
+    'page arguments' => array('geshifilter_admin_per_language_settings', 'disabled'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 6,
@@ -316,7 +316,7 @@ function _geshifilter_managed_external_stylesheet_possible() {
  */
 function geshifilter_generate_language_css_rules() {
   require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.admin.inc';
-  drupal_set_header("Content-type: text/css");
+  drupal_add_http_header("Content-type", "text/css");
   $output = _geshifilter_generate_languages_css_rules();
   print($output);
   exit();

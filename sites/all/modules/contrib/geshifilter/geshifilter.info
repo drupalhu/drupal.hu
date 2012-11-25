@@ -4,11 +4,11 @@ package = Filters
 core = 7.x
 configure = admin/config/content/formats/geshifilter
 files[] = geshifilter.test
-dependencies[] = libraries
+dependencies[] = libraries (2.x)
 
-; Information added by drupal.org packaging script on 2011-06-24
-version = "7.x-1.0"
+; Information added by drupal.org packaging script on 2012-08-21
+version = "7.x-1.1"
 core = "7.x"
 project = "geshifilter"
-datestamp = "1308888715"
+datestamp = "1345588371"
 
