@@ -14,11 +14,11 @@
  */
 function openlayers_ui_admin_settings() {
   $client_check = variable_get('openlayers_ui_version_check', 'no-check');
-  $source_description =
-    t('<p>By default the your site will point to a hosted version of the
+  $source_description = 
+    t('<p>By default the your site will point to a hosted version of the 
       OpenLayers library at %ol_api_url.</p>
-      <p>For better performance and reliability, you should <a href="!ol_url">download the
-      OpenLayers library</a>, and add it to your Drupal installation. For instance,
+      <p>For better performance and reliability, you should <a href="!ol_url">download the 
+      OpenLayers library</a>, and add it to your Drupal installation. For instance, 
       you could use a Drupal relative path like: %suggested_path.</p>
       <ul>
         <li>The default suggested, compatible version: <strong>%suggested_api</strong></li>
@@ -46,7 +46,7 @@ function openlayers_ui_admin_settings() {
     '#type' => 'select',
     '#title' => t('OpenLayers Default Map'),
     '#description' => t('This is the default map that will be used
-      in cases where one is not defined.  It will also be used as
+      in cases where one is not defined.  It will also be used as 
       the default when creating new maps.'),
     '#options' => openlayers_map_options(),
     '#default_value' => variable_get('openlayers_default_map', 'default'),
@@ -59,7 +59,7 @@ function openlayers_ui_admin_settings() {
       array('!link' => l(t('Map Interface'), 'admin/structure/openlayers/maps'))),
     '#default_value' => variable_get('openlayers_ui_preview_map', FALSE),
   );
-
+  
   // A hidden value to reset client check
   $form['openlayers_ui_version_check'] = array(
     '#type' => 'hidden',
@@ -75,11 +75,11 @@ function openlayers_ui_admin_settings() {
  */
 function openlayers_ui_version_check($version = 0) {
   $version = check_plain($version);
-
+  
   // Set variable with version for hook_requirements
   // and so we dont do this on every page load.
   variable_set('openlayers_ui_version_check', $version);
-
+  
   // Do a basic check
   if (strpos($version, (string) OPENLAYERS_SUGGESTED_LIBRARY) !== FALSE) {
     $status = 'valid';
@@ -87,18 +87,18 @@ function openlayers_ui_version_check($version = 0) {
   }
   else {
     $status = 'invalid';
-    $message = t('Could not find a valid library with a Javascript client-side check;  Value found: %version.  Please visit the !settings for more details.',
+    $message = t('Could not find a valid library with a Javascript client-side check;  Value found: %version.  Please visit the !settings for more details.', 
       array(
         '%version' => $version,
         '!settings' => l(t('OpenLayers settings page'), 'admin/structure/openlayers'),
       )
     );
   }
-
+  
   // Kind of a hack, but since we are using messages for this, let's clear the
   // messages queue out.
   $messages = drupal_get_messages();
-
+  
   // We just want to send some markup back.
   drupal_json_output(array(
     'status' => $status,

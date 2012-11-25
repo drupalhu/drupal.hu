@@ -37,7 +37,7 @@ define('OPENLAYERS_HOSTED_API_LIBRARY', 2.11);
 function openlayers_help($path, $arg) {
   switch ($path) {
     case 'admin/help#openlayers':
-      return '<p>' . t('The OpenLayers module is the base module for the
+      $output = '<p>' . t('The OpenLayers module is the base module for the 
         OpenLayers suite of modules, and provides the main API.') . '</p>';
   }
   return '';
@@ -117,9 +117,9 @@ function openlayers_include() {
       drupal_add_js($path);
     }
 
-    drupal_add_css(drupal_get_path('module', 'openlayers') .
+    drupal_add_css(drupal_get_path('module', 'openlayers') . 
       '/openlayers.css', 'file');
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/js/openlayers.js', 'file');
   }
 }
@@ -151,10 +151,10 @@ function openlayers_build_map($map = array()) {
   }
 
   // Create ID for map as this will help with alters.
-  $map['id'] = !isset($map['id']) ?
+  $map['id'] = !isset($map['id']) ? 
     _openlayers_create_map_id() : $map['id'];
 
-  // Hook to alter map before main processing.  Styles, behaviors,
+  // Hook to alter map before main processing.  Styles, behaviors, 
   // layers may all be added here.
   // hook_openlayers_map_preprocess_alter($map)
   drupal_alter('openlayers_map_preprocess', $map);
@@ -163,14 +163,14 @@ function openlayers_build_map($map = array()) {
   $map['styles'] = isset($map['styles']) ? $map['styles'] : array();
   $map['layer_styles'] = isset($map['layer_styles']) ? $map['layer_styles'] : array();
   $map['layer_styles_select'] = isset($map['layer_styles_select']) ? $map['layer_styles_select'] : array();
-
+  
   // Process map parts.
   $map['layers'] = _openlayers_layers_process($map['layers'], $map);
   $map['behaviors'] = _openlayers_behaviors_render($map['behaviors'], $map);
-  $map['styles'] = _openlayers_styles_process($map['styles'],
+  $map['styles'] = _openlayers_styles_process($map['styles'], 
     $map['layer_styles'], $map['layer_styles_select'], $map);
 
-  // Hook to alter map one last time.  Final modification to existing
+  // Hook to alter map one last time.  Final modification to existing 
   // styles, behaviors, layers can happen here, but adding new styles,
   // behaviors will not get rendered.
   // hook_openlayers_map_alter($map)
@@ -199,9 +199,8 @@ function openlayers_build_map($map = array()) {
 function openlayers_render_map_data($map = array(), $map_name = '') {
   // Run map through build process
   $map = openlayers_build_map($map);
-  $output = '';
 
-  // Given hide_empty_map flag, check if the map has any features
+  // Given hide_empty_map flag, check if the map has any features 
   // defined. If not, assume it is an empty map and shouldn't be displayed.
   if (isset($map['hide_empty_map']) && $map['hide_empty_map'] == TRUE) {
     $empty = TRUE;
@@ -214,7 +213,7 @@ function openlayers_render_map_data($map = array(), $map_name = '') {
       return '';
     }
   }
-
+  
   // Return themed map if no errors found
   if (empty($map['errors'])) {
     $js = array('openlayers' => array('maps' => array($map['id'] => $map)));
@@ -242,12 +241,12 @@ function openlayers_render_map_data($map = array(), $map_name = '') {
  *   Map HTML.
  */
 function openlayers_render_map($map = '') {
-
+  
   // If it's an array, then we have been passed the map data array
   if (is_array($map)) {
     return openlayers_render_map_data($map);
   }
-
+  
   // If it's a string, then we are passing a map name instead of the whole map object
   // so we need to load the object
   if (!$map || is_string($map)) {
@@ -257,11 +256,11 @@ function openlayers_render_map($map = '') {
     }
     $map = openlayers_map_load($map_name);
   }
-
+  
   if (!isset($map_name)) {
     $map_name = $map->name;
   }
-
+  
   return openlayers_render_map_data($map->data, $map_name);
 }
 
@@ -286,16 +285,16 @@ function openlayers_get_layer_object($layer, $map = array()) {
 
   // Attempt to get ctool class
   // class is renamed klass because of PHP keywords
-  if (isset($layer_types[$layer->data['layer_type']]) &&
+  if (isset($layer_types[$layer->data['layer_type']]) && 
     $klass = ctools_plugin_get_class(
-      $layer_types[$layer->data['layer_type']],
+      $layer_types[$layer->data['layer_type']], 
       'layer_type')
   ) {
     $layer_object = new $klass($layer, $map);
     return $layer_object;
   }
   else {
-    watchdog('openlayers', 'Layer !layer_name is unavailable because its
+    watchdog('openlayers', 'Layer !layer_name is unavailable because its 
       layer type or the module that provides its layer type is missing',
       array('!layer_name' => $layer->title),
       WATCHDOG_ERROR);
@@ -348,14 +347,15 @@ function openlayers_layer_load($name, $reset = FALSE) {
   ctools_include('export');
   if ($reset) ctools_export_load_object_reset('openlayers_layers');
   $layer = ctools_export_load_object('openlayers_layers', 'names', array($name));
-
-  if (is_array($layer) && isset($layer[$name])) {
+  if ($layer) {
     $layer_object = openlayers_get_layer_object($layer[$name]);
     if (openlayers_layer_sanity_check($layer_object)) {
       return $layer_object;
     }
   }
   else {
+    watchdog('openlayers', 'Layer %layer not found.',
+      array('%layer' => $name), WATCHDOG_ERROR);
     return FALSE;
   }
 }
@@ -421,13 +421,12 @@ function openlayers_layer_sanity_check($layer, $projection = FALSE, $strict = FA
     return !$strict;
   }
 
-  if ($projection && empty($layer->data['vector']) &&
+  if ($projection && empty($layer->data['vector']) && 
     (!in_array($projection, $layer->data['projection']))) {
     watchdog('openlayers',
       'The layer %layer_name cannot be reprojected to the map projection: EPSG: %map_proj',
       array(
         '%layer_name' => $layer->name,
-        // TODO: $map is not defined.
         '%map_proj' => $map['projection'],
       )
     );
@@ -522,7 +521,7 @@ function openlayers_styles($reset = FALSE) {
   if ($reset) {
     ctools_export_load_object_reset('openlayers_styles');
   }
-
+  
   $styles = ctools_export_load_object('openlayers_styles', 'all', array());
   return $styles;
 }
@@ -530,7 +529,7 @@ function openlayers_styles($reset = FALSE) {
 /**
  * Load a style object by name.
  *
- * This function can also be used as a
+ * This function can also be used as a 
  * menu loader for a style.
  *
  * @ingroup openlayers_api
@@ -599,7 +598,7 @@ function openlayers_maps($reset = FALSE) {
   if ($reset) {
     ctools_export_load_object_reset('openlayers_maps');
   }
-
+  
   $maps = ctools_export_load_object(
     'openlayers_maps', 'all', array());
   return $maps;
@@ -608,7 +607,7 @@ function openlayers_maps($reset = FALSE) {
 /**
  * Given a map name, get full map object.
  *
- * This function can also be used as a
+ * This function can also be used as a 
  * menu loader for a style.
  *
  * @ingroup openlayers_api
@@ -625,7 +624,7 @@ function openlayers_map_load($name = '', $reset = FALSE) {
   if ($reset) {
     ctools_export_load_object_reset('openlayers_maps');
   }
-
+  
   $maps = ctools_export_load_object(
     'openlayers_maps', 'names', array($name));
   if (empty($maps[$name])) {
@@ -744,8 +743,8 @@ function openlayers_error_check_map($map, $log_errors = TRUE) {
     // Check layer projections
     foreach ($map['layers'] as $layer) {
       openlayers_layer_sanity_check(
-        array('data' => $layer),
-        $map['projection'],
+        array('data' => $layer), 
+        $map['projection'], 
         TRUE);
     }
   }
@@ -770,7 +769,7 @@ function openlayers_error_check_map($map, $log_errors = TRUE) {
  * @ingroup openlayers_api
  *
  * @param $projection
- *   String of the projection value.  Currently
+ *   String of the projection value.  Currently 
  *   supports 900913, 4326.
  * @return
  *   Array of maxExtent in OpenLayers toArray() format.
@@ -1027,11 +1026,11 @@ function openlayers_boxes_plugins() {
 
 /**
  * Alias Functions
- *
+ * 
  * These functions temporarily map the alias the renamed 'map' functions to their
  * previous 'preset' functions to allow time for contrib modules to catch up.
  * These will eventually be removed
- *
+ * 
  * These should be removed in 7.x-3.x
  */
 function openlayers_build_preset($map = array())                        { return openlayers_build_map($map); }

@@ -38,20 +38,20 @@ class openlayers_behavior_navigation extends openlayers_behavior {
     return array('OpenLayers.Control.Navigation');
   }
 
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     return array(
       'zoomWheelEnabled' => array(
         '#type' => 'checkbox',
         '#title' => t('Enable Zoom Wheel'),
-        '#description' => t('Enable zooming via the mouse scroll wheel. This can
+        '#description' => t('Enable zooming via the mouse scroll wheel. This can 
           interfere with page scrolling.'),
-        '#default_value' => isset($defaults['zoomWheelEnabled']) ? $defaults['zoomWheelEnabled'] : TRUE
+        '#default_value' => isset($defaults['zoomWheelEnabled']) ? $defaults['zoomWheelEnabled'] : TRUE 
       ),
       'zoomBoxEnabled' => array(
         '#type' => 'checkbox',
         '#title' => t('Enable Zoom Box'),
         '#description' => t('Enable zooming with selecting a box by <em>SHIFT + clicking</em>.'),
-        '#default_value' => isset($defaults['zoomBoxEnabled']) ? $defaults['zoomBoxEnabled'] : TRUE
+        '#default_value' => isset($defaults['zoomBoxEnabled']) ? $defaults['zoomBoxEnabled'] : TRUE 
       ),
       'documentDrag' => array(
         '#type' => 'checkbox',
@@ -66,7 +66,7 @@ class openlayers_behavior_navigation extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_navigation.js');
     return $this->options;
   }

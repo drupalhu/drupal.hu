@@ -18,7 +18,7 @@
 function _openlayers_openlayers_maps() {
   $items = array();
 
-  // Default map with MapQuest
+  // Defualt map with MapQuest
   $default = new stdClass();
   $default->api_version = 1;
   $default->name = 'default';
@@ -57,7 +57,7 @@ function _openlayers_openlayers_maps() {
     ),
   );
   $items['default'] = $default;
-
+  
   // An example Google map
   $openlayers_maps = new stdClass;
   $openlayers_maps->disabled = FALSE;
@@ -116,7 +116,7 @@ function _openlayers_openlayers_maps() {
     ),
   );
   $items['default_google'] = $openlayers_maps;
-
+  
   // Example map with MapQuest and GeoJSON
   $openlayers_maps = new stdClass;
   $openlayers_maps->disabled = FALSE;
@@ -183,7 +183,7 @@ function _openlayers_openlayers_maps() {
     ),
   );
   $items["example_geojson"] = $openlayers_maps;
-
+  
   // Example Virtual Earth map
   $openlayers_maps = new stdClass;
   $openlayers_maps->disabled = FALSE;
@@ -243,7 +243,7 @@ function _openlayers_openlayers_maps() {
     ),
   );
   $items["example_virtual_earth"] = $openlayers_maps;
-
+  
   // Example OpenStreetMap
   $openlayers_maps = new stdClass;
   $openlayers_maps->disabled = FALSE;
@@ -300,14 +300,14 @@ function _openlayers_openlayers_maps() {
     ),
   );
   $items["example_osm"] = $openlayers_maps;
-
+  
   // Backwards compatibilty for features presets.  Since features
   // no longers cares about the preset hooks, we need to manually include
   // the preset file that stores the old hooks.
   $found_features = FALSE;
   if (module_exists('features')) {
     $features = features_get_features();
-
+    
     foreach ($features as $feature) {
       // Only utilize enabled features and look for presets
       if ($feature->status > 0 && !empty($feature->info['features']['openlayers_map_presets'])) {
@@ -319,7 +319,7 @@ function _openlayers_openlayers_maps() {
       }
     }
   }
-
+  
   // If features found, we have to explicilty reset the implement
   // cache.  This could be a significant performance hit on a site
   // that has a high number of modules installed.
@@ -333,6 +333,6 @@ function _openlayers_openlayers_maps() {
     $items = $items + $data;
   }
 
-
+  
   return $items;
 }

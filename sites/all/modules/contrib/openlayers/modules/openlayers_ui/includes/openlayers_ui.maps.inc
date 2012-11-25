@@ -53,7 +53,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
   // to turn it on or off.  Show on preview, otherwise look at setting.
   // Might want to look at disableing the mousewheel zoom since
   // the map could be very in the way.
-  $map_preview = (isset($form_state['values']) && $form_state['values']['preview_map']) ?
+  $map_preview = (isset($form_state['values']) && $form_state['values']['preview_map']) ? 
     $form_state['values']['preview_map'] : $map;
   if (variable_get('openlayers_ui_preview_map', FALSE) || !empty($form_state['values']['preview_map'])) {
     $form['preview'] = array(
@@ -61,7 +61,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
       '#type' => 'fieldset',
       '#title' => t('Preview'),
       '#description' => t('The following is a preview of your map.  Click <em>Preview</em>
-        to refresh the map with the new values.  ' .
+        to refresh the map with the new values.  ' . 
         (!variable_get('openlayers_ui_preview_map', FALSE) ?
           t('Turn map previews on by default on the !link.',
           array('!link' => l(t('Settings page'), 'admin/structure/openlayers'))) : ''
@@ -93,7 +93,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     '#group' => 'ui',
     '#type' => 'fieldset'
   );
-
+  
   $form['info']['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Map Machine Name'),
@@ -146,13 +146,13 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     $form['info']['hide_empty_map'] = array(
       '#type' => 'checkbox',
       '#title' => t('Hide empty map for Views'),
-      '#description' => t("Show views empty text or hide the map if there are
+      '#description' => t("Show views empty text or hide the map if there are 
         no map overlays with features. Otherwise an empty map is displayed."),
       '#default_value' => isset($defaults['hide_empty_map']) ?
-        $defaults['hide_empty_map'] : FALSE,
+        $defaults['hide_empty_map'] : FALSE,  
     );
   }
-
+  
   $default_image_path = drupal_get_path('module', 'openlayers') . '/themes/default_dark/img/';
   $form['info']['image_path'] = array(
     '#type' => 'textfield',
@@ -160,17 +160,17 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     '#description' => t('<p>The path to a directory of UI graphics. Use any of the
       following:</p>
       <ul>
-        <li><strong>Leave blank</strong> for default graphics as provided
+        <li><strong>Leave blank</strong> for default graphics as provided 
           by the OpenLayers library. </li>
-        <li><strong>Relative Drupal path</strong> a path without leading slash and
+        <li><strong>Relative Drupal path</strong> a path without leading slash and 
           the base path will be prepended, ex. "sites/all/themes/path/to/images/"</li>
-        <li><strong>Absolute path</strong> a path with leading slash and path will
+        <li><strong>Absolute path</strong> a path with leading slash and path will 
           start from sites root directory, ex. "/path/to/images/"</li>
         <li><strong>Full URL</strong> such as "http://example.com/image/"</li>
       </ul>
-      <p>Always include trailing slash.  The default path provided with this module
+      <p>Always include trailing slash.  The default path provided with this module 
       is: %default</p>
-      <p><strong>This is actually a setting for the OpenLayers
+      <p><strong>This is actually a setting for the OpenLayers 
       object and will affect all maps on the same page.</strong></p>',
       array('%default' => $default_image_path)
     ),
@@ -188,18 +188,18 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
       <ul>
         <li><strong>Leave blank</strong> for default hosted OpenLayers which
           is !link</li>
-        <li><strong>Relative Drupal path</strong> a path without leading slash and
+        <li><strong>Relative Drupal path</strong> a path without leading slash and 
           the base path will be prepended, ex. "sites/all/themes/path/to/style.css"</li>
-        <li><strong>Absolute path</strong> a path with leading slash and path will
+        <li><strong>Absolute path</strong> a path with leading slash and path will 
           start from sites root directory, ex. "/path/to/style.css"</li>
         <li><strong>Full URL</strong> such as "http://example.com/style.css"</li>
       </ul>
-      <p>The default path provided with this module
+      <p>The default path provided with this module 
       is: %default</p>
-      <p><strong>This is actually a setting for the OpenLayers
+      <p><strong>This is actually a setting for the OpenLayers 
       object and will affect all maps on the same page.</strong></p>',
       array(
-        '!link' => l('http://openlayers.org/api/theme/default/style.css',
+        '!link' => l('http://openlayers.org/api/theme/default/style.css', 
           'http://openlayers.org/api/theme/default/style.css'),
         '%default' => $default_css_path,
       )
@@ -216,23 +216,23 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
       KML).  Use any of the following:</p>
       <ul>
         <li><strong>Leave blank</strong> no proxy path.</li>
-        <li><strong>Relative Drupal path</strong> a path without leading slash and
+        <li><strong>Relative Drupal path</strong> a path without leading slash and 
           the base path will be prepended, ex. "proxy?request="</li>
-        <li><strong>Absolute path</strong> a path with leading slash and path will
+        <li><strong>Absolute path</strong> a path with leading slash and path will 
           start from sites root directory, ex. "/cgi_proxy?request="</li>
         <li><strong>Full URL</strong> such as "http://example.com/proxy?request="</li>
       </ul>
-      <p><strong>This is actually a setting for the OpenLayers
+      <p><strong>This is actually a setting for the OpenLayers 
       object and will affect all maps on the same page.</strong></p>'
     ),
     '#default_value' => !empty($defaults['proxy_host']) ?
       $defaults['proxy_host'] : '',
   );
-
+  
   // Center
   $form['center'] = array(
     '#title' => t('Center & Bounds'),
-    '#description' => t('Where the map will center itself initially.
+    '#description' => t('Where the map will center itself initially. 
       <strong>Shift-drag</strong> a box on the map to set the Restricted Extent.'),
     '#tree' => TRUE,
     '#type' => 'fieldset',
@@ -311,16 +311,16 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     $projection_layers = array_merge(
       openlayers_ui_get_layer_options('baselayer', $projection),
       openlayers_ui_get_layer_options('overlay', $projection));
-
+      
     $projections[$projection] = theme(
-      'openlayers_ui_form_projection_description',
+      'openlayers_ui_form_projection_description', 
       array(
-        'projection_title' => $projection,
+        'projection_title' => $projection, 
         'available_layers' => array_keys($projection_layers)
       )
     );
   }
-
+  
   // Construct data for theme_openlayers_ui_maps_form_layers
   $form['layerstyles']['layers']['#tree'] = TRUE;
   $form['layerstyles']['layers']['baselabels'] = array();
@@ -355,7 +355,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     $enabled = array_intersect(array_keys($defaults['layers']), $available);
     $disabled = array_diff($available, $enabled);
     $overlay_options_keys = array_merge($disabled, $enabled);
-
+    
     // Create overlay options.
     $form['layerstyles']['layer_styles']['#tree'] = TRUE;
     $form['layerstyles']['layer_styles_select']['#tree'] = TRUE;
@@ -363,23 +363,23 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     foreach ($overlay_options_keys as $id) {
       $description = $overlay_options[$id];
       $form['layerstyles']['layers']['overlaylabels'][$id] = array('#markup' => $description);
-
+      
       // Layer styles tha define the default style of layer.
       $form['layerstyles']['layer_styles'][$id] = array(
         '#type' => 'select',
         '#options' => array('<' . t('use default style') . '>') + openlayers_ui_get_style_options(),
-        '#default_value' => !empty($defaults['layer_styles'][$id]) ?
+        '#default_value' => !empty($defaults['layer_styles'][$id]) ? 
           $defaults['layer_styles'][$id] : '',
       );
-
+      
       // Layer select style.
       $form['layerstyles']['layer_styles_select'][$id] = array(
         '#type' => 'select',
         '#options' => array('<' . t('use default style') . '>') + openlayers_ui_get_style_options(),
-        '#default_value' => !empty($defaults['layer_styles_select'][$id]) ?
+        '#default_value' => !empty($defaults['layer_styles_select'][$id]) ? 
           $defaults['layer_styles_select'][$id] : '',
       );
-
+      
       // Weight of layer.  This will affect how the layer shows up in the
       // switcher and is rendered.
       $form['layerstyles']['layer_weight'][$id] = array(
@@ -390,7 +390,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
         )
       );
     }
-
+  
     // Checkbox options for overlay layers.
     $form['layerstyles']['layers']['overlays'] = array(
       '#type' => 'checkboxes',
@@ -411,17 +411,17 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
         array_intersect_key($defaults['layer_switcher'], $overlay_options) : array(),
     );
   }
-
+  
   // Data overlay help.
   $form['layerstyles']['help_data_overlays'] = array(
     '#type' => 'item',
-    '#description' => t('<strong>Add Data Overlays</strong>: You can add regular
-      overlays, like <a href="!geojson">GeoJSON</a> or <a href="!kml">KML</a>,
-      or you can utilize <a href="!views_url">Views</a> to create data overlays.
-      To create a Views-based overlay, you must choose the <strong>OpenLayers
-      Data Overlay Display Type</strong>, and then explicitly set the the
-      <strong>same for the Format</strong>.  The options in the <em>Format
-      Settings</em> will only use fields you have added. To learn more, take
+    '#description' => t('<strong>Add Data Overlays</strong>: You can add regular 
+      overlays, like <a href="!geojson">GeoJSON</a> or <a href="!kml">KML</a>, 
+      or you can utilize <a href="!views_url">Views</a> to create data overlays.  
+      To create a Views-based overlay, you must choose the <strong>OpenLayers 
+      Data Overlay Display Type</strong>, and then explicitly set the the 
+      <strong>same for the Format</strong>.  The options in the <em>Format 
+      Settings</em> will only use fields you have added. To learn more, take 
       a look at the <a href="!online_url">online documentation on Drupal.org</a>.',
       array(
         '!views_url' => url('admin/structure/views'),
@@ -431,13 +431,13 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
       )
     ),
   );
-
+  
 
   // Styles
   $form['layerstyles']['styles'] = array(
     '#type' => 'fieldset',
     '#title' => t('Default Styles'),
-    '#description' => t('Define default style designations for layers when there
+    '#description' => t('Define default style designations for layers when there 
       are no overrides.'),
     '#tree' => TRUE,
   );
@@ -467,7 +467,7 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
       $defaults['styles']['temporary'] : NULL,
   );
 
-  // TODO: This projection stuff sucks.  See
+  // TODO: This projection stuff sucks.  See 
   // http://drupal.org/node/1331410
   //
   // Grab default from submitted form values on AHAH rebuild.
@@ -491,9 +491,9 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     '#description' => t('<p><strong>WARNING: Projections are not well supported in
       this module.  If you need to handle non spherical mercator projections
       you may be better using the API directly.</strong></p>
-      <p>Select the EPSG code of the !link_proj for your map.  The list next
+      <p>Select the EPSG code of the !link_proj for your map.  The list next 
       to each projection is the layers that support this projection.</p>',
-      array('!link_proj' => l(t('geographical projection'),
+      array('!link_proj' => l(t('geographical projection'), 
         'http://en.wikipedia.org/wiki/Map_projection'))
     ),
     '#tree' => TRUE,
@@ -513,10 +513,10 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
   $form['layerstyles']['projections']['displayProjection'] = array(
     '#type' => 'textfield',
     '#title' => t('Display Projection'),
-    '#description' => t('All interaction with the map - drawing, panning,
-      centering, and more - occurs in the display projection. The vast majority
+    '#description' => t('All interaction with the map - drawing, panning, 
+      centering, and more - occurs in the display projection. The vast majority 
       of maps use 4326 (latitude/longitude) for this value.'),
-    '#default_value' => !empty($defaults['displayProjection']) ?
+    '#default_value' => !empty($defaults['displayProjection']) ? 
       $defaults['displayProjection'] : '4326',
     '#maxlength' => 6
   );
@@ -544,26 +544,26 @@ function openlayers_ui_maps_form($form, &$form_state, $map = FALSE, $edit = FALS
     $form['displays']['views'] = array(
       '#type' => 'item',
       '#title' => t('Views'),
-      '#description' => t('Utilize the <a href="!views_url">Views</a> module to
-        display your map as page or in a block.  By creating a new Views Display of
-        type <strong>Page</strong> or <strong>Block</strong> you can then choose
-        the <strong>OpenLayers Map Format</strong>.  For more details, check out
+      '#description' => t('Utilize the <a href="!views_url">Views</a> module to 
+        display your map as page or in a block.  By creating a new Views Display of 
+        type <strong>Page</strong> or <strong>Block</strong> you can then choose 
+        the <strong>OpenLayers Map Format</strong>.  For more details, check out 
         the <a href="!online_url">online documentation on Drupal.org</a>.',
         array(
           '!views_url' => url('admin/structure/views'),
           '!online_url' => url('http://drupal.org/node/595872')
         )
       ),
-      '#suffix' => theme('image', array('path' =>
+      '#suffix' => theme('image', array('path' => 
         'https://img.skitch.com/20111106-c6ukwxgpgykxx8m41yrn8qew4n.png')),
     );
     $form['displays']['api'] = array(
       '#type' => 'item',
       '#title' => t('API'),
-      '#description' => t('You can always utilize the API to directly display
-        your maps.  The key function to use is <code>openlayers_render_map()</code>.
-        Most of the code is well documented.  To learn how to extend the module,
-        take a look at the <a href="!online_url">online documentation on
+      '#description' => t('You can always utilize the API to directly display 
+        your maps.  The key function to use is <code>openlayers_render_map()</code>.  
+        Most of the code is well documented.  To learn how to extend the module, 
+        take a look at the <a href="!online_url">online documentation on 
         Drupal.org</a> as well as the files in the <code>docs/</code> folder.',
         array('!online_url' => url('http://drupal.org/node/595872'))
       ),
@@ -785,9 +785,9 @@ function openlayers_ui_maps_form_process($values = array()) {
         if (isset($values['layer_weight'])) {
           $overlays = array();
           asort($values['layer_weight']);
-          foreach (array_keys($values['layer_weight']) as $layer_key) {
-            if ($values['layers']['overlays'][$layer_key]) {
-               $overlays[$layer_key] = $layer_key;
+          foreach (array_keys($values['layer_weight']) as $key) {
+            if ($values['layers']['overlays'][$key]) {
+               $overlays[$key] = $key;
             }
           }
           // TODO: Above code is terrrrrrrrible. rewrite when I have the time
@@ -826,9 +826,9 @@ function openlayers_ui_get_behavior_options($type, $defaults) {
   foreach ($behaviors as $key => $plugin) {
     // Get behavior class
     $class = ctools_plugin_load_class(
-      'openlayers',
-      'behaviors',
-      $key,
+      'openlayers', 
+      'behaviors', 
+      $key, 
       'behavior');
     if (!empty($class)) {
       $options = isset($defaults['behaviors'][$key]) ?
@@ -854,7 +854,7 @@ function openlayers_ui_get_behavior_options($type, $defaults) {
         // Create options items
         $options = $behavior->options_form($options);
         if (!empty($options)) {
-          // HACK.  In order to use ctools form
+          // HACK.  In order to use ctools form 
           // dependencies, we have to use a hidden
           // field as it supports processing and IDs.
           $form[$key]['options_set'][$key . '-prefix'] = array(
@@ -907,10 +907,7 @@ function openlayers_ui_maps_form_center_map($defaults = array()) {
   drupal_add_js($pass_values, 'setting');
 
   // centerpoint & zoom of this map are overridden
-  // by the mapformvalues behavior on page load.
-  //
-  // Note that navigation screws up the boxselect
-  // behavior for getting extent.
+  // by the mapformvalues behavior on page load
   $centermap_def = array(
     'id' => 'openlayers-center-helpmap',
     'projection' => '900913',
@@ -929,9 +926,9 @@ function openlayers_ui_maps_form_center_map($defaults = array()) {
       'mapquest_osm',
     ),
     'behaviors' => array(
-      //'openlayers_behavior_navigation' => array(),
-      //'openlayers_behavior_dragpan' => array(),
+      'openlayers_behavior_navigation' => array(),
       'openlayers_behavior_panzoombar' => array(),
+      'openlayers_behavior_dragpan' => array(),
       'openlayers_behavior_mapformvalues' => array(),
       'openlayers_behavior_boxselect' => array(),
       'openlayers_behavior_attribution' => array(),

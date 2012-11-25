@@ -29,7 +29,7 @@ class openlayers_layer_type_wms extends openlayers_layer_type {
         $pts = explode(':', $this->data['options']['srs']);
         $this->data['projection'] = array($pts[1]);
         $this->data['params']['resolutions'] = openlayers_get_resolutions($pts[1]);
-        $this->data['params']['projection'] = $this->data['options']['srs'];
+        $this->data['params']['projection'] = $this->data['options']['srs']; 
         $this->data['params']['maxextent'] =  openlayers_get_extent($pts[1]);
       }
       $this->data['baselayer'] = $this->data['params']['isBaseLayer'];
@@ -53,7 +53,7 @@ class openlayers_layer_type_wms extends openlayers_layer_type {
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
       'base_url' => array(
         '#type' => 'textfield',
@@ -61,12 +61,12 @@ class openlayers_layer_type_wms extends openlayers_layer_type {
         '#default_value' => isset($this->data['base_url']) ?
           $this->data['base_url'] : ''
       ),
-
+      
       // TODO: swap terms
       'params' => array(
         'isBaseLayer' => array(
           '#type' => 'checkbox',
-          '#default_value' => isset($this->data['params']['isBaseLayer']) ?
+          '#default_value' => isset($this->data['params']['isBaseLayer']) ? 
             $this->data['params']['isBaseLayer'] : TRUE,
           '#return_value' => 'true',
           '#title' => t('BaseLayer'),

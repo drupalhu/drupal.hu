@@ -18,6 +18,7 @@ function _openlayers_test_openlayers_maps() {
   $behaviors_test->title = t('Test: Behaviors');
   $behaviors_test->description = t('This is a test map.');
   $behaviors_test->data = array(
+    'projection' => '4326',
     'projection' => '900913',
     'width' => 'auto',
     'default_layer' => 'osm_mapnik',
@@ -105,7 +106,7 @@ function _openlayers_test_openlayers_maps() {
     ),
     'options' => NULL,
   );
-
+  
   // GeoJSON example
   $openlayers_maps = new stdClass;
   $openlayers_maps->disabled = FALSE;
@@ -162,69 +163,6 @@ function _openlayers_test_openlayers_maps() {
     'layer_styles_select' => array(
       'test_geojson_direct_data' => 'default_select',
       'test_geojson_url' => 'default_marker_green',
-    ),
-    'projection' => '900913',
-    'displayProjection' => '4326',
-    'styles' => array(
-      'default' => 'default',
-      'select' => 'default_select',
-      'temporary' => 'default',
-    ),
-  );
-  $items[$openlayers_maps->name] = $openlayers_maps;
-
-  // GeoJSON example
-  $openlayers_maps = new stdClass;
-  $openlayers_maps->disabled = FALSE;
-  $openlayers_maps->api_version = 1;
-  $openlayers_maps->name = 'kml';
-  $openlayers_maps->title = 'Test: Using KML';
-  $openlayers_maps->description = 'This map uses a KML feed.';
-  $openlayers_maps->data = array(
-    'width' => 'auto',
-    'height' => '400px',
-    'image_path' => drupal_get_path('module', 'openlayers') . '/themes/default_dark/img/',
-    'css_path' => drupal_get_path('module', 'openlayers') . '/themes/default_dark/style.css',
-    'center' => array(
-      'initial' => array(
-        'centerpoint' => '-122.08452530529, 37.421872987049',
-        'zoom' => '17',
-      ),
-      'restrict' => array(
-        'restrictextent' => 0,
-        'restrictedExtent' => '',
-      ),
-    ),
-    'behaviors' => array(
-      'openlayers_behavior_attribution' => array(),
-      'openlayers_behavior_keyboarddefaults' => array(),
-      'openlayers_behavior_layerswitcher' => array(
-        'ascending' => 1,
-        'roundedCorner' => 1,
-        'roundedCornerColor' => '#222222',
-      ),
-      'openlayers_behavior_navigation' => array(
-        'zoomWheelEnabled' => 1,
-        'documentDrag' => 0,
-      ),
-      'openlayers_behavior_panzoombar' => array(),
-      'openlayers_behavior_popup' => array(
-        'layers' => array(
-          'test_geojson_direct_data' => 'test_kml_url',
-        ),
-      ),
-    ),
-    'default_layer' => 'mapquest_osm',
-    'layers' => array(
-      'mapquest_osm' => 'mapquest_osm',
-      'mapquest_openaerial' => 'mapquest_openaerial',
-      'test_kml_url' => 'test_kml_url',
-    ),
-    'layer_styles' => array(
-      'test_kml_url' => 'default',
-    ),
-    'layer_styles_select' => array(
-      'test_kml_url' => 'default_select',
     ),
     'projection' => '900913',
     'displayProjection' => '4326',

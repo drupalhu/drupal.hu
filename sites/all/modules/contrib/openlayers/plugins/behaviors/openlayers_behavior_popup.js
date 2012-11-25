@@ -15,14 +15,14 @@
  */
 Drupal.theme.prototype.openlayersPopup = function(feature) {
   var output = '';
-
+  
   if (feature.attributes.name) {
     output += '<div class="openlayers-popup openlayers-tooltip-name">' + feature.attributes.name + '</div>';
   }
   if (feature.attributes.description) {
     output += '<div class="openlayers-popup openlayers-tooltip-description">' + feature.attributes.description + '</div>';
   }
-
+  
   return output;
 };
 
@@ -48,12 +48,6 @@ Drupal.openlayers.addBehavior('openlayers_behavior_popup', function (data, optio
         layers.push(selectedLayer[0]);
       }
     }
-  }
-  
-  // if only 1 layer exists, do not add as an array.  Kind of a
-  // hack, see https://drupal.org/node/1393460
-  if (layers.length == 1) {
-    layers = layers[0];
   }
 
   var popupSelect = new OpenLayers.Control.SelectFeature(layers,

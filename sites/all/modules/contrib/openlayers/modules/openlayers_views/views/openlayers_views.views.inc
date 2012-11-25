@@ -21,7 +21,7 @@ function openlayers_views_views_plugins() {
         'path' => drupal_get_path('module', 'openlayers_views') . '/views',
         'uses hook menu' => FALSE,
         'use ajax' => FALSE,
-        'use pager' => TRUE,
+        'use pager' => FALSE,
         'accept attachments' => FALSE,
         'admin' => t('OpenLayers Data Overlay'),
       ),

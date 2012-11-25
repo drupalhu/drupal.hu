@@ -45,7 +45,7 @@ class openlayers_layer_type_virtualearth extends openlayers_layer_type {
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
       'layer_type' => array(
         '#type' => 'hidden',
@@ -59,9 +59,9 @@ class openlayers_layer_type_virtualearth extends openlayers_layer_type {
    */
   function settings_form() {
     return array();
-
+    
     // This is not actually used anywhere.
-
+    
     /*
     return array(
       'openlayers_layers_virtualearth_api' => array(
@@ -80,11 +80,11 @@ class openlayers_layer_type_virtualearth extends openlayers_layer_type {
    */
   function render(&$map) {
     static $virtualearth_maps_included;
-
+    
     if (!isset($virtualearth_maps_included)) {
       drupal_add_js(drupal_get_path('module', 'openlayers') .
       '/plugins/layer_types/openlayers_layer_type_virtualearth.js');
-      drupal_add_js('//dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.1',
+      drupal_add_js('http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.1',
         'external');
       $virtualearth_maps_included = TRUE;
     }

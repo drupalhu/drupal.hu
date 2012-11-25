@@ -9,7 +9,7 @@
  */
 $plugin = array(
   'title' => t('GeoJSON'),
-  'description' => t('Provides a vector layer based on <a href="!url">GeoJSON</a>.',
+  'description' => t('Provides a vector layer based on <a href="!url">GeoJSON</a>.', 
     array('!url' => 'http://geojson.org/')),
   'layer_type' => array(
     'file' => 'openlayers_layer_type_geojson.inc',
@@ -43,28 +43,21 @@ class openlayers_layer_type_geojson extends openlayers_layer_type {
       'baselayer' => FALSE,
       'vector' => TRUE,
       'geojson_data' => '',
-      'useBBOX' => FALSE,
     );
   }
 
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
       'url' => array(
         '#type' => 'textfield',
         '#title' => t('URL'),
-        '#description' => t('The URL of the GeoJSON file.  This can be a Drupal path as well, as it will get run through the Drupal <a href="!url">url()</a> function.',
+        '#description' => t('The URL of the GeoJSON file.  This can be a Drupal path as well, as it will get run through the Drupal <a href="!url">url()</a> function.', 
           array('!url' => 'http://api.drupal.org/api/drupal/includes--common.inc/function/url')),
         '#maxlength' => 1024,
-        '#default_value' => isset($this->data['url']) ? $this->data['url'] : '',
-      ),
-      'useBBOX' => array(
-        '#type' => 'checkbox',
-        '#title' => t('Use Bounding Box Strategy'),
-        '#description' => t('Bounding Box strategy will add a query string onto the GeoJSON URL, which means that only data in the viewport of the map will be loaded.  This can be helpful if you have lots of data coming from the feed.'),
-        '#default_value' => isset($this->data['useBBOX']) ? $this->data['useBBOX'] : FALSE,
+        '#default_value' => isset($this->data['url']) ? $this->data['url'] : ''
       ),
       'geojson_data' => array(
         '#type' => 'textarea',
@@ -85,7 +78,7 @@ class openlayers_layer_type_geojson extends openlayers_layer_type {
   function render(&$map) {
     $this->options['url'] = !empty($this->options['url']) ? url($this->options['url']) : '';
 
-    drupal_add_js(drupal_get_path('module', 'openlayers')
+    drupal_add_js(drupal_get_path('module', 'openlayers') 
       . '/plugins/layer_types/openlayers_layer_type_geojson.js');
     return $this->options;
   }

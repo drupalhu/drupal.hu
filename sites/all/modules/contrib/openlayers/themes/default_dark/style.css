@@ -3,12 +3,12 @@
  * CSS file for OpenLayers dark theme.
  *
  * We include the default styles, then add
- * some specificity to override certain elements
+ * some specificity to override certain elements 
  * like image references.
  */
-
-@import url("openlayers_style.css");
-
+ 
+@import url("openlayers_style.css"); 
+ 
 .openlayers-map .olControlOverviewMapExtentRectangle {
     background-image: url("img/blank.gif");
 }
@@ -26,17 +26,13 @@
 .openlayers-popup {
   color: #EEEEEE;
 }
-.olImageLoadError,
-.openlayers-map .olImageLoadError {
-  background-color: transparent;
-}
 
 
 /**
  * The following are images that are not in
  * this theme (but should be).
  */
-
+ 
 /*
 
 .openlayers-map .olControlOverviewMapRectReplacement {

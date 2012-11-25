@@ -31,7 +31,6 @@ class openlayers_behavior_layerswitcher extends openlayers_behavior {
       'ascending' => TRUE,
       'roundedCorner' => TRUE,
       'roundedCornerColor' => '#222222',
-      'maximizeDefault' => FALSE,
     );
   }
 
@@ -39,7 +38,7 @@ class openlayers_behavior_layerswitcher extends openlayers_behavior {
     return array('OpenLayers.Control.LayerSwitcher');
   }
 
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     return array(
       'ascending' => array(
         '#type' => 'checkbox',
@@ -57,13 +56,7 @@ class openlayers_behavior_layerswitcher extends openlayers_behavior {
         '#type' => 'textfield',
         '#title' => t('Rounded corners color'),
         '#description' => t('For rounded corners, this is the CSS color to use for the corners.'),
-        '#default_value' => isset($defaults['roundedCornerColor']) ? $defaults['roundedCornerColor'] : '#222222',
-      ),
-      'maximizeDefault' => array(
-        '#type' => 'checkbox',
-        '#title' => t('Maximize by Default'),
-        '#description' => t('Turn on to have the Layer Switcher open by default.'),
-        '#default_value' => isset($defaults['maximizeDefault']) ? $defaults['maximizeDefault'] : FALSE,
+        '#default_value' => isset($defaults['roundedCornerColor']) ? $defaults['roundedCornerColor'] : '#222222', 
       ),
     );
   }
@@ -74,14 +67,14 @@ class openlayers_behavior_layerswitcher extends openlayers_behavior {
   function render(&$map) {
     // Legacy code for maps not using the default images now
     // provided with the code, or for maps that dont have images
-    // set.  We have to set the rounded corner color and add a
+    // set.  We have to set the rounded corner color and add a 
     // class for CSS to style
     if (empty($map['image_path'])) {
       $this->options['roundedCornerColor'] = 'darkblue';
       $this->options['displayClass'] = 'olControlLayerSwitcher legacy';
     }
-
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+  
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_layerswitcher.js');
     return $this->options;
   }

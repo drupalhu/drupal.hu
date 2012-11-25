@@ -19,12 +19,11 @@ function openlayers_install() {
  */
 function openlayers_uninstall() {
   // Get module variables
-  global $conf;
-  foreach (array_keys($conf) as $key) {
-    // Find variables that have the module prefix
-    if (strpos($key, 'openlayers_') === 0) {
-      variable_del($key);
-    }
+  $variables = db_query("SELECT v.name FROM {variable} AS v WHERE v.name LIKE ':pattern'",
+    array(':pattern' => db_like('openlayers_') . '%'))->fetchAll();
+  // Remove variables
+  foreach ($variables as $v) {
+    variable_del($v);
   }
 }
 
@@ -181,37 +180,37 @@ function openlayers_schema() {
 function openlayers_requirements($phase) {
   $req = array();
   $t = get_t();
-
+  
   // We should not require a specfic version of the OpenLayers library, but
   // we should tell the administrator that specific versions are more
   // compatible than others.
   if ($phase == 'runtime') {
     $ol_library_version = 0;
     $current_library = variable_get('openlayers_source', OPENLAYERS_DEFAULT_LIBRARY);
-
+    
     // As of 2.11, the hosted version supports the newest hosted
     // stable with an actual version number.  This used to be just under
     // the 'api' path.
     if (strpos($current_library, (string) OPENLAYERS_SUGGESTED_LIBRARY) !== FALSE) {
       $ol_library_version = OPENLAYERS_SUGGESTED_LIBRARY;
     }
-
+    
     // Check if it is the default hosted.
     if ($current_library == 'http://openlayers.org/api/OpenLayers.js') {
       $ol_library_version = OPENLAYERS_HOSTED_API_LIBRARY;
     }
-
+    
     // Finally, let's see if the client has sent us a value
     // from the UI module AJAX magic.
     $client = variable_get('openlayers_ui_version_check', '');
     if (strpos($client, (string) OPENLAYERS_SUGGESTED_LIBRARY) !== FALSE) {
       $ol_library_version = OPENLAYERS_SUGGESTED_LIBRARY;
     }
-
+    
     // Check if suggest version.
     if ($ol_library_version == OPENLAYERS_SUGGESTED_LIBRARY) {
       $req['openlayers_old_presets'] = array(
-        'title' => $t('OpenLayers library version'),
+        'title' => $t('OpenLayers library version'), 
         'value' => $t('Using suggested compatible version %suggested.',
           array(
             '%suggested' => OPENLAYERS_SUGGESTED_LIBRARY,
@@ -221,13 +220,13 @@ function openlayers_requirements($phase) {
     }
     else {
       $req['openlayers_old_presets'] = array(
-        'title' => $t('OpenLayers library version'),
+        'title' => $t('OpenLayers library version'), 
         'value' => $t('Not suggested compatible version.'),
         'description' => $t('Though you are very welcome to use whatever version of the OpenLayers library you want, it is suggested that you use version %suggested.  You are currently not using that version or we are unable to determine which version you are using.  Update your library settings at !settings.',
           array(
             '%suggested' => OPENLAYERS_SUGGESTED_LIBRARY,
             '!settings' => l(t('OpenLayers settings'), 'admin/structure/openlayers'),
-          )),
+          )), 
         'severity' => REQUIREMENT_WARNING,
       );
     }
@@ -240,7 +239,7 @@ function openlayers_requirements($phase) {
     // Check preset hook
     $presets = module_invoke_all('openlayers_presets');
     $found_presets = (count($presets) > 0) ? TRUE : FALSE;
-
+    
     // Check features
     $feature_names = array();
     $found_features = FALSE;
@@ -254,34 +253,34 @@ function openlayers_requirements($phase) {
         }
       }
     }
-
+    
     // Create requirement entries
     if ($found_presets) {
       $req['openlayers_old_presets'] = array(
-        'title' => $t('OpenLayers Presets'),
+        'title' => $t('OpenLayers Presets'), 
         'value' => $t('Found old presets.'),
         'description' => $t('With the 7.x-2.x version of the OpenLayers module, map presets were renamed to just maps.  This has some implications on APIs and hooks.  One or more of of the modules installed on this site is utilizing the deprecated %hook.  Please <a href="@url">read the upgrade page</a>, then contact the module owner or fix the custom module yourself.',
           array(
             '%hook' => 'hook_openlayers_presets()',
             '@url' => url('http://drupal.org/node/1136810'),
-          )),
+          )), 
         'severity' => REQUIREMENT_ERROR,
       );
     }
     if ($found_features) {
       $req['openlayers_old_features'] = array(
-        'title' => $t('OpenLayers Presets'),
+        'title' => $t('OpenLayers Presets'), 
         'value' => $t('Found Features with presets.'),
         'description' => $t('With the 7.x-2.x version of the OpenLayers module, map presets were renamed to just maps.  This has some implications on APIs and hooks.  There are Features on this site that contain the old map presets.  Please <a href="@url">read the upgrade page</a>, and rebuild the following Features: %features',
           array(
             '@url' => url('http://drupal.org/node/1136810'),
             '%features' => implode(',', $feature_names),
-          )),
+          )), 
         'severity' => REQUIREMENT_ERROR,
       );
     }
   }
-
+  
   return $req;
 }
 

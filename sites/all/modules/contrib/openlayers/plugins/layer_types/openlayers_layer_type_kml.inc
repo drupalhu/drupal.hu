@@ -9,7 +9,7 @@
  */
 $plugin = array(
   'title' => t('KML'),
-  'description' => t('<a href="!url">KML</a> overlay.',
+  'description' => t('<a href="!url">KML</a> overlay.', 
     array('!url' => 'http://en.wikipedia.org/wiki/Keyhole_Markup_Language')),
   'layer_type' => array(
     'file' => 'openlayers_layer_type_kml.inc',
@@ -52,7 +52,7 @@ class openlayers_layer_type_kml extends openlayers_layer_type {
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
       'url' => array(
         '#type' => 'textfield',
@@ -91,7 +91,7 @@ class openlayers_layer_type_kml extends openlayers_layer_type {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers')
+    drupal_add_js(drupal_get_path('module', 'openlayers') 
       . '/plugins/layer_types/openlayers_layer_type_kml.js');
     return $this->options;
   }

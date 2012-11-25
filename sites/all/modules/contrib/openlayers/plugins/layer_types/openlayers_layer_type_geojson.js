@@ -12,6 +12,7 @@ Drupal.openlayers.layer.geojson = function(title, map, options) {
   var features = null;
   options.projection = 'EPSG:' + options.projection;
   options.styleMap = Drupal.openlayers.getStyleMap(map, options.drupalID);
+  var layer = new OpenLayers.Layer.Vector(title, options);
 
   // GeoJSON Projection handling
   var geojson_options = {
@@ -19,11 +20,8 @@ Drupal.openlayers.layer.geojson = function(title, map, options) {
     'externalProjection': new OpenLayers.Projection(options.projection)
   };
 
-  // If GeoJSON data is provided with the layer, use that.  Otherwise
-  // check if BBOX, then finally use AJAX method.
+  // If GeoJSON data is provided with the layer, use that
   if (options.geojson_data) {
-    var layer = new OpenLayers.Layer.Vector(title, options);
-  
     // Read data in.
     features = new OpenLayers.Format.GeoJSON(geojson_options).read(options.geojson_data);
     if (features) {
@@ -32,24 +30,13 @@ Drupal.openlayers.layer.geojson = function(title, map, options) {
         features = [features];
       }
     }
-
+    
     // Add features, if needed
     if (features) {
       layer.addFeatures(features);
-      layer.events.triggerEvent('loadend');
     }
   }
-  else if (options.useBBOX) {
-    options.strategies = [ new OpenLayers.Strategy.BBOX() ];
-    options.protocol = new OpenLayers.Protocol.HTTP({
-      url: options.url,
-      format: new OpenLayers.Format.GeoJSON()
-    });
-    var layer = new OpenLayers.Layer.Vector(title, options);
-  }
   else {
-    var layer = new OpenLayers.Layer.Vector(title, options);
-  
     // Use an AJAX like call to get data from URL
     OpenLayers.loadURL(options.url, {}, null, function (response) {
       var format = new OpenLayers.Format.GeoJSON(geojson_options);
@@ -57,9 +44,22 @@ Drupal.openlayers.layer.geojson = function(title, map, options) {
       // Add features, if needed
       if (features) {
         layer.addFeatures(features);
-        layer.events.triggerEvent('loadend');
       }
     });
+    
+    // Extend options with a Fixed strategy fo getting from URL.
+    //
+    // This seems a bit more natural but does not
+    // seem to work.
+    /*
+    options = $.extend(options, {
+      strategies: [ new OpenLayers.Strategy.Fixed() ],
+      protocol: new OpenLayers.Protocol.HTTP({
+        url: options.url,
+        format: new OpenLayers.Format.GeoJSON()
+      })
+    });
+    */
   }
 
   return layer;

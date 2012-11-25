@@ -16,7 +16,7 @@
 }
 
 /**
- * prevent rtl translations from mirroring
+ * prevent rtl translations from mirroring 
  * vector layers
  */
 .openlayers-map .olLayerDiv {
@@ -46,6 +46,6 @@ body .olControlAttribution {
  * This is a 'sensible default' for a weird decision
  * by OpenLayers to make 404 tiles pink.
  */
-body .olImageLoadError {
+.olImageLoadError {
   background: transparent;
 }

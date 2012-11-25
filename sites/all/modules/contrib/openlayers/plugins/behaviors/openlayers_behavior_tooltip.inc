@@ -35,7 +35,7 @@ class openlayers_behavior_tooltip extends openlayers_behavior {
   /**
    * Form defintion for per map customizations.
    */
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     // Only prompt for vector layers
     $vector_layers = array();
     foreach ($this->map['layers'] as $id => $name) {
@@ -51,7 +51,7 @@ class openlayers_behavior_tooltip extends openlayers_behavior {
         '#type' => 'checkboxes',
         '#options' => $vector_layers,
         '#description' => t('Select layer to apply tooltips to.'),
-        '#default_value' => isset($defaults['layers']) ?
+        '#default_value' => isset($defaults['layers']) ? 
           $defaults['layers'] : array(),
       ),
     );
@@ -61,7 +61,7 @@ class openlayers_behavior_tooltip extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_tooltip.js');
     return $this->options;
   }

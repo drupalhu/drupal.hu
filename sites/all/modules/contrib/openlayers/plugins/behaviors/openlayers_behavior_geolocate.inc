@@ -38,9 +38,9 @@ class openlayers_behavior_geolocate extends openlayers_behavior {
     );
   }
 
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     $intials = $this->options_init();
-
+  
     return array(
       'bind' => array(
         '#title' => t('Center when located'),
@@ -81,7 +81,7 @@ class openlayers_behavior_geolocate extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_geolocate.js');
     return $this->options;
   }

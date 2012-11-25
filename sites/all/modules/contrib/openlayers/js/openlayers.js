@@ -61,13 +61,12 @@ Drupal.behaviors.openlayers = {
             if (map.projection === '900913') {
               options.maxExtent = new OpenLayers.Bounds(
                 -20037508.34, -20037508.34, 20037508.34, 20037508.34);
-                options.units = "m";
             }
             if (map.projection === '4326') {
               options.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
             }
 
-            options.maxResolution = 'auto'; // 1.40625;
+            options.maxResolution = 1.40625;
             options.controls = [];
 
             // Change image, CSS, and proxy paths if specified
@@ -101,12 +100,11 @@ Drupal.behaviors.openlayers = {
             }
           }
           catch (e) {
-            var errorMessage = e.name + ': ' + e.message;
             if (typeof console != 'undefined') {
-              console.log(errorMessage);
+              console.log(e);
             }
             else {
-              $(this).text('Error during map rendering: ' + errorMessage);
+              $(this).text('Error during map rendering: ' + e);
             }
           }
         }
@@ -162,7 +160,7 @@ Drupal.openlayers = {
       sorted.push({'name': name, 'weight': map.layers[name].weight });
     }
     sorted.sort(function(a, b) {
-      var x = parseInt(a.weight, 10), y = parseInt(b.weight, 10);
+      var x = a.weight, y = b.weight;
       return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 
@@ -195,20 +193,20 @@ Drupal.openlayers = {
 
     openlayers.setBaseLayer(openlayers.getLayersBy('drupalID', map.default_layer)[0]);
 
+    // Zoom & center
+    if (map.center.initial) {
+      var center = OpenLayers.LonLat.fromString(map.center.initial.centerpoint).transform(
+            new OpenLayers.Projection('EPSG:4326'),
+            new OpenLayers.Projection('EPSG:' + map.projection));
+      var zoom = parseInt(map.center.initial.zoom, 10);
+      openlayers.setCenter(center, zoom, false, false);
+    }
+
     // Set the restricted extent if wanted.
     // Prevents the map from being panned outside of a specfic bounding box.
     if (typeof map.center.restrict !== 'undefined' && map.center.restrict.restrictextent) {
       openlayers.restrictedExtent = OpenLayers.Bounds.fromString(
           map.center.restrict.restrictedExtent);
-    }
-
-    // Zoom & center
-    if (map.center.initial) {
-      var center = OpenLayers.LonLat.fromString(map.center.initial.centerpoint).transform(
-        new OpenLayers.Projection('EPSG:4326'),
-        new OpenLayers.Projection('EPSG:' + map.projection));
-      var zoom = parseInt(map.center.initial.zoom, 10);
-      openlayers.setCenter(center, zoom, false, false);
     }
   },
   /**
@@ -283,16 +281,16 @@ Drupal.openlayers = {
       layer.addFeatures(newFeatures);
     }
   },
-
+  
   'getStyleMap': function(map, layername) {
     if (map.styles) {
       var stylesAdded = {};
-
+      
       // Grab and map base styles.
       for (var style in map.styles) {
         stylesAdded[style] = new OpenLayers.Style(map.styles[style]);
       }
-
+      
       // Implement layer-specific styles.  First default, then select.
       if (map.layer_styles !== undefined && map.layer_styles[layername]) {
         var style = map.layer_styles[layername];
@@ -302,7 +300,7 @@ Drupal.openlayers = {
         var style = map.layer_styles_select[layername];
         stylesAdded['select'] = new OpenLayers.Style(map.styles[style]);
       }
-
+      
       return new OpenLayers.StyleMap(stylesAdded);
     }
     else {
@@ -321,7 +319,7 @@ Drupal.openlayers = {
       });
     }
   },
-
+  
   'objectFromFeature': function(feature) {
     var wktFormat = new OpenLayers.Format.WKT();
     // Extract geometry either from wkt property or lon/lat properties
@@ -332,7 +330,7 @@ Drupal.openlayers = {
       return wktFormat.read('POINT(' + feature.lon + ' ' + feature.lat + ')');
     }
   },
-
+  
   /**
    * Add Behavior.
    *
@@ -355,12 +353,12 @@ Drupal.openlayers = {
     Drupal.behaviors['openlayers_auto_' + id] = {
       attach: function (context, settings) {
         var data = $(context).data('openlayers');
-
+        
         // Ensure that there is a map and that the appropriate
-        // behavior exists.  Need "data &&" to avoid js crash
+        // behavior exists.  Need "data &&" to avoid js crash 
         // when data is empty
         var localBehavior = data && data.map.behaviors[id];
-
+        
         // Ensure scope in the attach callback
         var that = this;
         if (localBehavior) {
@@ -373,7 +371,7 @@ Drupal.openlayers = {
       detach: detach
     };
   },
-
+  
   /**
    * Add Control.
    *

@@ -43,7 +43,7 @@ class openlayers_behavior_cluster extends openlayers_behavior {
   /**
    * Provide form for configurations per map.
    */
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     // Only prompt for vector layers
     $vector_layers = array();
     foreach ($this->map['layers'] as $id => $name) {
@@ -59,7 +59,7 @@ class openlayers_behavior_cluster extends openlayers_behavior {
         '#type' => 'checkboxes',
         '#options' => $vector_layers,
         '#description' => t('Select layers to cluster.'),
-        '#default_value' => isset($defaults['clusterlayer']) ?
+        '#default_value' => isset($defaults['clusterlayer']) ? 
         $defaults['clusterlayer'] : array(),
       ),
       'distance' => array(
@@ -87,7 +87,7 @@ class openlayers_behavior_cluster extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_cluster.js');
     return $this->options;
   }

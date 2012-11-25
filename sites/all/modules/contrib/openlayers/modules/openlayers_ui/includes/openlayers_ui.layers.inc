@@ -115,12 +115,13 @@ function openlayers_ui_get_layer_form($args, $layer = FALSE) {
   // TODO: this shouldn't be necessary. this is ugly code.
   $type = $args['build_info']['args'][0];
 
-
+  
   $form['basics'] = array(
-    '#tree' => FALSE,
+    '#tree' => TRUE,
     '#type' => 'fieldset',
     '#title' => t('Layer Basics'),
     '#description' => t('The following settings are for all layers.'),
+    '#tree' => FALSE,
   );
   $form['basics']['name'] = array(
     '#type' => 'textfield',
@@ -140,7 +141,7 @@ function openlayers_ui_get_layer_form($args, $layer = FALSE) {
     '#default_value' => isset($type->description) ? $type->description : '',
     '#description' => t('The description of your layer, which will appear in the administration interface.'),
   );
-
+  
   // @TODO: clarify use of data, and of layer_type in overriding it
   $form['data'] = array(
     '#tree' => TRUE,
@@ -164,13 +165,8 @@ function openlayers_ui_get_layer_type_options($type) {
     '#type' => 'item',
     '#markup' => t('Select a layer type to create a new layer.')
   );
-
+  
   foreach (openlayers_layer_types() as $key => $plugin) {
-    // Hack to keep Views layers out
-    if (in_array($key, array('openlayers_views_vector', 'openlayers_layer_type_raw'))) {
-      continue;
-    }
-
     $class = ctools_plugin_get_class($plugin, 'layer_type');
     if ($class) {
       // Build form.
@@ -220,8 +216,7 @@ function openlayers_ui_layers_import_validate($form, &$form_state) {
   ob_end_clean();
 
   if (!is_array($items)) {
-    form_error($form['layer'], t('Unable to interpret layer code.'));
-    return;
+    return form_error($form['layer'], t('Unable to interpret layer code.'));
   }
 
   // View name must be alphanumeric or underscores, no other punctuation.

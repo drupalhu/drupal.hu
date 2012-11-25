@@ -7,9 +7,9 @@ dependencies[] = ctools
 
 ; Core files
 files[] = openlayers.module
-; Information added by drupal.org packaging script on 2012-08-04
-version = "7.x-2.0-beta1+56-dev"
+; Information added by drupal.org packaging script on 2011-11-27
+version = "7.x-2.0-beta1"
 core = "7.x"
 project = "openlayers"
-datestamp = "1344040584"
+datestamp = "1322380553"
 

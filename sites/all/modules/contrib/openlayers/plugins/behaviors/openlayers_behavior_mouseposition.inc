@@ -39,7 +39,7 @@ class openlayers_behavior_mouseposition extends openlayers_behavior {
     return array('OpenLayers.Control.MousePosition');
   }
 
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     return array(
       'prefix' => array(
         '#title' => t('Prefix'),
@@ -78,7 +78,7 @@ class openlayers_behavior_mouseposition extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_mouseposition.js');
     return $this->options;
   }

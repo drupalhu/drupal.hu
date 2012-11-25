@@ -65,9 +65,9 @@ function _openlayers_openlayers_styles() {
 
   // Marker styles
   $markers = array(
-    'red' => t('Red'),
-    'green' => t('Green'),
-    'gold' => t('Gold'),
+    'red' => t('Red'), 
+    'green' => t('Green'), 
+    'gold' => t('Gold'), 
     'blue' => t('Blue'),
   );
   foreach ($markers as $marker => $color) {
@@ -78,7 +78,7 @@ function _openlayers_openlayers_styles() {
     $style->description = t('!color marker provided by the OpenLayers module.',
       array('!color' => $color));
     $style->data = array(
-      'externalGraphic' => drupal_get_path('module', 'openlayers') .
+      'externalGraphic' => drupal_get_path('module', 'openlayers') . 
         '/themes/default_dark/img/marker-' . $marker . '.png',
       'graphicWidth' => 21,
       'graphicHeight' => 25,
@@ -87,7 +87,7 @@ function _openlayers_openlayers_styles() {
     );
     $styles[$style->name] = $style;
   }
-
+  
   // Custom black markers
   $style = new stdClass();
   $style->api_version = 1;
@@ -95,7 +95,7 @@ function _openlayers_openlayers_styles() {
   $style->title = t('Marker Black');
   $style->description = t('Black marker provided by the OpenLayers module.');
   $style->data = array(
-    'externalGraphic' => drupal_get_path('module', 'openlayers') .
+    'externalGraphic' => drupal_get_path('module', 'openlayers') . 
       '/themes/default_dark/markers/marker-black.png',
     'graphicWidth' => 25,
     'graphicHeight' => 41,
@@ -103,14 +103,14 @@ function _openlayers_openlayers_styles() {
     'graphicYOffset' => -41,
   );
   $styles[$style->name] = $style;
-
+  
   $style = new stdClass();
   $style->api_version = 1;
   $style->name = 'default_marker_black_small';
   $style->title = t('Marker Black Small');
   $style->description = t('Small black marker provided by the OpenLayers module.');
   $style->data = array(
-    'externalGraphic' => drupal_get_path('module', 'openlayers') .
+    'externalGraphic' => drupal_get_path('module', 'openlayers') . 
       '/themes/default_dark/markers/marker-black-small.png',
     'graphicWidth' => 16,
     'graphicHeight' => 26,

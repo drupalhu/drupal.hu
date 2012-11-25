@@ -49,12 +49,13 @@ class openlayers_layer_type_xyz extends openlayers_layer_type {
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
-      'url' => array(
+      'base_url' => array(
         '#type' => 'textfield',
         '#title' => t('Base URL (template)'),
-        '#default_value' => isset($this->data['url']) ? $this->data['url'] : '',
+        '#default_value' => isset($this->data['base_url']) ?
+          $this->data['base_url'] : '',
         '#description' => t('This is the base URL template for the XYZ layer.  It should be something similar to <em>http://example.com/tiles/1.0.0/layer_name/${z}/${x}/${y}.png</em>.'),
       ),
       'layer_type' => array(

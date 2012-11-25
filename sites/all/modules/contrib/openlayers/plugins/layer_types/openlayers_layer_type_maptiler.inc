@@ -51,12 +51,12 @@ class openlayers_layer_type_maptiler extends openlayers_layer_type {
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
       'base_url' => array(
         '#type' => 'textfield',
         '#title' => t('Base URL'),
-        '#default_value' => isset($this->data['base_url']) ?
+        '#default_value' => isset($this->data['base_url']) ? 
           $this->data['base_url'] : ''
       ),
       'isBaseLayer' => array(

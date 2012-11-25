@@ -31,7 +31,7 @@ class openlayers_behavior_panzoom extends openlayers_behavior {
     );
   }
 
-  function options_form($defaults = array()) {
+  function options_form($defaults) {
     return array(
     );
   }
@@ -40,7 +40,7 @@ class openlayers_behavior_panzoom extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') .
+    drupal_add_js(drupal_get_path('module', 'openlayers') . 
       '/plugins/behaviors/openlayers_behavior_panzoom.js');
     return $this->options;
   }

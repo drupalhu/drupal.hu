@@ -3,7 +3,7 @@
  * @file
  * OpenLayers Views Vector Layer Type
  */
-
+ 
 /**
  * Ctools plugin definition
  */
@@ -16,7 +16,7 @@ $plugin = array(
     'parent' => 'openlayers_layer_type',
   ),
 );
-
+ 
 class openlayers_layer_type_openlayers_views_vector
   extends openlayers_layer_type {
   /**
@@ -33,7 +33,7 @@ class openlayers_layer_type_openlayers_views_vector
   /**
    * Options form which generates layers
    */
-  function options_form($defaults = array()) {
+  function options_form() {
     return array(
     );
   }

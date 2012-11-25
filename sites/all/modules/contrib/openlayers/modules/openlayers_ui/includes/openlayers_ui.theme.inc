@@ -11,9 +11,6 @@
  * Theme function for form description of layers
  */
 function theme_openlayers_ui_form_layer_description($args) {
-  if (!empty($args['layer_link'])) {
-    $args['layer_title'] = l($args['layer_title'], $args['layer_link']);
-  }
   return $args['layer_title'] . ($args['layer_description'] ?
     ': <span class="openlayers-form-layer-description">' .
     $args['layer_description'] . '</span>' :
@@ -41,14 +38,14 @@ function theme_openlayers_ui_maps_form_layers($args) {
   foreach (element_children($form['layers']['baselabels']) as $key) {
     unset($form['layers']['default_layer'][$key]['#title']);
     unset($form['layers']['baselayers'][$key]['#title']);
-
+    
     $rows[] = array(
       drupal_render($form['layers']['baselabels'][$key]),
       drupal_render($form['layers']['baselayers'][$key]),
       drupal_render($form['layers']['default_layer'][$key]));
   }
   $output .= theme('table', array(
-    'header' => array(t('Base layers'), t('Enabled'), t('Default')),
+    'header' => array(t('Base layers'), t('Enabled'), t('Default')), 
     'rows' => $rows)
   );
 
@@ -72,13 +69,13 @@ function theme_openlayers_ui_maps_form_layers($args) {
       'class' => array('draggable')
     );
   }
-  $output .= theme('table',
+  $output .= theme('table', 
     array(
       'header' => array(
-        t('Overlay layers'), t('Weight'), t('Enabled'),
+        t('Overlay layers'), t('Weight'), t('Enabled'), 
         t('Activated'), t('In Switcher'), t('Style'), t('Select Style')
-      ),
-      'rows' => $rows,
+      ), 
+      'rows' => $rows, 
       array('id' => 'overlay-layer-table')
     )
   );
@@ -96,8 +93,8 @@ function theme_openlayers_ui_maps_form_behaviors($args) {
 
   $rows = array();
   foreach (element_children($form) as $key) {
-    $rows[] = array(drupal_render($form[$key]['enabled']) .
-      drupal_render($form[$key]['options_set']) .
+    $rows[] = array(drupal_render($form[$key]['enabled']) . 
+      drupal_render($form[$key]['options_set']) . 
       drupal_render($form[$key]['dependencies']));
   }
 
