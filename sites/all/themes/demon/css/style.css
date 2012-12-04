@@ -968,3 +968,7 @@ li.search-result h3 {
 	bottom: 20px;
 	right: 20px;
 }
+
+.view-planet-feed-list .views-field-picture{
+  overflow: hidden;
+}
