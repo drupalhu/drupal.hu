@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the About page feature.
+ */
+
+include_once 'about_page.features.inc';
