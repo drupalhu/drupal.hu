@@ -972,3 +972,7 @@ li.search-result h3 {
 .view-planet-feed-list .views-field-picture{
   overflow: hidden;
 }
+.node-book-form .group-book-infos{
+  padding: 10px;
+  border: 1px solid #E3E2E2;
+}
