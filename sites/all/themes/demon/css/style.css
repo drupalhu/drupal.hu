@@ -285,9 +285,7 @@ pre {
 
 /* front hightlighted slideshow */
 #highlighted-wrapper {
-  height: 302px;
- /* Drupal Hétvége 2011 miatt a háttér kiszedve. */
- /* background: url(../images/highlight-bkg.jpg) repeat-y 50% 0;*/
+  
 }
 
 #highlighted h2 {
