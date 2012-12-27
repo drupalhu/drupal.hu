@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Könyvlap cimkék feature.
+ */
+
+include_once 'konyvlap_cimkek.features.inc';
