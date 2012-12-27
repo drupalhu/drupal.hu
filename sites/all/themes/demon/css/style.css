@@ -1001,3 +1001,10 @@ blockquote:after {
   bottom: 0;
   color: #7a7a7a;
 }
+
+/* fieldset */
+
+fieldset {
+  padding: 10px;
+  border: 1px solid #CCC;
+}
