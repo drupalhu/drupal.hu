@@ -41,7 +41,7 @@ function konyvlap_cimkek_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját, és célközönségét.';
+  $handler->display->display_options['header']['area']['content'] = 'Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját és célközönségét.';
   $handler->display->display_options['header']['area']['format'] = '1';
   /* Mező: Tartalom: Drupal verzió */
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['id'] = 'taxonomy_vocabulary_10';
@@ -101,7 +101,7 @@ function konyvlap_cimkek_views_default_views() {
     t('Rendezés'),
     t('Növekvő'),
     t('Csökkenő'),
-    t('Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját, és célközönségét.'),
+    t('Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját és célközönségét.'),
     t('Drupal verzió'),
     t('Kézikönyv'),
     t('Célközönség'),
