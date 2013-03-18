@@ -1002,6 +1002,35 @@ blockquote:after {
   color: #7a7a7a;
 }
 
+/**
+ * eloadas tablazat
+ */
+ 
+#main table.program a {
+  display: block;
+  font-weight: bold;
+}
+#main table.program td,
+#main table.program th {
+  text-align: center;
+  width: 42%;
+  border: 1px solid #CCC;
+  padding: 0.5em;
+}
+#main table.program td.time,
+#main table.program th.time {
+  width: 15%;
+  white-space: no-wrap;
+}
+div.eloadas-tipus {
+  font-style: italic;
+}
+h2.eloadas-cim {
+  clear: both;
+  padding-top: 13px;
+  font-size: 16px;
+}
+ 
 /* fieldset */
 
 fieldset {
