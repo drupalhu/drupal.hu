@@ -395,23 +395,6 @@ div#block-views-recent-planet-block img {
   margin-bottom: 8px;
 }
 
-/* Tabok, Bartikból átemelve */
-
-/*
-Drifter: tényleg rejteni akarjuk ezeket? Pl. user oldalon hasznos ha ott van.
-
-#content .tabs {
-  position: absolute;
-  display: none;
-  z-index: 100;
-  top: 2em;
-}
-
-#content:hover .tabs {
-  display: block;
-}
-*/
-
 .tabs {
   margin-bottom: 20px;
 }
@@ -621,7 +604,7 @@ h1#page-title {
   text-indent: -9000px;
   color: transparent;
   float: left;
-  margin-right: 10px;
+  margin-left: 10px;
 }
 .social-wrapper a.twitter {
   background-position: 0 0;

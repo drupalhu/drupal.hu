@@ -63,6 +63,7 @@ function demon_process_page(&$variables) {
  * Override or insert variables into the node template.
  */
 function demon_preprocess_node(&$variables) {
+  kpr($variables);
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
     $variables['classes_array'][] = 'node-' . $variables['type'] . '-full';
@@ -75,7 +76,7 @@ function demon_preprocess_node(&$variables) {
   if ($variables['node']) {
     $variables['linkedin_link'] = theme('linkedin_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
     $variables['twitter_link'] = theme('twitter_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
-    $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
+    $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
   }
 }
 
@@ -131,7 +132,7 @@ function demon_theme($existing, $type, $theme, $path) {
       'variables' => array('nid' => NULL, 'title' => NULL),
     ),
     'facebook_link' => array(
-      'variables' => array('nid' => NULL),
+      'variables' => array('nid' => NULL, 'title' => NULL, 'summary' => NULL),
     ),
     'author_info' => array(
       'variables' => array('nid' => NULL),
@@ -165,9 +166,10 @@ function demon_twitter_link($variables) {
 function demon_facebook_link($variables) {
   global $base_url;
   $query = array(
-    't' => $variables['title'],
-    'u' => $base_url . '/node/' . $variables['nid'],
+    'p[title]' => $variables['title'],
+    'p[url]' => $base_url . '/node/' . $variables['nid'],
+    'p[summary]' => substr(strip_tags($variables['summary']), 0, 300),
   );
-  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
+  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php?s=100', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
   return $link;
 }
