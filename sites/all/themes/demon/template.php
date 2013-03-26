@@ -76,8 +76,6 @@ function demon_preprocess_node(&$variables) {
     $variables['linkedin_link'] = theme('linkedin_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
     $variables['twitter_link'] = theme('twitter_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
     $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
-    $variables['email_link'] = theme('email_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
-    $variables['xing_link'] = theme('xing_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
   }
 }
 
@@ -134,12 +132,6 @@ function demon_theme($existing, $type, $theme, $path) {
     ),
     'facebook_link' => array(
       'variables' => array('nid' => NULL),
-    ),
-    'email_link' => array(
-      'variables' => array('nid' => NULL, 'title' => NULL),
-    ),
-    'xing_link' => array(
-      'variables' => array('nid' => NULL, 'title' => NULL),
     ),
     'author_info' => array(
       'variables' => array('nid' => NULL),
