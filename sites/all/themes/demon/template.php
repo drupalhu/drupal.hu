@@ -63,7 +63,6 @@ function demon_process_page(&$variables) {
  * Override or insert variables into the node template.
  */
 function demon_preprocess_node(&$variables) {
-  kpr($variables);
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
     $variables['classes_array'][] = 'node-' . $variables['type'] . '-full';
