@@ -88,11 +88,21 @@
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 
+  <div class="nodeheader clearfix">
   <?php if ($display_submitted): ?>
     <div class="meta submitted">
       <?php print $submitted; ?>
     </div>
   <?php endif; ?>
+
+  <div class="social-wrapper">
+    <div class="social clearfix">
+      <?php print $twitter_link; ?>
+      <?php print $facebook_link; ?>
+      <?php print $linkedin_link; ?>
+    </div>
+  </div>
+  </div>
 
   <div class="content clearfix"<?php print $content_attributes; ?>>
     <?php print $user_picture; ?>

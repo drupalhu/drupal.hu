@@ -72,6 +72,13 @@ function demon_preprocess_node(&$variables) {
     $variables['classes_array'][] = 'node-' . $variables['type'] . '-teaser';
     $variables['title_attributes_array']['class'][] = 'node-title';
   }
+  if ($variables['node']) {
+    $variables['linkedin_link'] = theme('linkedin_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
+    $variables['twitter_link'] = theme('twitter_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
+    $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
+    $variables['email_link'] = theme('email_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
+    $variables['xing_link'] = theme('xing_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
+  }
 }
 
 /**
@@ -114,4 +121,61 @@ function demon_breadcrumb($variables) {
     $output .= '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
     return $output;
   }
+}
+
+
+function demon_theme($existing, $type, $theme, $path) {
+  return array(
+    'linkedin_link' => array(
+      'variables' => array('nid' => NULL, 'title' => NULL, 'summary' => NULL),
+    ),
+    'twitter_link' => array(
+      'variables' => array('nid' => NULL, 'title' => NULL),
+    ),
+    'facebook_link' => array(
+      'variables' => array('nid' => NULL),
+    ),
+    'email_link' => array(
+      'variables' => array('nid' => NULL, 'title' => NULL),
+    ),
+    'xing_link' => array(
+      'variables' => array('nid' => NULL, 'title' => NULL),
+    ),
+    'author_info' => array(
+      'variables' => array('nid' => NULL),
+    ),
+  );
+}
+
+function demon_linkedin_link($variables) {
+  global $base_url;
+  $query = array(
+    'mini' => 'true',
+    'url' => $base_url . '/node/' . $variables['nid'],
+    'title' => $variables['title'],
+    'summary' => substr(strip_tags($variables['summary']), 0, 300),
+    'source' => 'Drupal.hu',  
+  );
+  $link = l('<span></span>' . t('linkedin'), 'http://www.linkedin.com/shareArticle', array('query' => $query, 'attributes' => array('class' => array('linkedin')), 'html' => true));
+  return $link;
+}
+
+function demon_twitter_link($variables) {
+  global $base_url;
+  $query = array(
+    'url' => $base_url . '/node/' . $variables['nid'],
+    'text' => $variables['title'],
+  );
+  $link = l('<span></span>' . t('twitter'), 'https://twitter.com/intent/tweet', array('query' => $query, 'attributes' => array('class' => array('twitter')), 'html' => true));
+  return $link;
+}
+
+function demon_facebook_link($variables) {
+  global $base_url;
+  $query = array(
+    't' => $variables['title'],
+    'u' => $base_url . '/node/' . $variables['nid'],
+  );
+  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
+  return $link;
 }

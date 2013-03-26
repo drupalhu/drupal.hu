@@ -523,10 +523,15 @@ h1#page-title {
 
 /* Node */
 
+.nodeheader {
+  margin-bottom: 10px;
+}
 .submitted {
-  font-size: 0.857em;
+  font-size: 1em;
   color: #68696b;
   padding-bottom: 1em;
+  padding-top: 3px;
+  float: left;
 }
 
 .node .node-title {
@@ -599,6 +604,33 @@ h1#page-title {
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 1px solid #F6F6F2;
+}
+
+/**
+ * social links in node
+ */
+.social-wrapper {
+  float: right;
+}
+.social-wrapper a {
+  display: block;
+  background-image: url("../images/social.png");
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  text-indent: -9000px;
+  color: transparent;
+  float: left;
+  margin-right: 10px;
+}
+.social-wrapper a.twitter {
+  background-position: 0 0;
+}
+.social-wrapper a.facebook {
+  background-position: -30px 0;
+}
+.social-wrapper a.linkedin {
+  background-position: -60px 0;
 }
 
 /* Forum */
