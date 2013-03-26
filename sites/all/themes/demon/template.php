@@ -72,7 +72,7 @@ function demon_preprocess_node(&$variables) {
     $variables['classes_array'][] = 'node-' . $variables['type'] . '-teaser';
     $variables['title_attributes_array']['class'][] = 'node-title';
   }
-  if ($variables['node']) {
+  if ($variables['node'] && $variables['is_front'] == FALSE) {
     $variables['linkedin_link'] = theme('linkedin_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
     $variables['twitter_link'] = theme('twitter_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
     $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
