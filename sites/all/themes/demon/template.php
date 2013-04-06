@@ -165,10 +165,9 @@ function demon_twitter_link($variables) {
 function demon_facebook_link($variables) {
   global $base_url;
   $query = array(
-    'p[title]' => $variables['title'],
-    'p[url]' => $base_url . '/node/' . $variables['nid'],
-    'p[summary]' => substr(strip_tags($variables['summary']), 0, 300),
+    't' => $variables['title'],
+    'u' => $base_url . '/node/' . $variables['nid'],
   );
-  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php?s=100', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
+  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
   return $link;
 }
