@@ -1,0 +1,254 @@
+<?php
+// $Id
+require_once(dirname(__FILE__) . '/TestBase.inc');
+
+
+/**
+ * Tests for Open Graph meta tags.
+ */
+class OGMTBasicTest extends OGMTTestBase {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Basic unit tests'),
+      'description' => t('Test basic functionality.'),
+      'group' => t('Open Graph meta tags'),
+    );
+  }
+
+  function testExtractImagesFromNode() {
+
+    /*
+     * Check that logic to extract image URLs from the node body works as expected.
+     */
+
+    $node = new stdClass();
+
+    $this->_set_node_body($node,
+        'bla bla bla <a href="this is">...<img src="body.jpg">...<img> <img src=""></p>'  // test broken HTML
+    );
+
+    $node->type = 'page';
+    $node->field_image = $this->_create_img_field('image','field1.jpg');
+    $node->field_no_image = $this->_create_img_field('pdf','field2.jpg');
+    $node->sub_field_image = array('child' => $this->_create_img_field('image','subfield.jpg'));
+    $ret = $this->ogm->harvest_images_from_node($node);
+    $expected = array();
+    foreach (array('field1.jpg','subfield.jpg','body.jpg') as $imgpath) {
+      if (7 <= OPENGRAPH_META_DRUPAL_VERSION && 'body.jpg' != $imgpath)
+        $imgpath = image_style_url('thumbnail', $imgpath);
+      array_push($expected, array('title' => $imgpath, 'alt' => $imgpath, 'url' => $imgpath));
+    }
+    $this->assertEqual(serialize($expected), serialize($ret), t('Extract images from node fields and body content'));
+  }
+  
+  function testMetaTagsEnabledForContentType() {
+
+    /*
+     * Check the logic when enable tags to be enabled/disabled for a given content type.
+     */
+
+    // turn on all content types (no variable set)
+    $this->ogm_settings->vars = array();
+    $this->assertTrue($this->ogm->tags_are_enabled_for_content_type('type1'));
+    // turn on all content types (variable set)
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPES_ENABLED, array());
+    $this->assertTrue($this->ogm->tags_are_enabled_for_content_type('type1'));
+    // turn on specific content type
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPES_ENABLED, array('type1' => 1,'type2' => 0));
+    $this->assertTrue($this->ogm->tags_are_enabled_for_content_type('type1'));
+    $this->assertFalse($this->ogm->tags_are_enabled_for_content_type('type2'));
+  }
+
+  function testSaveTagsForNode() {
+
+    /*
+     * Check that saving tags for nodes works.
+     */
+
+    // fresh save
+    $this->ogm_data->tags = array();
+    $data = array(
+      OpenGraphMeta::TITLE => 'a',
+      OpenGraphMeta::DESCRIPTION => 'b',
+      OpenGraphMeta::IMAGE => 'c',
+      OpenGraphMeta::TYPE => 'd',
+    );
+    $this->ogm->save_node_data(1,$data);
+
+    // check that saved ok
+    $this->_check_saved_tags_for_node(1, $data, __FUNCTION__);
+
+    // overwrite
+    $data[OpenGraphMeta::TITLE] = 'a2';
+    $data[OpenGraphMeta::DESCRIPTION] = 'b2';
+    $data[OpenGraphMeta::IMAGE] = 'c2';
+    $data[OpenGraphMeta::TYPE] = 'd2';
+    $this->ogm->save_node_data(1,$data);
+
+    // check that saved ok
+    $this->_check_saved_tags_for_node(1, $data, __FUNCTION__);
+  }
+
+
+  function testMetaTagsOnlyGetOutputOnce() {
+
+    /*
+     * Even if we're processing multiple nodes for a given page we should only output each meta tag once to avoid
+     * issues with browsers refusing to accept duplicate tags.
+     */
+
+    $node = $this->_build_test_node(1);
+    $this->ogm->save_node_data(1, array(
+      OpenGraphMeta::TITLE => 'blat',
+      OpenGraphMeta::DESCRIPTION => 'blad',
+    ));
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'blat',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'blad',
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+    // now repeat
+    $node2 = $this->_build_test_node(2);
+    $this->ogm->save_node_data(2, array(
+      OpenGraphMeta::TITLE => 'blat2',
+      OpenGraphMeta::DESCRIPTION => 'blad2',
+    ));
+    $this->ogm->render_data($node2, $this->ogm->load_node_data($node2));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'blat',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'blad',
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+  }
+
+
+
+
+  function testNodeOverridesEmptyValues() {
+
+    /*
+     * If no specific tag values set for node and there is not default fallback value set for the node's content type
+     * then expect tags to be dynamically calculated.
+     */
+
+    $node = $this->_build_test_node(1);
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPE_.'type1','');
+    $this->ogm->save_node_data(1, array(
+      OpenGraphMeta::TITLE => '',
+      OpenGraphMeta::DESCRIPTION => '',
+      OpenGraphMeta::IMAGE => '',
+      OpenGraphMeta::TYPE => '',
+    ));
+    drupal_set_title($node->title);
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => $node->title,
+      'og:'.OpenGraphMeta::DESCRIPTION => drupal_substr(strip_tags(OpenGraphMetaDrupalLayer::get_node_body($node)),0,200),
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+  }
+
+  function testOverridesWithDefaultFallbackValues() {
+
+    /*
+     * If no specific 'type' tag value is set for node and and there is a fallback value set on the content type
+     * then expect that value to be used for the final tag.
+     */
+
+    $node = $this->_build_test_node(1);
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPE_.'type1','product');
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_SITE_NAME, 'TestSite');
+    $this->ogm->save_node_data(1, array(
+      OpenGraphMeta::TITLE => 'abc',
+      OpenGraphMeta::DESCRIPTION => 'def',
+      OpenGraphMeta::IMAGE => 'test.jpg',
+      OpenGraphMeta::TYPE => '',
+    ));
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'abc',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'def',
+      'og:'.OpenGraphMeta::IMAGE => url('test.jpg', array('absolute' => TRUE)),
+      'og:'.OpenGraphMeta::TYPE => 'product',
+      'og:'.OpenGraphMeta::SITE_NAME => 'TestSite',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+  }
+
+  function testOverridesWithNodeSpecificValues() {
+
+    /*
+     * If a specific 'type' tag value is set for node and and there is a fallback value set on the content type
+     * then expect the specific value set for the node to be used for the final tag.
+     */
+
+    $node = $this->_build_test_node(1);
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPE_.'type1','generic');
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_SITE_NAME, 'TestSite2');
+    $this->ogm->save_node_data(1, array(
+      OpenGraphMeta::TITLE => 'abc2',
+      OpenGraphMeta::DESCRIPTION => 'def2',
+      OpenGraphMeta::IMAGE => 'test2.jpg',
+      OpenGraphMeta::TYPE => 'pixies',
+    ));
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'abc2',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'def2',
+      'og:'.OpenGraphMeta::IMAGE => url('test2.jpg', array('absolute' => TRUE)),
+      'og:'.OpenGraphMeta::TYPE => 'pixies',
+      'og:'.OpenGraphMeta::SITE_NAME => 'TestSite2',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+  }
+
+
+
+  function testNodeOverrideDefaultImage() {
+
+    /*
+     * Ensure that node image is used instead of global fallback image when no row is present for the node in
+     * the OG meta tags table.
+     */
+
+    // empty node values
+    // Important: there is no row in the data store!
+    $node = $this->_build_test_node(1);
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_CONTENT_TYPE_.'type1','');
+    $this->ogm_settings->set(OPENGRAPH_META_VAR_FALLBACK_IMG, 'default.jpg');
+
+    // Check if the default image is returned when the node does not contain an image
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => $node->title,
+      'og:'.OpenGraphMeta::DESCRIPTION => drupal_substr(strip_tags(OpenGraphMetaDrupalLayer::get_node_body($node)),0,200),
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::IMAGE => url('default.jpg', array('absolute' => TRUE)),
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__.' default image is returned');
+
+    // Add an image to the node
+    $this->_reset_rendered_tags();
+    $node->field_image = $this->_create_img_field('image/jpeg','node.jpg');
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+
+    $imgpath = 'node.jpg';
+    if (7 <= OPENGRAPH_META_DRUPAL_VERSION && 'body.jpg' != $imgpath)
+      $imgpath = image_style_url('thumbnail', $imgpath);
+
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => $node->title,
+      'og:'.OpenGraphMeta::DESCRIPTION => drupal_substr(strip_tags(OpenGraphMetaDrupalLayer::get_node_body($node)),0,200),
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::IMAGE => url($imgpath, array('absolute' => TRUE)),
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__.' default image is overridden');
+  }
+
+
+}

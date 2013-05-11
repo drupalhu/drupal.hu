@@ -1,0 +1,10 @@
+name = Open Graph meta tags test module
+description = This is a dummy module used in automated tests for the opengraph_meta module.
+package = Open Graph
+core = 7.x
+; Information added by drupal.org packaging script on 2012-05-19
+version = "7.x-1.3"
+core = "7.x"
+project = "opengraph_meta"
+datestamp = "1337448671"
+

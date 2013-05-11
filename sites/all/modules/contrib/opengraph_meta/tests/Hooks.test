@@ -1,0 +1,67 @@
+<?php
+// $Id
+require_once(dirname(__FILE__) . '/TestBase.inc');
+
+
+/**
+ * Tests for Open Graph meta tags hook tests.
+ */
+class OGMTHookTest extends OGMTTestBase {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Hook tests'),
+      'description' => t('Test hooks.'),
+      'group' => t('Open Graph meta tags'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    module_enable(array('opengraph_meta_test_module'));
+  }
+
+  public function tearDown() {
+    module_disable(array('opengraph_meta_test_module'));
+    parent::tearDown();
+  }
+
+  function testOGTagRenderAlterHook() {
+
+    /*
+     * Test hook_og_tag_render_alter()
+     */
+    module_implements(NULL, true, true);
+
+    // normal
+    $node = $this->_build_test_node(1);
+    $this->ogm->save_node_data(1, array(
+      OpenGraphMeta::TITLE => 'blat',
+      OpenGraphMeta::DESCRIPTION => 'blad',
+    ));
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'blat',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'blad',
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::URL => url('node/1', array('absolute' => TRUE)),
+    ),__FUNCTION__);
+
+    // hook
+    OpenGraphMetaTestModule::$og_tag_render_alter = array(
+      'title' => 'thetesttitle',
+      'url' => 'thetesturl',
+    );
+    $this->_reset_rendered_tags();
+    $this->ogm->render_data($node, $this->ogm->load_node_data($node));
+    $this->_check_rendered_meta_tags(array(
+      'og:'.OpenGraphMeta::TITLE => 'thetesttitle',
+      'og:'.OpenGraphMeta::DESCRIPTION => 'blad',
+      'og:'.OpenGraphMeta::SITE_NAME => 'Drupal',
+      'og:'.OpenGraphMeta::URL => 'thetesturl',
+    ),__FUNCTION__);
+  }
+  
+
+
+}

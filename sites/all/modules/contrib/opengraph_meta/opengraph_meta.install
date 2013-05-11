@@ -1,0 +1,93 @@
+<?php
+
+require_once('opengraph_meta.common.inc');
+
+/**
+ * Add the 'type' meta tag field to the meta tags table.
+ * @see http://drupal.org/node/975350
+ */
+function opengraph_meta_update_6001(){
+  db_add_field(OPENGRAPH_META_TABLE, OpenGraphMeta::TYPE, array(
+    'type' => 'varchar',
+    'length' => '255',
+    'not null' => TRUE,
+    'default' => '',
+  ));
+}
+
+
+/**
+ * Add an 'optional_tags' field for additional tags.
+ * @see http://drupal.org/node/983512
+ */
+function opengraph_meta_update_6002(){
+  db_add_field(OPENGRAPH_META_TABLE, OpenGraphMeta::__OPTIONAL_DB_FIELD, array(
+    'type' => 'text',
+    'not null' => FALSE,
+    'serialize' => TRUE,
+  ));
+}
+
+
+
+function opengraph_meta_schema(){
+    $schema[OPENGRAPH_META_TABLE] = array(
+      'description' => 'Stores Open Graph meta tag info useful for when sharing nodes on social networking sites, e.g. Facebook.',
+      'fields' => array(
+        'nid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        OpenGraphMeta::TITLE => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ),
+        OpenGraphMeta::DESCRIPTION => array(
+          'type' => 'text',
+          'not null' => TRUE,
+          'size' => 'big',
+        ),
+        OpenGraphMeta::IMAGE => array(
+          'type' => 'varchar',
+          'length' => '255',
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        OpenGraphMeta::TYPE => array(
+          'type' => 'varchar',
+          'length' => '255',
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        OpenGraphMeta::__OPTIONAL_DB_FIELD => array(
+          'type' => 'text',
+          'not null' => FALSE,
+          'serialize' => TRUE,
+        ),
+      ),
+      'primary key' => array('nid'),
+    );
+
+    return $schema;
+}
+
+
+function opengraph_meta_install() {
+  // nothing to do!
+}
+
+function opengraph_meta_uninstall() {
+    variable_del(OPENGRAPH_META_VAR_CONTENT_TYPES_ENABLED);
+    variable_del(OPENGRAPH_META_VAR_SITE_NAME);
+    variable_del(OPENGRAPH_META_VAR_FALLBACK_IMG);
+    variable_del(OPENGRAPH_META_VAR_OPTIONAL_TAGS);
+    $types = OpenGraphMetaDrupalLayer::get_node_types();
+    foreach ($types as $id => $d) {
+      variable_del(OPENGRAPH_META_VAR_CONTENT_TYPE_.$id);
+      variable_del(OPENGRAPH_META_VAR_CONTENT_TYPE_CCK_.$id);
+    }
+}
+

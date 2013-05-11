@@ -156,7 +156,7 @@ function demon_twitter_link($variables) {
   global $base_url;
   $query = array(
     'url' => $base_url . '/node/' . $variables['nid'],
-    'text' => $variables['title'],
+    'text' => $variables['title'] . ' #drupalhu',
   );
   $link = l('<span></span>' . t('twitter'), 'https://twitter.com/intent/tweet', array('query' => $query, 'attributes' => array('class' => array('twitter')), 'html' => true));
   return $link;
@@ -165,7 +165,6 @@ function demon_twitter_link($variables) {
 function demon_facebook_link($variables) {
   global $base_url;
   $query = array(
-    't' => $variables['title'],
     'u' => $base_url . '/node/' . $variables['nid'],
   );
   $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
