@@ -3,11 +3,10 @@ description = Testing module for Mollom functionality. Do not enable.
 core = 7.x
 package = Testing
 hidden = TRUE
-files[] = mollom_test.module
 
-; Information added by drupal.org packaging script on 2011-07-09
-version = "7.x-1.1"
+; Information added by drupal.org packaging script on 2013-04-17
+version = "7.x-2.6"
 core = "7.x"
 project = "mollom"
-datestamp = "1310217720"
+datestamp = "1366199410"
 
