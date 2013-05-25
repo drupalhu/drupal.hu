@@ -74,7 +74,6 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['filters']['search_api_multi_fulltext']['field'] = 'search_api_multi_fulltext';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['exposed'] = TRUE;
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator_id'] = 'search_api_multi_fulltext_op';
-  $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['label'] = 'Keresés';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator'] = 'search_api_multi_fulltext_op';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['identifier'] = 'text';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['remember_roles'] = array(
@@ -111,7 +110,6 @@ function drupalhu_multi_index_search_views_default_views() {
     t('‹ előző'),
     t('következő ›'),
     t('utolsó »'),
-    t('Keresés'),
     t('Oldal'),
   );
   $export['multi_index_kereso'] = $view;
