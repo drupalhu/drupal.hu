@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Code for the Drupal.hu planet feature.
+ */
+
+include_once 'drupalhu_planet.features.inc';
+
+/**
+ * Implements hook_feeds_after_parse().
+ */
+function drupalhu_planet_feeds_after_parse(FeedsSource $source, FeedsParserResult $result) {
+  // The phrases in blacklist should all be lowercase.
+  $blacklist = variable_get('drupalhu_planet_tag_blacklist', array());
+
+  if (!empty($blacklist) && isset($result->items) && is_array($result->items)) {
+    foreach ($result->items as &$item) {
+      if (!empty($item['tags'])) {
+        foreach ($item['tags'] as $k => $tag) {
+          if (in_array(drupal_strtolower($tag), $blacklist)) {
+            unset($item['tags'][$k]);
+          }
+        }
+      }
+    }
+  }
+}
