@@ -858,7 +858,12 @@ body.node-type-forum div.node-forum {
 .views-exposed-form .views-widget-filter-field_job_remotely_value {
   padding-bottom: 2em;
 }
-
+.view-job .views-exposed-form .views-exposed-widgets {
+  margin-bottom: 0;
+}
+.view-job .views-exposed-form .views-exposed-widget {
+  
+}
 #sidebar-first .view-job .views-row {
   padding-bottom: 1em;
   margin-bottom: 1em;
