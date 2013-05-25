@@ -462,7 +462,7 @@ ul.action-links li {
   margin-left: 10px;
 }
 
-.view-header a.button-action,
+.view a.button-action,
 ul.action-links li a {
   padding-left: 18px;
   background: url(../images/add.png) no-repeat left center;
@@ -549,7 +549,7 @@ h1#page-title {
   margin-right: 10px;
 }
 
-.view-header a.button-action,
+.view a.button-action,
 #main ul.action-links a,
 #main ul.links a {
   background-color: #F6F6F2;
@@ -557,19 +557,20 @@ h1#page-title {
   padding: 3px 10px;
 }
 
-.view-header a.button-action,
+.view a.button-action,
 #main ul.action-links a {
   padding-left: 18px;
 }
 
-.view-header a.button-action {
+.view a.button-action {
   display: block;
   font-size: 14px;
   padding: 8px 15px;
   background-image: none;
   margin-right: 0;
+  margin-bottom: 20px;
 }
-.view-header a.button-action:before {
+.view a.button-action:before {
   content:'+ ';
   color: #000;
 }
@@ -766,6 +767,9 @@ body.node-type-forum div.node-forum {
   padding: 0 0 24px 0;
 }
 
+#sidebar-first ul.menu {
+  margin-bottom: 0;
+}
 #sidebar-first ul.menu li {
   margin: 0 0 0 1.5em;
 }
@@ -1102,7 +1106,7 @@ fieldset {
   border-right: 0;
 }
 .view-link-ajanlo .views-field-title {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .view-link-ajanlo .views-field-title a {
   font-size: 16px;
@@ -1115,7 +1119,7 @@ fieldset {
 .view-job .view-filters {
   border:1px solid #F6F6F2;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .view-job .view-filters h3 {
   font-size: 14px;
