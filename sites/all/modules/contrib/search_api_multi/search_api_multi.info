@@ -1,0 +1,19 @@
+
+name = Multi-index searches
+description = Small extension for the Search API that allows searches across several indexes on the same server.
+dependencies[] = search_api
+core = 7.x
+package = Search
+
+files[] = search_api_multi.query.inc
+files[] = search_api_multi.service.inc
+files[] = views/handler_argument_fulltext.inc
+files[] = views/handler_filter_fulltext.inc
+files[] = views/query.inc
+
+; Information added by drupal.org packaging script on 2013-03-20
+version = "7.x-1.0"
+core = "7.x"
+project = "search_api_multi"
+datestamp = "1363808133"
+
