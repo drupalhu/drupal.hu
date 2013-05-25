@@ -10,7 +10,7 @@
 function drupalhu_tracker_views_default_views() {
   $export = array();
 
-  $view = new view;
+  $view = new view();
   $view->name = 'multitracker';
   $view->description = 'Core tracker szimulálása, egyéb követő fülek.';
   $view->tag = 'drupalhu';
@@ -23,16 +23,14 @@ function drupalhu_tracker_views_default_views() {
   /* Display: Custom tracker */
   $handler = $view->new_display('default', 'Custom tracker', 'default');
   $handler->display->display_options['title'] = 'Friss tartalom';
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'tovább';
-  $handler->display->display_options['access']['type'] = 'role';
-  $handler->display->display_options['access']['role'] = array(
-    2 => 2,
-  );
+  $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
-  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Alkalmazás';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Alaphelyzet';
   $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Rendezés';
   $handler->display->display_options['exposed_form']['options']['sort_asc_label'] = 'Növekvő';
@@ -42,6 +40,10 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Elemek száma oldalanként';
   $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all_label'] = '- Mind -';
   $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Eltolás';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« első';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ előző';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'következő ›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'utolsó »';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['grouping'] = '';
   $handler->display->display_options['style_options']['columns'] = array(
@@ -101,10 +103,7 @@ function drupalhu_tracker_views_default_views() {
       'separator' => '',
     ),
   );
-  $handler->display->display_options['style_options']['override'] = 1;
-  $handler->display->display_options['style_options']['sticky'] = 0;
   $handler->display->display_options['style_options']['order'] = 'desc';
-  $handler->display->display_options['style_options']['empty_table'] = 0;
   /* Kapcsolat: Tartalom: Szerző */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
@@ -137,20 +136,12 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['fields']['last_comment_timestamp']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
   $handler->display->display_options['fields']['last_comment_timestamp']['label'] = 'Legutóbbi válasz';
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['last_comment_timestamp']['alter']['html'] = 0;
   /* Mező: Tartalom: Van új tartalma */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = '';
-  $handler->display->display_options['fields']['timestamp']['link_to_node'] = 0;
-  $handler->display->display_options['fields']['timestamp']['comments'] = 1;
+  $handler->display->display_options['fields']['timestamp']['comments'] = TRUE;
   /* Mező: Tartalom: Új hozzászólások */
   $handler->display->display_options['fields']['new_comments']['id'] = 'new_comments';
   $handler->display->display_options['fields']['new_comments']['table'] = 'node';
@@ -158,7 +149,6 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['fields']['new_comments']['label'] = '';
   $handler->display->display_options['fields']['new_comments']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['new_comments']['suffix'] = ' új';
-  $handler->display->display_options['fields']['new_comments']['link_to_comment'] = 1;
   /* Rendezési szempont: Tartalom: Utolsó hozzászólás ideje */
   $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
@@ -199,6 +189,7 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Új tartalmak';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Szűrési feltétel: Tartalom: Közzétéve */
   $handler->display->display_options['filters']['status']['id'] = 'status';
@@ -233,6 +224,7 @@ function drupalhu_tracker_views_default_views() {
 
   /* Display: Custom tracker */
   $handler = $view->new_display('page', 'Custom tracker', 'page_4');
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Szűrési feltétel: Tartalom: Közzétéve */
   $handler->display->display_options['filters']['status']['id'] = 'status';
@@ -259,10 +251,8 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Tartalom: Típus';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op_custom';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-  $handler->display->display_options['filters']['type']['expose']['required'] = FALSE;
-  $handler->display->display_options['filters']['type']['expose']['remember'] = 1;
-  $handler->display->display_options['filters']['type']['expose']['multiple'] = FALSE;
-  $handler->display->display_options['filters']['type']['expose']['reduce'] = 1;
+  $handler->display->display_options['filters']['type']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   /* Szűrési feltétel: Felhasználó: Név */
   $handler->display->display_options['filters']['uid']['id'] = 'uid';
   $handler->display->display_options['filters']['uid']['table'] = 'users';
@@ -275,7 +265,6 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['uid']['expose']['label'] = 'Szerző: Felhasználónév';
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
-  $handler->display->display_options['filters']['uid']['expose']['reduce'] = 0;
   /* Szűrési feltétel: Hozzászólás: Szerző */
   $handler->display->display_options['filters']['name']['id'] = 'name';
   $handler->display->display_options['filters']['name']['table'] = 'comment';
@@ -288,7 +277,6 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Hozzászólás: Szerző';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  $handler->display->display_options['filters']['name']['expose']['required'] = 0;
   /* Szűrési feltétel: Tartalom: Típus */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
@@ -311,10 +299,6 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['tid']['expose']['label'] = 'Drupal verzió';
   $handler->display->display_options['filters']['tid']['expose']['operator'] = 'tid_op';
   $handler->display->display_options['filters']['tid']['expose']['identifier'] = 'core';
-  $handler->display->display_options['filters']['tid']['expose']['required'] = FALSE;
-  $handler->display->display_options['filters']['tid']['expose']['multiple'] = FALSE;
-  $handler->display->display_options['filters']['tid']['expose']['reduce'] = 0;
-  $handler->display->display_options['filters']['tid']['reduce_duplicates'] = 0;
   $handler->display->display_options['filters']['tid']['type'] = 'select';
   $handler->display->display_options['filters']['tid']['vocabulary'] = 'vocabulary_10';
   /* Szűrési feltétel: Tartalom: Törzs (body) */
@@ -328,8 +312,6 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['body_value']['expose']['label'] = 'Tartalom tartalmazza';
   $handler->display->display_options['filters']['body_value']['expose']['operator'] = 'body_value_op';
   $handler->display->display_options['filters']['body_value']['expose']['identifier'] = 'body_value';
-  $handler->display->display_options['filters']['body_value']['expose']['required'] = 0;
-  $handler->display->display_options['filters']['body_value']['expose']['multiple'] = FALSE;
   $handler->display->display_options['path'] = 'tracker/filter';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Egyedi szűrés';
@@ -387,6 +369,10 @@ function drupalhu_tracker_views_default_views() {
     t('Elemek száma oldalanként'),
     t('- Mind -'),
     t('Eltolás'),
+    t('« első'),
+    t('‹ előző'),
+    t('következő ›'),
+    t('utolsó »'),
     t('szerző'),
     t('Hozzászólások'),
     t('Típus'),
