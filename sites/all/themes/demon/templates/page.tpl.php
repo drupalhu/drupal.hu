@@ -118,17 +118,6 @@ require 'header.tpl.php';
     <?php print $feed_icons; ?>
   </div></div> <!-- /.section, /#content -->
 
-  <div id="main-blocks-wrapper">
-    <?php if ($page['front_left'] || $page['front_middle_left'] || $page['front_middle_right']  || $page['front_right']): ?>
-        <div id="main-blocks" class="clearfix container-24">
-        <div class="grid-6"><?php print render($page['front_left']); ?></div>
-        <div class="grid-6"><?php print render($page['front_middle_left']); ?></div>
-        <div class="grid-6"><?php print render($page['front_middle_right']); ?></div>
-        <div class="grid-6"><?php print render($page['front_right']); ?></div>
-    </div><!-- /#triptych -->
-    <?php endif; ?>
-  </div><!-- /#triptych-wrapper -->
-
   <?php if (!$is_front && $page['sidebar_first']): ?>
     <div id="sidebar-first" class="<?php print $sidebar_classes ?>"><div class="section">
       <?php print render($page['sidebar_first']); ?>
