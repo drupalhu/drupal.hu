@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Drupal.hu links feature.
+ */
+
+include_once 'drupalhu_links.features.inc';
