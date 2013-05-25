@@ -516,6 +516,9 @@ h1#page-title {
   padding-top: 3px;
   float: left;
 }
+.comment .submitted {
+  float: none;
+}
 
 .node .node-title {
   margin-bottom: 0.5em;
