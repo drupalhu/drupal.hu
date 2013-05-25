@@ -516,6 +516,9 @@ h1#page-title {
   padding-top: 3px;
   float: left;
 }
+.comment .submitted {
+  float: none;
+}
 
 .node .node-title {
   margin-bottom: 0.5em;
@@ -1051,4 +1054,41 @@ h2.eloadas-cim {
 fieldset {
   padding: 10px;
   border: 1px solid #CCC;
+}
+
+/**
+ * Footer blocks
+ */
+.region-footer-firstcolumn .block {
+  padding: 0 0 20px 0;
+}
+
+/**
+ * view-link-ajanlo 
+ */
+.view-link-ajanlo {
+  
+}
+.view-link-ajanlo table {
+  border: 0;
+}
+#content .view-link-ajanlo tr:hover,
+#content .view-link-ajanlo tr:hover td{
+  background-color: transparent !important;
+}
+.view-link-ajanlo tr td {
+  width: 50%;
+}
+.view-link-ajanlo tr {
+  border-bottom:1px solid #F6F6F2;
+}
+.view-link-ajanlo tr td:last-child {
+  border-right: 0;
+}
+.view-link-ajanlo .views-field-title {
+  margin-bottom: 10px;
+}
+.view-link-ajanlo .views-field-title a {
+  font-size: 16px;
+  color: ;
 }

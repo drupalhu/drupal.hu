@@ -21,3 +21,15 @@ function dhu_update_7101(&$sandbox) {
 
   return implode('<br />', $messages);
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function dhu_update_7102(&$sandbox) {
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('filename', 'profiles/standard/standard.profile')
+    ->execute();
+
+  return t('Issue #1170360 - Undefined index: distribution_name in drupal_install_profile_distribution_name()');
+}
