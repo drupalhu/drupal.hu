@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Custom theme for Drupal.hu.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
 function demon_preprocess_page(&$variables) {
   $variables['content_classes_array'] = array('clearfix');
   $variables['sidebar_classes_array'] = array('clearfix');
@@ -15,6 +23,7 @@ function demon_preprocess_page(&$variables) {
     }
   }
 }
+
 /**
  * Override or insert variables into the page template.
  *
@@ -24,21 +33,29 @@ function demon_process_page(&$variables) {
 
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.
-  $variables['hide_site_name']   = theme_get_setting('toggle_name') ? FALSE : TRUE;
+  $variables['hide_site_name'] = theme_get_setting('toggle_name') ? FALSE : TRUE;
 
   $variables['hide_site_slogan'] = theme_get_setting('toggle_slogan') ? FALSE : TRUE;
   if ($variables['hide_site_name']) {
     // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
-    $variables['site_name'] = filter_xss_admin(variable_get('site_name', 'Drupal'));
+    $variables['site_name'] = filter_xss_admin(
+      variable_get('site_name', 'Drupal')
+    );
   }
+
   if ($variables['hide_site_slogan']) {
-    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
+    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we
+    // rebuild it.
     $variables['site_slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
   }
+
   // Since the title and the shortcut link are both block level elements,
   // positioning them next to each other is much simpler with a wrapper div.
-  if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
-    // Add a wrapper div using the title_prefix and title_suffix render elements.
+  if (!empty($variables['title_suffix']['add_or_remove_shortcut'])
+    && $variables['title']
+  ) {
+    // Add a wrapper div using the title_prefix and title_suffix render
+    // elements.
     $variables['title_prefix']['shortcut_wrapper'] = array(
       '#markup' => '<div class="shortcut-wrapper clearfix">',
       '#weight' => 100,
@@ -57,8 +74,8 @@ function demon_process_page(&$variables) {
 
   $variables['content_classes'] = implode(' ', $variables['content_classes_array']);
   $variables['sidebar_classes'] = implode(' ', $variables['sidebar_classes_array']);
-
 }
+
 /**
  * Override or insert variables into the node template.
  */
@@ -73,9 +90,29 @@ function demon_preprocess_node(&$variables) {
     $variables['title_attributes_array']['class'][] = 'node-title';
   }
   if ($variables['node'] && $variables['is_front'] == FALSE) {
-    $variables['linkedin_link'] = theme('linkedin_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
-    $variables['twitter_link'] = theme('twitter_link', array('nid' => $variables['nid'], 'title' => $variables['title']));
-    $variables['facebook_link'] = theme('facebook_link', array('nid' => $variables['nid'], 'title' => $variables['title'], 'summary' => $variables['body']['0']['safe_value']));
+    $variables['linkedin_link'] = theme(
+      'linkedin_link',
+      array(
+        'nid' => $variables['nid'],
+        'title' => $variables['title'],
+        'summary' => $variables['body']['0']['safe_value'],
+      )
+    );
+    $variables['twitter_link'] = theme(
+      'twitter_link',
+      array(
+        'nid' => $variables['nid'],
+        'title' => $variables['title'],
+      )
+    );
+    $variables['facebook_link'] = theme(
+      'facebook_link',
+      array(
+        'nid' => $variables['nid'],
+        'title' => $variables['title'],
+        'summary' => $variables['body']['0']['safe_value'],
+      )
+    );
   }
 }
 
@@ -87,7 +124,7 @@ function demon_preprocess_node(&$variables) {
 function __demon_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
 
-  $variables['new'] = !empty($comment->new) ? 'új' : '';
+  $variables['new'] = !empty($comment->new) ? t('new') : '';
 }
 
 /**
@@ -100,7 +137,9 @@ function demon_preprocess_maintenance_page(&$variables) {
     unset($variables['site_name']);
   }
   // TODO need work here!
-  drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
+  drupal_add_css(
+    drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css'
+  );
 }
 
 /**
@@ -119,9 +158,13 @@ function demon_breadcrumb($variables) {
     $output .= '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
     return $output;
   }
+
+  return NULL;
 }
 
-
+/**
+ * Implements hook_theme().
+ */
 function demon_theme($existing, $type, $theme, $path) {
   return array(
     'linkedin_link' => array(
@@ -139,6 +182,9 @@ function demon_theme($existing, $type, $theme, $path) {
   );
 }
 
+/**
+ * Implements hook_linkdin_link().
+ */
 function demon_linkedin_link($variables) {
   global $base_url;
   $query = array(
@@ -146,28 +192,60 @@ function demon_linkedin_link($variables) {
     'url' => $base_url . '/node/' . $variables['nid'],
     'title' => $variables['title'],
     'summary' => substr(strip_tags($variables['summary']), 0, 300),
-    'source' => 'Drupal.hu',  
+    'source' => 'Drupal.hu',
   );
-  $link = l('<span></span>' . t('linkedin'), 'http://www.linkedin.com/shareArticle', array('query' => $query, 'attributes' => array('class' => array('linkedin')), 'html' => true));
+  $link = l(
+    t('linkedin'),
+    'http://www.linkedin.com/shareArticle',
+    array(
+      'query' => $query,
+      'attributes' => array('class' => array('linkedin')),
+      'html' => TRUE,
+    )
+  );
   return $link;
 }
 
+/**
+ * Implements theme_twitter_link().
+ */
 function demon_twitter_link($variables) {
   global $base_url;
   $query = array(
     'url' => $base_url . '/node/' . $variables['nid'],
     'text' => $variables['title'] . ' #drupalhu',
   );
-  $link = l('<span></span>' . t('twitter'), 'https://twitter.com/intent/tweet', array('query' => $query, 'attributes' => array('class' => array('twitter')), 'html' => true));
+  $link = l(
+    t('twitter'),
+    'https://twitter.com/intent/tweet',
+    array(
+      'query' => $query,
+      'attributes' => array('class' => array('twitter')),
+      'html' => TRUE,
+    )
+  );
+
   return $link;
 }
 
+/**
+ * Implements theme_facebook_link().
+ */
 function demon_facebook_link($variables) {
   global $base_url;
   $query = array(
     'u' => $base_url . '/node/' . $variables['nid'],
   );
-  $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
+  $link = l(
+    t('facebook'),
+    'https://www.facebook.com/sharer/sharer.php',
+    array(
+      'query' => $query,
+      'attributes' => array('class' => array('facebook')),
+      'html' => TRUE,
+    )
+  );
+
   return $link;
 }
 

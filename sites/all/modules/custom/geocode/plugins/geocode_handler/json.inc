@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -19,20 +18,23 @@ $plugin = array(
 );
 
 /**
- * Process Markup
+ * Process Markup.
  */
 function geocode_json($json_string) {
   geocode_load_geophp();
-  return geoPHP::load($json_string,'json');
+  return geoPHP::load($json_string, 'json');
 }
 
 function geocode_json_field($field, $field_item) {
   if ($field['type'] == 'text' || $field['type'] == 'text_long' || $field['type'] == 'computed') {
-  	return geocode_json($field_item['value']);
+    return geocode_json($field_item['value']);
   }
+
   if ($field['type'] == 'file') {
-  	$file = file_load($field_item['fid']);
-  	$json = file_get_contents($file->uri);
-  	return geocode_json($json);
+    $file = file_load($field_item['fid']);
+    $json = file_get_contents($file->uri);
+    return geocode_json($json);
   }
+
+  return NULL;
 }
