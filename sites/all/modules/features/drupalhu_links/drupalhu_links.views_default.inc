@@ -54,11 +54,6 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Mező: Tartalom: Cím */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
   /* Mező: Tartalom: Webshot */
   $handler->display->display_options['fields']['field_webshot']['id'] = 'field_webshot';
   $handler->display->display_options['fields']['field_webshot']['table'] = 'field_data_field_webshot';
@@ -72,6 +67,11 @@ function drupalhu_links_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_webshot']['group_column'] = 'fid';
+  /* Mező: Tartalom: Cím */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
   /* Rendezési szempont: Tartalom: Beküldés dátuma */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -220,11 +220,11 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['tab_options']['title'] = 'Linkek';
   $handler->display->display_options['tab_options']['weight'] = '0';
 
-  /* Display: Blokk 3 */
-  $handler = $view->new_display('block', 'Blokk 3', 'block_3');
+  /* Display: Friss linkek */
+  $handler = $view->new_display('block', 'Friss linkek', 'block_3');
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '3';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '4';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'default';
@@ -263,7 +263,6 @@ function drupalhu_links_views_default_views() {
     t('Kiemelt magyar Drupal alapú webhelyek'),
     t('A szerkesztői ajánlatok egyedi megjelenésű, prominens felhasználású, közismert vagy éppen a Drupal széleskörű alkalmazását szemléltető webhelyek.'),
     t('Linkek összefoglaló oldal'),
-    t('Blokk 3'),
   );
   $export['link_ajanlo'] = $view;
 
