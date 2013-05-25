@@ -1,6 +1,21 @@
-<a href="<?php print $releases[7]['download_link'] ?>" title="Drupal <?php print $releases[7]['version'] ?> letöltése">Drupal <?php print $releases[7]['version'] ?></a>&nbsp;&nbsp;
-<a href="<?php print $releases[7]['translation'] ?>" title="7.x-hez tartozó magyar nyelvi csomag">Fordítás</a>
-<br />
-<a href="<?php print $releases[6]['download_link'] ?>" title="Drupal <?php print $releases[6]['version'] ?> letöltése">Drupal <?php print $releases[6]['version'] ?></a>
-<a href="<?php print $releases[6]['translation'] ?>" title="6.x-hez tartozó magyar nyelvi csomag">Fordítás</a>
+<?php
 
+/**
+ * @file
+ * Formats current Drupal version numbers for active branches.
+ *
+ * It provides links to the Hungarian translation packages too.
+ *
+ * @ingroup themeable
+ */
+?>
+
+<a href="<?php print $releases[7]['download_link'] ?>"
+   title="<?php print t('Download Drupal @ver', array('@ver' => $releases[7]['version'])); ?>">Drupal <?php print $releases[7]['version'] ?></a>
+<a class="translation-download" href="<?php print $releases[7]['translation'] ?>"
+   title="<?php print t('Hungarian language package for @ver.x version', array('@ver' => 7)); ?>"><?php print t('Translation'); ?></a>
+<br />
+<a href="<?php print $releases[6]['download_link'] ?>"
+   title="<?php print t('Download Drupal @ver', array('@ver' => $releases[6]['version'])); ?>">Drupal <?php print $releases[6]['version'] ?></a>
+<a class="translation-download" href="<?php print $releases[6]['translation'] ?>"
+   title="<?php print t('Hungarian language package for @ver.x version', array('@ver' => 6)); ?>"><?php print t('Translation'); ?></a>
