@@ -1,0 +1,12 @@
+name = Drupalhu Tracker
+description = Friss tartalom nézetet adja.
+core = 7.x
+package = Drupalhu
+php = 5.2.4
+version = 7.x-1.0-beta2
+project = drupalhu_tracker
+dependencies[] = ctools
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = multitracker
