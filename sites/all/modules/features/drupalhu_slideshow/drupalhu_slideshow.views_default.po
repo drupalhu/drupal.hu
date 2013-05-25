@@ -1,0 +1,71 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  drupalhu_slideshow.features.field.inc: n/a
+#  drupalhu_slideshow.features.inc: n/a
+#  drupalhu_slideshow.views_default.inc: n/a
+#  drupalhu_slideshow.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-05-25 12:05+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: drupalhu_slideshow.features.field.inc:46;251
+msgid "Its visible in slideshow."
+msgstr "A slideshowban láthatod."
+
+#: drupalhu_slideshow.features.field.inc:64;247
+msgid "Description"
+msgstr "Leírás"
+
+#: drupalhu_slideshow.features.field.inc:115;250
+msgid "Image show in slideshow."
+msgstr "A slideshowban láthatod."
+
+#: drupalhu_slideshow.features.field.inc:136;249
+msgid "Image"
+msgstr "Kép"
+
+#: drupalhu_slideshow.features.field.inc:196;248
+msgid "If you need reference this field, paste your url."
+msgstr "Ha szeretnéd hogy a kép hivatkozzon, másold ide az urled."
+
+#: drupalhu_slideshow.features.field.inc:214;252
+msgid "URL"
+msgstr "Hivatkozás"
+
+#: drupalhu_slideshow.features.inc:30
+msgid "Slideshow item"
+msgstr "Slideshow elem"
+
+#: drupalhu_slideshow.features.inc:32
+msgid "Slideshow item show in site frontpage with image and description field."
+msgstr "A Slideshow elem a főoldlaon látható kép és leírás mezővel."
+
+#: drupalhu_slideshow.features.inc:34
+msgid "Main title"
+msgstr "Fő cím"
+
+#: drupalhu_slideshow.info:0
+msgid "Slideshow"
+msgstr ""
+
+#: drupalhu_slideshow.info:0
+msgid "Add Slideshow node type, image style and views slideshow"
+msgstr ""
+
+#: drupalhu_slideshow.info:0
+msgid "Drupalhu"
+msgstr ""
+
