@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * Implements hook_views_api().
+ */
+function search_api_multi_views_api() {
+  if (module_exists('search_api_views')) {
+    return array(
+      'api' => '3.0-alpha1',
+      'path' => drupal_get_path('module', 'search_api_multi') . '/views',
+    );
+  }
+}
+
+/**
+ * Implements hook_search_api_server_enabled().
+ */
+function search_api_multi_search_api_server_enabled(array $servers) {
+  if (!module_exists('search_api_views')) {
+    return;
+  }
+  foreach ($servers as $server) {
+    if ($server->supportsFeature('search_api_multi')) {
+      // Make the new server(s) available for views.
+      views_invalidate_cache();
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_search_api_server_update().
+ */
+function search_api_multi_search_api_server_update(SearchApiServer $server) {
+  if (module_exists('search_api_views') && $server->supportsFeature('search_api_multi') && !$server->enabled && $server->original->enabled) {
+    _search_api_multi_server_unavailable($server);
+  }
+}
+
+/**
+ * Implements hook_search_api_server_delete().
+ */
+function search_api_multi_search_api_server_delete(SearchApiServer $server) {
+  if (module_exists('search_api_views') && $server->supportsFeature('search_api_multi')) {
+    _search_api_multi_server_unavailable($server);
+  }
+}
+
+/**
+ * Function for reacting to a disabled or deleted search server.
+ */
+function _search_api_multi_server_unavailable(SearchApiServer $server) {
+  $names = array();
+  $table = 'search_api_server_' . $server->machine_name;
+  foreach (views_get_all_views() as $name => $view) {
+    if (empty($view->disabled) && $view->base_table == $table) {
+      $names[] = $name;
+      // @todo: if ($server_deleted) $view->delete()?
+    }
+  }
+  if ($names) {
+    views_invalidate_cache();
+    drupal_set_message(t('The following views were using the server %name: @views. You should disable or delete them.', array('%name' => $server->name, '@views' => implode(', ', $names))), 'warning');
+  }
+}
+
+/**
+ * Creates a multi-index search query on a specified search server.
+ *
+ * @param $id
+ *   The ID or machine name of the index to execute the search on.
+ * @param array $options
+ *   Associative array of options configuring this query. Recognized options
+ *   are:
+ *   - conjunction: The type of conjunction to use for this query - either
+ *     'AND' or 'OR'. 'AND' by default. This only influences the search keys,
+ *     filters will always use AND by default.
+ *   - 'parse mode': The mode with which to parse the $keys variable, if it
+ *     is set and not already an array. See SearchApiMultiQuery::parseModes() for
+ *     recognized parse modes.
+ *   - languages: The languages to search for, as an array of language IDs.
+ *     If not specified, all languages will be searched. Language-neutral
+ *     content (LANGUAGE_NONE) is always searched.
+ *   - offset: The position of the first returned search results relative to
+ *     the whole result on the server.
+ *   - limit: The maximum number of search results to return. -1 means no
+ *     limit.
+ *   - 'filter class': Can be used to change the SearchApiQueryFilterInterface
+ *     implementation to use.
+ *   - 'search id': A string that will be used as the identifier when storing
+ *     this search in the static cache.
+ *   All options are optional.
+ *
+ * @return SearchApiMultiQueryInterface
+ *   An object for searching on the specified server.
+ */
+function search_api_multi_query($id, array $options = array()) {
+  $server = search_api_server_load($id);
+  if (!$server) {
+    throw new SearchApiException(t('Unknown server with ID @id.', array('@id' => $id)));
+  }
+  if (!$server->supportsFeature('search_api_multi')) {
+    throw new SearchApiException(t("The search server @name doesn't support multi-index searches.", array('@name' => $server->name)));
+  }
+  return $server->queryMultiple($options);
+}
+
+/**
+ * Static store for the multi-index searches executed on the current page. Can
+ * either be used to store an executed search, or to retrieve a previously
+ * stored search.
+ *
+ * @param $search_id
+ *   For pages displaying multiple searches, an optional ID identifying the
+ *   search in questions. When storing a search, this is filled automatically,
+ *   unless it is manually set.
+ * @param SearchApiMultiQuery $query
+ *   When storing an executed search, the query that was executed. NULL
+ *   otherwise.
+ * @param array $results
+ *   When storing an executed search, the returned results as specified by
+ *   SearchApiMultiQueryInterface::execute(). An empty array, otherwise.
+ *
+ * @return array
+ *   If a search with the specified ID was executed, an array containing
+ *   ($query, $results) as used in this function's parameters. If $search_id is
+ *   NULL, an array of all executed searches will be returned, keyed by ID.
+ */
+function search_api_multi_current_search($search_id = NULL, SearchApiMultiQuery $query = NULL, array $results = array()) {
+  $searches = &drupal_static(__FUNCTION__, array());
+
+  if (isset($query)) {
+    if (!isset($search_id)) {
+      $search_id = $query->getOption('search id');
+    }
+    $base = $search_id;
+    $i = 0;
+    while (isset($searches[$search_id])) {
+      $search_id = $base . '-' . ++$i;
+    }
+    $searches[$search_id] = array($query, $results);
+  }
+
+  if (isset($searches[$search_id])) {
+    return $searches[$search_id];
+  }
+  return $searches;
+}
