@@ -562,6 +562,17 @@ h1#page-title {
   padding-left: 18px;
 }
 
+.view-header a.button-action {
+  display: block;
+  font-size: 14px;
+  padding: 8px 15px;
+  background-image: none;
+  margin-right: 0;
+}
+.view-header a.button-action:before {
+  content:'+ ';
+  color: #000;
+}
 #main ul.action-links a:hover,
 #main ul.links a:hover {
   background-color: #E6FCB6;
@@ -847,7 +858,12 @@ body.node-type-forum div.node-forum {
 .views-exposed-form .views-widget-filter-field_job_remotely_value {
   padding-bottom: 2em;
 }
-
+.view-job .views-exposed-form .views-exposed-widgets {
+  margin-bottom: 0;
+}
+.view-job .views-exposed-form .views-exposed-widget {
+  
+}
 #sidebar-first .view-job .views-row {
   padding-bottom: 1em;
   margin-bottom: 1em;
@@ -1091,4 +1107,17 @@ fieldset {
 .view-link-ajanlo .views-field-title a {
   font-size: 16px;
   color: ;
+}
+
+/**
+ * view-job view-filters
+ */
+.view-job .view-filters {
+  border:1px solid #F6F6F2;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.view-job .view-filters h3 {
+  font-size: 14px;
+  cursor: pointer;
 }
