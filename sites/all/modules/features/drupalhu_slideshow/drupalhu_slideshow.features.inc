@@ -22,6 +22,37 @@ function drupalhu_slideshow_views_api() {
 }
 
 /**
+ * Implements hook_image_default_styles().
+ */
+function drupalhu_slideshow_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: slideshow.
+  $styles['slideshow'] = array(
+    'name' => 'slideshow',
+    'effects' => array(
+      2 => array(
+        'label' => 'Arányos átméretezés és méretre vágás',
+        'help' => 'Az arányos átméretezés és kivágás megtartja a képarányt és azt követően kivágja a képet a hosszabbik oldal alapján. Ez a legáltalánosabban használt hatás négyzet alakú bélyegképek létrehozására anélkül, hogy a kép el lenne nyújtva.',
+        'effect callback' => 'image_scale_and_crop_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => '960',
+          'height' => '300',
+        ),
+        'weight' => '1',
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
  * Implements hook_node_info().
  */
 function drupalhu_slideshow_node_info() {

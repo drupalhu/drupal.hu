@@ -87,7 +87,7 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Mező: Tartalom: URL */
+  /* Mező: Tartalom: Webcím */
   $handler->display->display_options['fields']['field_slideshow_url']['id'] = 'field_slideshow_url';
   $handler->display->display_options['fields']['field_slideshow_url']['table'] = 'field_data_field_slideshow_url';
   $handler->display->display_options['fields']['field_slideshow_url']['field'] = 'field_slideshow_url';
@@ -96,7 +96,7 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['fields']['field_slideshow_url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_slideshow_url']['click_sort_column'] = 'url';
   $handler->display->display_options['fields']['field_slideshow_url']['type'] = 'link_plain';
-  /* Mező: Tartalom: Image */
+  /* Mező: Tartalom: Kép */
   $handler->display->display_options['fields']['field_slideshow_image']['id'] = 'field_slideshow_image';
   $handler->display->display_options['fields']['field_slideshow_image']['table'] = 'field_data_field_slideshow_image';
   $handler->display->display_options['fields']['field_slideshow_image']['field'] = 'field_slideshow_image';
@@ -109,7 +109,7 @@ function drupalhu_slideshow_views_default_views() {
     'image_style' => 'slideshow',
     'image_link' => '',
   );
-  /* Mező: Tartalom: Description */
+  /* Mező: Tartalom: Leírás */
   $handler->display->display_options['fields']['field_slideshow_description']['id'] = 'field_slideshow_description';
   $handler->display->display_options['fields']['field_slideshow_description']['table'] = 'field_data_field_slideshow_description';
   $handler->display->display_options['fields']['field_slideshow_description']['field'] = 'field_slideshow_description';

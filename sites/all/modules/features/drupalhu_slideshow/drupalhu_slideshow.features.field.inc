@@ -43,7 +43,7 @@ function drupalhu_slideshow_field_default_fields() {
       'bundle' => 'slideshow_item',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => t('Its visible in slideshow.'),
+      'description' => 'Its visible in slideshow.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -61,7 +61,7 @@ function drupalhu_slideshow_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_slideshow_description',
-      'label' => t('Description'),
+      'label' => 'Leírás',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -112,7 +112,7 @@ function drupalhu_slideshow_field_default_fields() {
     'field_instance' => array(
       'bundle' => 'slideshow_item',
       'deleted' => '0',
-      'description' => t('Image show in slideshow.'),
+      'description' => 'Image show in slideshow.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -133,7 +133,7 @@ function drupalhu_slideshow_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_slideshow_image',
-      'label' => t('Image'),
+      'label' => 'Kép',
       'required' => 1,
       'settings' => array(
         'alt_field' => 0,
@@ -193,7 +193,7 @@ function drupalhu_slideshow_field_default_fields() {
       'bundle' => 'slideshow_item',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => t('If you need reference this field, paste your url.'),
+      'description' => 'If you need reference this field, paste your url.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -211,7 +211,7 @@ function drupalhu_slideshow_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_slideshow_url',
-      'label' => t('URL'),
+      'label' => 'Webcím',
       'required' => 0,
       'settings' => array(
         'attributes' => array(
@@ -244,12 +244,12 @@ function drupalhu_slideshow_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Description');
   t('If you need reference this field, paste your url.');
-  t('Image');
   t('Image show in slideshow.');
   t('Its visible in slideshow.');
-  t('URL');
+  t('Kép');
+  t('Leírás');
+  t('Webcím');
 
   return $fields;
 }
