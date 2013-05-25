@@ -170,3 +170,16 @@ function demon_facebook_link($variables) {
   $link = l('<span></span>' . t('facebook'), 'https://www.facebook.com/sharer/sharer.php', array('query' => $query, 'attributes' => array('class' => array('facebook')), 'html' => true));
   return $link;
 }
+
+function job_link($variables) {
+  if ($variables['logged_in'] === TRUE) {
+    print l(t('Add new job'), 'node/add/job', array('attributes' => array('class' => array('button-action'))));
+  }
+  else {
+    print l(t('Add new job'), 'user/login', array(
+        'query' => array('destination' => 'node/add/job'), 
+        'attributes' => array('class' => array('button-action'))
+      )
+    );
+  }
+}
