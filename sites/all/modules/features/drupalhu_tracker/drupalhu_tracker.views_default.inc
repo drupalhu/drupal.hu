@@ -169,6 +169,7 @@ function drupalhu_tracker_views_default_views() {
     'note' => 'note',
     'translator' => 'translator',
     'faq' => 'faq',
+    'slideshow_item' => 'slideshow_item',
   );
   $handler->display->display_options['filters']['type_1']['group'] = '0';
   $handler->display->display_options['filters']['type_1']['expose']['operator'] = FALSE;
