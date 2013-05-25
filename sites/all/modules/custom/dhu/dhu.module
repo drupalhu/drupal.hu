@@ -1,36 +1,40 @@
 <?php
 
 /**
+ * @file
+ * Basic functions for Drupal.hu.
+ */
+
+/**
  * Implements hook_preprocess_views_view().
  */
 function dhu_preprocess_views_view(&$vars) {
-  if ((($vars['name'] == 'dhu_search') && ($vars['display_id'] == 'page')) || (($vars['name'] == 'dhu_search_comment') && ($vars['display_id'] == 'page'))) {
+  if ((($vars['name'] == 'dhu_search') && ($vars['display_id'] == 'page'))
+    || (($vars['name'] == 'dhu_search_comment') && ($vars['display_id'] == 'page'))
+  ) {
     $vars['header'] = render(views_block_view('-exp-' . $vars['name'] . '-' . $vars['display_id']));
   }
 }
 
 /**
- * Implements hook_preprocess()
- * @param array $variables
+ * Implements hook_preprocess().
  */
 function dhu_preprocess_links(array &$variables) {
   static $destination;
 
   if (isset($variables['attributes']['id']) && 'secondary-menu-links' == $variables['attributes']['id']) {
-
     if (empty($destination)) {
       $destination = drupal_get_destination();
     }
 
     if (isset($variables['links'])) {
       foreach ($variables['links'] as $menu_name => $link) {
-
         switch ($link['href']) {
-          //case 'user':
           case 'user/logout':
           case 'user/login':
             $variables['links'][$menu_name]['query'] = $destination;
-          break;
+            break;
+
         }
       }
     }

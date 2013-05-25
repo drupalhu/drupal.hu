@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Drupal site checker
+ * Drupal site checker.
  *
  * @author
  * CSÉCSY László <boobaa@kybest.hu>
@@ -15,8 +15,9 @@
 /**
  * Checks if an URL runs on Drupal.
  *
- * @param $url
+ * @param string $url
  *   (Valid) URL that needs to be checked.
+ *
  * @return bool
  *   TRUE if the URL runs on Drupal.
  */
@@ -29,7 +30,7 @@ function dhu_drupalcheck_check($url) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements of hook_menu().
  */
 function dhu_drupalcheck_menu() {
   $items = array();
@@ -84,11 +85,6 @@ function dhu_drupalcheck_form_url_submit($form, &$form_state) {
   }
 }
 
-// TODO: Remove.
-function dhu_drupalcheck_form_alter(&$form, &$form_state, $form_id) {
-//  dpm($form_id);
-}
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -124,7 +120,7 @@ function dhu_drupalcheck_node_insert($node) {
     db_insert('drupalcheck')
       ->fields(array(
         'nid' => $node->nid,
-        'lastcheck' => time(),
+        'lastcheck' => REQUEST_TIME,
       ))
       ->execute();
   }
@@ -133,14 +129,14 @@ function dhu_drupalcheck_node_insert($node) {
 /**
  * Checks if a 'link' node (still) runs on Drupal. If not, unpublishes it.
  *
- * @param $nid
+ * @param int $nid
  *   Node ID that needs to be checked.
  */
 function _dhu_drupalcheck_check_link_node($nid) {
   // Reset the node_load() cache to keep memory consumption down.
   $node = node_load($nid, NULL, FALSE);
-  $isdrupal = dhu_drupalcheck_check($node->field_link['und'][0]['url']);
-  if (!$isdrupal) {
+  $is_drupal = dhu_drupalcheck_check($node->field_link['und'][0]['url']);
+  if (!$is_drupal) {
     $node->status = 0;
     node_save($node);
     watchdog('drupal.hu link', '!url found not to be a Drupal site.', array('!url' => $node->field_link['und'][0]['url']));
@@ -149,8 +145,8 @@ function _dhu_drupalcheck_check_link_node($nid) {
   db_merge('drupalcheck')
     ->key(array('nid' => $node->nid))
     ->fields(array(
-      'lastcheck' => time(),
-      'isdrupal' => $isdrupal ? 1 : 0,
+      'lastcheck' => REQUEST_TIME,
+      'isdrupal' => $is_drupal ? 1 : 0,
     ))
     ->execute();
 }
@@ -162,18 +158,18 @@ function dhu_drupalcheck_cron() {
   // Iterate through up to 20 sites per cron run. Check only those sites that
   // haven't been checked since at least two weeks (or haven't ever been
   // checked).
-  $maxsites = 20;
+  $max_sites = 20;
   $nodes = db_query_range('SELECT n.nid AS nid
     FROM {node} n
     LEFT JOIN {drupalcheck} dc ON dc.nid = n.nid
     WHERE n.type = :type AND
     ((dc.lastcheck IS NULL) OR (dc.lastcheck < :time))
-    ORDER BY dc.lastcheck', 0, $maxsites, array(
+    ORDER BY dc.lastcheck', 0, $max_sites, array(
       ':type' => 'link',
-      ':time' => time() - 60 * 60 * 24 * 14,
+      ':time' => REQUEST_TIME - 60 * 60 * 24 * 14,
     ))
     ->fetchAll();
-//  watchdog('drupal.hu link', 'Checking d.hu links');
+  // watchdog('drupal.hu link', 'Checking d.hu links');
   foreach ($nodes as $node) {
     _dhu_drupalcheck_check_link_node($node->nid);
   }
@@ -189,7 +185,7 @@ function dhu_drupalcheck_page_list() {
     'lastcheck' => array('data' => t('Last check'), 'field' => 'dc.lastcheck'),
     'drupal' => array('data' => t('Is Drupal?'), 'field' => 'dc.isdrupal'),
     'status' => array('data' => t('Status'), 'field' => 'n.status'),
-    array(
+    'operations' => array(
       'data' => t('Operations'),
       'colspan' => 2,
     ),
@@ -236,6 +232,8 @@ function dhu_drupalcheck_page_list() {
 function dhu_drupalcheck_page_unpublish($node) {
   $node->status = 0;
   node_save($node);
-  drupal_set_message(t('%url has been unpublished from Drupal.hu.', array('%url' => $node->field_link['und'][0]['url'])));
+  drupal_set_message(t('%url has been unpublished from Drupal.hu.', array(
+        '%url' => $node->field_link['und'][0]['url'],
+      )));
   drupal_goto();
 }

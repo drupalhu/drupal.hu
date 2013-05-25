@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Custom port of the 6.x geocode module.
+ */
+
+/**
  * The Geocode API call.
  * @example:
  *    geocode('google','4925 Gair Ave, Terrace, BC');
@@ -12,7 +17,7 @@ function geocode() {
   $args = func_get_args();
   $processor_name = array_shift($args);
   $processor = ctools_get_plugins('geocode', 'geocode_handler', $processor_name);
-  $geometry = call_user_func_array($processor['callback'],$args);
+  $geometry = call_user_func_array($processor['callback'], $args);
 
   return $geometry;
 }
@@ -29,7 +34,7 @@ function geocode_handler_info($field_type = NULL) {
   }
   if ($field_type) {
     $field_handlers = $handlers;
-    foreach($field_handlers as $i => $handler) {
+    foreach ($field_handlers as $i => $handler) {
       if (!isset($handler['field_types']) || !in_array($field_type, $handler['field_types'])) {
         unset($field_handlers[$i]);
       }
@@ -57,7 +62,7 @@ function geocode_supported_field_types() {
     }
   }
 
-	return $supported;
+  return $supported;
 }
 
 function geocode_load_geophp() {
@@ -65,9 +70,9 @@ function geocode_load_geophp() {
 
   if (!$static_cache) {
     $path = libraries_get_path('geoPHP');
-    $file = $path.'/geoPHP.inc';
+    $file = $path . '/geoPHP.inc';
     if (file_exists($file)) {
-      if (include_once($file)) {
+      if (include_once $file) {
         $static_cache = $file;
       }
     }
@@ -76,24 +81,24 @@ function geocode_load_geophp() {
   return $static_cache;
 }
 
-
 /**
- * Implementation of hook_ctools_plugin_api().
+ * Implements of hook_ctools_plugin_api().
  */
 function geocode_ctools_plugin_api() {
   return array('version' => 1);
 }
 
 /**
- * Implementation of hook_ctools_plugin_dierctory() to let the system know
- * we implement plugins.
+ * Implements of hook_ctools_plugin_directory().
+ *
+ * To let the system know we implement plugins.
  */
 function geocode_ctools_plugin_directory($module, $plugin) {
   return 'plugins/' . $plugin;
 }
 
 /**
- * Implements hook_ctools_plugin_type
+ * Implements hook_ctools_plugin_type().
  */
 function geocode_ctools_plugin_type() {
   return array(
@@ -149,8 +154,8 @@ function geocode_field_widget_settings_form($this_field, $instance) {
       break;
   }
 
-
-  // Get a list of all valid fields that we both support and are part of this entity
+  // Get a list of all valid fields that we both support and are part of this
+  // entity.
   foreach ($all_fields as $field) {
     if (array_key_exists($field['field_name'], $entity_fields)) {
       if (in_array($field['type'], array_keys($supported_field_types)) && ($field['field_name'] != $this_field['field_name'])) {
@@ -167,7 +172,7 @@ function geocode_field_widget_settings_form($this_field, $instance) {
   $form['geocode_field'] = array(
     '#type' => 'select',
     '#title' => t('Geocode from field'),
-    '#default_value' => isset($settings['geocode_field']) ? $settings['geocode_field']: '',
+    '#default_value' => isset($settings['geocode_field']) ? $settings['geocode_field'] : '',
     '#options' => $valid_fields,
     '#description' => t('Select which field you would like to geocode from.'),
     '#required' => TRUE,
@@ -179,14 +184,15 @@ function geocode_field_widget_settings_form($this_field, $instance) {
     '#title' => t('Geocoder'),
     '#prefix' => '<div id="geocode-handler-div">',
     '#suffix' => '</div>',
-    '#default_value' => isset($settings['geocode_handler']) ? $settings['geocode_handler']: '',
+    '#default_value' => isset($settings['geocode_handler']) ? $settings['geocode_handler'] : '',
     '#options' => $available_handlers,
     '#description' => t('Select which type of geocoding handler you would like to use'),
     '#required' => TRUE,
   );
 
-  drupal_add_js(array('geocode_widget_settings' => array('handlers' => $handlers_by_type, 'types' => $field_types)),'setting');
-  drupal_add_js(drupal_get_path('module','geocode').'/geocode.admin.js','file');
+  // @todo Add JS by #attached.
+  drupal_add_js(array('geocode_widget_settings' => array('handlers' => $handlers_by_type, 'types' => $field_types)), 'setting');
+  drupal_add_js(drupal_get_path('module', 'geocode') . '/geocode.admin.js', 'file');
 
   return $form;
 }
@@ -202,20 +208,20 @@ function geocode_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   $element = $base;
 
   $element['wkt'] = array(
-   '#type' => 'hidden',
-   '#element_validate' => array('geocode_widget_validate'),
+    '#type' => 'hidden',
+    '#element_validate' => array('geocode_widget_validate'),
   );
   $element['geocode_target'] = array(
-   '#type' => 'hidden',
-   '#value' => $instance['field_name'],
+    '#type' => 'hidden',
+    '#value' => $instance['field_name'],
   );
   $element['geocode_source'] = array(
-   '#type' => 'hidden',
-   '#value' => isset($instance['widget']['settings']['geocode_field']) ? $instance['widget']['settings']['geocode_field'] : '',
+    '#type' => 'hidden',
+    '#value' => isset($instance['widget']['settings']['geocode_field']) ? $instance['widget']['settings']['geocode_field'] : '',
   );
   $element['geocode_handler'] = array(
-   '#type' => 'hidden',
-   '#value' => isset($instance['widget']['settings']['geocode_handler']) ? $instance['widget']['settings']['geocode_handler'] : '',
+    '#type' => 'hidden',
+    '#value' => isset($instance['widget']['settings']['geocode_handler']) ? $instance['widget']['settings']['geocode_handler'] : '',
   );
 
   return $element;
@@ -223,15 +229,18 @@ function geocode_field_widget_form(&$form, &$form_state, $field, $instance, $lan
 
 
 function geocode_widget_validate($element, &$form_state) {
-  // To validate, we simply run through the form fields, looking for items with geocode_source and geocode_target properties
-
-  // Walk the form_state values, applying all instances of geocode source and target operations
+  // To validate, we simply run through the form fields, looking for items with
+  // geocode_source and geocode_target properties.
+  //
+  // Walk the form_state values, applying all instances of geocode source and
+  // target operations.
   foreach ($form_state['values'] as &$field) {
     geocode_widget_validate_walkthrough($field, $form_state);
   }
 
   if (isset($form_state['field']['#parents'])) {
-    //Walk through the fields that are under parents and match up and sources and targets there
+    // Walk through the fields that are under parents and match up and sources
+    // and targets there.
     foreach ($form_state['field']['#parents'] as $parent => $parent_data) {
       foreach ($form_state['values'][$parent] as &$field) {
         geocode_widget_validate_walkthrough($field, $form_state, $parent);
@@ -249,16 +258,16 @@ function geocode_widget_validate_walkthrough(&$field, $form_state, $parent = NUL
       $source = $field[$lang][0]['geocode_source'];
       $handler = geocode_get_handler($field[$lang][0]['geocode_handler']);
       $field[$lang] = array();
-      // If the sources is 'title' then pull from the title
+      // If the sources is 'title' then pull from the title.
       if ($source == 'title' || $source == 'name') {
         if (isset($form_state['values'][$source])) {
           $field_object = array('type' => 'text');
           $item = array('value' => $form_state['values'][$source]);
           try {
-            $geometry = call_user_func($handler['field_callback'],$field_object, $item);
+            $geometry = call_user_func($handler['field_callback'], $field_object, $item);
           }
           catch(Exception $e) {
-            drupal_set_message($e->getMessage(),'error');
+            drupal_set_message($e->getMessage(), 'error');
             return;
           }
 
@@ -273,10 +282,10 @@ function geocode_widget_validate_walkthrough(&$field, $form_state, $parent = NUL
           if (isset($form_state['values'][$parent][$source][$lang])) {
             foreach ($form_state['values'][$parent][$source][$lang] as $delta => $item) {
               try {
-                $geometry = call_user_func($handler['field_callback'],$field_object, $item);
+                $geometry = call_user_func($handler['field_callback'], $field_object, $item);
               }
               catch(Exception $e) {
-                drupal_set_message($e->getMessage(),'error');
+                drupal_set_message($e->getMessage(), 'error');
                 return;
               }
 
@@ -285,14 +294,15 @@ function geocode_widget_validate_walkthrough(&$field, $form_state, $parent = NUL
               }
             }
           }
-        } else {
+        }
+        else {
           if (isset($form_state['values'][$source][$lang])) {
             foreach ($form_state['values'][$source][$lang] as $delta => $item) {
               try {
-                $geometry = call_user_func($handler['field_callback'],$field_object, $item);
+                $geometry = call_user_func($handler['field_callback'], $field_object, $item);
               }
               catch(Exception $e) {
-                drupal_set_message($e->getMessage(),'error');
+                drupal_set_message($e->getMessage(), 'error');
                 return;
               }
 
