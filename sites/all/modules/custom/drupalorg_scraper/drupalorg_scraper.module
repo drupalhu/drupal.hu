@@ -1,10 +1,13 @@
 <?php
 /**
  * @file
+ * Drupal usage fetcher.
+ *
  * Napi egyszer leolvassa a Drupal.org nyitólapról hogy hányan
  * haszálják a Drupalt hány országban, és ezeket megjeleníti egy blokkban.
  *
- * Egy másik blokkban pedig az aktuális Drupal 6, 7 verzióhoz és fordításaihoz ad letöltés linket.
+ * Egy másik blokkban pedig az aktuális Drupal 6, 7 verzióhoz és fordításaihoz
+ * ad letöltés linket.
  *
  * @author Várady Zoltán <zoltan@farm.co.hu>
  */
@@ -22,13 +25,16 @@ function drupalorg_scraper_scrape() {
  */
 function _drupalorg_scrape_headcount() {
   $page = drupal_http_request("http://drupal.org/home");
-  $res = preg_match("/front-drupal-stats[^0-9]+([0-9,]+).*people in[^0-9]+([0-9]+).*countries.*speaking[^0-9]+([0-9]+).*languages/", $page->data, $matches);
+  $res = preg_match(
+    "/front-drupal-stats[^0-9]+([0-9,]+).*people in[^0-9]+([0-9]+).*countries.*speaking[^0-9]+([0-9]+).*languages/",
+    $page->data, $matches
+  );
   if ($res) {
-    // nem kell a vessző
-    $people    = (int) preg_replace("/[^0-9\\.]/", "", $matches[1]);
+    // Nem kell a vessző.
+    $people = (int) preg_replace("/[^0-9\\.]/", "", $matches[1]);
     $countries = (int) $matches[2];
     $languages = (int) $matches[3];
-    // csak értelmes válaszokat fogadunk el
+    // Csak értelmes válaszokat fogadunk el.
     if ($people > 500000) {
       variable_set("drupalorg_scraper_people", $people);
     }
@@ -42,62 +48,71 @@ function _drupalorg_scrape_headcount() {
 }
 
 /**
+ * Scrape releases from Drupal.org.
+ *
  * Letölti a friss Drupal verziókat és fordításaikat, és eltárolja a
- * drupalorg_scraper_releases változóban
+ * drupalorg_scraper_releases változóban.
  */
 function _drupalorg_scrape_releases() {
-  $page = drupal_http_request("http://localize.drupal.org/translate/languages/hu");
+  $page = drupal_http_request(
+    "http://localize.drupal.org/translate/languages/hu"
+  );
   $releases = array();
 
-  for ($i=6; $i<8; $i++) {
-   $releases[$i] = _drupalorg_scrape_release($i);
-   $releases[$i]['translation'] = _drupalorg_scrape_translation($page->data, $i);
+  for ($i = 6; $i < 8; $i++) {
+    $releases[$i] = _drupalorg_scrape_release($i);
+    $releases[$i]['translation'] = _drupalorg_scrape_translation(
+      $page->data, $i
+    );
   }
-  
-  if ($releases[6]['version'] &&  $releases[7]['version']) {
+
+  if ($releases[6]['version'] && $releases[7]['version']) {
     variable_set("drupalorg_scraper_releases", $releases);
   }
 }
 
 /**
- * Letölti az aktuális Drupal változat számát és egy letöltés linket
- * 
- * @param $major
- *  Drupal fő verziószám, pl. 6 vagy 7
+ * Letölti az aktuális Drupal változat számát és egy letöltés linket.
  *
- * @return
- *  Update modul API által visszaadott release tömb, vagy FALSE ha hiba lépett föl
+ * @param int $major
+ *   Drupal fő verziószám, pl. 6 vagy 7
+ *
+ * @return array|bool
+ *   Release info array or FALSE on error.
  */
-function _drupalorg_scrape_release($major=7) {
- module_load_include('inc', 'update', 'update.fetch');
+function _drupalorg_scrape_release($major = 7) {
+  module_load_include('inc', 'update', 'update.fetch');
 
- $url = "http://updates.drupal.org/release-history/drupal/$major.x";
- $xml = drupal_http_request($url);
- if (isset($xml->data)) {
-   $data = $xml->data;
- }
- if (!empty($data)) {
-   $available = update_parse_xml($data);
-   $current_release = array_shift($available['releases']);
-   return $current_release;
- }
- 
- return FALSE;
+  $url = "http://updates.drupal.org/release-history/drupal/$major.x";
+  $xml = drupal_http_request($url);
+  if (isset($xml->data)) {
+    $data = $xml->data;
+  }
+  if (!empty($data)) {
+    $available = update_parse_xml($data);
+    $current_release = array_shift($available['releases']);
+    return $current_release;
+  }
+
+  return FALSE;
 }
 
 /**
- * Kibogarássza az aktuális Drupal változat fordítás linkjét
- * 
- * @param $html
- *  A html oldal szövege ahonnan ki kell mazsolázni a linket
- * @param $major
- *  Drupal fő verziószám, pl. 6 vagy 7
+ * Kibogarássza az aktuális Drupal változat fordítás linkjét.
  *
- * @return
- *  Letöltés link, vagy FALSE ha nincs találat
+ * @param string $html
+ *   A html oldal szövege ahonnan ki kell mazsolázni a linket.
+ * @param int $major
+ *   Drupal fő verziószám, pl. 6 vagy 7.
+ *
+ * @return string|bool
+ *   Letöltés link, vagy FALSE ha nincs találat.
  */
-function _drupalorg_scrape_translation($html, $major=7) {
-  $res = preg_match("|(http://ftp.drupal.org/files/translations/$major.x/drupal/drupal-$major.[0-9]+.hu.po)|", $html, $matches);
+function _drupalorg_scrape_translation($html, $major = 7) {
+  $res = preg_match(
+    "|(http://ftp.drupal.org/files/translations/$major.x/drupal/drupal-$major.[0-9]+.hu.po)|",
+    $html, $matches
+  );
   if ($res) {
     return $matches[1];
   }
@@ -116,42 +131,47 @@ function drupalorg_scraper_block_info() {
     'info' => 'Drupal + fordítás letöltés',
   );
 
-
   return $blocks;
 }
 
 /**
  * Implements hook_block_view().
  */
-function drupalorg_scraper_block_view($delta='') {
+function drupalorg_scraper_block_view($delta = '') {
   $block = array();
   switch ($delta) {
     case 'headcount':
       $block['subject'] = '';
       $block['content'] = array(
-        '#theme'     => 'headcount',
-        '#people'    => variable_get("drupalorg_scraper_people", 611388),
+        '#theme' => 'headcount',
+        '#people' => variable_get("drupalorg_scraper_people", 611388),
         '#countries' => variable_get("drupalorg_scraper_countries", 228),
         '#languages' => variable_get("drupalorg_scraper_languages", 182),
       );
       break;
-      case 'releases':
-        $block['subject'] = '+ Letöltés';
-        $block['content'] = array(
-          '#theme'     => 'releases',
-          '#releases'    => variable_get("drupalorg_scraper_releases", array(
-            6 => array('version' => '6.22',
-                       'download_link' => 'http://ftp.drupal.org/files/projects/drupal-6.22.tar.gz',
-                       'translation' => 'http://ftp.drupal.org/files/translations/6.x/drupal/drupal-6.22.hu.po',
-                       ),
-            7 => array('version' => '7.2',
-                       'download_link' => 'http://ftp.drupal.org/files/projects/drupal-7.2.tar.gz',
-                       'translation' => 'http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.2.hu.po',
-                       ),
-            
-          )),
-        );
-        break;
+
+    case 'releases':
+      $block['subject'] = '+ Letöltés';
+      $block['content'] = array(
+        '#theme' => 'releases',
+        '#releases' => variable_get(
+          "drupalorg_scraper_releases", array(
+            6 => array(
+              'version' => '6.22',
+              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-6.22.tar.gz',
+              'translation' => 'http://ftp.drupal.org/files/translations/6.x/drupal/drupal-6.22.hu.po',
+            ),
+            7 => array(
+              'version' => '7.2',
+              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-7.2.tar.gz',
+              'translation' => 'http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.2.hu.po',
+            ),
+
+          )
+        ),
+      );
+      break;
+
   }
 
   return $block;
@@ -161,21 +181,21 @@ function drupalorg_scraper_block_view($delta='') {
  * Implements hook_theme().
  */
 function drupalorg_scraper_theme() {
- return array(
-   'headcount' => array(
+  return array(
+    'headcount' => array(
       'variables' => array(
-        'people'    => 611388,
+        'people' => 611388,
         'countries' => 228,
         'languages' => 182,
-        ),
-      'template'  => 'headcount',
+      ),
+      'template' => 'headcount',
     ),
     'releases' => array(
-       'variables' => array(
-         'releases' => array(),
-         ),
-       'template'  => 'releases',
-     ),
+      'variables' => array(
+        'releases' => array(),
+      ),
+      'template' => 'releases',
+    ),
   );
 }
 
@@ -183,12 +203,12 @@ function drupalorg_scraper_theme() {
  * Implements hook_cron().
  */
 function drupalorg_scraper_cron() {
-  // elég ha napi egyszer lefut
-  $last_run = variable_get("drupalorg_scraper_last_run", 20100101);
-  $today    = (int) strftime("%Y%m%d");
+  // Elég ha napi egyszer lefut.
+  $last_run = variable_get('drupalorg_scraper_last_run', 20100101);
+  $today = (int) strftime('%Y%m%d');
   if ($today > $last_run) {
     drupalorg_scraper_scrape();
-    watchdog("drupalorg_scraper", "Scraped usage statistics from drupal.org");
+    watchdog('drupalorg_scraper', 'Scraped usage statistics from drupal.org');
+    variable_set('drupalorg_scraper_last_run', $today);
   }
-  variable_set("drupalorg_scraper_last_run", $today);
 }

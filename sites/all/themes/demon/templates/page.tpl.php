@@ -83,68 +83,85 @@
  * @see template_process()
  * @see bartik_process_page()
  */
-
-// common header template
-require 'header.tpl.php';
 ?>
+<div id="page-wrapper">
+  <div id="page">
+    <?php
+      // Common header template.
+      require 'header.tpl.php';
+    ?>
+    <div id="main-wrapper" class="clearfix">
+      <div id="main" class="clearfix container-24">
 
-  <div id="content" class="<?php print $content_classes ?>"><div class="section">
-    <a id="main-content"></a>
+        <div id="content" class="<?php print $content_classes ?>">
+          <div class="section">
+            <a id="main-content"></a>
 
-    <?php if ($breadcrumb): ?>
-      <div id="breadcrumb"><?php print $breadcrumb; ?></div>
-    <?php endif; ?>
+            <?php if ($breadcrumb): ?>
+              <div id="breadcrumb"><?php print $breadcrumb; ?></div>
+            <?php endif; ?>
 
-    <?php print render($title_prefix); ?>
-    <?php if ($title): ?>
-      <h1 class="title" id="page-title">
-        <?php print $title; ?>
-      </h1>
-    <?php endif; ?>
-    <?php print render($title_suffix); ?>
+            <?php print render($title_prefix); ?>
+            <?php if ($title): ?>
+              <h1 class="title" id="page-title">
+                <?php print $title; ?>
+              </h1>
+            <?php endif; ?>
+            <?php print render($title_suffix); ?>
 
-    <?php if ($tabs): ?>
-      <div class="tabs">
-        <?php print render($tabs); ?>
+            <?php if ($tabs): ?>
+              <div class="tabs">
+                <?php print render($tabs); ?>
+              </div>
+            <?php endif; ?>
+            <?php print render($page['help']); ?>
+            <?php if ($action_links): ?>
+              <ul class="action-links">
+                <?php print render($action_links); ?>
+              </ul>
+            <?php endif; ?>
+            <?php print render($page['content']); ?>
+            <?php print $feed_icons; ?>
+          </div>
+        </div> <!-- /.section, /#content -->
+
+        <div id="main-blocks-wrapper">
+          <?php if ($page['front_left'] || $page['front_middle_left']
+            || $page['front_middle_right']
+            || $page['front_right']
+          ): ?>
+            <div id="main-blocks" class="clearfix container-24">
+              <div class="grid-6"><?php print render($page['front_left']); ?></div>
+              <div class="grid-6"><?php print render(
+                  $page['front_middle_left']
+                ); ?></div>
+              <div class="grid-6"><?php print render(
+                  $page['front_middle_right']
+                ); ?></div>
+              <div class="grid-6"><?php print render($page['front_right']); ?></div>
+            </div><!-- /#triptych -->
+          <?php endif; ?>
+        </div><!-- /#triptych-wrapper -->
+
+        <?php if (!$is_front && $page['sidebar_first']): ?>
+          <div id="sidebar-first" class="<?php print $sidebar_classes ?>">
+            <div class="section">
+              <?php print render($page['sidebar_first']); ?>
+            </div>
+          </div> <!-- /.section, /#sidebar-first -->
+        <?php endif; ?>
+
+        <?php if (!$is_front): ?>
+          <div id="jump-to-top">
+            <a href="#main-content">Ugrás a lap tetejére</a>
+          </div>
+        <?php endif; ?>
+
+        <?php
+          // Common footer template.
+          require 'footer.tpl.php';
+        ?>
       </div>
-    <?php endif; ?>
-    <?php print render($page['help']); ?>
-    <?php if ($action_links): ?>
-      <ul class="action-links">
-        <?php print render($action_links); ?>
-      </ul>
-    <?php endif; ?>
-    <?php print render($page['content']); ?>
-    <?php print $feed_icons; ?>
-  </div></div> <!-- /.section, /#content -->
-
-  <div id="main-blocks-wrapper">
-    <?php if ($page['front_left'] || $page['front_middle_left'] || $page['front_middle_right']  || $page['front_right']): ?>
-        <div id="main-blocks" class="clearfix container-24">
-        <div class="grid-6"><?php print render($page['front_left']); ?></div>
-        <div class="grid-6"><?php print render($page['front_middle_left']); ?></div>
-        <div class="grid-6"><?php print render($page['front_middle_right']); ?></div>
-        <div class="grid-6"><?php print render($page['front_right']); ?></div>
-    </div><!-- /#triptych -->
-    <?php endif; ?>
-  </div><!-- /#triptych-wrapper -->
-
-  <?php if (!$is_front && $page['sidebar_first']): ?>
-    <div id="sidebar-first" class="<?php print $sidebar_classes ?>"><div class="section">
-      <?php print render($page['sidebar_first']); ?>
     </div>
-    </div> <!-- /.section, /#sidebar-first -->
-  <?php endif; ?>
-
-
-<?php if(!$is_front) { ?>
-<div id="jump-to-top">
-  <a href="#main-content">Ugrás a lap tetejére</a>
+ </div>
 </div>
-
-<?php } ?>
-
-<?php
-// common footer template
-require 'footer.tpl.php';
-?>

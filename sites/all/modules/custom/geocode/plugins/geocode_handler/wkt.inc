@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -19,23 +18,27 @@ $plugin = array(
 );
 
 /**
- * Process WKT
+ * Process WKT.
  */
 function geocode_wkt($wkt) {
   geocode_load_geophp();
-  return geoPHP::load($wkt,'wkt');
+  return geoPHP::load($wkt, 'wkt');
 }
 
 function geocode_wkt_field($field, $field_item) {
-	if ($field['type'] == 'text' || $field['type'] == 'text_long' || $field['type'] == 'computed') {
-		return geocode_wkt($field_item['value']);
-	}
-	if ($field['type'] == 'geofield') {
-		return geocode_wkt($field_item['wkt']);
-	}
-  if ($field['type'] == 'file') {
-  	$file = file_load($field_item['fid']);
-  	$wkt = file_get_contents($file->uri);
-  	return geocode_wkt($wkt);
+  if ($field['type'] == 'text' || $field['type'] == 'text_long' || $field['type'] == 'computed') {
+    return geocode_wkt($field_item['value']);
   }
+
+  if ($field['type'] == 'geofield') {
+    return geocode_wkt($field_item['wkt']);
+  }
+
+  if ($field['type'] == 'file') {
+    $file = file_load($field_item['fid']);
+    $wkt = file_get_contents($file->uri);
+    return geocode_wkt($wkt);
+  }
+
+  return NULL;
 }
