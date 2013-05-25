@@ -199,7 +199,14 @@ pre {
 #triptych-wrapper {
   height: 64px;
 }
-
+#triptych .grid-8:first-child{
+  margin-left: 0;
+  width: 317px;
+}
+#triptych .grid-8:last-child{
+  margin-right: 0;
+  width: 313px;
+}
 #triptych div.region {
   height: 54px;
   background-color: #F6F6F2;
@@ -239,6 +246,52 @@ pre {
 #triptych .block-search-api-page {
   padding: 19px 5px 0 5px;
 }
+
+/**
+ * search form
+ */
+#views-exposed-form-multi-index-kereso-page-kereso {
+  
+}
+#views-exposed-form-multi-index-kereso-page-kereso #edit-text-wrapper {
+  margin-left: 11px;
+  margin-top: 8px;
+}
+#triptych #views-exposed-form-multi-index-kereso-page-kereso .form-submit {
+  background: none repeat scroll 0 0 #34495E;
+  border: medium none;
+  border-radius: 6px 6px 6px 6px;
+  box-shadow: none;
+  color: white;
+  font-size: 16.5px;
+  margin-left: 12px;
+  margin-top: 9px;
+  padding: 7px 12px;
+  text-decoration: none;
+  text-shadow: none;
+  transition: all 0.25s ease 0s;
+  width: 100%;
+}
+#triptych #views-exposed-form-multi-index-kereso-page-kereso .form-submit:hover {
+  background-color: #4e6d8d;
+  color: white;
+  -webkit-transition: 0.25s;
+  -moz-transition: 0.25s;
+  -o-transition: 0.25s;
+  transition: 0.25s;
+  -webkit-backface-visibility: hidden;
+}
+#views-exposed-form-multi-index-kereso-page-kereso input.form-text {
+  border: 2px solid #DCE4EC;
+  border-radius: 6px 6px 6px 6px;
+  box-shadow: none;
+  color: #34495E;
+  font-family: "Lato",sans-serif;
+  font-size: 14px;
+  padding: 11px 0 9px 10px;
+  text-indent: 1px;
+}
+
 
 #block-drupalorg-scraper-releases {
   padding: 9px 5px 0 5px;
