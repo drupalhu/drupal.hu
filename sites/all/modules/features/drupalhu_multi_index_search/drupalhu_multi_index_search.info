@@ -1,7 +1,8 @@
 name = Drupal.hu multi-index kereső
 core = 7.x
 package = Drupalhu
-version = 7.x-1.0-20130525rc1
+php = 5.2.4
+version = 7.x-1.0-20130525rc2
 project = drupalhu_multi_index_search
 dependencies[] = search_api
 dependencies[] = search_api_multi
