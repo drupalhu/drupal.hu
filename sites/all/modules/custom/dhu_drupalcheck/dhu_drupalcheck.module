@@ -141,8 +141,8 @@ function _dhu_drupalcheck_check_link_node($nid) {
   $node = node_load($nid, NULL, FALSE);
   $isdrupal = dhu_drupalcheck_check($node->field_link['und'][0]['url']);
   if (!$isdrupal) {
-//    $node->status = 0;
-//    node_save($node);
+    $node->status = 0;
+    node_save($node);
     watchdog('drupal.hu link', '!url found not to be a Drupal site.', array('!url' => $node->field_link['und'][0]['url']));
   }
   // XXX: Should we watchdog a successful check?
