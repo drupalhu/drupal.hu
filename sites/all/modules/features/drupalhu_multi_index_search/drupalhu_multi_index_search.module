@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Drupal.hu multi-index kereső feature.
+ */
+
+include_once 'drupalhu_multi_index_search.features.inc';
