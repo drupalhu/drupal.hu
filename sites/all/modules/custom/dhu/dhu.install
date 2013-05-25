@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Drupal.hu module.
+ */
+
+/**
+ * Implements hook_update_N().
+ *
+ * Disable modules: geocode.
+ */
+function dhu_update_7101(&$sandbox) {
+  $messages = array();
+
+  $modules_to_disable = array('geocode');
+  module_disable($modules_to_disable);
+  $messages[] = t('Disable modules: @modules.', array(
+      '@modules' => implode(', ', $modules_to_disable),
+  ));
+
+  return implode('<br />', $messages);
+}
