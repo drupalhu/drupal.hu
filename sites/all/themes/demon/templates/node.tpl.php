@@ -117,9 +117,9 @@
   <?php
     // Remove the "Add new comment" link on the teaser page or if the comment
     // form is being displayed on the same page.
-    if ($teaser || !empty($content['comments']['comment_form'])) {
+    if ($teaser || !empty($content['comments']['comment_form'])) :
       unset($content['links']['comment']['#links']['comment-add']);
-    }
+    endif;
     // Only display the wrapper div if there are links.
     $links = render($content['links']);
     if ($links):
@@ -128,11 +128,9 @@
       <?php print $links; ?>
     </div>
   <?php endif; ?>
-
-
 </div>
-<?php if ($content['comments']) { ?>
+<?php if ($content['comments']) : ?>
   <div id="node-comments">
     <?php print render($content['comments']); ?>
   </div>
-<?php } ?>
+<?php endif; ?>

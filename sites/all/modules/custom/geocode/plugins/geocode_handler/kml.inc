@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -19,20 +18,23 @@ $plugin = array(
 );
 
 /**
- * Process Markup
+ * Process Markup.
  */
 function geocode_kml($kml_string) {
   geocode_load_geophp();
-  return geoPHP::load($kml_string,'kml');
+  return geoPHP::load($kml_string, 'kml');
 }
 
 function geocode_kml_field($field, $field_item) {
   if ($field['type'] == 'text' || $field['type'] == 'text_long' || $field['type'] == 'computed') {
-  	return geocode_kml($field_item['value']);
+    return geocode_kml($field_item['value']);
   }
+
   if ($field['type'] == 'file') {
-  	$file = file_load($field_item['fid']);
-  	$kml = file_get_contents($file->uri);
-  	return geocode_kml($kml);
+    $file = file_load($field_item['fid']);
+    $kml = file_get_contents($file->uri);
+    return geocode_kml($kml);
   }
+
+  return NULL;
 }

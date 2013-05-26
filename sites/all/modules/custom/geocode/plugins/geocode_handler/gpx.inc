@@ -1,12 +1,11 @@
-<?php // $Id: gpx.inc,v 1.1 2009/03/02 18:14:07 vauxia Exp $
-
+<?php
 
 /**
  * @file
+ * Parsing utilities for GPX track files.
  *
- * Parsing utilities for GPX track files.  Originally written to cover a more
- * comprehensive usage than what Geocode is doing, but handy nonetheless.
- *
+ * Originally written to cover a more comprehensive usage than what Geocode is
+ * doing, but handy nonetheless.
  */
 
 /**
@@ -22,21 +21,23 @@ $plugin = array(
 );
 
 /**
- * Process GPX
+ * Process GPX.
  */
 function geocode_gpx($gpx_string) {
   geocode_load_geophp();
-  return geoPHP::load($gpx_string,'gpx');
+  return geoPHP::load($gpx_string, 'gpx');
 }
 
 function geocode_gpx_field($field, $field_item) {
   if ($field['type'] == 'text' || $field['type'] == 'text_long' || $field['type'] == 'computed') {
-  	return geocode_gpx($field_item['value']);
+    return geocode_gpx($field_item['value']);
   }
-  if ($field['type'] == 'file') {
-  	$file = file_load($field_item['fid']);
-  	$gpx = file_get_contents($file->uri);
-  	return geocode_gpx($gpx);
-  }
-}
 
+  if ($field['type'] == 'file') {
+    $file = file_load($field_item['fid']);
+    $gpx = file_get_contents($file->uri);
+    return geocode_gpx($gpx);
+  }
+
+  return NULL;
+}
