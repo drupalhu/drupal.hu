@@ -56,7 +56,13 @@
   text-indent: 1px;
   width: 158px;
 }
-
+body.chrome #views-exposed-form-multi-index-kereso-page-kereso input.form-text {
+  padding-top: 8px;
+}
+body.chrome #triptych #views-exposed-form-multi-index-kereso-page-kereso .form-submit {
+  margin-top: 1px;
+  height: 36px;
+}
 /**
  * search result style
  */
