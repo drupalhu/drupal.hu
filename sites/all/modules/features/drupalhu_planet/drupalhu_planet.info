@@ -64,3 +64,4 @@ features[variable][] = node_submitted_feed
 features[variable][] = node_submitted_feed_item
 features[views_view][] = planet
 features[views_view][] = planet_feed_list
+features[views_view][] = recent_planet
