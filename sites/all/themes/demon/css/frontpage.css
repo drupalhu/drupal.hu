@@ -17,18 +17,42 @@ body.front .views-slideshow-cycle-main-frame  {
   position: relative;
 }
 body.front .views-slideshow-cycle-main-frame .views-field-title {
-  position: absolute;
-  bottom: 0;
+  
 }
-body.front .views-slideshow-cycle-main-frame .views-field-field-slideshow-description {
+body.front .views-slideshow-cycle-main-frame .slidetext {
   position: absolute;
-  top:0;
+  bottom:3px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, .8);
 }
 
 body.front #front h2.pane-title {
   margin-bottom: 15px;
 }
-
+.views-slideshow-controls-text {
+  position: relative;
+}
+.views-slideshow-controls-text .views-slideshow-controls-text-pause {
+  display: none;
+}
+.views-slideshow-controls-text a {
+  text-indent: -9000px;
+  display: block;
+  color: transparent;
+  width: 30px;
+  height: 54px;
+  top: 130px;
+}
+.views-slideshow-controls-text .views-slideshow-controls-text-previous a {
+  background: url('../images/slide_control_text_left.png') no-repeat 0 0 transparent;
+  position: absolute;
+  left: -50px;
+}
+.views-slideshow-controls-text .views-slideshow-controls-text-next a {
+  background: url('../images/slide_control_text_right.png') no-repeat 0 0 transparent;
+  position: absolute;
+  right: -50px;  
+}
 /**
  * event and recent blocks
  */

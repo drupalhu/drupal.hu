@@ -70,8 +70,9 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_controls']['type'] = 'views_slideshow_controls_text';
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_slide_counter']['weight'] = '1';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['effect'] = 'scrollHorz';
-  $handler->display->display_options['style_options']['views_slideshow_cycle']['timeout'] = '5000';
-  $handler->display->display_options['style_options']['views_slideshow_cycle']['speed'] = '700';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['transition_advanced'] = 1;
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['timeout'] = '15000';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['speed'] = '900';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['delay'] = '0';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['start_paused'] = 0;
   $handler->display->display_options['style_options']['views_slideshow_cycle']['remember_slide_days'] = '1';
@@ -85,8 +86,10 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Mező: Tartalom: Webcím */
   $handler->display->display_options['fields']['field_slideshow_url']['id'] = 'field_slideshow_url';
   $handler->display->display_options['fields']['field_slideshow_url']['table'] = 'field_data_field_slideshow_url';
@@ -114,7 +117,13 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['fields']['field_slideshow_description']['table'] = 'field_data_field_slideshow_description';
   $handler->display->display_options['fields']['field_slideshow_description']['field'] = 'field_slideshow_description';
   $handler->display->display_options['fields']['field_slideshow_description']['label'] = '';
+  $handler->display->display_options['fields']['field_slideshow_description']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_slideshow_description']['alter']['text'] = '<div class="slidetext">
+<div class="views-field views-field-title">[title]</div>
+<div class="views-field views-field-field-slideshow-description">[field_slideshow_description]</div>
+</div>';
   $handler->display->display_options['fields']['field_slideshow_description']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_slideshow_description']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_slideshow_description']['type'] = 'text_plain';
   /* Rendezési szempont: Tartalom: Beküldés dátuma */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
@@ -143,6 +152,10 @@ function drupalhu_slideshow_views_default_views() {
     t('Rendezés'),
     t('Növekvő'),
     t('Csökkenő'),
+    t('<div class="slidetext">
+<div class="views-field views-field-title">[title]</div>
+<div class="views-field views-field-field-slideshow-description">[field_slideshow_description]</div>
+</div>'),
   );
   $export['slideshow'] = $view;
 
