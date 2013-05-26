@@ -358,14 +358,15 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['picture']['image_style'] = 'user_picure';
+  $handler->display->display_options['fields']['picture']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['picture']['image_style'] = 'planet_user_picture';
   /* Mező: Tartalom: Beküldés dátuma */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['element_wrapper_type'] = 'div';
   $handler->display->display_options['fields']['created']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'M d';
@@ -377,6 +378,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['max_length'] = '40';
   $handler->display->display_options['fields']['title']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_wrapper_type'] = 'div';
   $translatables['recent_planet'] = array(
     t('Master'),
     t('Drupal planet'),

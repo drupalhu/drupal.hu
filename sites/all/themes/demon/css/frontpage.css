@@ -30,18 +30,20 @@ body.front #front h2.pane-title {
 }
 
 /**
- * event block
+ * event and recent blocks
  */
 body.front .view-recent-events {
   
 }
 body.front .view-recent-events .views-row,
-body.front .view-recent-news .views-row  {
+body.front .view-recent-news .views-row,
+body.front .view-recent-planet .views-row  {
   overflow: hidden;
   margin-bottom: 10px;
 }
 body.front .view-recent-events .views-field-created,
-body.front .view-recent-news .views-field-created {
+body.front .view-recent-news .views-field-created,
+body.front .view-recent-planet .views-field-created {
   background-color: #004874;
   width: 55px;
   height: 55px;
@@ -51,7 +53,8 @@ body.front .view-recent-news .views-field-created {
   margin: 0 10px 0 0;
 }
 body.front .view-recent-events .views-field-created span,
-body.front .view-recent-news .views-field-created span {
+body.front .view-recent-news .views-field-created span,
+body.front .view-recent-planet .views-field-created span  {
   display: block;
   font-size: 18px;
   line-height: 120%;
@@ -59,10 +62,17 @@ body.front .view-recent-news .views-field-created span {
   text-align: center;
 }
 body.front .view-recent-events .views-field-title,
-body.front .view-recent-news .views-field-title {
+body.front .view-recent-news .views-field-title,
+body.front .view-recent-planet .views-field-title {
   margin-top: 8px;
 }
 
+/**
+ * body.front .view-recent-planet
+ */
+body.front .view-recent-planet .views-field-picture {
+  float: left;
+}
 /**
  * job block
  */
