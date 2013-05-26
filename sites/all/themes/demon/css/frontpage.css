@@ -1,0 +1,111 @@
+/**
+ * frontpage
+ *
+ * Code by Istvan Csaki
+ */
+
+body.front {
+  
+}
+body.front .tabs{
+  display: none;
+}
+body.front #content {
+  padding-top: 0;
+}
+body.front .views-slideshow-cycle-main-frame  {
+  position: relative;
+}
+body.front .views-slideshow-cycle-main-frame .views-field-title {
+  position: absolute;
+  bottom: 0;
+}
+body.front .views-slideshow-cycle-main-frame .views-field-field-slideshow-description {
+  position: absolute;
+  top:0;
+}
+
+body.front #front h2.pane-title {
+  margin-bottom: 15px;
+}
+
+/**
+ * event block
+ */
+body.front .view-recent-events {
+  
+}
+body.front .view-recent-events .views-row,
+body.front .view-recent-news .views-row  {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+body.front .view-recent-events .views-field-created,
+body.front .view-recent-news .views-field-created {
+  background-color: #004874;
+  width: 55px;
+  height: 55px;
+  text-align: center;
+  color: #fff;
+  float: left;
+  margin: 0 10px 0 0;
+}
+body.front .view-recent-events .views-field-created span,
+body.front .view-recent-news .views-field-created span {
+  display: block;
+  font-size: 18px;
+  line-height: 120%;
+  padding-top: 7px;
+  text-align: center;
+}
+body.front .view-recent-events .views-field-title,
+body.front .view-recent-news .views-field-title {
+  margin-top: 8px;
+}
+
+/**
+ * job block
+ */
+body.front .view-job {
+  
+}
+body.front .view-job .views-row {
+  margin-bottom: 15px;
+}
+body.front .view-job h4 {
+  margin: 5px 0 5px 0;
+  font-size: 14px;
+}
+
+/**
+ * link ajanlo
+ */
+body.front .view-link-ajanlo .views-row {
+  display: inline-block;
+  width: 216px;
+  vertical-align: top;
+  padding: 0 5px 0 15px;
+  border-right: 1px solid #ECF0F5;  
+}
+body.front .view-link-ajanlo .views-row:first-child {
+  padding-left: 0;
+}
+body.front .view-link-ajanlo .views-row:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+body.front .view-link-ajanlo .views-field-title {
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+body.front .view-link-ajanlo .views-field-title a {
+  font-size: 1.5em;
+  transition: all 0.25s ease 0s;
+}
+body.front .view-link-ajanlo .views-field-title a:hover {
+    -webkit-transition: 0.25s;
+  -moz-transition: 0.25s;
+  -o-transition: 0.25s;
+  transition: 0.25s;
+  -webkit-backface-visibility: hidden;
+}
