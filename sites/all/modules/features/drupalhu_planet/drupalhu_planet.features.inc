@@ -26,6 +26,37 @@ function drupalhu_planet_views_api() {
 }
 
 /**
+ * Implements hook_image_default_styles().
+ */
+function drupalhu_planet_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: planet_user_picture.
+  $styles['planet_user_picture'] = array(
+    'name' => 'planet_user_picture',
+    'effects' => array(
+      3 => array(
+        'label' => 'Arányos átméretezés és méretre vágás',
+        'help' => 'Az arányos átméretezés és kivágás megtartja a képarányt és azt követően kivágja a képet a hosszabbik oldal alapján. Ez a legáltalánosabban használt hatás négyzet alakú bélyegképek létrehozására anélkül, hogy a kép el lenne nyújtva.',
+        'effect callback' => 'image_scale_and_crop_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => '55',
+          'height' => '55',
+        ),
+        'weight' => '1',
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
  * Implements hook_node_info().
  */
 function drupalhu_planet_node_info() {
