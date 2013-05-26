@@ -138,12 +138,11 @@
             <a href="#main-content">Ugrás a lap tetejére</a>
           </div>
         <?php endif; ?>
-
-        <?php
-          // Common footer template.
-          require 'footer.tpl.php';
-        ?>
       </div>
     </div>
+    <?php
+      // Common footer template.
+      require 'footer.tpl.php';
+    ?>
  </div>
 </div>
