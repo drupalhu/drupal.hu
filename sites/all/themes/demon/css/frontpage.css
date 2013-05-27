@@ -43,19 +43,22 @@ body.front #front h2.pane-title {
   text-indent: -9000px;
   display: block;
   color: transparent;
-  width: 30px;
-  height: 54px;
+  width: 18px;
+  height: 30px;
   top: 130px;
+  background-image:url('../images/slide_control.png');
+  background-image: transparent;
+  background-repeat: no-repeat;
 }
 .views-slideshow-controls-text .views-slideshow-controls-text-previous a {
-  background: url('../images/slide_control_text_left.png') no-repeat 0 0 transparent;
+  background-position: 0 -42px;
   position: absolute;
-  left: -50px;
+  left: -30px;
 }
 .views-slideshow-controls-text .views-slideshow-controls-text-next a {
-  background: url('../images/slide_control_text_right.png') no-repeat 0 0 transparent;
+  background-position: 0 0;
   position: absolute;
-  right: -50px;  
+  right: -30px;  
 }
 /**
  * event and recent blocks
@@ -146,4 +149,7 @@ body.front .view-link-ajanlo .views-field-title a:hover {
   -o-transition: 0.25s;
   transition: 0.25s;
   -webkit-backface-visibility: hidden;
+}
+body.front .view-link-ajanlo .view-footer {
+  margin-top: 10px;
 }
