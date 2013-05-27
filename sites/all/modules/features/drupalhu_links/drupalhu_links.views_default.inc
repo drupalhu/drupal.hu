@@ -232,6 +232,13 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
+  /* Lábléc: Általános: Szövegdoboz */
+  $handler->display->display_options['footer']['area']['id'] = 'area';
+  $handler->display->display_options['footer']['area']['table'] = 'views';
+  $handler->display->display_options['footer']['area']['field'] = 'area';
+  $handler->display->display_options['footer']['area']['content'] = '<a href="/linkek/all">További weboldalalak »</a>';
+  $handler->display->display_options['footer']['area']['format'] = '1';
   $translatables['link_ajanlo'] = array(
     t('Link ajánló'),
     t('Friss linkek'),
@@ -263,6 +270,7 @@ function drupalhu_links_views_default_views() {
     t('Kiemelt magyar Drupal alapú webhelyek'),
     t('A szerkesztői ajánlatok egyedi megjelenésű, prominens felhasználású, közismert vagy éppen a Drupal széleskörű alkalmazását szemléltető webhelyek.'),
     t('Linkek összefoglaló oldal'),
+    t('<a href="/linkek/all">További weboldalalak »</a>'),
   );
   $export['link_ajanlo'] = $view;
 

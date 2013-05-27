@@ -147,3 +147,6 @@ body.front .view-link-ajanlo .views-field-title a:hover {
   transition: 0.25s;
   -webkit-backface-visibility: hidden;
 }
+body.front .view-link-ajanlo .view-footer {
+  margin-top: 10px;
+}
