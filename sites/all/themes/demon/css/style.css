@@ -487,7 +487,7 @@ h1#page-title {
 
 
 .item-list ul.pager {
-  background-color: #E6FCB6;
+  background-color: #004874;
   padding: 0.5em 0;
 }
 
@@ -495,7 +495,9 @@ h1#page-title {
   padding: 0;
   margin-left: 0.5em;
 }
-
+.item-list ul.pager li a {
+  color:#fff;
+}
 .node .link-wrapper {
   margin: 10px 0;
   text-align: right;
