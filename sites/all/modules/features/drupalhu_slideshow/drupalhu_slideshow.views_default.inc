@@ -81,15 +81,27 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['style_options']['views_slideshow_cycle']['cleartype'] = 0;
   $handler->display->display_options['style_options']['views_slideshow_cycle']['cleartypenobg'] = 0;
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Mező: Tartalom: Webcím */
+  $handler->display->display_options['fields']['field_slideshow_url_1']['id'] = 'field_slideshow_url_1';
+  $handler->display->display_options['fields']['field_slideshow_url_1']['table'] = 'field_data_field_slideshow_url';
+  $handler->display->display_options['fields']['field_slideshow_url_1']['field'] = 'field_slideshow_url';
+  $handler->display->display_options['fields']['field_slideshow_url_1']['label'] = '';
+  $handler->display->display_options['fields']['field_slideshow_url_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_slideshow_url_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_slideshow_url_1']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_slideshow_url_1']['type'] = 'link_plain';
   /* Mező: Tartalom: Cím */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['path'] = '[field_slideshow_url_1]';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Mező: Tartalom: Webcím */
   $handler->display->display_options['fields']['field_slideshow_url']['id'] = 'field_slideshow_url';
   $handler->display->display_options['fields']['field_slideshow_url']['table'] = 'field_data_field_slideshow_url';
