@@ -17,13 +17,17 @@ body.front .views-slideshow-cycle-main-frame  {
   position: relative;
 }
 body.front .views-slideshow-cycle-main-frame .views-field-title {
-  
+  margin-bottom: 5px;
+}
+body.front .views-slideshow-cycle-main-frame .views-field-title a {
+  font-size: 18px;
 }
 body.front .views-slideshow-cycle-main-frame .slidetext {
   position: absolute;
   bottom:3px;
   padding: 10px 20px;
   background: rgba(255, 255, 255, .8);
+  width: 100%;
 }
 
 body.front #front h2.pane-title {
