@@ -487,7 +487,7 @@ h1#page-title {
 
 
 .item-list ul.pager {
-  background-color: #E6FCB6;
+  background-color: #004874;
   padding: 0.5em 0;
 }
 
@@ -495,7 +495,9 @@ h1#page-title {
   padding: 0;
   margin-left: 0.5em;
 }
-
+.item-list ul.pager li a {
+  color:#fff;
+}
 .node .link-wrapper {
   margin: 10px 0;
   text-align: right;
@@ -696,13 +698,13 @@ body.node-type-forum div.node-forum {
 }
 /* Comments */
 
-.node .comment {
+#node-comments .comment {
   padding: 1em;
   padding-right: 0;
   border-bottom: 1px solid #E6FCB6;
   border-left: 3px solid #E6FCB6;
 }
-.node .comment-new {
+#node-comments .comment-new {
 	border-color: #96BC44;
 }
 
@@ -1139,4 +1141,21 @@ fieldset {
 
 #block-drupalorg-scraper-releases .previous a:hover {
     color: black;
+}
+
+/**
+ * node type list
+ */
+.node-type-list {
+  
+}
+.node-type-list dt {
+  margin-top: 8px;
+}
+.node-type-list dt a {
+  font-weight: bold;
+}
+.node-type-list dd {
+  border-bottom: 1px solid #bdbdbd;
+  padding-bottom: 8px;
 }
