@@ -204,7 +204,7 @@ function drupalhu_planet_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'upload',
-      'label' => 'File attachments',
+      'label' => t('File attachments'),
       'required' => 0,
       'settings' => array(
         'description_field' => 1,
@@ -424,7 +424,7 @@ function drupalhu_planet_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_forras',
-      'label' => 'Forrás',
+      'label' => t('Source'),
       'required' => 0,
       'settings' => array(
         'attributes' => array(
@@ -518,7 +518,7 @@ function drupalhu_planet_field_default_fields() {
   // Translatables
   // Included for use with string extractors like potx.
   t('File attachments');
-  t('Forrás');
+  t('Source');
   t('Hírcsatornák');
   t('Kategóriák');
   t('Törzs');
