@@ -1,7 +1,0 @@
-name = view_mode
-description = 
-core = 6.x
-package = 
-php = 
-version =
-dependencies[] = 
