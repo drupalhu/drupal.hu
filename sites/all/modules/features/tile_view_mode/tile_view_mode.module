@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Tile view mode feature.
+ */
+
+include_once 'tile_view_mode.features.inc';
