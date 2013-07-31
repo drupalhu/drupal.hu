@@ -1,0 +1,11 @@
+<?php
+
+/**
+* Implements hook_entity_info_alter().
+*/
+function view_mode_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['tile'] = array(
+    'label' => t('Tile'),
+    'custom settings' => TRUE,
+  );
+}
