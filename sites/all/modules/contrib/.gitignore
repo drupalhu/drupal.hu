@@ -1,0 +1,8 @@
+# Exclude the developer helper modules.
+admin_language
+coder
+environment_modules
+features_tools
+ftools
+reroute_email
+stage_file_proxy
