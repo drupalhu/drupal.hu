@@ -201,7 +201,11 @@ class SearchApiIndex extends Entity {
       if ($server->enabled) {
         $server->removeIndex($this);
       }
-      else {
+      // Once the index is deleted, servers won't be able to tell whether it was
+      // read-only. Therefore, we prefer to err on the safe side and don't call
+      // the server method at all if the index is read-only and the server
+      // currently disabled.
+      elseif (empty($this->read_only)) {
         $tasks = variable_get('search_api_tasks', array());
         $tasks[$server->machine_name][$this->machine_name] = array('remove');
         variable_set('search_api_tasks', $tasks);
@@ -363,6 +367,17 @@ class SearchApiIndex extends Entity {
       $this->datasource = search_api_get_datasource_controller($this->item_type);
     }
     return $this->datasource;
+  }
+
+  /**
+   * Get the entity type of items in this index.
+   *
+   * @return string|null
+   *   An entity type string if the items in this index are entities; NULL
+   *   otherwise.
+   */
+  public function getEntityType() {
+    return $this->datasource()->getEntityType();
   }
 
   /**

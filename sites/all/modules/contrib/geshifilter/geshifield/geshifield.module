@@ -114,7 +114,7 @@ function geshifield_textarea_process($element, $form_state, $complete_form) {
     '#default_value' => isset($defaults['sourcecode']) ? $defaults['sourcecode'] : '',
     '#required' => $element['#required'],
     '#rows' => isset($field['widget']['rows']) ? $field['widget']['rows'] : 5, // TODO: do we need this row field?
-    '#description' => t($field['description']),
+    '#description' => filter_xss($field['description']),
   );
 
   $element['language'] = array(

@@ -18,9 +18,9 @@
  */
 function _openlayers_layers_process($layers = array(), &$map = array()) {
   $layer_data = array();
-  
+
   // Load Layers and assign weights
-  foreach ($layers as $key => $layer){
+  foreach ($layers as $key => $layer) {
     if ($layer_object = openlayers_layer_load($layer)) {
       $layers[$key] = $layer_object;
       if (!empty($map['layer_weight'][$key])) {
@@ -28,13 +28,14 @@ function _openlayers_layers_process($layers = array(), &$map = array()) {
       }
       else $layers[$key]->weight = 0;
     }
+    else unset($layers[$key]);
   }
-  
+
   // Sort layers
   usort($layers, '_openlayers_layers_process_sort');
-  
+
   // Process into array-based layer data for the map
-  foreach ($layers as $layer_object) {
+  foreach ($layers as $type => $layer_object) {
     if (is_object($layer_object)) {
       $layer_object->render($map);
       $layer_object->data['title'] = $layer_object->title;
@@ -72,7 +73,7 @@ function _openlayers_layers_process_sort($a, $b) {
  */
 function _openlayers_behaviors_render($behaviors = array(), &$map = array()) {
   $rendered = array();
-  
+
   foreach (openlayers_behaviors() as $key => $plugin) {
     if (isset($behaviors[$key]) && $class = ctools_plugin_get_class($plugin, 'behavior')) {
       $behavior = new $class($behaviors[$key], $map);
@@ -105,8 +106,8 @@ function _openlayers_behaviors_render($behaviors = array(), &$map = array()) {
  * @return $processed
  *   Array of processed styles ( <style_name> => <style_array> )
  */
-function _openlayers_styles_process($styles = array(), 
-  $layer_styles = array(), $layer_styles_select = array(), &$map = array()) {
+function _openlayers_styles_process($styles = array(),
+  $layer_styles = array(), $layer_styles_select = array(), $layer_styles_temporary = array(), &$map = array()) {
 
   // Get styles info array
   $styles_info = openlayers_styles();
@@ -125,8 +126,8 @@ function _openlayers_styles_process($styles = array(),
 
   // Add layer styles
   foreach ($layer_styles as $style) {
-    if (!isset($processed[$style]) && 
-        !empty($styles_info[$style]) && 
+    if (!isset($processed[$style]) &&
+        !empty($styles_info[$style]) &&
         $info = $styles_info[$style]->data) {
       $processed[$style] = $info;
     }
@@ -134,22 +135,22 @@ function _openlayers_styles_process($styles = array(),
 
   // Add layer styles select
   foreach ($layer_styles_select as $style) {
-    if (!isset($processed[$style]) && 
-        !empty($styles_info[$style]) && 
+    if (!isset($processed[$style]) &&
+        !empty($styles_info[$style]) &&
         $info = $styles_info[$style]->data) {
       $processed[$style] = $info;
     }
   }
 
-  // Add layer styles
-  foreach ($layer_styles as $style) {
-    if (!isset($processed[$style]) && 
-        !empty($styles_info[$style]) && 
-        $info = $styles_info[$style]->data) {
+  // Add layer styles temporary
+  foreach ($layer_styles_temporary as $style) {
+    if (!isset($processed[$style]) &&
+      !empty($styles_info[$style]) &&
+      $info = $styles_info[$style]->data) {
       $processed[$style] = $info;
     }
   }
-  
+
   // Update URLs to support different types of paths
   foreach ($processed as $k => $style) {
     $processed[$k] = openlayers_render_style($style);
@@ -157,7 +158,7 @@ function _openlayers_styles_process($styles = array(),
 
   // Run through theme function
   $processed = theme('openlayers_styles', array(
-    'styles' => $processed, 
+    'styles' => $processed,
     'map' => $map)
   );
 
@@ -175,13 +176,13 @@ function openlayers_render_style($style = array()) {
   // Relative path conversion
   if (!empty($style['externalGraphic'])) {
     // Check full URL or absolute path
-    if (!valid_url($style['externalGraphic'], TRUE) 
+    if (!valid_url($style['externalGraphic'], TRUE)
       && strpos($style['externalGraphic'], '/') !== 0) {
       // Make full URL from Drupal path
       $style['externalGraphic'] = openlayers_style_path($style['externalGraphic']);
     }
   }
-  
+
   return $style;
 }
 
@@ -197,7 +198,7 @@ function openlayers_render_style($style = array()) {
  *   New map id
  */
 function _openlayers_create_map_id() {
-  return 'openlayers-map-' . substr(md5(uniqid(mt_rand())), 0, 8);
+  return drupal_html_id('openlayers-map');
 }
 
 /**
@@ -209,14 +210,19 @@ function _openlayers_create_map_id() {
  * it will decode values that maybe not specifically part of the
  * attribute replacement.
  *
+ * A value that is just a replacement value, ${value} should
+ * not be run through the file_create_url() function.
+ *
  * @param $path
  *   Path to process.
  * @return
  *   Processed path.
  */
 function openlayers_style_path($path) {
-    $path = url($path, array('absolute' => TRUE));
+  if (strpos($path, '${') !== 0) {
+    $path = file_create_url($path);
     $path = str_replace('%24%7B', '${', $path);
     $path = str_replace('%7D', '}', $path);
-    return $path;
+  }
+  return $path;
 }

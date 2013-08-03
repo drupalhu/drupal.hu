@@ -29,17 +29,22 @@ Drupal.settings.openlayers.maps = {};
  */
 Drupal.behaviors.openlayers = {
   'attach': function(context, settings) {
+    Drupal.openlayers.loadProjections(context, settings);
+
     if (typeof(Drupal.settings.openlayers) === 'object' &&
         Drupal.settings.openlayers.maps &&
         !$(context).data('openlayers')) {
-      $('.openlayers-map:not(.openlayers-processed)').each(function() {
+      $('.openlayers-map').once('openlayers-map', function() {
         // By setting the stop_render variable to TRUE, this will
         // halt the render process.  If set, one could remove this setting
         // then call Drupal.attachBehaviors again to get it started
         var map_id = $(this).attr('id');
         if (Drupal.settings.openlayers.maps[map_id] && Drupal.settings.openlayers.maps[map_id].stop_render != true) {
           var map = Drupal.settings.openlayers.maps[map_id];
-          $(this).addClass('openlayers-processed');
+
+          if(map.default_layer===null){
+            Drupal.openlayers.console.error("Map configuration is invalid as it lacks a base layer.");
+          }
 
           // Use try..catch for error handling.
           try {
@@ -47,26 +52,15 @@ Drupal.behaviors.openlayers = {
             // rather than browser language
             OpenLayers.Lang.setCode($('html').attr('lang'));
 
-            $(this)
-              // @TODO: move this into markup in theme function, doing this dynamically is a waste.
-              .css('width', map.width)
-              .css('height', map.height);
-
             var options = {};
             // This is necessary because the input JSON cannot contain objects
-            options.projection = new OpenLayers.Projection('EPSG:' + map.projection);
-            options.displayProjection = new OpenLayers.Projection('EPSG:' + map.displayProjection);
+            options.projection = new OpenLayers.Projection(map.projection);
+            options.displayProjection = new OpenLayers.Projection(map.displayProjection);
 
-            // TODO: work around this scary code
-            if (map.projection === '900913') {
-              options.maxExtent = new OpenLayers.Bounds(
-                -20037508.34, -20037508.34, 20037508.34, 20037508.34);
-            }
-            if (map.projection === '4326') {
-              options.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
-            }
+            // Restrict map to its extent (usually projection extent).
+            options.maxExtent = OpenLayers.Bounds.fromArray(map.maxExtent);
 
-            options.maxResolution = 1.40625;
+            options.maxResolution = 'auto';
             options.controls = [];
 
             // Change image, CSS, and proxy paths if specified
@@ -84,10 +78,15 @@ Drupal.behaviors.openlayers = {
             }
 
             // Initialize openlayers map
-            var openlayers = new OpenLayers.Map(map.id, options);
+            var openlayers = new OpenLayers.Map(map_id, options);
 
             // Run the layer addition first
             Drupal.openlayers.addLayers(map, openlayers);
+
+            // Ensure redraw as maps stays blank until first zoom otherwise (observed with EPSG:2056)
+            openlayers.moveTo(openlayers.getCenter(), openlayers.getZoom(), {
+              forceZoomChange: true
+            });
 
             // Attach data to map DOM object
             $(this).data('openlayers', {'map': map, 'openlayers': openlayers});
@@ -96,15 +95,20 @@ Drupal.behaviors.openlayers = {
             Drupal.attachBehaviors(this);
 
             if ($.browser.msie) {
-              Drupal.openlayers.redrawVectors();
+              $(window).load(function() {
+                openlayers.render(map.id);
+              });
+            } else {
+              openlayers.render(map.id);
             }
           }
           catch (e) {
+            var errorMessage = e.name + ': ' + e.message;
             if (typeof console != 'undefined') {
-              console.log(e);
+              Drupal.openlayers.console.log(errorMessage);
             }
             else {
-              $(this).text('Error during map rendering: ' + e);
+              $(this).text('Error during map rendering: ' + errorMessage);
             }
           }
         }
@@ -157,11 +161,12 @@ Drupal.openlayers = {
 
     var sorted = [];
     for (var name in map.layers) {
-      sorted.push({'name': name, 'weight': map.layers[name].weight });
+      sorted.push({'name': name, 'weight': map.layers[name].weight, 'isBaseLayer': map.layers[name].isBaseLayer });
     }
+
     sorted.sort(function(a, b) {
-      var x = a.weight, y = b.weight;
-      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      var x = parseInt(a.weight, 10), y = parseInt(b.weight, 10);
+      return ((a.isBaseLayer && x < y) ? -1 : ((b.isBaseLayer || x > y) ? 1 : 0));
     });
 
     for (var i = 0; i < sorted.length; ++i) {
@@ -174,17 +179,12 @@ Drupal.openlayers = {
       // Ensure that the layer handler is available
       if (options.layer_handler !== undefined &&
         Drupal.openlayers.layer[options.layer_handler] !== undefined) {
-        var layer = Drupal.openlayers.layer[options.layer_handler](map.layers[name].title, map, options);
+        layer = Drupal.openlayers.layer[options.layer_handler](map.layers[name].title, map, options);
 
         layer.visibility = !!(!map.layer_activated || map.layer_activated[name]);
 
         if (layer.isBaseLayer === false) {
           layer.displayInLayerSwitcher = (!map.layer_switcher || map.layer_switcher[name]);
-        }
-
-        if (map.center.wrapdateline === '1') {
-          // TODO: move into layer specific settings
-          layer.wrapDateLine = true;
         }
 
         openlayers.addLayer(layer);
@@ -193,20 +193,32 @@ Drupal.openlayers = {
 
     openlayers.setBaseLayer(openlayers.getLayersBy('drupalID', map.default_layer)[0]);
 
-    // Zoom & center
-    if (map.center.initial) {
-      var center = OpenLayers.LonLat.fromString(map.center.initial.centerpoint).transform(
-            new OpenLayers.Projection('EPSG:4326'),
-            new OpenLayers.Projection('EPSG:' + map.projection));
-      var zoom = parseInt(map.center.initial.zoom, 10);
-      openlayers.setCenter(center, zoom, false, false);
-    }
-
     // Set the restricted extent if wanted.
     // Prevents the map from being panned outside of a specfic bounding box.
     if (typeof map.center.restrict !== 'undefined' && map.center.restrict.restrictextent) {
-      openlayers.restrictedExtent = OpenLayers.Bounds.fromString(
-          map.center.restrict.restrictedExtent);
+      var desiredRestriction = OpenLayers.Bounds.fromString(
+          map.center.restrict.restrictedExtent
+      ).transform(new OpenLayers.Projection('EPSG:3857'), openlayers.projection);
+
+      if(desiredRestriction.left>=openlayers.maxExtent.left && desiredRestriction.right<=openlayers.maxExtent.right
+        && desiredRestriction.top<=openlayers.maxExtent.top && desiredRestriction.bottom>=openlayers.maxExtent.bottom){
+
+        openlayers.restrictedExtent = desiredRestriction;
+      } else {
+        // Given the map to set the restricted extent is not dependent on the map projection
+        // it does allow to set an extent outwith the valid bound of the map projection. As a
+        // result no valid data could be requested and thus the wrong extent needs to be ignored.
+        Drupal.openlayers.console.error("Restricted bounds ignored as not within projection bounds.");
+      }
+    }
+
+    // Zoom & center
+    if (map.center.initial) {
+      var center = OpenLayers.LonLat.fromString(map.center.initial.centerpoint).transform(
+        new OpenLayers.Projection('EPSG:4326'),
+        new OpenLayers.Projection(map.projection));
+      var zoom = parseInt(map.center.initial.zoom, 10);
+      openlayers.setCenter(center, zoom, false, false);
     }
   },
   /**
@@ -236,14 +248,14 @@ Drupal.openlayers = {
         }
 
         // Go through new features
-        for (var i in newFeatureSet) {
+        for (var i = 0; i < newFeatureSet.length; i++) {
           var newFeature = newFeatureSet[i];
 
           // Transform the geometry if the 'projection' property is different from the map projection
           if (feature.projection) {
             if (feature.projection !== map.projection) {
-              var featureProjection = new OpenLayers.Projection('EPSG:' + feature.projection);
-              var mapProjection = new OpenLayers.Projection('EPSG:' + map.projection);
+              var featureProjection = new OpenLayers.Projection(feature.projection);
+              var mapProjection = new OpenLayers.Projection(map.projection);
               newFeature.geometry.transform(featureProjection, mapProjection);
             }
           }
@@ -281,16 +293,16 @@ Drupal.openlayers = {
       layer.addFeatures(newFeatures);
     }
   },
-  
+
   'getStyleMap': function(map, layername) {
     if (map.styles) {
       var stylesAdded = {};
-      
+
       // Grab and map base styles.
       for (var style in map.styles) {
         stylesAdded[style] = new OpenLayers.Style(map.styles[style]);
       }
-      
+
       // Implement layer-specific styles.  First default, then select.
       if (map.layer_styles !== undefined && map.layer_styles[layername]) {
         var style = map.layer_styles[layername];
@@ -300,7 +312,11 @@ Drupal.openlayers = {
         var style = map.layer_styles_select[layername];
         stylesAdded['select'] = new OpenLayers.Style(map.styles[style]);
       }
-      
+      if (map.layer_styles_temporary !== undefined && map.layer_styles_temporary[layername]) {
+        var style = map.layer_styles_temporary[layername];
+        stylesAdded['temporary'] = new OpenLayers.Style(map.styles[style]);
+      }
+
       return new OpenLayers.StyleMap(stylesAdded);
     }
     else {
@@ -319,7 +335,7 @@ Drupal.openlayers = {
       });
     }
   },
-  
+
   'objectFromFeature': function(feature) {
     var wktFormat = new OpenLayers.Format.WKT();
     // Extract geometry either from wkt property or lon/lat properties
@@ -330,7 +346,7 @@ Drupal.openlayers = {
       return wktFormat.read('POINT(' + feature.lon + ' ' + feature.lat + ')');
     }
   },
-  
+
   /**
    * Add Behavior.
    *
@@ -353,12 +369,12 @@ Drupal.openlayers = {
     Drupal.behaviors['openlayers_auto_' + id] = {
       attach: function (context, settings) {
         var data = $(context).data('openlayers');
-        
+
         // Ensure that there is a map and that the appropriate
-        // behavior exists.  Need "data &&" to avoid js crash 
+        // behavior exists.  Need "data &&" to avoid js crash
         // when data is empty
         var localBehavior = data && data.map.behaviors[id];
-        
+
         // Ensure scope in the attach callback
         var that = this;
         if (localBehavior) {
@@ -371,7 +387,7 @@ Drupal.openlayers = {
       detach: detach
     };
   },
-  
+
   /**
    * Add Control.
    *
@@ -383,7 +399,57 @@ Drupal.openlayers = {
     openlayers.addControl(control);
     control.activate();
     return control;
-  }
+  },
+
+  /**
+   * Instructs the Proj4js module to make projection definitions available
+   * to Proj4js and thus OpenLayers, too.
+   *
+   * Triggering the initialization of Proj4js this way guarantees projection
+   * definitions are available.
+   */
+  'loadProjections': function(context, settings){
+    // Proj4js is not necessarily present as we only load it when OpenLayers
+    // can't handle the projections is use without its help.
+    if(Drupal.behaviors.proj4js){
+      Drupal.behaviors.proj4js.attach(context, settings);
+    }
+  },
+
+  /**
+   * Logging implementation that logs using the browser's logging API.
+   * Falls back to doing nothing in case no such API is available. Simulates
+   * the presece of Firebug's console API in Drupal.openlayers.console.
+   */
+  'console': (function(){
+    var api = {};
+    var logger;
+    if(typeof(console)==="object" && typeof(console.log)==="function"){
+      logger = function(){
+        // Use console.log as fallback for missing parts of API if present.
+        console.log.apply(console, arguments);
+      }
+    } else {
+      logger = function (){
+        // Ignore call as no logging facility is available.
+      };
+    }
+    jQuery(["log", "debug", "info", "warn", "exception", "assert", "dir",
+      "dirxml", "trace", "group", "groupEnd", "groupCollapsed", "profile",
+      "profileEnd", "count", "clear", "time", "timeEnd", "timeStamp", "table",
+      "error"]).each(function(index, functionName){
+      if(typeof(console)!=="object" || typeof(console[functionName])!=="function"){
+        // Use fallback as browser does not provide implementation.
+        api[functionName] = logger;
+      } else {
+        api[functionName] = function(){
+          // Use browsers implementation.
+          console[functionName].apply(console, arguments);
+        };
+      }
+    });
+    return api;
+  })()
 };
 
 Drupal.openlayers.layer = {};
