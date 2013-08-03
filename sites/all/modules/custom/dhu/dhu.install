@@ -33,3 +33,31 @@ function dhu_update_7102(&$sandbox) {
 
   return t('Issue #1170360 - Undefined index: distribution_name in drupal_install_profile_distribution_name()');
 }
+
+/**
+ * Enable the Proj4JS module.
+ */
+function dhu_update_7103() {
+  $module_list = array('proj4js');
+  $args = array(
+    '@modules' => implode(', ', $module_list),
+  );
+  if (module_enable($module_list)) {
+    $message = format_plural(
+      count($module_list),
+      'The following module was enabled successful: @modules.',
+      'The following modules was enabled successful: @modules.',
+      $args
+    );
+  }
+  else {
+    $message = format_plural(
+      count($module_list),
+      'An error occurred during enabling of the following module: @modules.',
+      'An error occurred during enabling of the following modules: @modules.',
+      $args
+    );
+  }
+
+  return $message;
+}

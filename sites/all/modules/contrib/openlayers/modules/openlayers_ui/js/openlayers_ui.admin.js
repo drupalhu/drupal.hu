@@ -17,14 +17,14 @@ Drupal.behaviors.openlayers_ui_admin = {
       // Determine version
       var version = '0';
       var $thisContainer = $(this);
-      
+
       if (typeof OpenLayers != 'undefined' && OpenLayers.hasOwnProperty('VERSION_NUMBER')) {
         version = OpenLayers.VERSION_NUMBER;
       }
-      
+
       // Mark as loading, then do AJAX request
       $thisContainer.addClass('throbbing');
-      var url = settings.basePath + 'admin/structure/openlayers/callbacks/version_check/' + version;
+      var url = settings.basePath + '?q=admin/structure/openlayers/callbacks/version_check/' + version;
       $.ajax({
         url: url,
         success: function(data) {

@@ -5,20 +5,6 @@
  */
 
 /**
- * Ctools plugin definition.
- */
-$plugin = array(
-  'title' => t('Permalink'),
-  'description' =>  t('Provides a link that will create an URL that will link to a specific map position.  Permalink is usually similar to: ?zoom=1&lat=11&lon=11&layers=B0F'),
-  'type' => 'map',
-  'behavior' => array(
-    'file' => 'openlayers_behavior_permalink.inc',
-    'class' => 'openlayers_behavior_permalink',
-    'parent' => 'openlayers_behavior',
-  ),
-);
-
-/**
  * PermaLink Behavior
  */
 class openlayers_behavior_permalink extends openlayers_behavior {
@@ -35,7 +21,7 @@ class openlayers_behavior_permalink extends openlayers_behavior {
     return array('OpenLayers.Control.Permalink');
   }
 
-  function options_form($defaults) {
+  function options_form($defaults = array()) {
     return array(
       'anchor' => array(
         '#type' => 'checkbox',
@@ -50,7 +36,7 @@ class openlayers_behavior_permalink extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') . 
+    drupal_add_js(drupal_get_path('module', 'openlayers') .
       '/plugins/behaviors/openlayers_behavior_permalink.js');
     return $this->options;
   }

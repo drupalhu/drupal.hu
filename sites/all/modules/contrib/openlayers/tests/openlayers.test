@@ -15,7 +15,7 @@
  *
  * @ingroup openlayers
  */
- 
+
 /**
  * Test the OpenLayers core functionality.
  */
@@ -39,7 +39,7 @@ class OpenLayersCore extends DrupalWebTestCase {
   function testInclude() {
     $user = $this->drupalCreateUser(array('administer openlayers'));
     $this->drupalLogin($user);
-    
+
     // Go to test page and ensure includes happened.
     $this->drupalGet('admin/structure/openlayers/test');
     $this->assertRaw('openlayers.css', t('The OpenLayers CSS file was included'));
@@ -55,11 +55,11 @@ class OpenLayersCore extends DrupalWebTestCase {
 
     // Check output
     $this->assertTrue((stripos($rendered, 'default') !== FALSE), t('Default name found'));
-    $this->assertTrue((stripos($rendered, 'id="openlayers-container-openlayers-map') !== FALSE), 
+    $this->assertTrue((stripos($rendered, 'id="openlayers-container-openlayers-map') !== FALSE),
       t('Container ID found'));
-    $this->assertTrue((stripos($rendered, 'id="openlayers-map') !== FALSE), 
+    $this->assertTrue((stripos($rendered, 'id="openlayers-map') !== FALSE),
       t('Map ID found'));
-    $this->assertTrue((stripos($rendered, 'class="openlayers-map') !== FALSE), 
+    $this->assertTrue((stripos($rendered, 'class="openlayers-map') !== FALSE),
       t('Map Class found'));
   }
 }
@@ -90,7 +90,10 @@ class OpenLayersUI extends DrupalWebTestCase {
 
     // Update source settings
     $new_openlayers_source = 'http://openlayers.org/nightly/OpenLayers.js';
-    $openlayers_settings = array('openlayers_source' => $new_openlayers_source);
+    $openlayers_settings = array(
+      'openlayers_source_type' => 'external',
+      'openlayers_source_external' => $new_openlayers_source
+    );
     $this->drupalPost('admin/structure/openlayers', $openlayers_settings, t('Save configuration'));
     // Go to map page
     $this->drupalGet('admin/structure/openlayers');
@@ -162,9 +165,9 @@ class OpenLayersMaps extends DrupalWebTestCase {
     $this->assertText(t('Map saved.'), t('The map was successfully saved.'));
 
     // Remove Map
-    $this->drupalPost('admin/structure/openlayers/maps/' . $map_settings['name'] . '/delete', 
-      array(), t('Confirm'));
-    $this->assertText($map_settings['name'] .' was deleted.', t('Map removed succesfully.'));
+    $this->drupalPost('admin/structure/openlayers/maps/list/' . $map_settings['name'] . '/delete',
+      array(), t('Delete'));
+    $this->assertText('Map was deleted.', t('Map removed succesfully.'));
   }
 }
 
@@ -191,13 +194,13 @@ class OpenLayersStyles extends DrupalWebTestCase {
 
     // New style.
     $new_style = array(
-      'name' => 'UnitStyle',
+      'name' => 'unitstyle',
       'title' => 'Unit Style',
       'description' => 'Unit Style for Drupal',
     );
-    
+
     // Check basic navigation.
-    $this->drupalGet('admin/structure/openlayers/styles/default/export');
+    $this->drupalGet('admin/structure/openlayers/styles/list/default/export');
     $this->assertResponse(200, t('User can reach default style export page.'));
     $this->drupalGet('admin/structure/openlayers/styles/add');
     $this->assertResponse(200, t('User can reach style add page.'));
@@ -209,13 +212,13 @@ class OpenLayersStyles extends DrupalWebTestCase {
 
     // Test that the style shows up in the style list.
     $this->drupalGet('admin/structure/openlayers/styles');
-    $this->assertRaw(t('UnitStyle'),
+    $this->assertRaw(t('Unit Style'),
       t('A new style has been added by the test'));
-      
+
     // Test removing style.
-    $this->drupalPost('admin/structure/openlayers/styles/UnitStyle/delete', 
-      array(), t('Confirm'));
-    $this->assertText($new_style['name'] .' was deleted.', 
+    $this->drupalPost('admin/structure/openlayers/styles/list/unitstyle/delete',
+      array(), t('Delete'));
+    $this->assertText('Style was deleted.',
       t('Style removed succesfully.'));
   }
 }
@@ -244,69 +247,67 @@ class OpenLayersLayers extends DrupalWebTestCase {
     // New layers to add
     $layer_inputs = array(
       'openlayers_layer_type_osm' => array(
-        'name' => 'UnitLayerOSM',
+        'name' => 'unitlayerosm',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       ),
       'openlayers_layer_type_xyz' => array(
-        'name' => 'UnitLayerXYZ',
+        'name' => 'unitlayerxyz',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       ),
       'openlayers_layer_type_kml' => array(
-        'name' => 'UnitLayerKML',
+        'name' => 'unitlayerkml',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
+        'openlayers_layer_type_kml[method]' => 'raw',
+        'openlayers_layer_type_kml[raw]' => $this->randomString(32)
       ),
       'openlayers_layer_type_wms' => array(
-        'name' => 'UnitLayerWMS',
+        'name' => 'unitlayerwms',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       ),
       'openlayers_layer_type_cloudmade' => array(
-        'name' => 'UnitLayerCloudMade',
+        'name' => 'unitlayercloudmade',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       ),
-      'openlayers_layer_type_yahoo' => array(
-        'name' => 'UnitLayerYahoo',
-        'title' => 'Unit Layer',
-        'description' => 'Unit Layer for Drupal',
-      ),
-      'openlayers_layer_type_virtualearth' => array(
-        'name' => 'UnitLayerVirtualEarth',
+      'openlayers_layer_type_bing' => array(
+        'name' => 'unitlayerbing',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       ),
       'openlayers_layer_type_google' => array(
-        'name' => 'UnitLayerGoogle',
+        'name' => 'unitlayergoogle',
         'title' => 'Unit Layer',
         'description' => 'Unit Layer for Drupal',
       )
     );
 
-    // Basic navigation.  
+    // Basic navigation.
     $this->drupalGet('admin/structure/openlayers/layers/add');
     $this->assertResponse(200, t('User can reach layer add page.'));
 
     // Go through each new layer for testing.
     foreach ($layer_inputs as $layer_type => $input_data) {
       // Test saving new layer.
-      $this->drupalPost('admin/structure/openlayers/layers/add/' . $layer_type,
+      $input_data['layer_type'] = $layer_type;
+      $this->drupalPost('admin/structure/openlayers/layers/add',
         $input_data, t('Save'));
       $this->assertText(t('Layer saved.'),
         t('The layer was successfully saved.'));
 
       // Ensure that the layer shows up in the list.
       $this->drupalGet('admin/structure/openlayers/layers');
-      $this->assertRaw($input_data['name'],
+      $this->assertRaw($input_data['title'],
         t('A new layer of layer type %type_name has been added by the test',
           array('%type_name' => $layer_type)));
-      
+
       // Test removing layer.
-      $this->drupalPost('admin/structure/openlayers/layers/' . 
-        $input_data['name'] . '/delete', array(), t('Confirm'));
-      $this->assertText($input_data['name'] . ' was deleted.', 
+      $this->drupalPost('admin/structure/openlayers/layers/list/' .
+        $input_data['name'] . '/delete', array(), t('Delete'));
+      $this->assertText('Layer was deleted.',
         t('Layer removed succesfully.'));
     }
   }
@@ -344,6 +345,13 @@ class OpenLayersMapAlters extends DrupalWebTestCase {
 
 /**
  * OpenLayers Unit Tests
+ *
+ * Do not use t() in Unit tests.
+ * https://drupal.org/node/811254
+ *
+ * Unit tests do not bootstrap Drupal very
+ * far which makes them a bit useless if
+ * we are utilizing Drupal API functions.
  */
 class OpenLayersUnitTests extends DrupalUnitTestCase {
   public static function getInfo() {
@@ -356,8 +364,21 @@ class OpenLayersUnitTests extends DrupalUnitTestCase {
 
   function testOpenLayersStylePath() {
     module_load_include('inc', 'openlayers', 'includes/openlayers.render');
-    $path = 'http://example.org/site/all/modules/openlayers/example/${path}.jpg';
+    global $base_url;
+
+    // Full URL
+    $path = 'http://example.org/sites/all/modules/openlayers/example/${path}.jpg';
     $styled_path = openlayers_style_path($path);
-    $this->assertTrue($styled_path, $path);
+    $this->assertTrue($styled_path === $path, 'OpenLayers Style Path function with full URL.');
+
+    // Just replacement value
+    $path = '${path}';
+    $styled_path = openlayers_style_path($path);
+    $this->assertTrue($styled_path === $path, 'OpenLayers Style Path function with just replacement value.');
+
+    // Relative URL
+    $path = 'sites/all/modules/openlayers/example/${path}.jpg';
+    $styled_path = openlayers_style_path($path);
+    $this->assertTrue($styled_path === $base_url . '/' . $path, 'OpenLayers Style Path function with relative URL.');
   }
 }

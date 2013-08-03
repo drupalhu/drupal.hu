@@ -5,20 +5,6 @@
  */
 
 /**
- * Ctools plugin definition.
- */
-$plugin = array(
-  'title' => t('Mouse Drag Pan'),
-  'description' => t('Provides the ability to pan in the map interface with the mouse.  The Navigation Control includes this control.  You should only use this behavior if you want fine control over what interactions you want on your map.'),
-  'type' => 'map',
-  'behavior' => array(
-    'file' => 'openlayers_behavior_dragpan.inc',
-    'class' => 'openlayers_behavior_dragpan',
-    'parent' => 'openlayers_behavior',
-  ),
-);
-
-/**
  * DragPan Behavior
  */
 class openlayers_behavior_dragpan extends openlayers_behavior {
@@ -36,9 +22,9 @@ class openlayers_behavior_dragpan extends openlayers_behavior {
     return array('OpenLayers.Control.DragPan');
   }
 
-  function options_form($defaults) {
+  function options_form($defaults = array()) {
     $form = array();
-    
+
     // This options seem to be buggy.  Shoudl look into more.
     /*
     $form = array(
@@ -56,7 +42,7 @@ class openlayers_behavior_dragpan extends openlayers_behavior {
       ),
     );
     */
-    
+
     return $form;
   }
 
@@ -64,7 +50,7 @@ class openlayers_behavior_dragpan extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') . 
+    drupal_add_js(drupal_get_path('module', 'openlayers') .
       '/plugins/behaviors/openlayers_behavior_dragpan.js');
     return $this->options;
   }
