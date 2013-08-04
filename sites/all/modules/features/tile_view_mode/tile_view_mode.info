@@ -1,0 +1,11 @@
+name = Tile view mode
+core = 7.x
+package = Drupalhu
+version = 7.x-1.0-beta1
+project = tile_view_mode
+dependencies[] = ctools
+dependencies[] = entity_view_mode
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = entity_view_modes
