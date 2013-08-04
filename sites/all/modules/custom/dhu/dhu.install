@@ -33,3 +33,18 @@ function dhu_update_7102(&$sandbox) {
 
   return t('Issue #1170360 - Undefined index: distribution_name in drupal_install_profile_distribution_name()');
 }
+
+/**
+ * Disable the Bartik theme.
+ */
+function dhu_update_7103() {
+  $theme_list = array('bartik');
+  theme_disable($theme_list);
+
+  return format_plural(
+    count($theme_list),
+    'The following theme was enabled successful: @themes.',
+    'The following themes was enabled successful: @themes.',
+    array('@themes' => implode(', ', $theme_list))
+  );
+}
