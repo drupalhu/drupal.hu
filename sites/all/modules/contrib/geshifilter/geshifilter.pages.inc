@@ -334,7 +334,7 @@ function geshifilter_geshi_process($source_code, $lang, $line_numbering=0, $line
    // Check for a cached version of this source code and return it if available.
    // @todo: Use a dedicated table instead of using cache_filter? If so,
    // also take care of the flushing in _geshifilter_clear_filter_cache().
-  $cache_id = "geshifilter:$lang:$line_numbering:$line_numbering:$inline_mode" . md5($title . $source_code);
+  $cache_id = "geshifilter:$lang:$line_numbering:$linenumbers_start:$inline_mode" . md5($title . $source_code);
   if ($cached = cache_get($cache_id, 'cache_filter')) {
     return $cached->data;
   }

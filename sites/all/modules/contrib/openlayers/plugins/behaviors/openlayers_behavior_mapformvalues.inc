@@ -5,21 +5,6 @@
  */
 
 /**
- * Ctools plugin definition.
- */
-$plugin = array(
-  'title' => t('Map Form Values'),
-  'description' => t('Provides a way of updating form elements with zoom level and centering from a map.'),
-  'type' => 'map',
-  'ui_visibility' => FALSE,
-  'behavior' => array(
-    'file' => 'openlayers_behavior_mapformvalues.inc',
-    'class' => 'openlayers_behavior_mapformvalues',
-    'parent' => 'openlayers_behavior',
-  ),
-);
-
-/**
  * Map Form Values Behavior
  */
 class openlayers_behavior_mapformvalues extends openlayers_behavior {
@@ -37,7 +22,7 @@ class openlayers_behavior_mapformvalues extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') . 
+    drupal_add_js(drupal_get_path('module', 'openlayers') .
       '/plugins/behaviors/openlayers_behavior_mapformvalues.js');
     return $this->options;
   }

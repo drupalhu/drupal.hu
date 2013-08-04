@@ -2,7 +2,7 @@
  * @file
  * JS Implementation of OpenLayers behavior.
  */
- 
+
 /**
  * ArgParser Behavior.  Implements the ArgParser OpenLayers
  * Control.
