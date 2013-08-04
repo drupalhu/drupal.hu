@@ -142,34 +142,31 @@ function drupalorg_scraper_block_view($delta = '') {
   switch ($delta) {
     case 'headcount':
       $block['subject'] = '';
-      $block['content'] = array(
-        '#theme' => 'headcount',
-        '#people' => variable_get("drupalorg_scraper_people", 611388),
-        '#countries' => variable_get("drupalorg_scraper_countries", 228),
-        '#languages' => variable_get("drupalorg_scraper_languages", 182),
-      );
+      $block['content'] = theme('drupalorg_scraper_headcount', array(
+        'people' => variable_get("drupalorg_scraper_people", 611388),
+        'countries' => variable_get("drupalorg_scraper_countries", 228),
+        'languages' => variable_get("drupalorg_scraper_languages", 182),
+      ));
       break;
 
     case 'releases':
-      $block['subject'] = '+ Letöltés';
-      $block['content'] = array(
-        '#theme' => 'releases',
-        '#releases' => variable_get(
-          "drupalorg_scraper_releases", array(
-            6 => array(
-              'version' => '6.22',
-              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-6.22.tar.gz',
-              'translation' => 'http://ftp.drupal.org/files/translations/6.x/drupal/drupal-6.22.hu.po',
-            ),
-            7 => array(
-              'version' => '7.2',
-              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-7.2.tar.gz',
-              'translation' => 'http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.2.hu.po',
-            ),
-
-          )
+      $default = array(
+        6 => array(
+          'version' => '6.22',
+          'download_link' => 'http://ftp.drupal.org/files/projects/drupal-6.22.tar.gz',
+          'translation' => 'http://ftp.drupal.org/files/translations/6.x/drupal/drupal-6.22.hu.po',
+        ),
+        7 => array(
+          'version' => '7.2',
+          'download_link' => 'http://ftp.drupal.org/files/projects/drupal-7.2.tar.gz',
+          'translation' => 'http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.2.hu.po',
         ),
       );
+
+      $block['subject'] = '+ Letöltés';
+      $block['content'] = theme('drupalorg_scraper_releases', array(
+          'releases' => variable_get('drupalorg_scraper_releases', $default),
+        ));
       break;
 
   }
@@ -182,7 +179,7 @@ function drupalorg_scraper_block_view($delta = '') {
  */
 function drupalorg_scraper_theme() {
   return array(
-    'headcount' => array(
+    'drupalorg_scraper_headcount' => array(
       'variables' => array(
         'people' => 611388,
         'countries' => 228,
@@ -190,7 +187,7 @@ function drupalorg_scraper_theme() {
       ),
       'template' => 'headcount',
     ),
-    'releases' => array(
+    'drupalorg_scraper_releases' => array(
       'variables' => array(
         'releases' => array(),
       ),
