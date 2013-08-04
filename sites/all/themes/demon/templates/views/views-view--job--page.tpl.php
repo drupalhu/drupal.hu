@@ -34,7 +34,7 @@
   <?php endif; ?>
   <?php print render($title_suffix); ?>
   
-  <?php print job_link(); ?>
+  <?php print job_link($variables); ?>
   
   <?php if ($header): ?>
     <div class="view-header">
