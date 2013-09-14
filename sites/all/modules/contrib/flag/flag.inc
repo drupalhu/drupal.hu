@@ -17,7 +17,7 @@
  */
 function flag_flag_definitions() {
   // Entity types we specifically cater for.
-  $flags = array(
+  $definitions = array(
     'node' => array(
       'title' => t('Nodes'),
       'description' => t("Nodes are a Drupal site's primary content."),
@@ -35,7 +35,7 @@ function flag_flag_definitions() {
     ),
   );
 
-  return $flags;
+  return $definitions;
 }
 
 /**
@@ -1310,6 +1310,7 @@ class flag_flag {
   function theme_suggestions() {
     $suggestions = array();
     $suggestions[] = 'flag__' . $this->name;
+    $suggestions[] = 'flag__' . $this->link_type;
     $suggestions[] = 'flag';
     return $suggestions;
   }
@@ -1360,12 +1361,14 @@ class flag_entity extends flag_flag {
       '#title' => t('Display link on entity'),
       '#default_value' => isset($this->show_on_entity) ? $this->show_on_entity : TRUE,
       '#access' => empty($this->locked['show_on_entity']),
+      '#weight' => 0,
     );
     $form['display']['show_on_form'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display checkbox on entity edit form'),
       '#default_value' => $this->show_on_form,
       '#access' => empty($this->locked['show_on_form']),
+      '#weight' => 5,
     );
   }
 
@@ -1540,12 +1543,13 @@ class flag_node extends flag_entity {
       '#title' => t('Display in contextual links'),
       '#default_value' => $this->show_contextual_link,
       '#access' => empty($this->locked['show_contextual_link']) && module_exists('contextual'),
+      '#weight' => 10,
     );
 
     unset($form['display']['show_on_entity']);
   }
 
-  function type_access_multiple($content_ids, $account = NULL) {
+  function type_access_multiple($content_ids, $account) {
     $access = array();
 
     // Ensure that only flaggable node types are granted access. This avoids a
@@ -1728,8 +1732,9 @@ class flag_comment extends flag_entity {
 class flag_user extends flag_entity {
   function options() {
     $options = parent::options();
-    // Use own display settings in the meanwhile.
-    unset($options['show_on_entity']);
+    // We supersede, but do not supplant, the regular entity display with an
+    // option that's formatted in the style of user profiles.
+    $options['show_on_entity'] = FALSE;
     $options += array(
       'show_on_profile' => TRUE,
       'access_uid' => '',
@@ -1757,11 +1762,14 @@ class flag_user extends flag_entity {
     $form['display']['show_on_profile'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display link on user profile page'),
+      '#description' => t('Show the link formatted as a user profile element.'),
       '#default_value' => $this->show_on_profile,
       '#access' => empty($this->locked['show_on_profile']),
+      // Put this above 'show on entity'.
+      '#weight' => -1,
     );
-
-    unset($form['display']['show_on_entity']);
+    // Explain how 'show on entity' is different.
+    $form['display']['show_on_entity']['#description'] = t('Show the link in the same format as on other entities.');
   }
 
   function form_input($form_values) {
@@ -1792,13 +1800,6 @@ class flag_user extends flag_entity {
     }
 
     return $access;
-  }
-
-  function uses_hook_link($teaser) {
-    if ($this->show_on_profile) {
-      return TRUE;
-    }
-    return FALSE;
   }
 
   function get_flag_action($content_id) {
