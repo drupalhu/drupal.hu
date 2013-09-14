@@ -15,14 +15,14 @@
  */
 Drupal.theme.prototype.openlayersPopup = function(feature) {
   var output = '';
-  
+
   if (feature.attributes.name) {
     output += '<div class="openlayers-popup openlayers-tooltip-name">' + feature.attributes.name + '</div>';
   }
   if (feature.attributes.description) {
     output += '<div class="openlayers-popup openlayers-tooltip-description">' + feature.attributes.description + '</div>';
   }
-  
+
   return output;
 };
 
@@ -35,6 +35,7 @@ Drupal.openlayers.popup = Drupal.openlayers.popup || {};
 Drupal.openlayers.addBehavior('openlayers_behavior_popup', function (data, options) {
   var map = data.openlayers;
   var layers = [];
+  var selectedFeature;
 
   // For backwards compatiability, if layers is not
   // defined, then include all vector layers
@@ -50,6 +51,12 @@ Drupal.openlayers.addBehavior('openlayers_behavior_popup', function (data, optio
     }
   }
 
+  // if only 1 layer exists, do not add as an array.  Kind of a
+  // hack, see https://drupal.org/node/1393460
+  if (layers.length == 1) {
+    layers = layers[0];
+  }
+
   var popupSelect = new OpenLayers.Control.SelectFeature(layers,
     {
       onSelect: function(feature) {
@@ -62,23 +69,26 @@ Drupal.openlayers.addBehavior('openlayers_behavior_popup', function (data, optio
           null,
           true,
           function(evt) {
-            Drupal.openlayers.popup.popupSelect.unselect(
-              Drupal.openlayers.popup.selectedFeature
-            );
+            while( map.popups.length ) {
+              map.removePopup(map.popups[0]);
+              }
+            Drupal.openlayers.popup.popupSelect.unselect(selectedFeature);
           }
         );
 
         // Assign popup to feature and map.
+        popup.panMapIfOutOfView = options.panMapIfOutOfView;
+        popup.keepInMap = options.keepInMap;
+        selectedFeature = feature;
         feature.popup = popup;
-        feature.layer.map.addPopup(popup);
         Drupal.attachBehaviors();
-        Drupal.openlayers.popup.selectedFeature = feature;
+        map.addPopup(popup);
       },
       onUnselect: function(feature) {
-        // Remove popup if feature is unselected.
-        feature.layer.map.removePopup(feature.popup);
+        map.removePopup(feature.popup);
         feature.popup.destroy();
         feature.popup = null;
+        this.unselectAll();
       }
     }
   );

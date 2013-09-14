@@ -1,7 +1,7 @@
 <?php
 
 /**
- * OpenLayers Boxk
+ * OpenLayers Box
  */
 class openlayers_simple extends boxes_box {
   /**

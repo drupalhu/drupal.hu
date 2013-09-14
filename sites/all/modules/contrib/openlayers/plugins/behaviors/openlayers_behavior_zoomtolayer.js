@@ -4,35 +4,85 @@
  */
 
 /**
- * OpenLayers Zoom to Layer Behavior
+ * OpenLayers Zoom to Layer Behavior.
+ *
+ * Zooms to the data extent of the selected layers.
  */
 Drupal.openlayers.addBehavior('openlayers_behavior_zoomtolayer', function (data, options) {
   var map = data.openlayers;
-  var layers = map.getLayersBy('drupalID', options.zoomtolayer);
+  var zoomtolayer_scale = parseInt(options.zoomtolayer_scale, 10);
+  var point_zoom_level = parseInt(options.point_zoom_level, 10);
+
+  var layers = map.getLayersBy('drupalID', {
+    test: function(id) {
+      for (var i in options.zoomtolayer) {
+        if (options.zoomtolayer[i] == id) {
+          return true;
+        }
+      }
+      return false;
+    }
+  });
+
+  // Combined extent of all layers.
+  var fullExtent = undefined;
 
   // Go through selected layers to get full extent.
-  for (var i in layers) {
-    if (layers[i].features !== undefined) {
-      // For KML layers, we need to wait until layer is loaded.  Ideally
-      // we could check for any layer that is loading from an external
-      // source, but for now, just check KML
-      if (layers[i].layer_handler == 'kml') {
-        layers[i].events.register('loadend', layers[i], function() {
-          layerextent = layers[i].getDataExtent();
-          map.zoomToExtent(layerextent);
-        });
-      }
-      else {
-        layerextent = layers[i].getDataExtent();
-        // Check for valid layer extent
-        if (layerextent != null) {
-          map.zoomToExtent(layerextent);
+  jQuery(layers).each(function(index, layer) {
+    accumulate_extent(layer);
 
-          // If unable to find width due to single point,
-          // zoom in with point_zoom_level option.
-          if (layerextent.getWidth() == 0.0) {
-            map.zoomTo(options.point_zoom_level);
-          }
+    if (layer instanceof OpenLayers.Layer.Vector) {
+      // This should not register the handler in case no data is available.
+      if (layer.getDataExtent() === null) {
+        // Try again to determine the extent after layer has loaded.
+        layer.events.register('loadend', layer, handle_loadend_once);
+      }
+    }
+  });
+  // Zoom if some data was sychronously loaded.
+  show_extent_if_determined();
+
+  /**
+   * Handler for loadend event of layer that is still loading.
+   */
+  function handle_loadend_once(event) {
+    var layer = event.object;
+    layer.events.unregister('loadend', layer, handle_loadend_once);
+
+    accumulate_extent(layer);
+    // Zoom if bound have been determined.
+    show_extent_if_determined();
+  }
+
+  /**
+   * Add data extent of layer to total data extent.
+   */
+  function accumulate_extent(layer){
+    var layerextent = layer.getDataExtent();
+    if(fullExtent instanceof OpenLayers.Bounds){
+      fullExtent.extend(layerextent);
+    } else if(layerextent instanceof OpenLayers.Bounds) {
+      fullExtent = layerextent;
+    }
+  }
+
+  /**
+   * Zooms map if bounds are at least partially known.
+   */
+  function show_extent_if_determined(){
+    if(fullExtent instanceof OpenLayers.Bounds){
+      if (fullExtent.getWidth()===0 && fullExtent.getHeight()===0) {
+        // If extent is a single point,
+        // zoom in with point_zoom_level option.
+        map.setCenter(fullExtent.getCenterLonLat(), point_zoom_level)
+      } else {
+        var scaled = fullExtent.scale(zoomtolayer_scale);
+        map.zoomToExtent(scaled);
+        if(!map.getExtent().contains(scaled)){
+          // OpenLayers silently ignores zoom in case the date line would need
+          // to be displayed more than once. Move map to where the data is at
+          // least.
+          map.setCenter(scaled.getCenterLonLat());
         }
       }
     }

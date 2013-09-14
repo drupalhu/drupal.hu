@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  *
@@ -7,49 +6,24 @@
  */
 
 /**
- * Define the Ctools plugin options.
- */
-$plugin = array(
-  'title' => t('CloudMade'),
-  'description' => t('<a href="!url">CloudMade</a> Custom Map',
-    array('!url' => 'http://cloudmade.com/')),
-  'layer_type' => array(
-    'file' => 'openlayers_layer_type_cloudmade.inc',
-    'class' => 'openlayers_layer_type_cloudmade',
-    'parent' => 'openlayers_layer_type',
-  ),
-);
-
-/**
  * OpenLayers CloudMade Layer Type class
  */
 class openlayers_layer_type_cloudmade extends openlayers_layer_type {
-  function __construct($layer = array(), $map = array()) {
-    parent::__construct($layer, $map);
-    if (isset($this->data)) {
-      $this->data += $this->options_init();
-    }
-    else {
-      $this->data = $this->options_init();
-    }
-  }
+
   /**
    * Provide initial values for options.
    */
   function options_init() {
     return array(
-      'layer_type' => 'cloudmade',
       'layer_handler' => 'cloudmade',
       'key' => variable_get('openlayers_layers_cloudmade_api', ''),
-      'projection' => array('900913'),
-      'baselayer' => TRUE,
-    );
+    ) + parent::options_init();
   }
 
   /**
    * Options form which generates layers
    */
-  function options_form() {
+  function options_form($defaults = array()) {
     $warning = (!variable_get('openlayers_layers_cloudmade_js', FALSE) ||
       !variable_get('openlayers_layers_cloudmade_api', FALSE)) ?
         array(
@@ -65,10 +39,6 @@ class openlayers_layer_type_cloudmade extends openlayers_layer_type {
         '#description' => t('Enter the numeric Style ID for a <a href="http://maps.cloudmade.com/editor">Map Style</a> from CloudMade. You can usually find the Style ID in the lower right hand corner of each Map Style box.'),
         '#default_value' => isset($this->data['styleId']) ?
           $this->data['styleId'] : ''
-      ),
-      'layer_type' => array(
-        '#type' => 'hidden',
-        '#value' => 'openlayers_layer_type_cloudmade'
       ),
       $warning
     );
@@ -91,7 +61,7 @@ class openlayers_layer_type_cloudmade extends openlayers_layer_type {
         '#title' => t('CloudMade Javascript Location'),
         '#default_value' => variable_get('openlayers_layers_cloudmade_js', ''),
         '#description' => t('The Drupal path or full URL to the location of the ' .
-          '<a href="@url">Cloudmade OpenLayers Javascript library</a>', 
+          '<a href="@url">Cloudmade OpenLayers Javascript library</a>',
           array('@url' => 'http://developers.cloudmade.com/projects/show/openlayers-api')),
       ),
     );
@@ -102,9 +72,9 @@ class openlayers_layer_type_cloudmade extends openlayers_layer_type {
    */
   function render(&$map) {
     static $cloudmade_maps_included;
-    
+
     if (!isset($cloudmade_maps_included)) {
-      drupal_add_js(drupal_get_path('module', 'openlayers') . 
+      drupal_add_js(drupal_get_path('module', 'openlayers') .
         '/plugins/layer_types/openlayers_layer_type_cloudmade.js');
       $path = variable_get('openlayers_layers_cloudmade_js', '');
       if (valid_url($path, TRUE)) {
@@ -116,6 +86,5 @@ class openlayers_layer_type_cloudmade extends openlayers_layer_type {
       }
       $cloudmade_maps_included = TRUE;
     }
-    return $this->options;
   }
 }

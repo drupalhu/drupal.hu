@@ -4,17 +4,15 @@
  * OpenLayers Map Content Type. Displays a Map.
  */
 
-/**
- * Plugins are described by creating a $plugin array which will be used
- * by the system that includes this file.
- */
-$plugin = array(
-  // And this is just the administrative title.
-  // All our callbacks are named according to the standard pattern and can be deduced.
-  'title' => t('Openlayers Map'),
-  'content type' => 'openlayers_openlayers_map_content_type_content_types',
-  'render callback' => 'openlayers_map_content_type_render',
-);
+function openlayers_openlayers_map_ctools_content_types() {
+  return array(
+    // And this is just the administrative title.
+    // All our callbacks are named according to the standard pattern and can be deduced.
+    'title' => t('OpenLayers Map'),
+    'content type' => 'openlayers_openlayers_map_content_type_content_types',
+    'render callback' => 'openlayers_map_content_type_render',
+  );
+}
 
 /**
  * Return all content types available.
@@ -24,11 +22,12 @@ function openlayers_openlayers_map_content_type_content_types($plugin) {
   $maps = openlayers_maps();
 
   foreach ($maps as $map) {
-    $types[$map->name] = array (
+    $types[$map->name] = array(
       'map' => $map->name,
       'title' => $map->title,
       'description' => $map->description,
       'category' => t('OpenLayers Maps'),
+      'icon' => 'icon_openlayers_map.png',
     );
   }
 
@@ -54,7 +53,7 @@ function openlayers_map_content_type_render($subtype, $conf, $args, $context) {
   $block = new stdClass();
   $block->title = $map->title;
   $block->content = openlayers_render_map($map);
-  
+
   return $block;
 }
 
