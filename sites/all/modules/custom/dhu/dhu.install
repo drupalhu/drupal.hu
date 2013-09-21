@@ -16,7 +16,7 @@ function dhu_update_7101(&$sandbox) {
   $modules_to_disable = array('geocode');
   module_disable($modules_to_disable);
   $messages[] = t('Disable modules: @modules.', array(
-      '@modules' => implode(', ', $modules_to_disable),
+    '@modules' => implode(', ', $modules_to_disable),
   ));
 
   return implode('<br />', $messages);
@@ -241,8 +241,24 @@ function dhu_update_7106() {
   db_delete('field_config')
     ->condition('field_name', 'field_assigned')
     ->execute();
-
+  //update owner - ezt biztos lehet szebben is...
+  db_query("update {system} set owner=''");
   //delete unneded content type
+  $types = array(
+    'munkakozveito',
+    'blog',
+    'translator',
+  );
 
-  return t("Not deleted: " . join(', ', $fails));
+  foreach (
+    $types as $type) {
+    node_type_delete($type);
+    variable_del('node_preview_' . $type);
+  }
+
+  node_types_rebuild();
+  menu_rebuild();
+  if ($fails) {
+    return t("Not deleted: " . join(', ', $fails));
+  }
 }
