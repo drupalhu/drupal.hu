@@ -103,23 +103,23 @@ function dhu_job_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Fejléc: Általános: Szövegdoboz */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  /* Mező: Tartalom: Van új tartalma */
+  /* Field: Content: Has new content */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Új';
   $handler->display->display_options['fields']['timestamp']['exclude'] = TRUE;
-  /* Mező: Tartalom: Beküldés dátuma */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'Y.m.d.';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -128,27 +128,27 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['text'] = '[title] [timestamp]';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Mező: Tartalom: Idő igénybevétel */
+  /* Field: Content: Idő igénybevétel */
   $handler->display->display_options['fields']['field_job_timing']['id'] = 'field_job_timing';
   $handler->display->display_options['fields']['field_job_timing']['table'] = 'field_data_field_job_timing';
   $handler->display->display_options['fields']['field_job_timing']['field'] = 'field_job_timing';
-  /* Mező: Tartalom: Jelentkezés határideje */
+  /* Field: Content: Jelentkezés határideje */
   $handler->display->display_options['fields']['field_job_due_date']['id'] = 'field_job_due_date';
   $handler->display->display_options['fields']['field_job_due_date']['table'] = 'field_data_field_job_due_date';
   $handler->display->display_options['fields']['field_job_due_date']['field'] = 'field_job_due_date';
-  /* Rendezési szempont: Tartalom: Beküldés dátuma */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -156,7 +156,7 @@ function dhu_job_views_default_views() {
     'job' => 'job',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Szűrési feltétel: Tartalom: Cím */
+  /* Filter criterion: Content: Title */
   $handler->display->display_options['filters']['title']['id'] = 'title';
   $handler->display->display_options['filters']['title']['table'] = 'node';
   $handler->display->display_options['filters']['title']['field'] = 'title';
@@ -167,7 +167,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['filters']['title']['expose']['label'] = 'Ajánlat megnevezése (tartalmazza)';
   $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
   $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
-  /* Szűrési feltétel: Tartalom: Munka jellege (field_job_remotely) */
+  /* Filter criterion: Content: Munka jellege (field_job_remotely) */
   $handler->display->display_options['filters']['field_job_remotely_value']['id'] = 'field_job_remotely_value';
   $handler->display->display_options['filters']['field_job_remotely_value']['table'] = 'field_data_field_job_remotely';
   $handler->display->display_options['filters']['field_job_remotely_value']['field'] = 'field_job_remotely_value';
@@ -177,7 +177,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['filters']['field_job_remotely_value']['expose']['label'] = 'Munka jellege';
   $handler->display->display_options['filters']['field_job_remotely_value']['expose']['operator'] = 'field_job_remotely_value_op';
   $handler->display->display_options['filters']['field_job_remotely_value']['expose']['identifier'] = 'field_job_remotely_value';
-  /* Szűrési feltétel: Tartalom: Idő igénybevétel (field_job_timing) */
+  /* Filter criterion: Content: Idő igénybevétel (field_job_timing) */
   $handler->display->display_options['filters']['field_job_timing_value']['id'] = 'field_job_timing_value';
   $handler->display->display_options['filters']['field_job_timing_value']['table'] = 'field_data_field_job_timing';
   $handler->display->display_options['filters']['field_job_timing_value']['field'] = 'field_job_timing_value';
@@ -188,7 +188,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['filters']['field_job_timing_value']['expose']['operator'] = 'field_job_timing_value_op';
   $handler->display->display_options['filters']['field_job_timing_value']['expose']['identifier'] = 'field_job_timing_value';
   $handler->display->display_options['filters']['field_job_timing_value']['expose']['multiple'] = TRUE;
-  /* Szűrési feltétel: Tartalom: Szükséges tapasztalat szintje (field_job_experience) */
+  /* Filter criterion: Content: Szükséges tapasztalat szintje (field_job_experience) */
   $handler->display->display_options['filters']['field_job_experience_value']['id'] = 'field_job_experience_value';
   $handler->display->display_options['filters']['field_job_experience_value']['table'] = 'field_data_field_job_experience';
   $handler->display->display_options['filters']['field_job_experience_value']['field'] = 'field_job_experience_value';
@@ -199,7 +199,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['filters']['field_job_experience_value']['expose']['operator'] = 'field_job_experience_value_op';
   $handler->display->display_options['filters']['field_job_experience_value']['expose']['identifier'] = 'field_job_experience_value';
   $handler->display->display_options['filters']['field_job_experience_value']['expose']['multiple'] = TRUE;
-  /* Szűrési feltétel: Tartalom: Nyelvtudás (field_job_other_language) */
+  /* Filter criterion: Content: Nyelvtudás (field_job_other_language) */
   $handler->display->display_options['filters']['field_job_other_language_value']['id'] = 'field_job_other_language_value';
   $handler->display->display_options['filters']['field_job_other_language_value']['table'] = 'field_data_field_job_other_language';
   $handler->display->display_options['filters']['field_job_other_language_value']['field'] = 'field_job_other_language_value';
@@ -226,14 +226,14 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Mező: Tartalom: Beküldés dátuma */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'short';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -242,13 +242,13 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_type'] = 'h4';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Mező: Tartalom: Rövid leírás */
+  /* Field: Content: Rövid leírás */
   $handler->display->display_options['fields']['field_job_summary']['id'] = 'field_job_summary';
   $handler->display->display_options['fields']['field_job_summary']['table'] = 'field_data_field_job_summary';
   $handler->display->display_options['fields']['field_job_summary']['field'] = 'field_job_summary';
   $handler->display->display_options['fields']['field_job_summary']['label'] = '';
   $handler->display->display_options['fields']['field_job_summary']['element_label_colon'] = FALSE;
-  /* Mező: Tartalom: Munkavégzés helye */
+  /* Field: Content: Munkavégzés helye */
   $handler->display->display_options['fields']['field_place_of_work']['id'] = 'field_place_of_work';
   $handler->display->display_options['fields']['field_place_of_work']['table'] = 'field_data_field_place_of_work';
   $handler->display->display_options['fields']['field_place_of_work']['field'] = 'field_place_of_work';
@@ -256,14 +256,14 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['fields']['field_place_of_work']['element_label_type'] = 'strong';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -339,36 +339,36 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* Megjelenés, ha nincs eredmény: Általános: Szövegdoboz */
+  /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['content'] = 'Nincs megjeleníthető munkaajánlat.';
   $handler->display->display_options['empty']['area']['format'] = '1';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Mező: Tartalom: Van új tartalma */
+  /* Field: Content: Has new content */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Új';
   $handler->display->display_options['fields']['timestamp']['exclude'] = TRUE;
-  /* Mező: Tartalom: Munka jellege */
+  /* Field: Content: Munka jellege */
   $handler->display->display_options['fields']['field_job_remotely']['id'] = 'field_job_remotely';
   $handler->display->display_options['fields']['field_job_remotely']['table'] = 'field_data_field_job_remotely';
   $handler->display->display_options['fields']['field_job_remotely']['field'] = 'field_job_remotely';
   $handler->display->display_options['fields']['field_job_remotely']['exclude'] = TRUE;
-  /* Mező: Tartalom: Idő igénybevétel */
+  /* Field: Content: Idő igénybevétel */
   $handler->display->display_options['fields']['field_job_timing']['id'] = 'field_job_timing';
   $handler->display->display_options['fields']['field_job_timing']['table'] = 'field_data_field_job_timing';
   $handler->display->display_options['fields']['field_job_timing']['field'] = 'field_job_timing';
   $handler->display->display_options['fields']['field_job_timing']['exclude'] = TRUE;
-  /* Mező: Tartalom: Beküldés dátuma */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'Y.m.d.';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -377,7 +377,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['text'] = '[title] [timestamp]';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Mező: Tartalom: Jelentkezés határideje */
+  /* Field: Content: Jelentkezés határideje */
   $handler->display->display_options['fields']['field_job_due_date']['id'] = 'field_job_due_date';
   $handler->display->display_options['fields']['field_job_due_date']['table'] = 'field_data_field_job_due_date';
   $handler->display->display_options['fields']['field_job_due_date']['field'] = 'field_job_due_date';
@@ -388,7 +388,7 @@ function dhu_job_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Mező: Általános: Egyedi szöveg */
+  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
@@ -422,7 +422,7 @@ function dhu_job_views_default_views() {
     t('következő ›'),
     t('utolsó »'),
     t('Új'),
-    t('Beküldés dátuma'),
+    t('Post date'),
     t('Ajánlat megnevezése'),
     t('[title] [timestamp]'),
     t('Idő igénybevétel'),
@@ -433,11 +433,11 @@ function dhu_job_views_default_views() {
     t('Nyelvtudás'),
     t('Munkaajánlatok blokk'),
     t('Új munkaajánlatok'),
-    t('tovább'),
+    t('more'),
     t('Munkavégzés helye'),
     t('Munkaajánlatok oldal'),
     t('Nincs megjeleníthető munkaajánlat.'),
-    t('Egyedi szöveg'),
+    t('Custom text'),
     t('[field_job_timing], [field_job_remotely]'),
     t('Feed'),
   );

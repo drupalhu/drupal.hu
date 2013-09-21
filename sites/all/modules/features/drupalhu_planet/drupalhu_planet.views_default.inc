@@ -45,22 +45,22 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = 'utolsó »';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'node';
-  /* Fejléc: Általános: Szövegdoboz */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['text']['id'] = 'area';
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Az általunk ismert magyar Drupal témákkal is foglalkozó blogokból a Drupalhoz kapcsolódó bejegyzéseket összesítjük, így könnyebb követni a releváns magyar tartalmakat.';
   $handler->display->display_options['header']['text']['format'] = '1';
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
+  /* Relationship: Content: Taxonomy terms on node */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
   $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
-  /* Rendezési szempont: Tartalom: Beküldés dátuma */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -69,7 +69,7 @@ function drupalhu_planet_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['group'] = '0';
   $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -104,8 +104,9 @@ function drupalhu_planet_views_default_views() {
     t('következő ›'),
     t('utolsó »'),
     t('Az általunk ismert magyar Drupal témákkal is foglalkozó blogokból a Drupalhoz kapcsolódó bejegyzéseket összesítjük, így könnyebb követni a releváns magyar tartalmakat.'),
-    t('kifejezés'),
+    t('term'),
     t('Oldal'),
+    t('more'),
     t('Hírcsatorna'),
   );
   $export['planet'] = $view;
@@ -152,47 +153,47 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['style_options']['columns'] = '2';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['hide_empty'] = TRUE;
-  /* Kapcsolat: Tartalom: Szerző */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
+  /* Relationship: Content: Taxonomy terms on node */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
   $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
-  /* Mező: Felhasználó: Név */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
-  /* Mező: Tartalom: Hivatkozás */
+  /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['label'] = '';
   $handler->display->display_options['fields']['view_node']['exclude'] = TRUE;
-  /* Mező: Felhasználó: Kép */
+  /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
   $handler->display->display_options['fields']['picture']['field'] = 'picture';
   $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['hide_empty'] = TRUE;
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['text'] = '[name]';
-  /* Rendezési szempont: Felhasználó: Név */
+  /* Sort criterion: User: Name */
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'users';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['relationship'] = 'uid';
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -201,7 +202,7 @@ function drupalhu_planet_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['group'] = '0';
   $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Taxonómia kifejezés: Név */
+  /* Filter criterion: Taxonomy term: Name */
   $handler->display->display_options['filters']['name']['id'] = 'name';
   $handler->display->display_options['filters']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['filters']['name']['field'] = 'name';
@@ -209,7 +210,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['filters']['name']['value'] = 'Planet Drupal.hu';
   $handler->display->display_options['filters']['name']['group'] = '0';
   $handler->display->display_options['filters']['name']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -235,10 +236,11 @@ function drupalhu_planet_views_default_views() {
     t('‹ előző'),
     t('következő ›'),
     t('utolsó »'),
-    t('szerző'),
-    t('kifejezés'),
+    t('author'),
+    t('term'),
     t('[name]'),
     t('Blokk'),
+    t('more'),
   );
   $export['planet_feed_list'] = $view;
 
@@ -260,6 +262,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Alkalmazás';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Alaphelyzet';
@@ -278,18 +281,18 @@ function drupalhu_planet_views_default_views() {
     'title' => 'title',
   );
   $handler->display->display_options['row_options']['separator'] = ' ';
-  /* Lábléc: Általános: Szövegdoboz */
+  /* Footer: Global: Text area */
   $handler->display->display_options['footer']['area']['id'] = 'area';
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
   $handler->display->display_options['footer']['area']['content'] = '<a href="/planet">További bejegyzések »</a>';
   $handler->display->display_options['footer']['area']['format'] = '1';
-  /* Kapcsolat: Tartalom: Szerző */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
+  /* Relationship: Content: Taxonomy terms on node */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
   $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
@@ -303,7 +306,7 @@ function drupalhu_planet_views_default_views() {
     'vocabulary_11' => 0,
     'vocabulary_8' => 0,
   );
-  /* Mező: Felhasználó: Kép */
+  /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
   $handler->display->display_options['fields']['picture']['field'] = 'picture';
@@ -311,7 +314,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['hide_alter_empty'] = FALSE;
-  /* Mező: Tartalom: Beküldés dátuma */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
@@ -320,26 +323,26 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['created']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'M d';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Rendezési szempont: Tartalom: Beküldés dátuma */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -351,7 +354,7 @@ function drupalhu_planet_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Mező: Felhasználó: Kép */
+  /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
   $handler->display->display_options['fields']['picture']['field'] = 'picture';
@@ -360,7 +363,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['picture']['image_style'] = 'planet_user_picture';
-  /* Mező: Tartalom: Beküldés dátuma */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
@@ -370,7 +373,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['fields']['created']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'M d';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -389,9 +392,10 @@ function drupalhu_planet_views_default_views() {
     t('Növekvő'),
     t('Csökkenő'),
     t('<a href="/planet">További bejegyzések »</a>'),
-    t('szerző'),
-    t('kifejezés'),
+    t('author'),
+    t('term'),
     t('Block'),
+    t('more'),
   );
   $export['recent_planet'] = $view;
 

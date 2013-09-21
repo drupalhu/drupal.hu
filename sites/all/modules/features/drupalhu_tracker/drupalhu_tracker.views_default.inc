@@ -104,63 +104,63 @@ function drupalhu_tracker_views_default_views() {
     ),
   );
   $handler->display->display_options['style_options']['order'] = 'desc';
-  /* Kapcsolat: Tartalom: Szerző */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Kapcsolat: Hozzászólás: A tartalom megjegyzései */
+  /* Relationship: Comment: Comments of the node */
   $handler->display->display_options['relationships']['cid']['id'] = 'cid';
   $handler->display->display_options['relationships']['cid']['table'] = 'node';
   $handler->display->display_options['relationships']['cid']['field'] = 'cid';
-  /* Mező: Tartalom: Típus */
+  /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
-  /* Mező: Felhasználó: Név */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = 'Szerző';
-  /* Mező: Tartalom: Hozzászólások száma */
+  /* Field: Content: Comment count */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['label'] = 'Válaszok';
-  /* Mező: Tartalom: Utolsó hozzászólás ideje */
+  /* Field: Content: Last comment time */
   $handler->display->display_options['fields']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['fields']['last_comment_timestamp']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
   $handler->display->display_options['fields']['last_comment_timestamp']['label'] = 'Legutóbbi válasz';
-  /* Mező: Tartalom: Van új tartalma */
+  /* Field: Content: Has new content */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'history';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = '';
   $handler->display->display_options['fields']['timestamp']['comments'] = TRUE;
-  /* Mező: Tartalom: Új hozzászólások */
+  /* Field: Content: New comments */
   $handler->display->display_options['fields']['new_comments']['id'] = 'new_comments';
   $handler->display->display_options['fields']['new_comments']['table'] = 'node';
   $handler->display->display_options['fields']['new_comments']['field'] = 'new_comments';
   $handler->display->display_options['fields']['new_comments']['label'] = '';
   $handler->display->display_options['fields']['new_comments']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['new_comments']['suffix'] = ' új';
-  /* Rendezési szempont: Tartalom: Utolsó hozzászólás ideje */
+  /* Sort criterion: Content: Last comment time */
   $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
   $handler->display->display_options['sorts']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
@@ -192,20 +192,20 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Van új tartalma */
+  /* Filter criterion: Content: Has new content */
   $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['filters']['timestamp']['table'] = 'history';
   $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['filters']['timestamp']['group'] = '0';
   $handler->display->display_options['filters']['timestamp']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -227,14 +227,14 @@ function drupalhu_tracker_views_default_views() {
   $handler = $view->new_display('page', 'Custom tracker', 'page_4');
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 0;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -254,7 +254,7 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
   $handler->display->display_options['filters']['type']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
-  /* Szűrési feltétel: Felhasználó: Név */
+  /* Filter criterion: User: Name */
   $handler->display->display_options['filters']['uid']['id'] = 'uid';
   $handler->display->display_options['filters']['uid']['table'] = 'users';
   $handler->display->display_options['filters']['uid']['field'] = 'uid';
@@ -266,7 +266,7 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['uid']['expose']['label'] = 'Szerző: Felhasználónév';
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
-  /* Szűrési feltétel: Hozzászólás: Szerző */
+  /* Filter criterion: Comment: Author */
   $handler->display->display_options['filters']['name']['id'] = 'name';
   $handler->display->display_options['filters']['name']['table'] = 'comment';
   $handler->display->display_options['filters']['name']['field'] = 'name';
@@ -278,7 +278,7 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Hozzászólás: Szerző';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
@@ -290,7 +290,7 @@ function drupalhu_tracker_views_default_views() {
   );
   $handler->display->display_options['filters']['type_1']['group'] = '0';
   $handler->display->display_options['filters']['type_1']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Létezik hozzá taxonómia kifejezés */
+  /* Filter criterion: Content: Has taxonomy term */
   $handler->display->display_options['filters']['tid']['id'] = 'tid';
   $handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
   $handler->display->display_options['filters']['tid']['field'] = 'tid';
@@ -302,7 +302,7 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['filters']['tid']['expose']['identifier'] = 'core';
   $handler->display->display_options['filters']['tid']['type'] = 'select';
   $handler->display->display_options['filters']['tid']['vocabulary'] = 'vocabulary_10';
-  /* Szűrési feltétel: Tartalom: Törzs (body) */
+  /* Filter criterion: Content: Törzs (body) */
   $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
   $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
   $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
@@ -324,11 +324,11 @@ function drupalhu_tracker_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'rss';
   $handler->display->display_options['row_plugin'] = 'node_rss';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Kapcsolat: Tartalom: Szerző */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Kapcsolat: Hozzászólás: A tartalom megjegyzései */
+  /* Relationship: Comment: Comments of the node */
   $handler->display->display_options['relationships']['cid']['id'] = 'cid';
   $handler->display->display_options['relationships']['cid']['table'] = 'node';
   $handler->display->display_options['relationships']['cid']['field'] = 'cid';
@@ -337,15 +337,15 @@ function drupalhu_tracker_views_default_views() {
   /* Display: Követett dolgaim */
   $handler = $view->new_display('page', 'Követett dolgaim', 'page_2');
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Kapcsolat: Tartalom: Szerző */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Kapcsolat: Hozzászólás: A tartalom megjegyzései */
+  /* Relationship: Comment: Comments of the node */
   $handler->display->display_options['relationships']['cid']['id'] = 'cid';
   $handler->display->display_options['relationships']['cid']['table'] = 'node';
   $handler->display->display_options['relationships']['cid']['field'] = 'cid';
-  /* Kapcsolat: Jelölők: bookmarks */
+  /* Relationship: Flags: bookmarks */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
@@ -374,10 +374,10 @@ function drupalhu_tracker_views_default_views() {
     t('‹ előző'),
     t('következő ›'),
     t('utolsó »'),
-    t('szerző'),
-    t('Hozzászólások'),
-    t('Típus'),
-    t('Cím'),
+    t('author'),
+    t('Comments'),
+    t('Type'),
+    t('Title'),
     t('Szerző'),
     t('Válaszok'),
     t('.'),
@@ -385,6 +385,7 @@ function drupalhu_tracker_views_default_views() {
     t('Legutóbbi válasz'),
     t(' új'),
     t('Recent posts'),
+    t('more'),
     t('New posts'),
     t('Új tartalmak'),
     t('Tartalom: Típus'),

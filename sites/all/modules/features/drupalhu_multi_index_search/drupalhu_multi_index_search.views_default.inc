@@ -43,7 +43,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = 'utolsó »';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Mező: Keresés: Tartalom results */
+  /* Field: Search: Tartalom results */
   $handler->display->display_options['fields']['tartalom']['id'] = 'tartalom';
   $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi_ujsolr';
   $handler->display->display_options['fields']['tartalom']['field'] = 'tartalom';
@@ -53,7 +53,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['tartalom']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['tartalom']['display'] = 'view';
   $handler->display->display_options['fields']['tartalom']['view_mode'] = 'teaser';
-  /* Mező: Keresés: Hozzászólás results */
+  /* Field: Search: Hozzászólás results */
   $handler->display->display_options['fields']['hozzaszolas']['id'] = 'hozzaszolas';
   $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi_ujsolr';
   $handler->display->display_options['fields']['hozzaszolas']['field'] = 'hozzaszolas';
@@ -63,12 +63,12 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['hozzaszolas']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['hozzaszolas']['display'] = 'view';
   $handler->display->display_options['fields']['hozzaszolas']['view_mode'] = 'full';
-  /* Rendezési szempont: Keresés: Relevance */
+  /* Sort criterion: Search: Relevance */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi_ujsolr';
   $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
-  /* Szűrési feltétel: Keresés: Fulltext search */
+  /* Filter criterion: Search: Fulltext search */
   $handler->display->display_options['filters']['search_api_multi_fulltext']['id'] = 'search_api_multi_fulltext';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['table'] = 'search_api_multi_ujsolr';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['field'] = 'search_api_multi_fulltext';
@@ -111,6 +111,7 @@ function drupalhu_multi_index_search_views_default_views() {
     t('következő ›'),
     t('utolsó »'),
     t('Oldal'),
+    t('more'),
   );
   $export['multi_index_kereso'] = $view;
 

@@ -13,17 +13,17 @@ function konyvlap_cimkek_taxonomy_default_vocabularies() {
       'name' => 'Célközönség',
       'machine_name' => 'celkozonseg',
       'description' => 'Célközönség meghatározására használatos szótár.',
-      'hierarchy' => '0',
+      'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => '0',
+      'weight' => 0,
     ),
     'szint' => array(
       'name' => 'Szint',
       'machine_name' => 'szint',
       'description' => 'A szótár felhasználó tudásszinteket jelenít meg. ',
-      'hierarchy' => '0',
+      'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => '0',
+      'weight' => 0,
     ),
   );
 }
