@@ -37,34 +37,34 @@ function konyvlap_cimkek_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: Text area */
+  /* Fejléc: Általános: Szövegdoboz */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját és célközönségét.';
   $handler->display->display_options['header']['area']['format'] = '1';
-  /* Field: Content: Drupal verzió */
+  /* Mező: Tartalom: Drupal verzió */
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['id'] = 'taxonomy_vocabulary_10';
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['table'] = 'field_data_taxonomy_vocabulary_10';
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['field'] = 'taxonomy_vocabulary_10';
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['hide_empty'] = TRUE;
-  /* Field: Content: Kézikönyv */
+  /* Mező: Tartalom: Kézikönyv */
   $handler->display->display_options['fields']['taxonomy_vocabulary_6']['id'] = 'taxonomy_vocabulary_6';
   $handler->display->display_options['fields']['taxonomy_vocabulary_6']['table'] = 'field_data_taxonomy_vocabulary_6';
   $handler->display->display_options['fields']['taxonomy_vocabulary_6']['field'] = 'taxonomy_vocabulary_6';
   $handler->display->display_options['fields']['taxonomy_vocabulary_6']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['taxonomy_vocabulary_6']['delta_offset'] = '0';
-  /* Field: Content: Célközönség */
+  /* Mező: Tartalom: Célközönség */
   $handler->display->display_options['fields']['field_voc_celkozonseg']['id'] = 'field_voc_celkozonseg';
   $handler->display->display_options['fields']['field_voc_celkozonseg']['table'] = 'field_data_field_voc_celkozonseg';
   $handler->display->display_options['fields']['field_voc_celkozonseg']['field'] = 'field_voc_celkozonseg';
   $handler->display->display_options['fields']['field_voc_celkozonseg']['hide_empty'] = TRUE;
-  /* Field: Content: Szint */
+  /* Mező: Tartalom: Szint */
   $handler->display->display_options['fields']['field_voc_szint']['id'] = 'field_voc_szint';
   $handler->display->display_options['fields']['field_voc_szint']['table'] = 'field_data_field_voc_szint';
   $handler->display->display_options['fields']['field_voc_szint']['field'] = 'field_voc_szint';
   $handler->display->display_options['fields']['field_voc_szint']['hide_empty'] = TRUE;
-  /* Contextual filter: Content: Nid */
+  /* Szövegkörnyezeti szűrő: Tartalom: Tartalom azonosító */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
@@ -74,14 +74,14 @@ function konyvlap_cimkek_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-  /* Filter criterion: Content: Published */
+  /* Szűrési feltétel: Tartalom: Közzétéve */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
+  /* Szűrési feltétel: Tartalom: Típus */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -108,7 +108,6 @@ function konyvlap_cimkek_views_default_views() {
     t('Szint'),
     t('Minden'),
     t('Block'),
-    t('more'),
   );
   $export['oldalrol_infok'] = $view;
 
