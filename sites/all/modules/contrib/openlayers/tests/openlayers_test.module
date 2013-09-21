@@ -39,7 +39,7 @@ function openlayers_test_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => -10,
   );
-  
+
 
   return $items;
 }
@@ -53,7 +53,7 @@ function openlayers_test_ctools_plugin_api($module, $api) {
     switch ($api) {
       case 'openlayers_maps':
         return array('version' => 1);
-        
+
       case 'openlayers_layers':
         return array('version' => 1);
 
@@ -105,7 +105,7 @@ function openlayers_test_openlayers_map_preprocess_alter(&$map) {
     drupal_set_message(t('OpenLayers preprocess map alter hook fired.'));
     $performed = TRUE;
   }
-  
+
   // Add stop render for JS testing
   if ($_GET['q'] == 'admin/structure/openlayers/test/js') {
     $map['stop_render'] = TRUE;

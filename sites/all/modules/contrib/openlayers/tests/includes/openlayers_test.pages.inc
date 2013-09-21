@@ -10,7 +10,7 @@
  */
 function openlayers_test_show_maps() {
   $output = '';
-  
+
   // Render all maps
   $maps = openlayers_maps();
   foreach ($maps as $name => $map) {
@@ -43,7 +43,7 @@ function openlayers_test_js() {
   drupal_add_css(drupal_get_path('module', 'openlayers_test') . '/js/qunit/qunit.css');
   drupal_add_js(drupal_get_path('module', 'openlayers_test') . '/js/openlayers_test.js');
   $output = '';
-  
+
   // Display QUnit stuff
   $output .= '
     <h1 id="qunit-header">OpenLayers QUnit Tests</h1>

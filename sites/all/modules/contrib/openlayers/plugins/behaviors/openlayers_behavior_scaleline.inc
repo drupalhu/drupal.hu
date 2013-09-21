@@ -5,20 +5,6 @@
  */
 
 /**
- * Ctools plugin definition.
- */
-$plugin = array(
-  'title' => t('Scale Line'),
-  'description' => t('Provides a line of scale in the map interface.'),
-  'type' => 'map',
-  'behavior' => array(
-    'file' => 'openlayers_behavior_scaleline.inc',
-    'class' => 'openlayers_behavior_scaleline',
-    'parent' => 'openlayers_behavior',
-  ),
-);
-
-/**
  * Scaleline Behavior
  */
 class openlayers_behavior_scaleline extends openlayers_behavior {
@@ -35,7 +21,7 @@ class openlayers_behavior_scaleline extends openlayers_behavior {
     return array('OpenLayers.Control.ScaleLine');
   }
 
-  function options_form($defaults) {
+  function options_form($defaults = array()) {
     return array();
   }
 
@@ -43,7 +29,7 @@ class openlayers_behavior_scaleline extends openlayers_behavior {
    * Render.
    */
   function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers') . 
+    drupal_add_js(drupal_get_path('module', 'openlayers') .
       '/plugins/behaviors/openlayers_behavior_scaleline.js');
     return $this->options;
   }

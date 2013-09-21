@@ -12,6 +12,10 @@ Drupal.openlayers.addBehavior('openlayers_behavior_geolocate', function (data, o
   var geolocate = new OpenLayers.Control.Geolocate(options);
   data.openlayers.addControl(geolocate);
 
+  // Adding the watch options.
+  // {Boolean} If true, position will be update regularly.
+  geolocate.watch = (options.watch == 1) ? true : false;
+
   // Add some event handling
   geolocate.events.register('locationupdated', this, function(e) {
     data.openlayers.setCenter(new OpenLayers.Geometry.Point(e.point.x, e.point.y), options.zoom_level);
@@ -20,6 +24,6 @@ Drupal.openlayers.addBehavior('openlayers_behavior_geolocate', function (data, o
     OpenLayers.Console.log(Drupal.t('Location detection failed'));
   });
 
-  // Activiate!
+  // Activate!
   geolocate.activate();
 });
