@@ -50,8 +50,8 @@ function dhu_update_7104() {
 
   return format_plural(
     count($theme_list),
-    'The following theme was enabled successful: @themes.',
-    'The following themes was enabled successful: @themes.',
+    'The following theme was disabled successful: @themes.',
+    'The following themes was disabled successful: @themes.',
     array('@themes' => implode(', ', $theme_list))
   );
 }
@@ -155,4 +155,92 @@ function _dhu_update_module_enable(array $module_list) {
       $args
     );
   }
+}
+
+/**
+ * "Remove unneeded tables
+ *
+ * @see https:github.com/drupalhu/drupal.hu/issues75
+ */
+function dhu_update_7106() {
+  $tables_to_drop = array(
+    'access',
+    'cache_content',
+    'backup_migrate_destinations',
+    'backup_migrate_profiles',
+    'backup_migrate_schedules',
+    'client',
+    'client_system',
+    'comment_cck_revisions',
+    'content_field_assigned',
+    'content_field_technique',
+    'content_group',
+    'content_group_fields',
+    'content_node_field',
+    'content_node_field_instance',
+    'content_type_issue',
+    'content_type_link',
+    'content_type_news',
+    'content_type_poll',
+    'd6_upgrade_filter',
+    'field_data_field_book_audience',
+    'field_data_field_book_level',
+    'field_data_field_clicks',
+    'field_data_field_location',
+    'field_data_field_priority',
+    'field_data_field_slide_headline',
+    'field_data_field_slide_image',
+    'field_data_field_slide_link',
+    'field_data_field_technique',
+    'field_revision_field_book_audience',
+    'field_revision_field_book_level',
+    'field_revision_field_clicks',
+    'field_revision_field_location',
+    'field_revision_field_priority',
+    'field_revision_field_slide_headline',
+    'field_revision_field_slide_image',
+    'field_revision_field_slide_link',
+    'field_revision_field_technique',
+    'files',
+    'moderation_filters',
+    'moderation_roles',
+    'moderation_votes',
+    'node_type_content',
+    'old_revisions',
+    'opengraph_meta',
+    'parser_common_syndication',
+    'search_api_facet',
+    'search_api_page',
+    'search_api_sort',
+    'search_dataset',
+    'search_index',
+    'search_node_links',
+    'search_total',
+    'taxonomy_manager_merge',
+    'taxonomy_term_relation',
+    'taxonomy_term_synonym',
+    'views_object_cache',
+    'weblink',
+    'content_field_assigned',
+    'field_data_field_assigned',
+    'field_revision_field_assigned',
+  );
+  $fails = array();
+  foreach ($tables_to_drop as $table) {
+    if (db_table_exists($table)) {
+      if (!db_drop_table($table)) {
+        $fails[] = $table;
+      }
+    }
+  }
+
+  db_delete('field_config_instance')
+    ->condition('field_name', 'field_assigned')
+    ->execute();
+
+  db_delete('field_config')
+    ->condition('field_name', 'field_assigned')
+    ->execute();
+
+  return t("Not deleted: " . join(', ', $fails));
 }
