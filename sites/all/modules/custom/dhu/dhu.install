@@ -158,9 +158,9 @@ function _dhu_update_module_enable(array $module_list) {
 }
 
 /**
- * "Remove unneeded tables
+ * Remove unneeded tables
  *
- * @see https:github.com/drupalhu/drupal.hu/issues75
+ * @see https:github.com//drupalhu//drupal.hu//issues75
  */
 function dhu_update_7106() {
   $tables_to_drop = array(
@@ -241,6 +241,8 @@ function dhu_update_7106() {
   db_delete('field_config')
     ->condition('field_name', 'field_assigned')
     ->execute();
+
+  //delete unneded content type
 
   return t("Not deleted: " . join(', ', $fails));
 }
