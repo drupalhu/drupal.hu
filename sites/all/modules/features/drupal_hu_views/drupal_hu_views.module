@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Drupal hu views feature.
+ */
+
+include_once 'drupal_hu_views.features.inc';
