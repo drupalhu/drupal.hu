@@ -2,7 +2,7 @@
  * @file
  * JS Implementation of OpenLayers behavior.
  */
- 
+
 /**
  * Attribution Behavior.  Implements the Attribution OpenLayers
  * Control.

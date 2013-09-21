@@ -33,3 +33,63 @@ function dhu_update_7102(&$sandbox) {
 
   return t('Issue #1170360 - Undefined index: distribution_name in drupal_install_profile_distribution_name()');
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function dhu_update_7103(&$sandbox) {
+  //////////////////////////////////
+  // Feed API uninstall
+  // https://github.com/drupalhu/drupal.hu/issues/76
+  //////////////////////////////////
+
+  $tables_to_drop = array('feedapi', 'feedapi_stat', 'feedapi_node_item', 'feedapi_node_item_feed', 'parser_common_syndication');
+  foreach ($tables_to_drop as $table) {
+    if (db_table_exists($table)) {
+      db_drop_table($table);
+    }
+  }
+
+  // Delete variables site-wide
+  variable_del('feedapi_allowed_html_tags');
+  variable_del('feedapi_allow_html_all');
+  variable_del('feedapi_cron_percentage');
+
+  // Delete variables per-content-type
+  $types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
+  foreach ($types as $type => $data) {
+    variable_del('feedapi_settings_'. $type);
+  }
+
+  // Empty parser common syndication cache directory.
+  $cache_dir = variable_get('parser_common_syndication_cache', FALSE);
+  if (is_dir($cache_dir)) {
+    $dp = opendir($cache_dir);
+    while (($file = readdir($dp)) !== FALSE) {
+      if (is_file($file)) {
+        unlink($cache_dir .'/'. $file);
+      }
+    }
+    closedir($dp);
+    rmdir($cache_dir);
+  }
+  variable_del('parser_common_syndication_cache');
+
+  // Empty parser simplepie cache directory
+  $cache_dir = variable_get('parser_simplepie_cache', FALSE);
+  if (is_dir($cache_dir)) {
+    $dp = opendir($cache_dir);
+    while (($file = readdir($dp)) !== FALSE) {
+      if (is_file($file)) {
+        unlink($cache_dir .'/'. $file);
+      }
+    }
+    closedir($dp);
+    rmdir($cache_dir);
+  }
+  variable_del('parser_simplepie_cache');
+
+  // Emtpy global variables
+  variable_del('feedapi_settings_feed');
+  menu_rebuild();
+}

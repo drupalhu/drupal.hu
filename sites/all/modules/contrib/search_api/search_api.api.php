@@ -15,8 +15,6 @@
  *
  * Note: The ids should be valid PHP identifiers.
  *
- * @see hook_search_api_service_info_alter()
- *
  * @return array
  *   An associative array of search service classes, keyed by a unique
  *   identifier and containing associative arrays with the following keys:
@@ -27,6 +25,8 @@
  *     the "direct" parse mode and other specific things to keep in mind.
  *   - class: The service class, which has to implement the
  *     SearchApiServiceInterface interface.
+ *
+ * @see hook_search_api_service_info_alter()
  */
 function hook_search_api_service_info() {
   $services['example_some'] = array(
@@ -49,13 +49,14 @@ function hook_search_api_service_info() {
  * Alter the Search API service info.
  *
  * Modules may implement this hook to alter the information that defines Search
- * API service. All properties that are available in
- * hook_search_api_service_info() can be altered here.
- *
- * @see hook_search_api_service_info()
+ * API services. All properties that are available in
+ * hook_search_api_service_info() can be altered here, with the addition of the
+ * "module" key specifying the module that originally defined the service class.
  *
  * @param array $service_info
  *   The Search API service info array, keyed by service id.
+ *
+ * @see hook_search_api_service_info()
  */
 function hook_search_api_service_info_alter(array &$service_info) {
   foreach ($service_info as $id => $info) {
@@ -95,6 +96,9 @@ function hook_search_api_service_info_alter(array &$service_info) {
  *   - datasource controller: A class implementing the
  *     SearchApiDataSourceControllerInterface interface which will be used as
  *     the data source controller for this type.
+ *   - entity_type: (optional) If the type represents entities, the entity type.
+ *     This is used by SearchApiAbstractDataSourceController for determining the
+ *     entity type of items. Other datasource controllers might ignore this.
  *   Other, datasource-specific settings might also be placed here. These should
  *   be specified with the data source controller in question.
  *
@@ -109,6 +113,7 @@ function hook_search_api_item_type_info() {
       $types[$type] = array(
         'name' => $info['label'],
         'datasource controller' => 'SearchApiEntityDataSourceController',
+        'entity_type' => $type,
       );
     }
   }
@@ -121,7 +126,8 @@ function hook_search_api_item_type_info() {
  *
  * Modules may implement this hook to alter the information that defines an
  * item type. All properties that are available in
- * hook_search_api_item_type_info() can be altered here.
+ * hook_search_api_item_type_info() can be altered here, with the addition of
+ * the "module" key specifying the module that originally defined the type.
  *
  * @param array $infos
  *   The item type info array, keyed by type identifier.
@@ -287,7 +293,7 @@ function hook_search_api_index_items_alter(array &$items, SearchApiIndex $index)
  *   An array containing the indexed items' IDs.
  */
 function hook_search_api_items_indexed(SearchApiIndex $index, array $item_ids) {
-  if ($index->item_type == 'node') {
+  if ($index->getEntityType() == 'node') {
     // Flush page cache of the search page.
     cache_clear_all(url('search'), 'cache_page');
   }
@@ -300,8 +306,11 @@ function hook_search_api_items_indexed(SearchApiIndex $index, array $item_ids) {
  *   The SearchApiQueryInterface object representing the search query.
  */
 function hook_search_api_query_alter(SearchApiQueryInterface $query) {
-  $info = entity_get_info($index->item_type);
-  $query->condition($info['entity keys']['id'], 0, '!=');
+  // Exclude entities with ID 0. (Assume the ID field is always indexed.)
+  if ($query->getIndex()->getEntityType()) {
+    $info = entity_get_info($query->getIndex()->getEntityType());
+    $query->condition($info['entity keys']['id'], 0, '!=');
+  }
 }
 
 /**

@@ -54,8 +54,7 @@ linked to for the filter to have an effect.
 Since the block will trigger a search on pages where it is set to appear, you
 can also enable additional „normal“ facet blocks for that search, via the
 „Facets“ tab for the index. They will automatically also point to the same
-search that you specified for the display. The Search ID of the „Facets blocks“
-display can easily be recognized by the "-facet_block" suffix.
+search that you specified for the display.
 If you want to use only the normal facets and not display anything at all in
 the Views block, just activate the display's „Hide block“ option.
 
@@ -94,6 +93,18 @@ you should therefore only use this in combination with appropriate filter
 settings ensuring that only when the index isn't up-to-date items will be
 filtered out this way.
 This option is only available for indexes on entity types.
+
+Other features
+--------------
+- Change parse mode
+You can determine how search keys entered by the user will be parsed by going to
+"Advanced" > "Query settings" within your View's settings. "Direct" can be
+useful, e.g., when you want to give users the full power of Solr. In other
+cases, "Multiple terms" is usually what you want / what users expect.
+Caution: For letting users use fulltext searches, always use the "Search:
+Fulltext search" filter or contextual filter – using a normal filter on a
+fulltext field won't parse the search keys, which means multiple words will only
+be found when they appear as that exact phrase.
 
 FAQ: Why „*Indexed* Node“?
 --------------------------
