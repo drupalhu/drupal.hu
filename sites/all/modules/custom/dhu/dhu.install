@@ -56,8 +56,8 @@ function dhu_update_7103(&$sandbox) {
   variable_del('feedapi_cron_percentage');
 
   // Delete variables per-content-type
-  $types = array_keys(node_get_types());
-  foreach ($types as $type) {
+  $types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
+  foreach ($types as $type => $data) {
     variable_del('feedapi_settings_'. $type);
   }
 
