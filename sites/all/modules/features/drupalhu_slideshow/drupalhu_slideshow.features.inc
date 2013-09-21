@@ -7,8 +7,7 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function drupalhu_slideshow_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
+function drupalhu_slideshow_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -17,8 +16,8 @@ function drupalhu_slideshow_ctools_plugin_api() {
 /**
  * Implements hook_views_api().
  */
-function drupalhu_slideshow_views_api() {
-  return array("version" => "3.0");
+function drupalhu_slideshow_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
 }
 
 /**
@@ -41,10 +40,10 @@ function drupalhu_slideshow_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '960',
-          'height' => '300',
+          'width' => 960,
+          'height' => 300,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );

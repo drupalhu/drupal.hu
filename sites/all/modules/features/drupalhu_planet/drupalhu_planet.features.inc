@@ -7,12 +7,10 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function drupalhu_planet_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
+function drupalhu_planet_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "feeds" && $api == "feeds_importer_default") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -21,8 +19,8 @@ function drupalhu_planet_ctools_plugin_api() {
 /**
  * Implements hook_views_api().
  */
-function drupalhu_planet_views_api() {
-  return array("version" => "3.0");
+function drupalhu_planet_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
 }
 
 /**
@@ -45,10 +43,10 @@ function drupalhu_planet_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '55',
-          'height' => '55',
+          'width' => 55,
+          'height' => 55,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );

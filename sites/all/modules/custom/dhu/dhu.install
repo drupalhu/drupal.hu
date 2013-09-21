@@ -35,15 +35,41 @@ function dhu_update_7102(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
+ * Enable the Proj4JS and Drupal.hu common modules.
  */
-function dhu_update_7103(&$sandbox) {
-  //////////////////////////////////
-  // Feed API uninstall
-  // https://github.com/drupalhu/drupal.hu/issues/76
-  //////////////////////////////////
+function dhu_update_7103() {
+  return _dhu_update_module_enable(array('proj4js', 'drupalhu_common'));
+}
 
-  $tables_to_drop = array('feedapi', 'feedapi_stat', 'feedapi_node_item', 'feedapi_node_item_feed', 'parser_common_syndication');
+/**
+ * Disable the Bartik theme.
+ */
+function dhu_update_7104() {
+  $theme_list = array('bartik');
+  theme_disable($theme_list);
+
+  return format_plural(
+    count($theme_list),
+    'The following theme was enabled successful: @themes.',
+    'The following themes was enabled successful: @themes.',
+    array('@themes' => implode(', ', $theme_list))
+  );
+}
+
+/**
+ * Uninstall Feed API.
+ *
+ * @see https://github.com/drupalhu/drupal.hu/issues/76
+ */
+function dhu_update_7105() {
+  $tables_to_drop = array(
+    'feedapi',
+    'feedapi_stat',
+    'feedapi_node_item',
+    'feedapi_node_item_feed',
+    'parser_common_syndication',
+  );
+
   foreach ($tables_to_drop as $table) {
     if (db_table_exists($table)) {
       db_drop_table($table);
@@ -58,7 +84,8 @@ function dhu_update_7103(&$sandbox) {
   // Delete variables per-content-type
   $types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
   foreach ($types as $type => $data) {
-    variable_del('feedapi_settings_'. $type);
+    variable_del('feedapi_' . $type);
+    variable_del('feedapi_settings_' . $type);
   }
 
   // Empty parser common syndication cache directory.
@@ -67,7 +94,7 @@ function dhu_update_7103(&$sandbox) {
     $dp = opendir($cache_dir);
     while (($file = readdir($dp)) !== FALSE) {
       if (is_file($file)) {
-        unlink($cache_dir .'/'. $file);
+        unlink($cache_dir . '/' . $file);
       }
     }
     closedir($dp);
@@ -75,13 +102,13 @@ function dhu_update_7103(&$sandbox) {
   }
   variable_del('parser_common_syndication_cache');
 
-  // Empty parser simplepie cache directory
+  // Empty parser simplepie cache directory.
   $cache_dir = variable_get('parser_simplepie_cache', FALSE);
   if (is_dir($cache_dir)) {
     $dp = opendir($cache_dir);
     while (($file = readdir($dp)) !== FALSE) {
       if (is_file($file)) {
-        unlink($cache_dir .'/'. $file);
+        unlink($cache_dir . '/' . $file);
       }
     }
     closedir($dp);
@@ -89,7 +116,43 @@ function dhu_update_7103(&$sandbox) {
   }
   variable_del('parser_simplepie_cache');
 
-  // Emtpy global variables
+  // Empty global variables.
   variable_del('feedapi_settings_feed');
   menu_rebuild();
+}
+
+/**
+ * Enables or installs a given list of modules.
+ *
+ * @param string[] $module_list
+ *   Array of module names.
+ *
+ * @return string
+ *   Status message.
+ */
+function _dhu_update_module_enable(array $module_list) {
+  if (empty($module_list)) {
+    return '';
+  }
+
+  $args = array(
+    '@modules' => implode(', ', $module_list),
+  );
+
+  if (module_enable($module_list)) {
+    return format_plural(
+      count($module_list),
+      'The following module was enabled successful: @modules.',
+      'The following modules was enabled successful: @modules.',
+      $args
+    );
+  }
+  else {
+    return format_plural(
+      count($module_list),
+      'An error occurred during enabling of the following module: @modules.',
+      'An error occurred during enabling of the following modules: @modules.',
+      $args
+    );
+  }
 }

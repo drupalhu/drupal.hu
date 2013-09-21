@@ -1,0 +1,14 @@
+name = Drupal.hu Common
+description = Common objects.
+core = 7.x
+package = Drupal.hu
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = list
+dependencies[] = taxonomy
+dependencies[] = text
+features[features_api][] = api:2
+features[field_base][] = body
+features[field_base][] = comment_body
+features[field_base][] = taxonomy_vocabulary_8
+features[taxonomy][] = vocabulary_8
