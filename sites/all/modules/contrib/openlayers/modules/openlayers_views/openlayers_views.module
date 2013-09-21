@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file holds the main Drupal hook functions 
+ * This file holds the main Drupal hook functions
  * and private functions for the openlayers_views module.
  *
  * @ingroup openlayers
@@ -39,6 +39,15 @@ function openlayers_views_theme($existing, $type, $theme, $path) {
         'record' => '',
       ),
       'file' => 'includes/openlayers_views.theme.inc',
+    ),
+    'openlayers_image_formatter' => array(
+      'variables' => array(
+        'item'             => NULL,
+        'node'             => NULL,
+        'field'            => array(),
+        'display_settings' => array(),
+      ),
+      'file'      => 'views/openlayers_views.views.theme.inc',
     ),
     'openlayers_views_map' => array(
       'arguments' => array(
@@ -102,25 +111,57 @@ function openlayers_views_openlayers_layers() {
   foreach ($views as $view) {
     foreach ($view->display as $display => $data) {
       $view->set_display($display);
-      if ($data->display_plugin == 'openlayers') {
+
+      // Check for OpenLayers Data Overlays
+      if ($view->display_handler->get_option('style_plugin') == 'openlayers_data' && $display != 'default') {
         //Build Layer
         $layer = new stdClass();
         $layer->api_version = 1;
         $layer->name = $view->name . '_' . $display;
-        $layer->title = 
-          !empty($view->display['default']->handler->options['title']) ?
-            $view->display['default']->handler->options['title'] : 
-            $view->name;
-        $layer->description = $view->description . ' - ' . $data->display_title;
+        $layer->title = empty($data->display_options['title']) ? $view->name : $data->display_options['title'];
+        $layer->title .= ' - ' . $data->display_title;
+        $layer->description = $view->description;
         $layer->data = array(
           'layer_type' => 'openlayers_views_vector',
-          'projection' => array('4326'),
-          'baselayer' => FALSE,
+          'layer_handler' => 'openlayers_views_vector',
+          'projection' => array('EPSG:4326'),
+          'isBaseLayer' => FALSE,
+          'vector' => TRUE,
           'type' => 'Vector',
           'url' => array(),
           'options' => array(),
           'events' => array(),
           'views' => array('view' => $view->name, 'display' => $display),
+        );
+        $layers[$layer->name] = $layer;
+      }
+
+      // Make GeoJSON layers from the views_geojson module
+      if ($view->display_handler->get_option('style_plugin') == 'views_geojson' &&
+        $view->display_handler->display->display_plugin == 'page' &&
+        $view->display_handler->get_option('path') != ''
+      ) {
+        $layer = new stdClass();
+        $layer->api_version = 1;
+        $layer->name = $view->name . '_' . $display;
+        $layer->title = empty($data->display_options['title']) ? $view->name : $data->display_options['title'];
+        $layer->title .= ' - ' . $data->display_title;
+        $layer->description = $view->description;
+
+        // Determine if we should use a BBOX strategy.
+        $useBBOX = FALSE;
+        if (isset($view->display['default']->display_options['arguments']) &&
+          isset($view->display['default']->display_options['arguments']['bbox_argument']) &&
+          $view->display['default']->display_options['arguments']['bbox_argument']['arg_id'] == 'bbox') {
+          $useBBOX = TRUE;
+        }
+
+        $layer->data = array(
+          'layer_type' => 'openlayers_layer_type_geojson',
+          'url' => url($view->display_handler->get_option('path'), array('absolute' => TRUE)),
+          'geojson_data' => '',
+          'views' => array('view' => $view->name, 'display' => $display),
+          'useBBOX' => $useBBOX,
         );
         $layers[$layer->name] = $layer;
       }
@@ -132,54 +173,62 @@ function openlayers_views_openlayers_layers() {
 }
 
 /**
- * Implements hook_form_alter()
+ * Implements hook_field_formatter_info().
  */
-function openlayers_views_form_alter(&$form, $form_state, $form_id) {
-  switch ($form_id) {
-    case 'openlayers_ui_object_export':
-      // prevent exporting in the openlayers interface
-      if (isset($form['#parameters'][3]->data['layer_type']) &&
-        $form['#parameters'][3]->data['layer_type'] == 'openlayers_views_vector') {
-        if (module_exists('views_ui')) {
-          $form['export'] = array(
-            '#value' => t(
-              'This layer is provided by a view, so it must be exported via the 
-              Views interface as a view. <a href="@url">Export this view 
-              using the views module.</a>',
-              array(
-                '@url' => url('admin/structure/views/export/' . 
-                $form['#parameters'][3]->data['views']['view'])
-              )
-            )
-          );
-          unset($form['done']);
-        }
-        else {
-          $form['export'] = array(
-            '#value' => t(
-              'This layer is provided by a view, so it must be exported via the 
-              Views interface as a view. Enable the Views UI 
-              module to export it.'));
-          unset($form['done']);
-        }
-      }
-      break;
-    case 'openlayers_ui_layers_form':
-      // prevent cloning in the openlayers interface
-      if (isset($form['#parameters'][2]->data['layer_type']) && 
-        $form['#parameters'][2]->data['layer_type'] == 'openlayers_views_vector') {
-        $form = array(
-          'message' => array(
-            '#value' => t(
-              'This layer is provided by a view, so it can be cloned by cloning 
-              the view in the <a href="@url">Views interface.</a>',
-              array(
-                '@url' => url('admin/structure/views/')
-              )
-            )
-          )
-          );
-      }
-      break;
+function openlayers_views_field_formatter_info() {
+  return array(
+    'openlayers' => array(
+      'label'       => t('OpenLayers Style'),
+      'field types' => array('image'),
+      'settings'    => array('image_style' => ''),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function openlayers_views_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#theme'            => 'openlayers_image_formatter',
+      '#item'             => $item,
+      '#display_settings' => $display['settings'],
+      '#node'             => $entity,
+      '#field'            => $field,
+    );
   }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function openlayers_views_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $style = new stdClass();
+  $style->name = drupal_html_id('style');
+  $style->data = $settings;
+
+  $form_state['item'] = $style;
+
+  ctools_include('export-ui');
+  $plugin = ctools_get_export_ui('openlayers_styles');
+  $handler = ctools_export_ui_get_handler($plugin);
+
+  call_user_func_array(array($handler, 'edit_form'), array(&$form, &$form_state));
+
+  $form = $form['data'];
+  unset($form['#type']);
+  unset($form['#tree']);
+  unset($form['#title']);
+  unset($form['#description']);
+  unset($form['externalGraphic']);
+
+  return $form;
 }

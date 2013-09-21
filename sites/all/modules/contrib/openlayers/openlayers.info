@@ -2,14 +2,19 @@ name = "OpenLayers"
 description = "OpenLayers base API module"
 core = 7.x
 package = "OpenLayers"
-php = 5.2
+php = 5.3
+dependencies[] = libraries (>=2.1)
+dependencies[] = proj4js
 dependencies[] = ctools
+dependencies[] = file
+dependencies[] = image
 
 ; Core files
 files[] = openlayers.module
-; Information added by drupal.org packaging script on 2011-11-27
-version = "7.x-2.0-beta1"
+
+; Information added by drupal.org packaging script on 2013-05-27
+version = "7.x-2.0-beta7"
 core = "7.x"
 project = "openlayers"
-datestamp = "1322380553"
+datestamp = "1369677663"
 

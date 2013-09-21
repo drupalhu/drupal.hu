@@ -5,6 +5,10 @@ This module provides an implementation of the Search API which uses an Apache
 Solr search server for indexing and searching. Before enabling or using this
 module, you'll have to follow the instructions given in INSTALL.txt first.
 
+For more detailed documentation, see the handbook [1].
+
+[1] https://drupal.org/node/1999280
+
 Supported optional features
 ---------------------------
 
@@ -15,13 +19,13 @@ can be changed arbitrarily. Using your own Solr extensions is thereby also
 possible.
 
 The "direct" parse mode for queries will result in the keys being directly used
-as the query to Solr. For details about Lucene's query syntax, see [1]. There
-are also some Solr additions to this, listed at [2]. Note however that, by
+as the query to Solr. For details about Lucene's query syntax, see [2]. There
+are also some Solr additions to this, listed at [3]. Note however that, by
 default, this module uses the dismax query handler, so searches like
 "field:value" won't work with the "direct" mode.
 
-[1] http://lucene.apache.org/java/2_9_1/queryparsersyntax.html
-[2] http://wiki.apache.org/solr/SolrQuerySyntax
+[2] http://lucene.apache.org/java/2_9_1/queryparsersyntax.html
+[3] http://wiki.apache.org/solr/SolrQuerySyntax
 
 Regarding third-party features, the following are supported:
 
@@ -40,6 +44,10 @@ Regarding third-party features, the following are supported:
   Introduced by module: search_api_views
   Lets you display items that are similar to a given one. Use, e.g., to create
   a "More like this" block for node pages.
+  NOTE: Due to a regression in Solr itself, "More like this" doesn't work with
+  integer and float fields in Solr 4. As a work-around, you can index the fields
+  (or copies of them) as string values. See [4] for details.
+  Also, MLT with date fields isn't currently supported at all for any version.
 - search_api_multi
   Introduced by module: search_api_multi
   Allows you to search multiple indexes at once, as long as they are on the same
@@ -53,12 +61,19 @@ Regarding third-party features, the following are supported:
   Lets you index, filter and sort on location fields. Note, however, that only
   single-valued fields are currently supported for Solr 3.x, and that the option
   isn't supported at all in Solr 1.4.
+- search_api_grouping
+  Introduced by module: search_api_grouping [5]
+  Lets you group search results based on indexed fields. For further information
+  see the FieldCollapsing documentation in the solr wiki [6].
 
 If you feel some service option is missing, or have other ideas for improving
 this implementation, please file a feature request in the project's issue queue,
-at [3].
+at [7].
 
-[3] http://drupal.org/project/issues/search_api_solr
+[4] https://drupal.org/node/2004596
+[5] https://drupal.org/sandbox/daspeter/1783280
+[6] http://wiki.apache.org/solr/FieldCollapsing
+[7] https://drupal.org/project/issues/search_api_solr
 
 Specifics
 ---------
@@ -78,6 +93,19 @@ different sets of fields in different searches on an index, it is adviced that
 you collect all fields that should be searchable into a single field using the
 “Aggregated fields” data alteration.
 
+Clean field identifiers:
+  If your Solr server was created in a module version prior to 1.2, you will get
+  the option to switch the server to "Clean field identifiers" (which is default
+  for all new servers). This will change the Solr field names used for all
+  fields whose Search API identifiers contain a colon (i.e., all nested fields)
+  to support some advanced functionality, like sorting by distance, for which
+  Solr is buggy when using field names with colons.
+  The only downside of this change is that the data in Solr for these fields
+  will become invalid, so all indexes on the server which contain such fields
+  will be scheduled for re-indexing. (If you don't want to search on incomplete
+  data until the re-indexing is finished, you can additionally manually clear
+  the indexes, on their Status tabs, to prevent this.)
+
 Hidden variables
 ----------------
 
@@ -93,11 +121,11 @@ The schema.xml and solrconfig.xml files contain extensive comments on how to
 add additional features or modify behaviour, e.g., for adding a language-
 specific stemmer or a stopword list.
 If you are interested in further customizing your Solr server to your needs,
-see the Solr wiki at [4] for documentation. When editing the schema.xml and
+see the Solr wiki at [8] for documentation. When editing the schema.xml and
 solrconfig.xml files, please only edit the copies in the Solr configuration
 directory, not directly the ones provided with this module.
 
-[4] http://wiki.apache.org/solr/
+[8] http://wiki.apache.org/solr/
 
 You'll have to restart your Solr server after making such changes, for them to
 take effect.

@@ -51,6 +51,13 @@ class SearchApiViewsQuery extends views_plugin_query {
   protected $errors;
 
   /**
+   * Whether to abort the search instead of executing it.
+   *
+   * @var bool
+   */
+  protected $abort = FALSE;
+
+  /**
    * The names of all fields whose value is required by a handler.
    *
    * The format follows the same as Search API field identifiers (parent:child).
@@ -85,7 +92,7 @@ class SearchApiViewsQuery extends views_plugin_query {
         $id = substr($base_table, 17);
         $this->index = search_api_index_load($id);
         $this->query = $this->index->query(array(
-          'parse mode' => 'terms',
+          'parse mode' => $this->options['parse_mode'],
         ));
       }
     }
@@ -136,6 +143,9 @@ class SearchApiViewsQuery extends views_plugin_query {
       'entity_access' => array(
         'default' => FALSE,
       ),
+      'parse_mode' => array(
+        'default' => 'terms',
+      ),
     );
   }
 
@@ -153,6 +163,7 @@ class SearchApiViewsQuery extends views_plugin_query {
       '#description' => t('If the underlying search index has access checks enabled, this option allows to disable them for this view.'),
       '#default_value' => $this->options['search_api_bypass_access'],
     );
+
     if (entity_get_info($this->index->item_type)) {
       $form['entity_access'] = array(
         '#type' => 'checkbox',
@@ -160,6 +171,27 @@ class SearchApiViewsQuery extends views_plugin_query {
         '#description' => t("Execute an access check for all result entities. This prevents users from seeing inappropriate content when the index contains stale data, or doesn't provide access checks. However, result counts, paging and other things won't work correctly if results are eliminated in this way, so only use this as a last ressort (and in addition to other checks, if possible)."),
         '#default_value' => $this->options['entity_access'],
       );
+    }
+
+    $form['parse_mode'] = array(
+      '#type' => 'select',
+      '#title' => t('Parse mode'),
+      '#description' => t('Choose how the search keys will be parsed.'),
+      '#options' => array(),
+      '#default_value' => $this->options['parse_mode'],
+    );
+    $modes = array();
+    foreach ($this->query->parseModes() as $key => $mode) {
+      $form['parse_mode']['#options'][$key] = $mode['name'];
+      if (!empty($mode['description'])) {
+        $states['visible'][':input[name="query[options][parse_mode]"]']['value'] = $key;
+        $form["parse_mode_{$key}_description"] = array(
+          '#type' => 'item',
+          '#title' => $mode['name'],
+          '#description' => $mode['description'],
+          '#states' => $states,
+        );
+      }
     }
   }
 
@@ -184,6 +216,7 @@ class SearchApiViewsQuery extends views_plugin_query {
       // Add a nested filter for each filter group, with its set conjunction.
       foreach ($this->where as $group_id => $group) {
         if (!empty($group['conditions']) || !empty($group['filters'])) {
+          $group += array('type' => 'AND');
           // For filters without a group, we want to always add them directly to
           // the query.
           $filter = ($group_id === '') ? $this->query : $this->query->createFilter($group['type']);
@@ -210,6 +243,21 @@ class SearchApiViewsQuery extends views_plugin_query {
     $view->init_pager();
     $this->pager->query();
 
+    // Views passes sometimes NULL and sometimes the integer 0 for "All" in a
+    // pager. If set to 0 items, a string "0" is passed. Therefore, we unset
+    // the limit if an empty value OTHER than a string "0" was passed.
+    if (!$this->limit && $this->limit !== '0') {
+      $this->limit = NULL;
+    }
+    // Set the range. (We always set this, as there might even be an offset if
+    // all items are shown.)
+    $this->query->range($this->offset, $this->limit);
+
+    // Set the search ID, if it was not already set.
+    if ($this->query->getOption('search id') == get_class($this->query)) {
+      $this->query->setOption('search id', 'search_api_views:' . $view->name . ':' . $view->current_display);
+    }
+
     // Add the "search_api_bypass_access" option to the query, if desired.
     if (!empty($this->options['search_api_bypass_access'])) {
       $this->query->setOption('search_api_bypass_access', TRUE);
@@ -224,7 +272,7 @@ class SearchApiViewsQuery extends views_plugin_query {
    * $view->pager['current_page'].
    */
   public function execute(&$view) {
-    if ($this->errors) {
+    if ($this->errors || $this->abort) {
       if (error_displayable()) {
         foreach ($this->errors as $msg) {
           drupal_set_message(check_plain($msg), 'error');
@@ -238,11 +286,6 @@ class SearchApiViewsQuery extends views_plugin_query {
 
     try {
       $start = microtime(TRUE);
-      // Add range and search ID (if it wasn't already set).
-      $this->query->range($this->offset, $this->limit);
-      if ($this->query->getOption('search id') == get_class($this->query)) {
-        $this->query->setOption('search id', 'search_api_views:' . $view->name . ':' . $view->current_display);
-      }
 
       // Execute the search.
       $results = $this->query->execute();
@@ -267,6 +310,16 @@ class SearchApiViewsQuery extends views_plugin_query {
       // Recursion to get the same error behaviour as above.
       return $this->execute($view);
     }
+  }
+
+  /**
+   * Aborts this search query.
+   *
+   * Used by handlers to flag a fatal error which shouldn't be displayed but
+   * still lead to the view returning empty and the search not being executed.
+   */
+  public function abort() {
+    $this->abort = TRUE;
   }
 
   /**
@@ -370,12 +423,21 @@ class SearchApiViewsQuery extends views_plugin_query {
   public function get_result_entities($results, $relationship = NULL, $field = NULL) {
     list($type, $wrappers) = $this->get_result_wrappers($results, $relationship, $field);
     $return = array();
-    foreach ($wrappers as $id => $wrapper) {
+    foreach ($wrappers as $i => $wrapper) {
       try {
-        $return[$id] = $wrapper->value();
+        // Get the entity ID beforehand for possible watchdog messages.
+        $id = $wrapper->value(array('identifier' => TRUE));
+
+        // Only add results that exist.
+        if ($entity = $wrapper->value()) {
+          $return[$i] = $entity;
+        }
+        else {
+          watchdog('search_api_views', 'The search index returned a reference to an entity with ID @id, which does not exist in the database. Your index may be out of sync and should be rebuilt.', array('@id' => $id), WATCHDOG_ERROR);
+        }
       }
       catch (EntityMetadataWrapperException $e) {
-        // Ignore.
+        watchdog_exception('search_api_views', $e, "%type while trying to load search result entity with ID @id: !message in %function (line %line of %file).", array('@id' => $id), WATCHDOG_ERROR);
       }
     }
     return array($type, $return);
@@ -388,11 +450,11 @@ class SearchApiViewsQuery extends views_plugin_query {
    * query backend.
    */
   public function get_result_wrappers($results, $relationship = NULL, $field = NULL) {
-    $is_entity = (boolean) entity_get_info($this->index->item_type);
+    $entity_type = $this->index->getEntityType();
     $wrappers = array();
     $load_entities = array();
     foreach ($results as $row_index => $row) {
-      if ($is_entity && isset($row->entity)) {
+      if ($entity_type && isset($row->entity)) {
         // If this entity isn't load, register it for pre-loading.
         if (!is_object($row->entity)) {
           $load_entities[$row->entity] = $row_index;
@@ -405,14 +467,14 @@ class SearchApiViewsQuery extends views_plugin_query {
     // If the results are entities, we pre-load them to make use of a multiple
     // load. (Otherwise, each result would be loaded individually.)
     if (!empty($load_entities)) {
-      $entities = entity_load($this->index->item_type, array_keys($load_entities));
+      $entities = entity_load($entity_type, array_keys($load_entities));
       foreach ($entities as $entity_id => $entity) {
         $wrappers[$load_entities[$entity_id]] = $this->index->entityWrapper($entity);
       }
     }
 
     // Apply the relationship, if necessary.
-    $type = $this->index->item_type;
+    $type = $entity_type ? $entity_type : $this->index->item_type;
     $selector_suffix = '';
     if ($field && ($pos = strrpos($field, ':'))) {
       $selector_suffix = substr($field, 0, $pos);
