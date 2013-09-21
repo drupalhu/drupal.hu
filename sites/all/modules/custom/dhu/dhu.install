@@ -156,20 +156,3 @@ function _dhu_update_module_enable(array $module_list) {
     );
   }
 }
-
-function dhu_update_7106() {
-  $tables_to_drop = array(
-    'content_field_assigned',
-    'field_data_field_assigned',
-    'field_revision_field_assigned',
-    'cache_content',
-    'cache_rules',
-  );
-
-  foreach ($tables_to_drop as $table) {
-    if (db_table_exists($table)) {
-      db_drop_table($table);
-    }
-  }
-
-}
