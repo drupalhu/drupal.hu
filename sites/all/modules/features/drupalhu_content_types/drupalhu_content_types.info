@@ -147,3 +147,7 @@ features[variable][] = node_submitted_news
 features[variable][] = node_submitted_note
 features[variable][] = node_submitted_page
 features[variable][] = node_submitted_webform
+
+features_exclude[field_base][] = taxonomyextra
+features_exclude[field_instance][] = node-news-taxonomyextra
+features_exclude[field_instance][] = node-page-taxonomyextra
