@@ -7,7 +7,7 @@
 /**
  * Implements hook_strongarm().
  */
-function drupal_hu_global_settings_strongarm() {
+function drupalhu_global_settings_strongarm() {
   $export = array();
 
   $strongarm = new stdClass();

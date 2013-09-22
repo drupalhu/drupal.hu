@@ -5,7 +5,7 @@
  *
  * Implements hook_update_N().
  */
-function drupal_hu_views_update_7001() {
+function drupalhu_views_update_7001() {
   $deleted_view_list = array(
     'forum_blocks',
     'comments_recent',

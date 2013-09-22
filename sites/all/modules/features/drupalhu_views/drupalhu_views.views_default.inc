@@ -7,7 +7,7 @@
 /**
  * Implements hook_views_default_views().
  */
-function drupal_hu_views_views_default_views() {
+function drupalhu_views_views_default_views() {
   $export = array();
 
   $view = new view();

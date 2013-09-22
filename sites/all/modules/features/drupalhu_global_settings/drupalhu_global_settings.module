@@ -4,4 +4,4 @@
  * Code for the Drupal.hu global settings feature.
  */
 
-include_once 'drupal_hu_global_settings.features.inc';
+include_once 'drupalhu_global_settings.features.inc';

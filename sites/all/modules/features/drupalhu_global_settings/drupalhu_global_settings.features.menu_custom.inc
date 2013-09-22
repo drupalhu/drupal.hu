@@ -7,7 +7,7 @@
 /**
  * Implements hook_menu_default_menu_custom().
  */
-function drupal_hu_global_settings_menu_default_menu_custom() {
+function drupalhu_global_settings_menu_default_menu_custom() {
   $menus = array();
 
   // Exported menu: devel.

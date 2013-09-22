@@ -7,6 +7,6 @@
 /**
  * Implements hook_views_api().
  */
-function drupal_hu_views_views_api($module = NULL, $api = NULL) {
+function drupalhu_views_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
 }

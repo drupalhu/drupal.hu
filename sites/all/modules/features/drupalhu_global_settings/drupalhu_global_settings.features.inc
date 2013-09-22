@@ -7,7 +7,7 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function drupal_hu_global_settings_ctools_plugin_api($module = NULL, $api = NULL) {
+function drupalhu_global_settings_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -16,7 +16,7 @@ function drupal_hu_global_settings_ctools_plugin_api($module = NULL, $api = NULL
 /**
  * Implements hook_flag_default_flags().
  */
-function drupal_hu_global_settings_flag_default_flags() {
+function drupalhu_global_settings_flag_default_flags() {
   $flags = array();
   // Exported flag: "Könyvjelzők - Követés".
   $flags['bookmarks'] = array(
@@ -64,7 +64,7 @@ function drupal_hu_global_settings_flag_default_flags() {
 /**
  * Implements hook_image_default_styles().
  */
-function drupal_hu_global_settings_image_default_styles() {
+function drupalhu_global_settings_image_default_styles() {
   $styles = array();
 
   // Exported image style: user_picure.

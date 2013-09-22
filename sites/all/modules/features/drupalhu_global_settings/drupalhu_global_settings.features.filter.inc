@@ -7,7 +7,7 @@
 /**
  * Implements hook_filter_default_formats().
  */
-function drupal_hu_global_settings_filter_default_formats() {
+function drupalhu_global_settings_filter_default_formats() {
   $formats = array();
 
   // Exported format: Szűrt HTML.

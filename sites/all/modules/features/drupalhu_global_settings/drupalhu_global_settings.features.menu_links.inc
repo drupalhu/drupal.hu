@@ -7,7 +7,7 @@
 /**
  * Implements hook_menu_default_menu_links().
  */
-function drupal_hu_global_settings_menu_default_menu_links() {
+function drupalhu_global_settings_menu_default_menu_links() {
   $menu_links = array();
 
   // Exported menu link: main-menu:<front>

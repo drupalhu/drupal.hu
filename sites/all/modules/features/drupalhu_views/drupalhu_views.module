@@ -4,4 +4,4 @@
  * Code for the Drupal hu views feature.
  */
 
-include_once 'drupal_hu_views.features.inc';
+include_once 'drupalhu_views.features.inc';
