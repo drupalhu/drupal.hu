@@ -10,7 +10,7 @@
  *
  * Disable modules: geocode.
  */
-function dhu_update_7101(&$sandbox) {
+function dhu_update_7101() {
   $messages = array();
 
   $modules_to_disable = array('geocode');
@@ -25,7 +25,7 @@ function dhu_update_7101(&$sandbox) {
 /**
  * Implements hook_update_N().
  */
-function dhu_update_7102(&$sandbox) {
+function dhu_update_7102() {
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('filename', 'profiles/standard/standard.profile')
@@ -76,12 +76,12 @@ function dhu_update_7105() {
     }
   }
 
-  // Delete variables site-wide
+  // Delete variables site-wide.
   variable_del('feedapi_allowed_html_tags');
   variable_del('feedapi_allow_html_all');
   variable_del('feedapi_cron_percentage');
 
-  // Delete variables per-content-type
+  // Delete variables per-content-type.
   $types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
   foreach ($types as $type => $data) {
     variable_del('feedapi_' . $type);
