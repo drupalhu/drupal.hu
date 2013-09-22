@@ -119,50 +119,40 @@ function dhu_update_7105() {
   // Empty global variables.
   variable_del('feedapi_settings_feed');
   menu_rebuild();
-}
 
-/**
- * Enables or installs a given list of modules.
- *
- * @param string[] $module_list
- *   Array of module names.
- *
- * @return string
- *   Status message.
- */
-function _dhu_update_module_enable(array $module_list) {
-  if (empty($module_list)) {
-    return '';
-  }
-
-  $args = array(
-    '@modules' => implode(', ', $module_list),
+  return t(
+    'The following module was uninstalled without hook_uninstall(): @module.',
+    array(
+      '@module' => 'feedapi',
+    )
   );
-
-  if (module_enable($module_list)) {
-    return format_plural(
-      count($module_list),
-      'The following module was enabled successful: @modules.',
-      'The following modules was enabled successful: @modules.',
-      $args
-    );
-  }
-  else {
-    return format_plural(
-      count($module_list),
-      'An error occurred during enabling of the following module: @modules.',
-      'An error occurred during enabling of the following modules: @modules.',
-      $args
-    );
-  }
 }
 
 /**
- * Remove unneeded tables
+ * Database cleanup.
  *
- * @see https:github.com//drupalhu//drupal.hu//issues75
+ * @see https://github.com/drupalhu/drupal.hu/issues/75
  */
 function dhu_update_7106() {
+  // https://github.com/drupalhu/drupal.hu/issues/83
+  drupal_uninstall_modules(
+    array(
+      'colorbox',
+      'diff',
+      'drupalhu_search',
+      'environment_indicator',
+      'geocode',
+      'googleanalytics',
+      'l10n_client',
+      'search_api_sorts',
+      'shortcut',
+      'rules_admin',
+      'rules',
+    ),
+    TRUE
+  );
+
+  // https://github.com/drupalhu/drupal.hu/issues/84
   $tables_to_drop = array(
     'access',
     'cache_content',
@@ -172,7 +162,6 @@ function dhu_update_7106() {
     'client',
     'client_system',
     'comment_cck_revisions',
-    'content_field_assigned',
     'content_field_technique',
     'content_group',
     'content_group_fields',
@@ -208,10 +197,8 @@ function dhu_update_7106() {
     'node_type_content',
     'old_revisions',
     'opengraph_meta',
-    'parser_common_syndication',
     'search_api_facet',
     'search_api_page',
-    'search_api_sort',
     'search_dataset',
     'search_index',
     'search_node_links',
@@ -225,15 +212,13 @@ function dhu_update_7106() {
     'field_data_field_assigned',
     'field_revision_field_assigned',
   );
-  $fails = array();
   foreach ($tables_to_drop as $table) {
     if (db_table_exists($table)) {
-      if (!db_drop_table($table)) {
-        $fails[] = $table;
-      }
+      db_drop_table($table);
     }
   }
 
+  // https://github.com/drupalhu/drupal.hu/issues/82
   db_delete('field_config_instance')
     ->condition('field_name', 'field_assigned')
     ->execute();
@@ -241,24 +226,144 @@ function dhu_update_7106() {
   db_delete('field_config')
     ->condition('field_name', 'field_assigned')
     ->execute();
-  //update owner - ezt biztos lehet szebben is...
-  db_query("update {system} set owner=''");
-  //delete unneded content type
+
+  // https://github.com/drupalhu/drupal.hu/issues/74
+  db_update('system')
+    ->fields(array(
+        'owner' => '',
+      ))
+    ->condition('type', 'module')
+    ->execute();
+
+  // https://github.com/drupalhu/drupal.hu/issues/80
+  // https://github.com/drupalhu/drupal.hu/issues/81
+  // https://github.com/drupalhu/drupal.hu/issues/82
   $types = array(
-    'munkakozveito',
-    'blog',
-    'translator',
+    'blog' => array(
+      'variables' => array(
+        'field_bundle_settings_node__blog',
+        'menu_options_blog',
+        'menu_parent_blog',
+      ),
+    ),
+    'issue' => array(
+      'variables' => array(
+        'comment_cck_fields_issue',
+        'comment_controls_issue',
+        'comment_default_order_issue',
+        'content_extra_weights_issue',
+        'feedapi_issue',
+        'feedapi_settings_issue',
+        'form_build_id_issue',
+        'language_content_type_issue',
+        'node_options_issue',
+        'show_preview_changes_issue',
+      ),
+    ),
+    'munkakozveito' => array(
+      'variables' => array(
+        'additional_settings__active_tab_munkakozveito',
+        'comment_anonymous_munkakozveito',
+        'comment_default_mode_munkakozveito',
+        'comment_default_per_page_munkakozveito',
+        'comment_form_location_munkakozveito',
+        'comment_munkakozveito',
+        'comment_preview_munkakozveito',
+        'comment_subject_field_munkakozveito',
+        'field_bundle_settings_node__munkakozveito',
+        'language_content_type_munkakozveito',
+        'menu_options_munkakozveito',
+        'menu_parent_munkakozveito',
+        'node_options_munkakozveito',
+        'node_preview_munkakozveito',
+        'node_submitted_munkakozveito',
+        'pathauto_node_munkakozveito_pattern',
+        'save_continue_munkakozveito',
+        'unique_field_comp_munkakozveito',
+        'unique_field_fields_munkakozveito',
+        'unique_field_scope_munkakozveito',
+        'unique_field_show_matches_munkakozveito',
+      ),
+    ),
+    'translator' => array(
+      'variables' => array(
+        'comment_anonymous_translator',
+        'comment_controls_translator',
+        'comment_default_mode_translator',
+        'comment_default_order_translator',
+        'comment_default_per_page_translator',
+        'comment_form_location_translator',
+        'comment_preview_translator',
+        'comment_subject_field_translator',
+        'comment_translator',
+        'field_bundle_settings_node__translator',
+        'menutrails_node_types',
+        'menu_options_translator',
+        'menu_parent_translator',
+        'node_options_translator',
+        'node_preview_translator',
+        'node_submitted_translator',
+        'pathauto_node_translator_pattern',
+      ),
+    ),
   );
 
-  foreach (
-    $types as $type) {
-    node_type_delete($type);
-    variable_del('node_preview_' . $type);
+  foreach ($types as $type_name => $type) {
+    node_type_delete($type_name);
+    foreach ($type['variables'] as $variable_name) {
+      variable_del($variable_name);
+    }
+
+    $vud = variable_get('vud_comment_node_types', NULL);
+    if ($vud) {
+      unset($vud[$type_name]);
+      variable_set('vud_comment_node_types', $vud);
+    }
   }
 
   node_types_rebuild();
-  menu_rebuild();
-  if ($fails) {
-    return t("Not deleted: " . join(', ', $fails));
+
+  $message = t('The field deletions will be finished after the first cron run.');
+  $message .= ' ';
+  $message .= t('You can <a href="@cron">run cron manually</a>.', array(
+      '@cron' => url('admin/reports/status/run-cron'),
+    ));
+
+  return $message;
+}
+
+/**
+ * Enables or installs a given list of modules.
+ *
+ * @param string[] $module_list
+ *   Array of module names.
+ *
+ * @return string
+ *   Status message.
+ */
+function _dhu_update_module_enable(array $module_list) {
+  if (empty($module_list)) {
+    return '';
+  }
+
+  $args = array(
+    '@modules' => implode(', ', $module_list),
+  );
+
+  if (module_enable($module_list)) {
+    return format_plural(
+      count($module_list),
+      'The following module was enabled successful: @modules.',
+      'The following modules was enabled successful: @modules.',
+      $args
+    );
+  }
+  else {
+    return format_plural(
+      count($module_list),
+      'An error occurred during enabling of the following module: @modules.',
+      'An error occurred during enabling of the following modules: @modules.',
+      $args
+    );
   }
 }
