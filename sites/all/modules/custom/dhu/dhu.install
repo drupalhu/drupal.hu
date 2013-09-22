@@ -297,7 +297,6 @@ function dhu_update_7106() {
         'comment_subject_field_translator',
         'comment_translator',
         'field_bundle_settings_node__translator',
-        'menutrails_node_types',
         'menu_options_translator',
         'menu_parent_translator',
         'node_options_translator',
