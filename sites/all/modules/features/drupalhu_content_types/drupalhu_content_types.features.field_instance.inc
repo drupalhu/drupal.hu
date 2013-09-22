@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function drupal_hu_content_types_field_default_field_instances() {
+function drupalhu_content_types_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-esemeny-body'

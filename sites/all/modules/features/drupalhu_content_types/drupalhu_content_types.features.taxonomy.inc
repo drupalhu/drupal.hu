@@ -7,7 +7,7 @@
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function drupal_hu_content_types_taxonomy_default_vocabularies() {
+function drupalhu_content_types_taxonomy_default_vocabularies() {
   return array(
     'vocabulary_1' => array(
       'name' => 'Tudásbázis',

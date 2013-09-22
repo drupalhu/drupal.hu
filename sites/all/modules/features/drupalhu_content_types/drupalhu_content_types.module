@@ -4,4 +4,4 @@
  * Code for the Drupal.hu content types feature.
  */
 
-include_once 'drupal_hu_content_types.features.inc';
+include_once 'drupalhu_content_types.features.inc';

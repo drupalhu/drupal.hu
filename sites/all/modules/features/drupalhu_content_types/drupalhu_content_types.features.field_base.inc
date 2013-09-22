@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_bases().
  */
-function drupal_hu_content_types_field_default_field_bases() {
+function drupalhu_content_types_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_date'
