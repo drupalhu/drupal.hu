@@ -16,7 +16,7 @@ function dhu_update_7101(&$sandbox) {
   $modules_to_disable = array('geocode');
   module_disable($modules_to_disable);
   $messages[] = t('Disable modules: @modules.', array(
-      '@modules' => implode(', ', $modules_to_disable),
+    '@modules' => implode(', ', $modules_to_disable),
   ));
 
   return implode('<br />', $messages);
@@ -50,8 +50,8 @@ function dhu_update_7104() {
 
   return format_plural(
     count($theme_list),
-    'The following theme was enabled successful: @themes.',
-    'The following themes was enabled successful: @themes.',
+    'The following theme was disabled successful: @themes.',
+    'The following themes was disabled successful: @themes.',
     array('@themes' => implode(', ', $theme_list))
   );
 }
@@ -119,6 +119,217 @@ function dhu_update_7105() {
   // Empty global variables.
   variable_del('feedapi_settings_feed');
   menu_rebuild();
+
+  return t(
+    'The following module was uninstalled without hook_uninstall(): @module.',
+    array(
+      '@module' => 'feedapi',
+    )
+  );
+}
+
+/**
+ * Database cleanup.
+ *
+ * @see https://github.com/drupalhu/drupal.hu/issues/75
+ */
+function dhu_update_7106() {
+  // https://github.com/drupalhu/drupal.hu/issues/83
+  drupal_uninstall_modules(
+    array(
+      'colorbox',
+      'diff',
+      'drupalhu_search',
+      'environment_indicator',
+      'geocode',
+      'googleanalytics',
+      'l10n_client',
+      'search_api_sorts',
+      'shortcut',
+      'rules_admin',
+      'rules',
+    ),
+    TRUE
+  );
+
+  // https://github.com/drupalhu/drupal.hu/issues/84
+  $tables_to_drop = array(
+    'access',
+    'cache_content',
+    'backup_migrate_destinations',
+    'backup_migrate_profiles',
+    'backup_migrate_schedules',
+    'client',
+    'client_system',
+    'comment_cck_revisions',
+    'content_field_technique',
+    'content_group',
+    'content_group_fields',
+    'content_node_field',
+    'content_node_field_instance',
+    'content_type_issue',
+    'content_type_link',
+    'content_type_news',
+    'content_type_poll',
+    'd6_upgrade_filter',
+    'field_data_field_book_audience',
+    'field_data_field_book_level',
+    'field_data_field_clicks',
+    'field_data_field_location',
+    'field_data_field_priority',
+    'field_data_field_slide_headline',
+    'field_data_field_slide_image',
+    'field_data_field_slide_link',
+    'field_data_field_technique',
+    'field_revision_field_book_audience',
+    'field_revision_field_book_level',
+    'field_revision_field_clicks',
+    'field_revision_field_location',
+    'field_revision_field_priority',
+    'field_revision_field_slide_headline',
+    'field_revision_field_slide_image',
+    'field_revision_field_slide_link',
+    'field_revision_field_technique',
+    'files',
+    'moderation_filters',
+    'moderation_roles',
+    'moderation_votes',
+    'node_type_content',
+    'old_revisions',
+    'opengraph_meta',
+    'search_api_facet',
+    'search_api_page',
+    'search_dataset',
+    'search_index',
+    'search_node_links',
+    'search_total',
+    'taxonomy_manager_merge',
+    'taxonomy_term_relation',
+    'taxonomy_term_synonym',
+    'views_object_cache',
+    'weblink',
+    'content_field_assigned',
+    'field_data_field_assigned',
+    'field_revision_field_assigned',
+  );
+  foreach ($tables_to_drop as $table) {
+    if (db_table_exists($table)) {
+      db_drop_table($table);
+    }
+  }
+
+  // https://github.com/drupalhu/drupal.hu/issues/82
+  db_delete('field_config_instance')
+    ->condition('field_name', 'field_assigned')
+    ->execute();
+
+  db_delete('field_config')
+    ->condition('field_name', 'field_assigned')
+    ->execute();
+
+  // https://github.com/drupalhu/drupal.hu/issues/74
+  db_update('system')
+    ->fields(array(
+        'owner' => '',
+      ))
+    ->condition('type', 'module')
+    ->execute();
+
+  // https://github.com/drupalhu/drupal.hu/issues/80
+  // https://github.com/drupalhu/drupal.hu/issues/81
+  // https://github.com/drupalhu/drupal.hu/issues/82
+  $types = array(
+    'blog' => array(
+      'variables' => array(
+        'field_bundle_settings_node__blog',
+        'menu_options_blog',
+        'menu_parent_blog',
+      ),
+    ),
+    'issue' => array(
+      'variables' => array(
+        'comment_cck_fields_issue',
+        'comment_controls_issue',
+        'comment_default_order_issue',
+        'content_extra_weights_issue',
+        'feedapi_issue',
+        'feedapi_settings_issue',
+        'form_build_id_issue',
+        'language_content_type_issue',
+        'node_options_issue',
+        'show_preview_changes_issue',
+      ),
+    ),
+    'munkakozveito' => array(
+      'variables' => array(
+        'additional_settings__active_tab_munkakozveito',
+        'comment_anonymous_munkakozveito',
+        'comment_default_mode_munkakozveito',
+        'comment_default_per_page_munkakozveito',
+        'comment_form_location_munkakozveito',
+        'comment_munkakozveito',
+        'comment_preview_munkakozveito',
+        'comment_subject_field_munkakozveito',
+        'field_bundle_settings_node__munkakozveito',
+        'language_content_type_munkakozveito',
+        'menu_options_munkakozveito',
+        'menu_parent_munkakozveito',
+        'node_options_munkakozveito',
+        'node_preview_munkakozveito',
+        'node_submitted_munkakozveito',
+        'pathauto_node_munkakozveito_pattern',
+        'save_continue_munkakozveito',
+        'unique_field_comp_munkakozveito',
+        'unique_field_fields_munkakozveito',
+        'unique_field_scope_munkakozveito',
+        'unique_field_show_matches_munkakozveito',
+      ),
+    ),
+    'translator' => array(
+      'variables' => array(
+        'comment_anonymous_translator',
+        'comment_controls_translator',
+        'comment_default_mode_translator',
+        'comment_default_order_translator',
+        'comment_default_per_page_translator',
+        'comment_form_location_translator',
+        'comment_preview_translator',
+        'comment_subject_field_translator',
+        'comment_translator',
+        'field_bundle_settings_node__translator',
+        'menutrails_node_types',
+        'menu_options_translator',
+        'menu_parent_translator',
+        'node_options_translator',
+        'node_preview_translator',
+        'node_submitted_translator',
+        'pathauto_node_translator_pattern',
+      ),
+    ),
+  );
+
+  foreach ($types as $type_name => $type) {
+    node_type_delete($type_name);
+    foreach ($type['variables'] as $variable_name) {
+      variable_del($variable_name);
+    }
+
+    $vud = variable_get('vud_comment_node_types', NULL);
+    if ($vud) {
+      unset($vud[$type_name]);
+      variable_set('vud_comment_node_types', $vud);
+    }
+  }
+
+  node_types_rebuild();
+
+  $message = t('The field deletions will be finished after the first cron run.');
+  $message .= ' ';
+  $message .= t('You can <a href="@cron">run cron manually</a>.', array(
+      '@cron' => url('admin/reports/status/run-cron'),
+    ));
+
+  return $message;
 }
 
 /**
