@@ -56,62 +56,6 @@ function drupal_hu_global_settings_filter_default_formats() {
     ),
   );
 
-  // Exported format: Teljes HTML.
-  $formats[3] = array(
-    'format' => 3,
-    'name' => 'Teljes HTML',
-    'cache' => 1,
-    'status' => 1,
-    'weight' => 0,
-    'filters' => array(
-      'filter_autop' => array(
-        'weight' => -10,
-        'status' => 1,
-        'settings' => array(),
-      ),
-      'filter_url' => array(
-        'weight' => 10,
-        'status' => 1,
-        'settings' => array(
-          'filter_url_length' => 72,
-        ),
-      ),
-      'filter_htmlcorrector' => array(
-        'weight' => 11,
-        'status' => 1,
-        'settings' => array(),
-      ),
-    ),
-  );
-
-  // Exported format: Plain text.
-  $formats[7] = array(
-    'format' => 7,
-    'name' => 'Plain text',
-    'cache' => 1,
-    'status' => 1,
-    'weight' => 1,
-    'filters' => array(
-      'filter_html_escape' => array(
-        'weight' => 0,
-        'status' => 1,
-        'settings' => array(),
-      ),
-      'filter_url' => array(
-        'weight' => 1,
-        'status' => 1,
-        'settings' => array(
-          'filter_url_length' => 72,
-        ),
-      ),
-      'filter_autop' => array(
-        'weight' => 2,
-        'status' => 1,
-        'settings' => array(),
-      ),
-    ),
-  );
-
   // Exported format: Advanced HTML.
   $formats['advanced_html'] = array(
     'format' => 'advanced_html',
