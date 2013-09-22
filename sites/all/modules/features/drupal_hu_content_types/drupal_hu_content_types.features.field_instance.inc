@@ -678,46 +678,6 @@ function drupal_hu_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-news-taxonomyextra'
-  $field_instances['node-news-taxonomyextra'] = array(
-    'bundle' => 'news',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Debris left over after upgrade from Drupal 6',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'taxonomyextra',
-    'label' => 'Taxonomy upgrade extras',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 33,
-    ),
-  );
-
   // Exported field_instance: 'node-news-upload'
   $field_instances['node-news-upload'] = array(
     'bundle' => 'news',
@@ -919,46 +879,6 @@ function drupal_hu_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-page-taxonomyextra'
-  $field_instances['node-page-taxonomyextra'] = array(
-    'bundle' => 'page',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Debris left over after upgrade from Drupal 6',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'taxonomyextra',
-    'label' => 'Taxonomy upgrade extras',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 31,
-    ),
-  );
-
   // Exported field_instance: 'node-page-upload'
   $field_instances['node-page-upload'] = array(
     'bundle' => 'page',
@@ -1120,7 +1040,6 @@ function drupal_hu_content_types_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Body');
   t('Címkék');
-  t('Debris left over after upgrade from Drupal 6');
   t('Drupal verzió');
   t('File attachments');
   t('Fájlok');
@@ -1128,7 +1047,6 @@ function drupal_hu_content_types_field_default_field_instances() {
   t('Időpont');
   t('Kategóriák');
   t('Kérlek add meg mindig, hogy milyen Drupal verziót használsz! A segítség csak akkor lesz használható, ha ezt megadod.');
-  t('Taxonomy upgrade extras');
   t('Törzs');
   t('Válasz');
 
