@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * drupal_hu_global_settings.features.inc
+ * drupalhu_global_settings.features.inc
  */
 
 /**
@@ -52,7 +52,7 @@ function drupalhu_global_settings_flag_default_flags() {
     'show_contextual_link' => FALSE,
     'i18n' => 0,
     'api_version' => 2,
-    'module' => 'drupal_hu_global_settings',
+    'module' => 'drupalhu_global_settings',
     'locked' => array(
       0 => 'name',
     ),

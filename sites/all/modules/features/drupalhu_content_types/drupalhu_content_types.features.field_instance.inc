@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * drupal_hu_content_types.features.field_instance.inc
+ * drupalhu_content_types.features.field_instance.inc
  */
 
 /**

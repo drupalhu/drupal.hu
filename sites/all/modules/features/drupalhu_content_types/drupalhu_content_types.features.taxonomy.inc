@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * drupal_hu_content_types.features.taxonomy.inc
+ * drupalhu_content_types.features.taxonomy.inc
  */
 
 /**

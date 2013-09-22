@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * drupal_hu_global_settings.features.menu_links.inc
+ * drupalhu_global_settings.features.menu_links.inc
  */
 
 /**

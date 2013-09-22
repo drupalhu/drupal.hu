@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * drupal_hu_views.views_default.inc
+ * drupalhu_views.views_default.inc
  */
 
 /**
