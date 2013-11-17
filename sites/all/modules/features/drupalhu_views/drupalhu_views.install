@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * Remove the unnecessary views form site.
+ *
+ * Implements hook_update_N().
+ */
+function drupalhu_views_update_7001() {
+  $deleted_view_list = array(
+    'forum_blocks',
+    'comments_recent',
+    'felhasznaloi_keptar',
+    'kereses',
+    'hh_linkek',
+    'gallery_admin'
+  );
+
+  foreach ($deleted_view_list as $view_name) {
+    $view = views_get_view($view_name);
+    views_delete_view($view);
+  }
+}
