@@ -141,6 +141,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteRule ^kezikonyv/letoltes/cvs$ http://drupal.hu/kezikonyv/kiegeszitesek/cvs [R=301,L]
   RewriteRule ^kezikonyv/letoltes$ http://drupal.hu/kezikonyv/telepites [R=301,L]
   RewriteRule ^kezikonyv/eletrekeltes$ http://drupal.hu/kezikonyv/telepites [R=301,L]
+  RewriteRule ^kategoriak/linkek/magyar-drupal-alapú-webhelyek$ http://drupalhu/linkek [R=301,L]
 
   # Nem letezo dolgok
   RewriteRule ^themes/(ddothu|drupalhu)(.*)$ - [G]

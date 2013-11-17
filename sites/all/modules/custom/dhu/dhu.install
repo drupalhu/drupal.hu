@@ -366,3 +366,16 @@ function _dhu_update_module_enable(array $module_list) {
     );
   }
 }
+
+/**
+ * Delete vocabulary_7
+ *
+ * @see https://github.com/drupalhu/drupal.hu/issues/87
+ */
+function dhu_update_7106() {
+  $vids = array();
+  $conditions = array('machine_name' => 'vocabulary_7');
+  $vocabs = taxonomy_vocabulary_load_multiple(array(), $conditions);
+  $vocab = array_shift($vocabs);
+  taxonomy_vocabulary_delete($vocab->vid);
+}
