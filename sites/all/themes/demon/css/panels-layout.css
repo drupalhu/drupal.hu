@@ -1,0 +1,14 @@
+
+body > .panel-display {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#main-wrapper.panel-2col-stacked > .center-wrapper > .panel-col-first {
+  width: 650px;
+}
+
+#main-wrapper.panel-2col-stacked > .center-wrapper > .panel-col-last {
+  width: 310px;
+}

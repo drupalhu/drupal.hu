@@ -5,6 +5,8 @@
  * Basic functions for Drupal.hu.
  */
 
+include_once 'dhu.features.inc';
+
 /**
  * Implements hook_preprocess_views_view().
  */
