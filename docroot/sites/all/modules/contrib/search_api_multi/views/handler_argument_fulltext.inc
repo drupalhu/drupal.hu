@@ -6,14 +6,13 @@
 class SearchApiMultiHandlerArgumentFulltext extends SearchApiViewsHandlerArgumentFulltext {
 
   /**
-   * Extend the options form a bit.
+   * Overrides SearchApiViewsHandlerArgumentFulltext::getFulltextFields().
+   *
+   * Provides the correct options in the "Fields" select list.
    */
-  public function options_form(array &$form, array &$form_state) {
-    parent::options_form($form, $form_state);
-
+  public function getFulltextFields() {
     $fields = array();
-    $server_id = substr($this->table, 17);
-    $indexes = search_api_index_load_multiple(FALSE, array('enabled' => TRUE, 'server' => $server_id));
+    $indexes = search_api_index_load_multiple(FALSE, array('enabled' => TRUE));
     foreach ($indexes as $index) {
       if ($index->getFields()) {
         $prefix = $index->machine_name . ':';
@@ -24,23 +23,7 @@ class SearchApiMultiHandlerArgumentFulltext extends SearchApiViewsHandlerArgumen
         }
       }
     }
-    if (!empty($fields)) {
-      $form['fields'] = array(
-        '#type' => 'select',
-        '#title' => t('Searched fields'),
-        '#description' => t('Select the fields that will be searched. If no fields are selected, all available fulltext fields will be searched.'),
-        '#options' => $fields,
-        '#size' => min(4, count($fields)),
-        '#multiple' => TRUE,
-        '#default_value' => $this->options['fields'],
-      );
-    }
-    else {
-      $form['fields'] = array(
-        '#type' => 'value',
-        '#value' => array(),
-      );
-    }
+    return $fields;
   }
 
 }

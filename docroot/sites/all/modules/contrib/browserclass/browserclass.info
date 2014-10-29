@@ -2,9 +2,9 @@ name = Browser class
 description = Add browser class to body element
 core = 7.x
 configure = admin/config/user-interface/browserclass
-; Information added by drupal.org packaging script on 2012-11-21
-version = "7.x-1.5"
+; Information added by Drupal.org packaging script on 2013-12-07
+version = "7.x-1.7"
 core = "7.x"
 project = "browserclass"
-datestamp = "1353523594"
+datestamp = "1386426509"
 

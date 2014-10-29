@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Multi-Index Searches module.
+ */
+
+/**
+ * Change the base table of multi-index views.
+ */
+function search_api_multi_update_7101() {
+  if (db_table_exists('views_view')) {
+    db_update('views_view')
+      ->fields(array('base_table' => 'search_api_multi'))
+      ->condition('base_table', 'search_api_multi_%', 'LIKE')
+      ->execute();
+  }
+}

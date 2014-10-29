@@ -19,12 +19,15 @@
       var aversion = '';
       var resultant = '';
 
-      if (this.agent.match(/msie/)) {
+      var iePattern = /(?:\b(ms)?ie\s+|\btrident\/7\.0;.*\s+rv:)(\d+)/;
+      var ieMatch = this.agent.match(iePattern);
+
+      if (ieMatch) {
         this.classes.push('ie');
 
-        reg_res = this.agent.match(/.*msie ([0-9]*)\..*/);
-        this.classes.push('ie' + reg_res[1]);
-
+        if (typeof ieMatch[2] !== 'undefined') {
+          this.classes.push('ie' + ieMatch[2]);
+        }
       }
 
       if (this.agent.match(/opera/)) {
@@ -37,14 +40,22 @@
         }
       }
 
-      // Chrome is send safari header too
+      // Check for chrome desktop first, then chrome mobile, lastly check for
+      // safari, as these are mutually exclusive.
       if (this.agent.match(/chrome/)) {
         this.classes.push('chrome');
         
         aresult = this.stristr(this.agent, 'chrome').split('/');
         aversion = aresult[1].split(' ');
         this.classes.push('chrome' + this.clearVersion(aversion[0]));
-        
+      } else if (this.agent.match(/crios/)) {
+        this.classes.push('chrome');
+        aresult = this.stristr(this.agent, 'crios').split('/');
+
+        if (aresult[1]) {
+          aversion = aresult[1].split(' ');
+          this.classes.push('chrome' + this.clearVersion(aversion[0]));
+        }
       } else if (this.agent.match(/safari/)) {
         this.classes.push('safari');
         aresult = this.stristr(this.agent, 'version').split('/');
@@ -186,14 +197,18 @@
 
     isMobile: function(classes) {
       var mobile_devices = ['ipad', 'ipod', 'iphone', 'android', 'blackberry', 'operamini'];
+      var mobile_devices_test = false;
 
       $.each(mobile_devices, function(index, value) {
         if ($.inArray(value, classes) != -1) {
-          return true;
+          mobile_devices_test = true;
+
+          // Terminate the $.each() loop, since a match has been found.
+          return false;
         }
       });
 
-      if (this.agent.match(/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|vodafone|o2|pocket|kindle|mobile|pda|psp|treo)/)) {
+      if (mobile_devices_test || this.agent.match(/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|vodafone|o2|pocket|kindle|mobile|pda|psp|treo)/)) {
         return true;
       }
     },
