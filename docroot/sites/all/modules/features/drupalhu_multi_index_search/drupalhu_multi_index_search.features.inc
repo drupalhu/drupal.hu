@@ -215,3 +215,33 @@ function drupalhu_multi_index_search_default_search_api_index() {
   }');
   return $items;
 }
+
+/**
+ * Implements hook_default_search_api_server().
+ */
+function drupalhu_multi_index_search_default_search_api_server() {
+  $items = array();
+  $items['acquia_solr'] = entity_import('search_api_server', '{
+    "name" : "Acquia Solr",
+    "machine_name" : "acquia_solr",
+    "description" : "",
+    "class" : "acquia_search_service",
+    "options" : {
+      "clean_ids" : true,
+      "scheme" : "http",
+      "host" : "useast1-c1.acquia-search.com",
+      "port" : "80",
+      "path" : "\\/solr\\/CDKV-36627",
+      "edismax" : 0,
+      "modify_acquia_connection" : 0,
+      "http_user" : "",
+      "http_pass" : "",
+      "excerpt" : 0,
+      "retrieve_data" : 0,
+      "highlight_data" : 0,
+      "http_method" : "POST"
+    },
+    "enabled" : "1"
+  }');
+  return $items;
+}
