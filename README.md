@@ -6,9 +6,9 @@
 
 2. Klonozd a projectet a gepedre (a USERNAME a te githubos userneved)
 
-```
-$ git clone git@github.com:USERNAME/drupal.hu.git
-```
+	```
+	$ git clone git@github.com:USERNAME/drupal.hu.git
+	```
 
 3. Add hozza a hivatalos repot remote-kent
 
