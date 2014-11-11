@@ -51,6 +51,7 @@ function drupalhu_planet_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'planet_user_picture',
   );
 
   return $styles;

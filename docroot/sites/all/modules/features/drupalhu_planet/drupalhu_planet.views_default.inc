@@ -51,10 +51,6 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Az általunk ismert magyar Drupal témákkal is foglalkozó blogokból a Drupalhoz kapcsolódó bejegyzéseket összesítjük, így könnyebb követni a releváns magyar tartalmakat.';
   $handler->display->display_options['header']['text']['format'] = '1';
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
-  $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
-  $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
-  $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
   /* Rendezési szempont: Tartalom: Beküldés dátuma */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -85,7 +81,7 @@ function drupalhu_planet_views_default_views() {
   $handler = $view->new_display('feed', 'Hírcsatorna', 'feed_1');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['style_plugin'] = 'rss';
-  $handler->display->display_options['row_plugin'] = 'rss_fields';
+  $handler->display->display_options['row_plugin'] = 'node_rss';
   $handler->display->display_options['path'] = 'planet/content-rss';
   $translatables['planet'] = array(
     t('Alapértelmezések'),
@@ -104,7 +100,6 @@ function drupalhu_planet_views_default_views() {
     t('következő ›'),
     t('utolsó »'),
     t('Az általunk ismert magyar Drupal témákkal is foglalkozó blogokból a Drupalhoz kapcsolódó bejegyzéseket összesítjük, így könnyebb követni a releváns magyar tartalmakat.'),
-    t('kifejezés'),
     t('Oldal'),
     t('Hírcsatorna'),
   );
@@ -156,7 +151,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
+  /* Kapcsolat: Tartalom: Taxonómia kifejezések tartalmon */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
   $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
@@ -260,6 +255,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Alkalmazás';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Alaphelyzet';
@@ -289,7 +285,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
-  /* Kapcsolat: Tartalom: Taxonomy terms on node */
+  /* Kapcsolat: Tartalom: Taxonómia kifejezések tartalmon */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
   $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
