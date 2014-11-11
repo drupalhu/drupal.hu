@@ -91,7 +91,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
         }
       }
     },
-    "enabled" : "1",
+    "enabled" : "0",
     "read_only" : "0"
   }');
   $items['tartalom'] = entity_import('search_api_index', '{
@@ -126,10 +126,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
         "taxonomy_vocabulary_8" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_pick" : { "type" : "boolean" },
         "field_buzzwords" : { "type" : "list\\u003Ctext\\u003E" },
-        "field_job_advantage" : { "type" : "string" },
-        "field_job_announcer_gives" : { "type" : "string" },
         "field_job_due_date" : { "type" : "date" },
-        "field_job_expectations" : { "type" : "string" },
         "field_job_experience" : { "type" : "list\\u003Cstring\\u003E" },
         "field_job_other_language" : { "type" : "list\\u003Cstring\\u003E" },
         "field_job_remotely" : { "type" : "string" },
@@ -213,7 +210,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
         }
       }
     },
-    "enabled" : "1",
+    "enabled" : "0",
     "read_only" : "0"
   }');
   return $items;
