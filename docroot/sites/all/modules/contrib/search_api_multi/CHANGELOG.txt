@@ -1,0 +1,18 @@
+Search API Multi-Index Searches 1.2 (05/24/2014):
+-------------------------------------------------
+- #2148023 by drunken monkey: Fixed filtering for specific entity type bundles.
+- #2147563 by drunken monkey: Improved error handling.
+- #2113925 by drunken monkey: Fixed the "Search: Index" filter.
+
+Search API Multi-Index Searches 1.1 (12/09/2013):
+-------------------------------------------------
+- #2138225 by Ronino: Fixed definition of Relevance Views field handler.
+- #1845014 by minorOffense, DeFr, drunken monkey: Added support for view
+  (build) modes in Views.
+- #2134939 by drunken monkey: Fixed Views options filter handler.
+- #2032451 by drunken monkey: Added possibility to search indexes on any server.
+- #2045127 by lex0r, drunken monkey: Fixed parse mode in views.
+
+Search API Multi-Index Searches 1.0 (03/20/2013):
+-------------------------------------------------
+First stable release of the Search API Multi-Index Searches project.

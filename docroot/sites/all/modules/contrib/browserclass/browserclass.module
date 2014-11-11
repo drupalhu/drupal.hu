@@ -148,16 +148,16 @@ function browserclass_get_classes($types = BROWSERCLASS_ALL) {
 function browserclass_check_browser($agent) {
   $classes = array();
 
-  if (stristr($agent, 'msie') !== FALSE) {
+  // Add ie extra class with the version number
+  $ie_pattern = '/(?:\b(ms)?ie\s+|\btrident\/7\.0;.*\s+rv:)(\d+)/';
+  $ie_matches = array();
+  $ie_m = preg_match($ie_pattern, $agent, $ie_matches);
+
+  if ($ie_m === 1) {
     $classes[] = 'ie';
 
-    // Add ie extra class with the version number
-    $pattern = '/.*msie ([0-9]*)\..*/';
-    $matches = array();
-
-    preg_match($pattern, $agent, $matches);
-    if ($matches[1]) {
-      $classes[] = 'ie' . $matches[1];
+    if (isset($ie_matches[2])) {
+      $classes[] = 'ie' . $ie_matches[2];
     }
   }
 
@@ -170,12 +170,22 @@ function browserclass_check_browser($agent) {
     }
   }
 
-  // Chrome is send safari header too
+  // Check for chrome desktop first, then chrome mobile, lastly check for
+  // safari, as these are mutually exclusive.
   if (stristr($agent, 'chrome') !== FALSE) {
     $classes[] = 'chrome';
     $aresult = explode('/', stristr($agent, 'chrome'));
     $aversion = explode(' ', $aresult[1]);
     $classes[] = 'chrome' . _browserclass_clear_version($aversion[0]);
+  }
+  elseif (stristr($agent, 'crios') !== FALSE) {
+    $classes[] = 'chrome';
+
+    $aresult = explode('/', stristr($agent, 'crios'));
+    if (isset($aresult[1])) {
+      $aversion = explode(' ', $aresult[1]);
+      $classes[] = 'chrome' . _browserclass_clear_version($aversion[0]);
+    }
   }
   elseif (stristr($agent, 'safari') !== FALSE) {
     $classes[] = 'safari';

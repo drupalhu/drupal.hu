@@ -9,11 +9,13 @@ files[] = search_api_multi.query.inc
 files[] = search_api_multi.service.inc
 files[] = views/handler_argument_fulltext.inc
 files[] = views/handler_filter_fulltext.inc
+files[] = views/handler_filter_options.inc
 files[] = views/query.inc
+files[] = views/row_entity_view.inc
 
-; Information added by drupal.org packaging script on 2013-03-20
-version = "7.x-1.0"
+; Information added by Drupal.org packaging script on 2014-05-24
+version = "7.x-1.2"
 core = "7.x"
 project = "search_api_multi"
-datestamp = "1363808133"
+datestamp = "1400921930"
 
