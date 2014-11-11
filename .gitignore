@@ -5,6 +5,7 @@ sites/*/settings*.php
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
+docroot/files
 
 
 #idea - PhpStorm
@@ -23,3 +24,4 @@ dhu.node
 
 # sajat fejlesztoi gepen modulok
 sites/all/modules/dev
+
