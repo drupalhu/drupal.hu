@@ -2,6 +2,8 @@
 
 ## Hogyan fejlesszek a drupal.hu kodjan?
 
+### Uj kontributor beallitasa
+
 1. [Forkold](http://help.github.com/fork-a-repo/) a hivatalos repot: https://github.com/drupalhu/drupal.hu
 
 2. Klonozd a projectet a gepedre (a USERNAME a te githubos userneved)
@@ -10,7 +12,7 @@
 	$ git clone git@github.com:USERNAME/drupal.hu.git
 	```
 
-3. Add hozza a hivatalos repot remote-kent
+3. Add hozza a hivatalos repot remote-kent, a neve legyen "upstream".
 
 	```
 	$ cd drupal.hu
@@ -66,4 +68,18 @@
 	$ git rebase --continue
 	```
 
-13. Keszits egy Pull Requestet a hivatalos repo oldalan a forkodban talalhato uj branchedre, hogy a karbantartok beolvaszthassak a kodot.
+13. Pushold a kododat a sajat origin repodba. Miutan a rebase atpakolja a committokat es gyakorlatilag ujakat hoz letre, ezert valoszinuleg --force-al lehet majd csak pusholni.
+
+    ```
+    $ git push --force origin nagyonmeno-feature
+    ```
+
+14. Keszits egy Pull Requestet a hivatalos repo oldalan a forkodban talalhato uj branchedre, hogy a karbantartok beolvaszthassak a kodot.
+
+### Tovabbi kontribociok menete
+
+1. Mielott megkezded a munkat huzd le az upstream valtoztatasait, es rebaseld a sajat repodat. Ezaltal nem kell felesleges merge committokkal szennyezni a sajat logodat.
+2. Valassz ki egy branchot amin dolgozni akarsz
+3. Implementald a valtoztatasokat, valtoztasd a kodot
+4. Committold a helyi, sajat repository-dba, es pushold a sajat githubos forkodba.
+5. Keszits egy Pull Requestet a hivatalos repo oldalan
