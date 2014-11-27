@@ -1,5 +1,7 @@
 # Drupal.hu karbantarto kezikonyv
 
+Project build status: [![Build Status](https://travis-ci.org/snufkin/drupal.hu.svg?branch=stable-acquia)](https://travis-ci.org/snufkin/drupal.hu)
+
 ## Hogyan fejlesszek a drupal.hu kodjan?
 
 ### Uj kontributor beallitasa
