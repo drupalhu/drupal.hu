@@ -33,7 +33,8 @@ before_script:
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
   - mysql -e 'create database travis_ci_drupal_hu_test'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install --profile=testing --db-url=mysql://root:@127.0.0.1/travis_ci_drupal_hu_test --enable=simpletest
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install testing --db-url=mysql://root:@127.0.0.1/travis_ci_drupal_hu_test
+  - drush --yes en simpletest
 
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 &
