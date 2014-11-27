@@ -1,0 +1,47 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+
+matrix:
+  fast_finish: true
+
+mysql:
+  database: travis_ci_drupal_hu_test
+  username: root
+  encoding: utf8
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  # install php packages required for running a web server from drush on php 5.3
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+
+  # add composer's global bin directory to the path
+  # see: https://github.com/drush-ops/drush#install---composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  # install drush globally
+  - composer global require drush/drush:6.*
+
+before_script:
+  # navigate out of module directory to prevent blown stack by recursive module lookup
+  - cd docroot
+
+  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
+  - mysql -e 'create database travis_ci_drupal_hu_test'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install testing --db-url=mysql://root:@127.0.0.1/travis_ci_drupal_hu_test
+  - drush --yes en simpletest
+
+  # start a web server on port 8080, run in the background; wait for initialization
+  - drush runserver 127.0.0.1:8080 &
+  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+
+script: drush test-run Block --uri=http://127.0.0.1:8080
+
+notifications:
+  email: false
+  irc: "chat.freenode.net#drupal.hu"
