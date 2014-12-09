@@ -1,0 +1,13 @@
+name = Secondary search
+core = 7.x
+package = Drupalhu
+version = 7.x-1.0
+project = drupalhu_secondary_search
+dependencies[] = ctools
+dependencies[] = page_manager
+dependencies[] = views
+features[ctools][] = page_manager:pages_default:1
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[page_manager_pages][] = search
+features[views_view][] = secondary_search
