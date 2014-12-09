@@ -18,8 +18,6 @@ scripts[] = colorbox_register.js
 
 regions[header] = Header
 regions[help] = Help
-;regions[page_top] = Page top
-;regions[page_bottom] = Page bottom
 regions[front_highlighted] = Front Highlighted
 regions[content] = Content
 regions[sidebar_first] = Sidebar first
