@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Secondary search feature.
+ */
+
+include_once 'drupalhu_secondary_search.features.inc';
