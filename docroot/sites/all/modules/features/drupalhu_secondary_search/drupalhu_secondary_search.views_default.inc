@@ -50,7 +50,6 @@ function drupalhu_secondary_search_views_default_views() {
   $handler->display->display_options['filters']['search_api_multi_fulltext']['id'] = 'search_api_multi_fulltext';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['table'] = 'search_api_multi';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['field'] = 'search_api_multi_fulltext';
-  $handler->display->display_options['filters']['search_api_multi_fulltext']['value'] = 'Search';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['exposed'] = TRUE;
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator_id'] = 'search_api_multi_fulltext_op';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator'] = 'search_api_multi_fulltext_op';
