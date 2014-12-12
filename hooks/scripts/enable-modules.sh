@@ -13,4 +13,12 @@ target_env="$2"
 db_name="$3"
 source_env="$4"
 
-drush @$site.$target_env drush en -y
+# Enable the acquia specific modules
+
+# Enable site profile information collector for the insight score
+drush @$site.$target_env drush en -y acquia_spi
+
+# Enable syslog and disable dblog
+
+drush @$site.$target_env dis -y dblog
+drush @$site.$target_env en -y syslog
