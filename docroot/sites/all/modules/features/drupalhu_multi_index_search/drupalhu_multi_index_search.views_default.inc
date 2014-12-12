@@ -14,7 +14,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $view->name = 'multi_index_kereso';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'search_api_multi_ujsolr';
+  $view->base_table = 'search_api_multi';
   $view->human_name = 'Multi-index kereső';
   $view->core = 7;
   $view->api_version = '3.0';
@@ -45,7 +45,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Mező: Keresés: Tartalom results */
   $handler->display->display_options['fields']['tartalom']['id'] = 'tartalom';
-  $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['tartalom']['field'] = 'tartalom';
   $handler->display->display_options['fields']['tartalom']['label'] = '';
   $handler->display->display_options['fields']['tartalom']['element_label_colon'] = FALSE;
@@ -55,7 +55,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['tartalom']['view_mode'] = 'teaser';
   /* Mező: Keresés: Hozzászólás results */
   $handler->display->display_options['fields']['hozzaszolas']['id'] = 'hozzaszolas';
-  $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['hozzaszolas']['field'] = 'hozzaszolas';
   $handler->display->display_options['fields']['hozzaszolas']['label'] = '';
   $handler->display->display_options['fields']['hozzaszolas']['element_label_colon'] = FALSE;
@@ -63,20 +63,38 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['hozzaszolas']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['hozzaszolas']['display'] = 'view';
   $handler->display->display_options['fields']['hozzaszolas']['view_mode'] = 'full';
-  /* Rendezési szempont: Keresés: Relevancia */
+  /* Rendezési szempont: Keresés: Relevance */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
-  $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi';
   $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
+  /* Szűrési feltétel: Keresés: Fulltext search */
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['id'] = 'search_api_multi_fulltext';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['table'] = 'search_api_multi';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['field'] = 'search_api_multi_fulltext';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator_id'] = 'search_api_multi_fulltext_op';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['operator'] = 'search_api_multi_fulltext_op';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['identifier'] = 'text';
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    3 => 0,
+    10 => 0,
+    1 => 0,
+    9 => 0,
+    11 => 0,
+  );
+  $handler->display->display_options['filters']['search_api_multi_fulltext']['fields'] = array(
+    'tartalom:title' => 'tartalom:title',
+    'tartalom:body:value' => 'tartalom:body:value',
+    'hozzaszolas:subject' => 'hozzaszolas:subject',
+    'hozzaszolas:comment_body:value' => 'hozzaszolas:comment_body:value',
+  );
 
   /* Display: Oldal */
   $handler = $view->new_display('page', 'Oldal', 'page_kereso');
   $handler->display->display_options['exposed_block'] = TRUE;
   $handler->display->display_options['path'] = 'kereso';
-
-  /* Display: Oldal */
-  $handler = $view->new_display('page', 'Oldal', 'page_1');
-  $handler->display->display_options['path'] = 'kereso2';
   $translatables['multi_index_kereso'] = array(
     t('Master'),
     t('tovább'),

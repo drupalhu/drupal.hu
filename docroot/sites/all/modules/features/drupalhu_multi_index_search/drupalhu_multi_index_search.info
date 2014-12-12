@@ -14,3 +14,4 @@ features[search_api_index][] = hozzaszolas
 features[search_api_index][] = tartalom
 features[search_api_server][] = acquia_solr
 features[views_view][] = multi_index_kereso
+mtime = 1415697981

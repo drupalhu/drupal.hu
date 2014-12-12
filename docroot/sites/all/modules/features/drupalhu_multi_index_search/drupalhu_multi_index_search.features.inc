@@ -20,19 +20,19 @@ function drupalhu_multi_index_search_default_search_api_index() {
     "name" : "Hozz\\u00e1sz\\u00f3l\\u00e1s",
     "machine_name" : "hozzaszolas",
     "description" : null,
-    "server" : "ujsolr",
+    "server" : "acquia_solr",
     "item_type" : "comment",
     "options" : {
       "index_directly" : 1,
       "cron_limit" : "50",
       "fields" : {
+        "author" : { "type" : "integer", "entity_type" : "user" },
         "cid" : { "type" : "integer" },
-        "subject" : { "type" : "text" },
+        "comment_body:value" : { "type" : "text" },
         "created" : { "type" : "date" },
         "node" : { "type" : "integer", "entity_type" : "node" },
-        "author" : { "type" : "integer", "entity_type" : "user" },
         "search_api_language" : { "type" : "string" },
-        "comment_body:value" : { "type" : "text" }
+        "subject" : { "type" : "text" }
       },
       "data_alter_callbacks" : {
         "search_api_alter_bundle_filter" : {
@@ -91,51 +91,51 @@ function drupalhu_multi_index_search_default_search_api_index() {
         }
       }
     },
-    "enabled" : "0",
+    "enabled" : "1",
     "read_only" : "0"
   }');
   $items['tartalom'] = entity_import('search_api_index', '{
     "name" : "Tartalom",
     "machine_name" : "tartalom",
     "description" : null,
-    "server" : "ujsolr",
+    "server" : "acquia_solr",
     "item_type" : "node",
     "options" : {
       "index_directly" : 0,
       "cron_limit" : "50",
       "fields" : {
-        "nid" : { "type" : "integer" },
-        "type" : { "type" : "string" },
-        "title" : { "type" : "text", "boost" : "5.0" },
-        "url" : { "type" : "uri" },
-        "status" : { "type" : "boolean" },
-        "created" : { "type" : "date" },
         "author" : { "type" : "integer", "entity_type" : "user" },
+        "body:value" : { "type" : "text", "boost" : "2.0" },
         "comment_count" : { "type" : "integer" },
-        "taxonomy_forums" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_10" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_11" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "taxonomyextra" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_6" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "field_voc_celkozonseg" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "field_voc_szint" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_5" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_12" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "field_helyszin" : { "type" : "string" },
-        "taxonomy_vocabulary_7" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "taxonomy_vocabulary_8" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "field_pick" : { "type" : "boolean" },
+        "created" : { "type" : "date" },
         "field_buzzwords" : { "type" : "list\\u003Ctext\\u003E" },
+        "field_helyszin" : { "type" : "string" },
         "field_job_due_date" : { "type" : "date" },
         "field_job_experience" : { "type" : "list\\u003Cstring\\u003E" },
         "field_job_other_language" : { "type" : "list\\u003Cstring\\u003E" },
         "field_job_remotely" : { "type" : "string" },
         "field_job_summary" : { "type" : "text" },
         "field_job_timing" : { "type" : "string" },
+        "field_pick" : { "type" : "boolean" },
         "field_place_of_work" : { "type" : "string" },
-        "search_api_language" : { "type" : "string" },
+        "field_voc_celkozonseg" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "field_voc_szint" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "nid" : { "type" : "integer" },
         "search_api_access_node" : { "type" : "list\\u003Cstring\\u003E" },
-        "body:value" : { "type" : "text", "boost" : "2.0" }
+        "search_api_language" : { "type" : "string" },
+        "status" : { "type" : "boolean" },
+        "taxonomy_forums" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_10" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_11" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_12" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_5" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_6" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_7" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "taxonomy_vocabulary_8" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "taxonomyextra" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "title" : { "type" : "text", "boost" : "5.0" },
+        "type" : { "type" : "string" },
+        "url" : { "type" : "uri" }
       },
       "data_alter_callbacks" : {
         "search_api_alter_node_status" : { "status" : 1, "weight" : "-50", "settings" : [] },
@@ -210,7 +210,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
         }
       }
     },
-    "enabled" : "0",
+    "enabled" : "1",
     "read_only" : "0"
   }');
   return $items;
