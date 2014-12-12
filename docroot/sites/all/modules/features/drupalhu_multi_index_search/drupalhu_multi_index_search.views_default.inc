@@ -45,7 +45,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Mező: Keresés: Tartalom results */
   $handler->display->display_options['fields']['tartalom']['id'] = 'tartalom';
-  $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['tartalom']['field'] = 'tartalom';
   $handler->display->display_options['fields']['tartalom']['label'] = '';
   $handler->display->display_options['fields']['tartalom']['element_label_colon'] = FALSE;
@@ -55,7 +55,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['tartalom']['view_mode'] = 'teaser';
   /* Mező: Keresés: Hozzászólás results */
   $handler->display->display_options['fields']['hozzaszolas']['id'] = 'hozzaszolas';
-  $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['hozzaszolas']['field'] = 'hozzaszolas';
   $handler->display->display_options['fields']['hozzaszolas']['label'] = '';
   $handler->display->display_options['fields']['hozzaszolas']['element_label_colon'] = FALSE;
@@ -65,7 +65,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['fields']['hozzaszolas']['view_mode'] = 'full';
   /* Rendezési szempont: Keresés: Relevancia */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
-  $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi_ujsolr';
+  $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi';
   $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
 
