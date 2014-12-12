@@ -14,7 +14,7 @@ function drupalhu_multi_index_search_views_default_views() {
   $view->name = 'multi_index_kereso';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'search_api_multi_ujsolr';
+  $view->base_table = 'search_api_multi';
   $view->human_name = 'Multi-index kereső';
   $view->core = 7;
   $view->api_version = '3.0';
