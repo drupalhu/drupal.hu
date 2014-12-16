@@ -19,3 +19,4 @@ repo_type="$6"
 
 ../../scripts/update-db.sh
 ../../scripts/enable-modules.sh
+../../scripts/drush-cache-clear.sh
