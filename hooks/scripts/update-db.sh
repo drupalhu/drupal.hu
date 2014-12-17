@@ -15,5 +15,3 @@ source_env="$4"
 
 # Update the database
 drush @$site.$target_env updatedb --yes
-
-drush @$site.$target_env en -y diff

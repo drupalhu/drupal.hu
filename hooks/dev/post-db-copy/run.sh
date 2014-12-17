@@ -7,3 +7,4 @@ source_env="$4"
 
 ../../scripts/update-db.sh
 ../../scripts/enable-modules.sh
+../../scripts/drush-cache-clear.sh
