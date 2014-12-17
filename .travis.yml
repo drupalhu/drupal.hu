@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
 
@@ -40,4 +39,8 @@ before_script:
   - drush runserver 127.0.0.1:8080 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
-script: drush test-run Webform --uri=http://127.0.0.1:8080
+script: ../scripts/run-tests.sh
+
+notifications:
+  slack: drupalhu:PaRaPcc5EKNTllHnR56jD7Pj
+
