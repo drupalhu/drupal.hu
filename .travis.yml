@@ -41,3 +41,6 @@ before_script:
 
 script: ../scripts/run-tests.sh
 
+notifications:
+  slack: drupalhu:PaRaPcc5EKNTllHnR56jD7Pj
+
