@@ -12,4 +12,4 @@ target_env=$2
 drush_alias=$site'.'$target_env
 
 # Execute a standard drush command.
-drush @$drush_alias cc all
+drush @$drush_alias --yes cache-clear all
