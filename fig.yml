@@ -5,6 +5,7 @@ web:
   volumes:
   - docroot:/var/www/html
   - .:/home/dev
+  - dockerfiles:/var/www/site-php
   ports:
   - "80:80"
   environment:
