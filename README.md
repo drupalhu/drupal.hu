@@ -101,16 +101,18 @@ A tetszkörnyezet használatához a Docker-re(OSX és Windows boot2docker) és a
 
 A repo gyökér könyvtárában (ahol a .git és a fig.yml fájlok vannak) add ki a következő parancsot:
 
-    ```
-    fig up -d
-    ```
+  ```
+  fig up -d
+  ```
+
 Legeslegelső futtatásnál várnod kell, mert le fogja tölteni a két image-t a netről. Ez olyan 500Mb. Türelem.
 
 Ha szeretnél parancsokat futtatni a környezetben, pl. drush, vagy mysql, vagy php vagy bármi más, add ki a következő parancsot:
 
-    ```
-    fig run --rm --entrypoint bash web
-    ```
+  ```
+  fig run --rm --entrypoint bash web
+  ```
+
 Ez olyan mint az ssh, de nagyon nem az. :)
 
 ### Használat
