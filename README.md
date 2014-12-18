@@ -107,6 +107,9 @@ A repo gyökér könyvtárában (ahol a .git és a fig.yml fájlok vannak) add k
 
 Legeslegelső futtatásnál várnod kell, mert le fogja tölteni a két image-t a netről. Ez olyan 500Mb. Türelem.
 
+Ezután már csak létre kell hoznod egy drupal adatbázist és beimportálnod bele az adatokat, vagy indítani egy install.php-t.
+Hogy hogyan? Lásd a következő bekezdés.
+
 Ha szeretnél parancsokat futtatni a környezetben, pl. drush, vagy mysql, vagy php vagy bármi más, add ki a következő parancsot:
 
   ```
@@ -114,6 +117,8 @@ Ha szeretnél parancsokat futtatni a környezetben, pl. drush, vagy mysql, vagy 
   ```
 
 Ez olyan mint az ssh, de nagyon nem az. :)
+
+
 
 ### Használat
 
