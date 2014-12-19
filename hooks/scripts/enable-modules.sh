@@ -4,17 +4,15 @@
 #
 # Usage: enable-modules.sh site target-env db-name source-env
 
-site="$1"
-target_env="$2"
-db_name="$3"
-source_env="$4"
+drush_alias=$1
 
 # Enable the acquia specific modules
 
 # Enable site profile information collector for the insight score
-drush @$site.$target_env pm-enable --yes acquia_spi
+drush @$drush_alias pm-enable --yes acquia_spi
+drush @$drush_alias pm-enable --yes search_api_acquia
 
 # Enable syslog and disable dblog
 
-drush @$site.$target_env pm-disable --yes dblog
-drush @$site.$target_env pm-enable --yes syslog
+drush @$drush_alias pm-disable --yes dblog
+drush @$drush_alias pm-enable --yes syslog
