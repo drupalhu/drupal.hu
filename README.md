@@ -113,7 +113,7 @@ Hogy hogyan? Lásd a következő bekezdés.
 Ha szeretnél parancsokat futtatni a környezetben, pl. drush, vagy mysql, vagy php vagy bármi más, add ki a következő parancsot:
 
   ```
-  fig run --rm --entrypoint bash web
+  docker exec -i -t drupalhu_web_1 bash
   ```
 
 Ez olyan mint az ssh, de nagyon nem az. :)

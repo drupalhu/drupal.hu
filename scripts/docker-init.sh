@@ -4,7 +4,7 @@ echo "=================================================="
 echo
 echo " Pranacssorhoz futtasd a következő parancsot:"
 echo
-echo "   fig run --rm --entrypoint bash web"
+echo "   docker exec -i -t drupalhu_web_1 bash"
 echo
 echo "=================================================="
 /usr/sbin/apache2 -D FOREGROUND
