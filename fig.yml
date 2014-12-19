@@ -11,6 +11,7 @@ web:
   environment:
   - MYSQL_HOST=mysql
   working_dir: /var/www/html
+  entrypoint: /home/dev/scripts/docker-init.sh
 mysql:
   image: mysql
   environment:
