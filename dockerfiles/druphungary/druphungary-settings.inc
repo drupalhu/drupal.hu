@@ -7,3 +7,5 @@
    'host' => 'mysql',
    'prefix' => '',
  );
+# Set right /tmp directory
+$conf['file_temporary_path'] = '/tmp';
