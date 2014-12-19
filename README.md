@@ -88,3 +88,45 @@ Stabil ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=
 3. Implementald a valtoztatasokat, valtoztasd a kodot
 4. Committold a helyi, sajat repository-dba, es pushold a sajat githubos forkodba.
 5. Keszits egy Pull Requestet a hivatalos repo oldalan
+
+## Instant tesztkörnyezete Docker és Fig segítségével
+
+FIGYELMETETÉS - Jelenleg teszt üzemmódban van ez a rész, ha kipróbálod és visszajelzel, segíted a munkánkat.
+
+### Telepítés
+
+A tetszkörnyezet használatához a Docker-re(OSX és Windows boot2docker) és a Fig-re van szükség. Telepítsd azokat. (hamarosan kibővítjük ezt a leírást)
+
+### Elindítás és parancssor
+
+A repo gyökér könyvtárában (ahol a .git és a fig.yml fájlok vannak) add ki a következő parancsot:
+
+  ```
+  fig up -d
+  ```
+
+Legeslegelső futtatásnál várnod kell, mert le fogja tölteni a két image-t a netről. Ez olyan 500Mb. Türelem.
+
+Ezután már csak létre kell hoznod egy drupal adatbázist és beimportálnod bele az adatokat, vagy indítani egy install.php-t.
+Hogy hogyan? Lásd a következő bekezdés.
+
+Ha szeretnél parancsokat futtatni a környezetben, pl. drush, vagy mysql, vagy php vagy bármi más, add ki a következő parancsot:
+
+  ```
+  docker exec -i -t drupalhu_web_1 bash
+  ```
+
+Ez olyan mint az ssh, de nagyon nem az. :)
+
+
+
+### Használat
+
+Ha minden jól megy, akkor a docker host 80-es portján eléred a webszervert. Ha Linuxot használsz(és root-ként futtattad), akkor localhoston, ha Mac-et, akkor a boot2docker ip-jén éred el a webszervert. (Windowson még nem teszteltem.)
+
+#### Mysql szerver adatai
+A telepítés során a mysql szerver felhasználó _root_, jelszó _root_, a host pedig _mysql_.
+
+#### Fájlok helye a konténerben
+A docroot a /var/www/html útvonalon érhető el a környezetben, míg a repo gyökere a /home/dev mappában található.
+

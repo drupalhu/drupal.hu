@@ -1,0 +1,18 @@
+web:
+  image: tanarurkerem/drupal-dev
+  links:
+    - mysql
+  volumes:
+  - docroot:/var/www/html
+  - .:/home/dev
+  - dockerfiles:/var/www/site-php
+  ports:
+  - "80:80"
+  environment:
+  - MYSQL_HOST=mysql
+  working_dir: /var/www/html
+  entrypoint: /home/dev/scripts/docker-init.sh
+mysql:
+  image: mysql
+  environment:
+  - MYSQL_ROOT_PASSWORD=root
