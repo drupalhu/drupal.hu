@@ -7,6 +7,4 @@ source_env="$4"
 
 drush_alias=$site'.'$target_env
 
-# Get the current directory
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-sh ${DIR}/../../scripts/drush-cache-clear.sh $drush_alias
+. `dirname $0`/../../scripts/drush-cache-clear.sh $drush_alias
