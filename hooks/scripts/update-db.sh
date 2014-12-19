@@ -8,10 +8,7 @@
 #
 # Usage: post-db-copy site target-env db-name source-env
 
-site="$1"
-target_env="$2"
-db_name="$3"
-source_env="$4"
+drush_alias=$1
 
 # Update the database
-drush @$site.$target_env updatedb --yes
+drush @$drush_alias updatedb --yes
