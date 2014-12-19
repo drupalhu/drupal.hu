@@ -17,6 +17,6 @@ deployed_tag="$4"
 repo_url="$5"
 repo_type="$6"
 
-../../scripts/update-db.sh
-../../scripts/enable-modules.sh
-../../scripts/drush-cache-clear.sh
+drush_alias=$site'.'$target_env
+
+../../scripts/drush-cache-clear.sh $drush_alias
