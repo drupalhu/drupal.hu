@@ -13,6 +13,7 @@ source_env="$4"
 
 # Enable site profile information collector for the insight score
 drush @$site.$target_env pm-enable --yes acquia_spi
+drush @$site.$target_env pm-enable --yes search_api_acquia
 
 # Enable syslog and disable dblog
 
