@@ -5,6 +5,6 @@ target_env="$2"
 db_name="$3"
 source_env="$4"
 
-../../scripts/update-db.sh
-../../scripts/enable-modules.sh
-../../scripts/drush-cache-clear.sh
+drush_alias=$site'.'$target_env
+
+../../scripts/drush-cache-clear.sh $drush_alias
