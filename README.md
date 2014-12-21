@@ -56,15 +56,15 @@ Stabil ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=
 10. Frissitsed a helyi stabil kodot.
 
 	```
-	$ git checkout acquia-stable
-	$ git pull upstream acquia-stable
+	$ git checkout stable-acquia
+	$ git pull upstream stable-acquia
 	```
 
 11. Rebase-ld a te branchedben levo valtoztatasokat az upstream acquia-stable aganak tetejere
 
 	```
 	$ git checkout nagyonmeno-feature
-	$ git rebase acquia-stable
+	$ git rebase stable-acquia
 	```
 
 12. Rebase kozben conflictok konnyen bekovetkezhetnek. Ezek feloldasa utan ``git add .`` frissiti az indexet, es folytatni lehet a rebase-t:
