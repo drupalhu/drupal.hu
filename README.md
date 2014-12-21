@@ -3,6 +3,7 @@
 ## Build status
 
 Stabil ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=stable-acquia)](https://travis-ci.org/drupalhu/drupal.hu)
+Fejlesztoi ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=dev)](https://travis-ci.org/drupalhu/drupal.hu)
 
 
 ## Hogyan fejlesszek a drupal.hu kodjan?
