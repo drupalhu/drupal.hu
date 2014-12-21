@@ -33,7 +33,7 @@ function dhu_job_field_group_info() {
       'label' => 'Ajánlatkiíró',
       'instance_settings' => array(
         'required_fields' => 0,
-        'classes' => '',
+        'classes' => ' group-job-announcer field-group-fieldset',
         'description' => '',
       ),
       'formatter' => 'open',
@@ -63,7 +63,7 @@ function dhu_job_field_group_info() {
       'label' => 'Egyéb jellemzők és elvárások',
       'instance_settings' => array(
         'required_fields' => 0,
-        'classes' => '',
+        'classes' => ' group-job-other-conditions field-group-fieldset',
         'description' => '',
       ),
       'formatter' => 'open',
@@ -99,7 +99,7 @@ function dhu_job_field_group_info() {
       'label' => '',
       'instance_settings' => array(
         'required_fields' => 0,
-        'classes' => '',
+        'classes' => ' group-job-type field-group-fieldset',
         'description' => '',
       ),
       'formatter' => 'open',

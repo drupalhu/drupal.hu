@@ -33,7 +33,7 @@ function konyvlap_cimkek_field_group_info() {
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-book-vocs field-group-fieldset',
         'required_fields' => 1,
       ),
     ),

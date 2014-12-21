@@ -35,3 +35,4 @@ features[variable][] = node_options_slideshow_item
 features[variable][] = node_preview_slideshow_item
 features[variable][] = node_submitted_slideshow_item
 features[views_view][] = slideshow
+mtime = 1419012045
