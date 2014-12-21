@@ -48,6 +48,7 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['weight'] = '1';
   $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['type'] = 'views_slideshow_pager_fields';
   $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['views_slideshow_pager_fields_fields'] = array(
+    'field_slideshow_url_1' => 0,
     'title' => 0,
     'field_slideshow_url' => 0,
     'field_slideshow_image' => 0,
@@ -60,6 +61,7 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['weight'] = '1';
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['type'] = 'views_slideshow_pager_fields';
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['views_slideshow_pager_fields_fields'] = array(
+    'field_slideshow_url_1' => 0,
     'title' => 0,
     'field_slideshow_url' => 0,
     'field_slideshow_image' => 0,
@@ -71,7 +73,7 @@ function drupalhu_slideshow_views_default_views() {
   $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_slide_counter']['weight'] = '1';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['effect'] = 'scrollHorz';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['transition_advanced'] = 1;
-  $handler->display->display_options['style_options']['views_slideshow_cycle']['timeout'] = '15000';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['timeout'] = '2000';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['speed'] = '900';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['delay'] = '0';
   $handler->display->display_options['style_options']['views_slideshow_cycle']['start_paused'] = 0;

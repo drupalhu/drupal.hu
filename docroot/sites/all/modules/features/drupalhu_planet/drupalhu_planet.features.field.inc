@@ -427,6 +427,7 @@ function drupalhu_planet_field_default_fields() {
       'label' => 'Forrás',
       'required' => 0,
       'settings' => array(
+        'absolute_url' => 1,
         'attributes' => array(
           'class' => '',
           'rel' => '',
@@ -437,6 +438,7 @@ function drupalhu_planet_field_default_fields() {
         ),
         'enable_tokens' => 1,
         'title' => 'value',
+        'title_label_use_field_label' => FALSE,
         'title_maxlength' => 128,
         'title_value' => 'Tovább az eredeti bejegyzésre »',
         'url' => 0,

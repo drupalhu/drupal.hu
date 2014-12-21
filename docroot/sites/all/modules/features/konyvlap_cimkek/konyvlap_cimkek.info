@@ -18,3 +18,4 @@ features[field_group][] = group_book_vocs|node|book|form
 features[taxonomy][] = celkozonseg
 features[taxonomy][] = szint
 features[views_view][] = oldalrol_infok
+mtime = 1419012053
