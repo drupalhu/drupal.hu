@@ -44,7 +44,7 @@ DELETE FROM cache WHERE cid = 'variables';
 -- Drupal 7 requires sites to generate a hashed password specific to their site. A script in the 
 -- docroot/scripts directory is provided for doing this. 
 -- Remove passwords unless users have 'developer role'
-UPDATE users SET pass='$S$DMXNF9w9lpy9xux.OJ5kyNgzh5hEerBjdHhF5v.BH7Ekp7PMJsc7' WHERE uid IN (SELECT uid FROM users_roles WHERE rid=3) AND uid > 0;
+UPDATE users SET pass='$S$DMXNF9w9lpy9xux.OJ5kyNgzh5hEerBjdHhF5v.BH7Ekp7PMJsc7' WHERE uid != 1 AND uid > 0;
 -- Admin user should not be same but not really well known
 UPDATE users SET pass='$S$DFQ1z0sJTAiqizkM4Z0PColNbNy1f.EbIPobs0fZBBmADPRUtjZu' WHERE uid = 1;
 
