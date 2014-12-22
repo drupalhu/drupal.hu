@@ -20,14 +20,10 @@ echo "$site.$target_env: Scrubbing database $db_name"
 -- Remove all email addresses.
 UPDATE users SET mail=CONCAT('user', uid, '@nagyontitkos.hu'), init=CONCAT('user', uid, '@nagyontitkos.hu') WHERE uid != 0;
 -- Remove email addresses of OpenID users.
-UPDATE authmap SET mail=CONCAT('user', uid, '@nagyontitkos.hu'), init=CONCAT('user', uid, '@nagyontitkos.hu') WHERE uid != 0;
+UPDATE authmap SET authname=CONCAT('aid', aid, '@nagyontitkos.hu') WHERE uid != 0;
 
--- Scrub url aliases for non-admins since these also reveal names
--- Add the IGNORE keyword, since a user may have multiple aliases, and without
--- this keyword the attempt to store duplicate dst values causes the query to fail.
-UPDATE IGNORE url_alias SET dst = CONCAT('users/', REPLACE(src,'/', '')) WHERE src IN (SELECT CONCAT('user/', u.uid) FROM users u WHERE u.uid NOT IN (SELECT uid FROM users_roles WHERE rid=3) AND u.uid > 0);
--- don't leave e-mail addresses, etc in comments table.
-UPDATE comments SET name='Anonymous', mail='', homepage='http://nagyontitkos.hu' WHERE uid=0;
+-- Don't leave e-mail addresses, etc in comments table.
+UPDATE comment SET name='Anonymous', mail='', homepage='http://nagyontitkos.hu' WHERE uid=0;
 
 -- These statements assume you want to preserve real passwords for developers. Change 'rid=3' to the 
 -- developer or test role you want to preserve.
@@ -49,8 +45,8 @@ UPDATE field_data_field_job_contact_email SET field_job_contact_email_email='job
 UPDATE field_revision_field_job_contact_email SET field_job_contact_email_email='job-contact@nagyontitkos.hu';
 
 -- Empty some tables which might contain sensitive data.
-TRUNCATE accesslog;
-TRUNCATE access;
+-- TRUNCATE accesslog;
+-- TRUNCATE access;
 TRUNCATE blocked_ips;
 TRUNCATE flood;
 TRUNCATE history;
