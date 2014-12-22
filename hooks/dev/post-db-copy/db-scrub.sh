@@ -24,6 +24,19 @@ UPDATE authmap SET authname=CONCAT('aid', aid, '@nagyontitkos.hu') WHERE uid != 
 
 -- Don't leave e-mail addresses, etc in comments table.
 UPDATE comment SET name='Anonymous', mail='', homepage='http://nagyontitkos.hu' WHERE uid=0;
+-- Remove IP addresses from comment table.
+UPDATE comment SET hostname='42.42.42.42';
+
+-- Delete variables via the variable table.
+DELETE FROM variable WHERE name='cron_key';
+DELETE FROM variable WHERE name='acquia_key';
+DELETE FROM variable WHERE name='acquia_identifier';
+DELETE FROM variable WHERE name='acquia_subscription_data';
+DELETE FROM variable WHERE name='mollom_public_key';
+DELETE FROM variable WHERE name='mollom_private_key';
+
+-- IMPORTANT: We change the variable table, so clear the variables cache.
+DELETE FROM cache WHERE cid = 'variables';
 
 -- These statements assume you want to preserve real passwords for developers. Change 'rid=3' to the 
 -- developer or test role you want to preserve.
@@ -43,6 +56,12 @@ TRUNCATE webform_submitted_data;
 -- Remove contact email addresses from job post nodes.
 UPDATE field_data_field_job_contact_email SET field_job_contact_email_email='job-contact@nagyontitkos.hu';
 UPDATE field_revision_field_job_contact_email SET field_job_contact_email_email='job-contact@nagyontitkos.hu';
+
+-- Remove email addresses from core contact module recipients.
+UPDATE contact SET recipients='contact@nagyontitkos.hu';
+
+-- Remove IP addresses from voting api records.
+UPDATE votingapi_vote SET vote_source='42.42.42.42';
 
 -- Empty some tables which might contain sensitive data.
 -- TRUNCATE accesslog;
