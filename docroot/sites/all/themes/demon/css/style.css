@@ -153,6 +153,9 @@ pre {
   height: 68px;
   padding-top: 34px;
 }
+#logo img {
+  width: 195px;
+}
 
 #header-content {
   height: 44px;
