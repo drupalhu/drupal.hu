@@ -1,0 +1,27 @@
+@mixin dhu-img-retina($file-1x, $file-2x, $width-1x: false, $height-1x: false) {
+  background-image: url("#{$file-1x}");
+
+  @media
+  only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (   min--moz-device-pixel-ratio: 2),
+  only screen and (     -o-min-device-pixel-ratio: 2/1),
+  only screen and (        min-device-pixel-ratio: 2),
+  only screen and (                min-resolution: 192dpi),
+  only screen and (                min-resolution: 2dppx) {
+    background-image: url("#{$file-2x}");
+    @if ($width-1x) {
+      background-size: $width-1x $height-1x;
+    }
+  }
+}
+
+@mixin dhu-sprite-background() {
+  background-repeat: no-repeat;
+  @include dhu-img-retina('../images/sprite.png', '../images/sprite-2x.png', 130px, 100px);
+}
+
+@mixin dhu-sprite($width, $height, $background-position) {
+  width: $width;
+  height: $height;
+  background-position: $background-position;
+}
