@@ -97,7 +97,7 @@ function dhu_drupalcheck_form_link_node_form_alter(&$form, &$form_state) {
  */
 function dhu_drupalcheck_form_link_node_form_alter_validate($element, &$form_state, $form) {
   if (!dhu_drupalcheck_check($element['#value']['url'])) {
-    drupal_set_message($element, t('This URL does not point to a Drupal site. We are accepting only Drupal sites. Sorry.'));
+    drupal_set_message(t('This URL does not point to a Drupal site. We are accepting only Drupal sites. Sorry.'), 'error');
   }
 }
 
