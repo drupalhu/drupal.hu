@@ -8,15 +8,13 @@ css_dir            = "css"
 #output_style = :expanded or :nested or :compact or :compressed
   if environment != :production
     output_style = :expanded
-    line_comments = true
+    line_comments = false
     disable_warnings = false
-    # give us all the info
-    disable_warnings = true
+    disable_warnings = false
     sass_options = {:quiet => true}
   end
 
-
-  if environment == :production 
+  if environment == :production
     output_style = :compressed
     line_comments = false
     # keep the build output nice and clean
@@ -25,10 +23,10 @@ css_dir            = "css"
   end
 
 # To enable relative paths to assets via compass helper functions. Uncomment:
-# relative_assets = true
+relative_assets = true
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
-# line_comments = false
+line_comments = false
 
 
 # If you prefer the indented syntax, you might want to regenerate this
@@ -40,8 +38,8 @@ css_dir            = "css"
 Sass::Script::Number.precision = 9
 
 # Change this to :production when ready to deploy the CSS to the live server.
-#environment = :development
-environment = :production
+environment = :development
+#environment = :production
 
 # In development, we can turn on the FireSass-compatible debug_info.
 firesass = false
@@ -61,7 +59,7 @@ output_style = (environment == :development) ? :expanded : :compressed
 #relative_assets = false
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
-line_comments = (environment == :development) ? true : false
+line_comments = (:environment == :development) ? true : false
 
 # Pass options to sass. For development, we turn on the FireSass-compatible
 # debug_info if the firesass config variable above is true.
