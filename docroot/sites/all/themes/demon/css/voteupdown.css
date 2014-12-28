@@ -1,0 +1,77 @@
+.vud-widget-upanddown {
+  float: left;
+  margin: 10px 10px 10px 0;
+}
+
+.vud-widget-upanddown .up-inactive,
+.vud-widget-upanddown .down-inactive,
+.vud-widget-upanddown .up-active,
+.vud-widget-upanddown .down-active {
+  background: url(../images/hands.png) no-repeat scroll 0 0 transparent;
+  display: block;
+  float: left;
+  font-weight: bold;
+  height: 30px;
+  text-align: center;
+  width: 31px;
+}
+
+.vud-widget-upanddown .up-score,
+.vud-widget-upanddown .down-score {
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  float: left;
+}
+
+.vud-widget-upanddown .up-score {
+  margin-right: 5px;
+  padding-right: 5px;
+  border-right: 1px solid #E6E6E2;
+}
+
+.vud-widget-upanddown .up-score .up-current-score,
+.vud-widget-upanddown .down-score .down-current-score {
+  margin-left: 35px;
+}
+
+.vud-widget-upanddown .up-current-score,
+.vud-widget-upanddown .down-current-score {
+  font-weight: bold;
+}
+
+.vud-widget-upanddown .up-current-score {
+  color: #0678BE;
+}
+
+.vud-widget-upanddown .down-current-score {
+  color: #CCCCCC;
+}
+
+.vud-widget-upanddown .down-inactive {
+  background-position: -30px -64px;
+}
+
+.vud-widget-upanddown .up-active {
+  background-position: 0 -32px;
+}
+
+.vud-widget-upanddown .down-active {
+  background-position: -30px -32px;
+}
+
+.vud-widget-upanddown .up-inactive {
+  background-position: 0 -64px;
+}
+
+.vud-widget-upanddown .down-inactive {
+  background-position: -30px -64px;
+}
+
+.vud-widget-upanddown .up-inactive:hover {
+  background-position: 0 -96px;
+}
+
+.vud-widget-upanddown .down-inactive:hover {
+  background-position: -30px -96px;
+}
