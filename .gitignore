@@ -7,11 +7,8 @@ sites/*/files
 sites/*/private
 docroot/files
 
-
 #idea - PhpStorm
-
 .idea
-
 
 #Den
 dhu.node
@@ -19,9 +16,11 @@ dhu.node
 
 #sass cache dirs
 .sass-cache
-
 .htaccess.loc
 
 # sajat fejlesztoi gepen modulok
 sites/all/modules/dev
 
+# Bundler specific files
+.bundle*
+docroot/sites/all/themes/demon/vendor*

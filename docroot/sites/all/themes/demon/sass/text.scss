@@ -4,8 +4,10 @@
 
 	Licensed under GPL and MIT.
 */
+
 /* `Basic HTML
 ----------------------------------------------------------------------------------------------------*/
+
 body {
   font-family: 'Lucida Grande', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, Arial, sans-serif;
   font-size: 13px;
@@ -13,30 +15,29 @@ body {
 }
 
 a:focus {
-  outline: none;
+	outline: none;
 }
 
 hr {
-  border: 0 #ccc solid;
-  border-top-width: 1px;
-  clear: both;
-  height: 0;
+	border: 0 #ccc solid;
+	border-top-width: 1px;
+	clear: both;
+	height: 0;
 }
 
 /* `Headings
 ----------------------------------------------------------------------------------------------------*/
-h1, h2, h3, h4, h5 {
-  line-height: 1.2em;
-}
+
+h1, h2, h3, h4, h5 { line-height: 1.2em; }
 
 h1 {
-  font-size: 25px;
+	font-size: 25px;
   font-weight: normal;
   margin-bottom: 1.2em;
 }
 
 h2 {
-  font-size: 23px;
+	font-size: 23px;
   font-weight: normal;
   margin-bottom: 1.2em;
 }
@@ -47,24 +48,25 @@ h2 {
 }
 
 h3 {
-  font-size: 21px;
+	font-size: 21px;
   font-weight: normal;
   margin-bottom: 1.2em;
 }
 
 h4 {
-  font-size: 19px;
+	font-size: 19px;
   font-weight: normal;
   margin-bottom: 1.2em;
 }
 
 h5 {
-  font-size: 17px;
+	font-size: 17px;
 }
 
 h6 {
-  font-size: 15px;
+	font-size: 15px;
 }
+
 
 a {
   color: #0678BE;
@@ -75,18 +77,20 @@ a:hover {
   color: #53B0EB;
 }
 
+
 /* `Spacing
 ----------------------------------------------------------------------------------------------------*/
+
 ol {
-  list-style: decimal;
+	list-style: decimal;
 }
 
 ul {
-  list-style: square;
+	list-style: square;
 }
 
 li {
-  margin-left: 2em;
+	margin-left: 2em;
 }
 
 ul.links li {
@@ -110,5 +114,5 @@ pre,
 table,
 address,
 fieldset {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
