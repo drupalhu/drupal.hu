@@ -93,3 +93,11 @@ function dhu_update_7103(&$sandbox) {
   variable_del('feedapi_settings_feed');
   menu_rebuild();
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function dhu_update_7104() {
+  $modules_to_enable = array('memcache');
+  module_enable($modules_to_enable);
+}

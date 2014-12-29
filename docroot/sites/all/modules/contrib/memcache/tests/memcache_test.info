@@ -1,0 +1,12 @@
+name = Memcache test
+description = Support module for memcache testing.
+package = Testing
+core = 7.x
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2014-11-01
+version = "7.x-1.3"
+core = "7.x"
+project = "memcache"
+datestamp = "1414805630"
+
