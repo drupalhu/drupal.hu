@@ -2,6 +2,8 @@ web:
   image: tanarurkerem/drupal-dev
   links:
     - mysql
+    - solr
+    - memcache
   volumes:
   - docroot:/var/www/html
   - .:/home/dev
@@ -16,3 +18,7 @@ mysql:
   image: mysql
   environment:
   - MYSQL_ROOT_PASSWORD=root
+solr:
+  image: tanarurkerem/docker-solr
+memcache:
+  image: borja/docker-memcached

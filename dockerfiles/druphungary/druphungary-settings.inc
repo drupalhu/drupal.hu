@@ -9,3 +9,24 @@
  );
 # Set right /tmp directory
 $conf['file_temporary_path'] = '/tmp';
+
+// Override search API server settings fetched from default configuration.
+$conf['search_api_override_mode'] = 'load';
+$conf['search_api_override_servers'] = array(
+  'my_solr_server' => array(
+    'name' => 'My Solr Server (Docker)',
+    'options' => array(
+      'host' => 'solr',
+      'port' => '8983',
+      'path' => '/solr',
+      'http_user' => '',
+      'http_pass' => '',
+      'excerpt' => 0,
+      'retrieve_data' => 0,
+      'highlight_data' => 0,
+      'http_method' => 'POST',
+    ),
+  ),
+);
+
+$conf['memcache_servers'] = array('memcache:11211' => 'default');
