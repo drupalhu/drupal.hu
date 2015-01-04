@@ -13,7 +13,7 @@ $conf['file_temporary_path'] = '/tmp';
 // Override search API server settings fetched from default configuration.
 $conf['search_api_override_mode'] = 'load';
 $conf['search_api_override_servers'] = array(
-  'my_solr_server' => array(
+  'acquia_solr' => array(
     'name' => 'My Solr Server (Docker)',
     'options' => array(
       'host' => 'solr',
