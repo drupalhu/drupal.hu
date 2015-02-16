@@ -1022,27 +1022,13 @@ li.search-result h3 {
 
 blockquote {
   font-style: italic;
-  position: relative;
-  margin: 0.25em 0;
-  padding: 0.25em 40px;
-}
-blockquote:before {
-  display: block;
-  content: "\201C";
-  font-size: 80px;
-  position: absolute;
-  left: -10px;
-  top: 20px;
-  color: #7a7a7a;
-}
-blockquote:after {
-  display: block;
-  content: "\201d";
-  font-size: 80px;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #7a7a7a;
+  margin: 0 0 20px;
+  padding: 10px 20px;
+  border-left: 5px solid #eee;
+  
+  p {
+    margin-bottom: 0;
+  }
 }
 
 /**
