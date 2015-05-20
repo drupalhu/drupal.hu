@@ -101,3 +101,11 @@ function dhu_update_7104() {
   $modules_to_enable = array('memcache');
   module_enable($modules_to_enable);
 }
+
+/**
+ * Enable admin_views module, issue-175.
+ */
+function dhu_update_7105() {
+  $modules_to_enable = array('admin_views');
+  module_enable($modules_to_enable);
+}
