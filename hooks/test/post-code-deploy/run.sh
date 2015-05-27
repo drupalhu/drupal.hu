@@ -19,6 +19,7 @@ repo_type="$6"
 
 drush_alias=$site'.'$target_env
 
+. `dirname $0`/../../scripts/drush-registry-rebuild.sh $drush_alias
 . `dirname $0`/../../scripts/update-db.sh $drush_alias
 . `dirname $0`/../../scripts/enable-modules.sh $drush_alias
 . `dirname $0`/../../scripts/drush-cache-clear.sh $drush_alias
