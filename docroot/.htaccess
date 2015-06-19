@@ -82,11 +82,12 @@ DirectoryIndex index.php index.html index.htm
   # downloaded.
   RewriteRule "(^|/)\." - [F]
 
-  # On the live domain redirect to HTTPS without www.
-  RewriteCond "%{HTTPS}:%{HTTP_HOST}"   ^off:(www\.){0,1}drupal\.hu$        [OR]
-  RewriteCond "%{HTTPS}:%{HTTP_HOST}"   ^on:drupal\.hu$
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^(.*)$                    https://www.drupal.hu%{REQUEST_URI} [L,R=301]
+  # On the live domain redirect to HTTPS with www.
+  # In the Acquia cloud the %{HTTP:X-Forwarded-Proto} header is set by Varnish
+  # but in other environments this header can be missing.
+  RewriteCond "%{HTTP:X-Forwarded-Proto}:%{HTTP_HOST}"   ^http:(www\.){0,1}drupal\.hu$       [OR]
+  RewriteCond "%{HTTP:X-Forwarded-Proto}:%{HTTP_HOST}"   ^https:drupal\.hu$
+  RewriteRule ^(.*)$                                     https://www.drupal.hu%{REQUEST_URI} [L,R=301]
 
   # If your site can be accessed both with and without the 'www.' prefix, you
   # can use one of the following settings to redirect users to your preferred
