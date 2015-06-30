@@ -109,3 +109,10 @@ function dhu_update_7105() {
   $modules_to_enable = array('admin_views');
   module_enable($modules_to_enable);
 }
+/**
+ * Enable the recaptcha module, issue-189.
+ */
+function dhu_update_7106() {
+    $modules_to_enable = array('recaptcha');
+      module_enable($modules_to_enable);
+}
