@@ -1,6 +1,14 @@
 name = Custom hacks for drupal.hu
 description = Custom hacks for drupal.hu.
-package = Drupal.hu
 core = 7.x
-
-version 7.x-1.0
+package = Drupalhu
+php = 5.2.4
+version = 7.x-1.0
+project = dhu
+dependencies[] = ctools
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = openlayers_source_internal_variant
+features[variable][] = openlayers_source_type
+mtime = 1440349645
