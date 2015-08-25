@@ -7,6 +7,11 @@ Stabil ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=
 
 ## Hogyan fejlesszek a drupal.hu kodjan?
 
+### Adatbázis beszerzése
+
+Le tudsz tölteni egy [tisztított adatbázis dump](http://dev.drupal.hu/files/druphungary-dev.tar.gz)ot,
+ami nem tartalmaz érzékeny adatokat. (Ha találsz benne jelezd nekünk, hogy törölni tudjuk.)
+
 ### Uj kontributor beallitasa
 
 1. [Forkold](http://help.github.com/fork-a-repo/) a hivatalos repot: https://github.com/drupalhu/drupal.hu
