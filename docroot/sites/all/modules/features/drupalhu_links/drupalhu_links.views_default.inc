@@ -49,12 +49,12 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'grid';
   $handler->display->display_options['style_options']['columns'] = '2';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Mező: Tartalom: Tartalom azonosító */
+  /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Mező: Tartalom: Webshot */
+  /* Field: Content: Webshot */
   $handler->display->display_options['fields']['field_webshot']['id'] = 'field_webshot';
   $handler->display->display_options['fields']['field_webshot']['table'] = 'field_data_field_webshot';
   $handler->display->display_options['fields']['field_webshot']['field'] = 'field_webshot';
@@ -67,12 +67,12 @@ function drupalhu_links_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_webshot']['group_column'] = 'fid';
-  /* Mező: Tartalom: Cím */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
-  /* Rendezési szempont: Tartalom: Beküldés dátuma */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
@@ -81,14 +81,14 @@ function drupalhu_links_views_default_views() {
     1 => 'AND',
     2 => 'AND',
   );
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -97,7 +97,7 @@ function drupalhu_links_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: A szerkesztő ajánlja (field_pick) */
+  /* Filter criterion: Content: A szerkesztő ajánlja (field_pick) */
   $handler->display->display_options['filters']['field_pick_value']['id'] = 'field_pick_value';
   $handler->display->display_options['filters']['field_pick_value']['table'] = 'field_data_field_pick';
   $handler->display->display_options['filters']['field_pick_value']['field'] = 'field_pick_value';
@@ -124,12 +124,30 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['title'] = 'Magyar Drupal alapú webhelyek';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Fejléc: Általános: Szövegdoboz */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['text']['id'] = 'area';
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Az alábbi linkeket küldték be webhelyünkre. Itt a beküldés szerint fordított időrendben lapozhatóak, a legutóbb beküldött linkek találhatóak az első oldalon.';
   $handler->display->display_options['header']['text']['format'] = '1';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'link' => 'link',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
   $handler->display->display_options['path'] = 'linkek/friss';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Friss';
@@ -146,7 +164,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['title'] = 'Népszerű magyar Drupal alapú webhelyek';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Fejléc: Általános: Szövegdoboz */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['text']['id'] = 'area';
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
@@ -165,7 +183,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['title'] = 'Kiemelt magyar Drupal alapú webhelyek';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Fejléc: Általános: Szövegdoboz */
+  /* Header: Global: Text area */
   $handler->display->display_options['header']['text']['id'] = 'area';
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
@@ -177,14 +195,14 @@ function drupalhu_links_views_default_views() {
     2 => 'AND',
   );
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Közzétéve */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: Típus */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -193,7 +211,7 @@ function drupalhu_links_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
-  /* Szűrési feltétel: Tartalom: A szerkesztő ajánlja (field_pick) */
+  /* Filter criterion: Content: A szerkesztő ajánlja (field_pick) */
   $handler->display->display_options['filters']['field_pick_value']['id'] = 'field_pick_value';
   $handler->display->display_options['filters']['field_pick_value']['table'] = 'field_data_field_pick';
   $handler->display->display_options['filters']['field_pick_value']['field'] = 'field_pick_value';
@@ -233,7 +251,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['footer'] = FALSE;
-  /* Lábléc: Általános: Szövegdoboz */
+  /* Footer: Global: Text area */
   $handler->display->display_options['footer']['area']['id'] = 'area';
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
@@ -255,9 +273,10 @@ function drupalhu_links_views_default_views() {
     t('‹ előző'),
     t('következő ›'),
     t('utolsó »'),
-    t('Tartalom azonosító'),
+    t('Nid'),
     t('Friss blokk'),
     t('Friss'),
+    t('more'),
     t('Ajánlott blokk'),
     t('Ajánlott linkek'),
     t('Friss oldal'),
