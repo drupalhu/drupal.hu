@@ -3,40 +3,102 @@
 /**
  * @file
  *   Download translations from remote localization server.
+ */
+
+/**
+ * Translation update mode: Use local files only.
  *
- * @todo Fetch information from info files.
+ * When checking for available translation updates, only local files will be
+ * used. Any remote translation file will be ignored. Also custom modules and
+ * themes which have set a "server pattern" to use a remote translation server
+ * will be ignored.
  */
+define('L10N_UPDATE_USE_SOURCE_LOCAL', 2);
 
 /**
- * Update mode: Remote server.
+ * Translation update mode: Use both remote and local files.
+ *
+ * When checking for available translation updates, both local and remote files
+ * will be checked.
  */
-define('L10N_UPDATE_CHECK_REMOTE', 1);
+define('L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL', 3);
 
 /**
- * Update mode: Local server.
+ * Default location of gettext file on the translation server.
+ *
+ * @see l10n_update_default_translation_server().
  */
-define('L10N_UPDATE_CHECK_LOCAL', 2);
+define('L10N_UPDATE_DEFAULT_SERVER_PATTERN', 'http://ftp.drupal.org/files/translations/%core/%project/%project-%release.%language.po');
 
 /**
- * Update mode: both.
+ * Default gettext file name on the translation server.
  */
-define('L10N_UPDATE_CHECK_ALL', L10N_UPDATE_CHECK_REMOTE | L10N_UPDATE_CHECK_LOCAL);
+define('L10N_UPDATE_DEFAULT_FILE_NAME', '%project-%release.%language.po');
 
 /**
- * Translation import mode keeping translations which are edited after enabling
- * Locale Update module an only override default (un-edited) translations.
+ * Default gettext file name on the translation server.
  */
-define('LOCALE_UPDATE_OVERRIDE_DEFAULT', 2);
+define('L10N_UPDATE_DEFAULT_TRANSLATION_PATH', 'sites/all/translations');
 
 /**
- * The maximum number of projects which are checked for available translations each cron run.
+ * The number of seconds that the translations status entry should be considered.
  */
-define('L10N_UPDATE_CRON_PROJECTS', 10);
+define('L10N_UPDATE_STATUS_TTL', 600);
 
 /**
- * The maximum number of projects which are updated each cron run.
+ * UI option for override of existing translations. Only override non-customized
+ * translations.
  */
-define('L10N_UPDATE_CRON_UPDATES', 2);
+define('L10N_UPDATE_OVERWRITE_NON_CUSTOMIZED', 2);
+
+/**
+ * Translation source is a remote file.
+ */
+define('L10N_UPDATE_REMOTE', 'remote');
+
+/**
+ * Translation source is a local file.
+ */
+define('L10N_UPDATE_LOCAL', 'local');
+
+/**
+ * Translation source is the current translation.
+ */
+define('L10N_UPDATE_CURRENT', 'current');
+
+/**
+ * The delimiter used to split plural strings.
+ *
+ * This is the ETX (End of text) character and is used as a minimal means to
+ * separate singular and plural variants in source and translation text. It
+ * was found to be the most compatible delimiter for the supported databases.
+ */
+define('L10N_UPDATE_PLURAL_DELIMITER', "\03");
+
+/**
+ * Flag for locally not customized interface translation.
+ *
+ * Such translations are imported from .po files downloaded from
+ * localize.drupal.org for example.
+ */
+define('L10N_UPDATE_NOT_CUSTOMIZED', 0);
+
+/**
+ * Flag for locally customized interface translation.
+ *
+ * Strings are customized when translated or edited using the build in
+ * string translation form. Strings can also be marked as customized when a po
+ * file is imported.
+ */
+define('L10N_UPDATE_STRING_CUSTOM', 1);
+
+/**
+ * Flag for locally customized interface translation.
+ *
+ * Such translations are edited from their imported originals on the user
+ * interface or are imported as customized.
+ */
+define('L10N_UPDATE_CUSTOMIZED', 1);
 
 /**
  * Implements hook_help().
@@ -44,8 +106,8 @@ define('L10N_UPDATE_CRON_UPDATES', 2);
 function l10n_update_help($path, $arg) {
   switch ($path) {
     case 'admin/config/regional/translate/update':
-      $output = '<p>' . t('List of latest imported translations and available updates for each enabled project and language.') . '</p>';
-      $output .= '<p>' . t('If there are available updates you can click on Update for them to be downloaded and imported now or you can edit the configuration for them to be updated automatically on the <a href="@update-settings">Update settings page</a>', array('@update-settings' => url('admin/config/regional/language/update'))) . '</p>';
+      $output = '<p>' . t('Status of interface translations for each of the enabled languages.') . '</p>';
+      $output .= '<p>' . t('If there are available updates you can click on "Update translation" for them to be downloaded and imported now or you can edit the configuration for them to be updated automatically on the <a href="@update-settings">Update settings page</a>', array('@update-settings' => url('admin/config/regional/language/update'))) . '</p>';
       return $output;
       break;
     case 'admin/config/regional/language/update':
@@ -62,11 +124,21 @@ function l10n_update_menu() {
   $items['admin/config/regional/translate/update'] = array(
     'title' => 'Update',
     'description' => 'Available updates',
-    'page callback' => 'l10n_update_admin_overview',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('l10n_update_status_form'),
     'access arguments' => array('translate interface'),
     'file' => 'l10n_update.admin.inc',
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/regional/translate/check'] = array(
+    'title' => 'Update',
+    'description' => 'Available updates',
+    'page callback' => 'l10n_update_manual_status',
+    'access arguments' => array('translate interface'),
+    'file' => 'l10n_update.admin.inc',
+    'weight' => 20,
+    'type' => MENU_CALLBACK,
   );
   $items['admin/config/regional/language/update'] = array(
     'title' => 'Translation updates',
@@ -81,6 +153,23 @@ function l10n_update_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_theme().
+ */
+function l10n_update_theme() {
+  return array(
+    'l10n_update_last_check' => array(
+      'variables' => array('last' => NULL),
+      'file' => 'l10n_update.admin.inc',
+      'template' => 'l10n_update-translation-last-check',
+    ),
+    'l10n_update_update_info' => array(
+      'variables' => array('updates' => array(), 'not_found' => array()),
+      'file' => 'l10n_update.admin.inc',
+      'template' => 'l10n_update-translation-update-info',
+    ),
+  );
+}
 /**
  * Implements hook_menu_alter().
  */
@@ -97,16 +186,100 @@ function l10n_update_menu_alter(&$menu) {
  * Check one project/language at a time, download and import if update available
  */
 function l10n_update_cron() {
-  $last = variable_get('l10n_update_last_check', 0);
-  $frequency = variable_get('l10n_update_check_frequency', 0) * 24 *3600;
-  if ($frequency && $last < REQUEST_TIME - $frequency) {
-    module_load_include('check.inc', 'l10n_update');
-    list($checked, $updated) = l10n_update_check_translations(L10N_UPDATE_CRON_PROJECTS, REQUEST_TIME - $frequency, L10N_UPDATE_CRON_UPDATES);
-    if (count($checked) || count($updated)) {
-      watchdog('l10n_update', 'Automatically checked @checked translations, updated @updated.', array('@checked' => count($checked), '@updated' => count($updated)));
-    }
-    variable_set('l10n_update_last_check', REQUEST_TIME);
+  // Update translations only when an update frequency was set by the admin
+  // and a translatable language was set.
+  // Update tasks are added to the queue here but processed by Drupal's cron
+  // using the cron worker defined in l10n_update_queue_info().
+  if ($frequency = variable_get('l10n_update_check_frequency', '0') && l10n_update_translatable_language_list()) {
+    module_load_include('translation.inc', 'l10n_update');
+    l10n_update_cron_fill_queue();
   }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function l10n_update_cron_queue_info() {
+  $queues['l10n_update'] = array(
+    'worker callback' => 'l10n_update_worker',
+    'time' => 30,
+  );
+  return $queues;
+}
+
+/**
+ * Callback: Executes interface translation queue tasks.
+ *
+ * The translation update functions executed here are batch operations which
+ * are also used in translation update batches. The batch functions may need to
+ * be executed multiple times to complete their task, typically this is the
+ * translation import function. When a batch function is not finished, a new
+ * queue task is created and added to the end of the queue. The batch context
+ * data is needed to continue the batch task is stored in the queue with the
+ * queue data.
+ *
+ * @param array $data
+ * Queue data array containing:
+ *   - Function name.
+ *   - Array of function arguments. Optionally contains the batch context data.
+ *
+ * @see l10n_update_queue_info()
+ */
+function l10n_update_worker($data) {
+  module_load_include('batch.inc', 'l10n_update');
+  list($function, $args) = $data;
+
+  // We execute batch operation functions here to check, download and import the
+  // translation files. Batch functions use a context variable as last argument
+  // which is passed by reference. When a batch operation is called for the
+  // first time a default batch context is created. When called iterative
+  // (usually the batch import function) the batch context is passed through via
+  // the queue and is part of the $data.
+  $last = count($args) - 1;
+  if (!is_array($args[$last]) || !isset($args[$last]['finished'])) {
+    $batch_context = array(
+      'sandbox'  => array(),
+      'results'  => array(),
+      'finished' => 1,
+      'message'  => '',
+    );
+  }
+  else {
+    $batch_context = $args[$last];
+    unset ($args[$last]);
+  }
+  $args = array_merge($args, array(&$batch_context));
+
+  // Call the batch operation function.
+  call_user_func_array($function, $args);
+
+  // If the batch operation is not finished we create a new queue task to
+  // continue the task. This is typically the translation import task.
+  if ($batch_context['finished'] < 1) {
+    unset($batch_context['strings']);
+    $queue = DrupalQueue::get('l10n_update', TRUE);
+    $queue->createItem(array($function, $args));
+  }
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function l10n_update_stream_wrappers() {
+  // Load the stream wrapper class if not automatically loaded. This happens
+  // before update.php is executed.
+  if (!class_exists('TranslationsStreamWrapper')) {
+    require_once('includes/locale/TranslationsStreamWrapper.php');
+  }
+
+  $wrappers['translations'] = array(
+    'name' => t('Translation files'),
+    'class' => 'TranslationsStreamWrapper',
+    'description' => t('Translation files.'),
+    'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
+  );
+
+  return $wrappers;
 }
 
 /**
@@ -135,8 +308,24 @@ function l10n_update_form_alter(&$form, $form_state, $form_id) {
  * Refresh project translation status and get translations if required.
  */
 function l10n_update_modules_enabled($modules) {
-  module_load_include('project.inc', 'l10n_update');
-  l10n_update_project_refresh($modules);
+  $components['module'] = $modules;
+  l10n_update_system_update($components);
+}
+
+/**
+ * Implements hook_modules_disabled().
+ *
+ * Set disabled modules to be ignored when updating translations.
+ */
+function l10n_update_modules_disabled($modules) {
+  if (!variable_get('l10n_update_check_disabled', FALSE)) {
+    db_update('l10n_update_project')
+      ->fields(array(
+        'status' => 0,
+      ))
+      ->condition('name', $modules)
+      ->execute();
+  }
 }
 
 /**
@@ -146,29 +335,40 @@ function l10n_update_modules_enabled($modules) {
  * rebuild the projects cache.
  */
 function l10n_update_modules_uninstalled($modules) {
-  db_delete('l10n_update_file')
-    ->condition('project', $modules)
-    ->execute();
-
-  // Rebuild {l10n_update_project} table.
-  // Just like the system table, the project table holds both enabled and
-  // disabled projects. Full control over its content is not possible.
-  // To minimize polution we flush it here. The cost of rebuilding is small
-  // compared to the {l10n_update_file} table.
-  db_delete('l10n_update_project')->execute();
-  module_load_include('project.inc', 'l10n_update');
-  l10n_update_build_projects();
+  $components['module'] = $modules;
+  l10n_update_system_remove($components);
 }
 
 /**
- * Aditional submit handler for language forms
+ * Implements hook_themes_enabled().
+ *
+ * Refresh project translation status and get translations if required.
+ */
+function l10n_update_themes_enabled($themes) {
+  $components['theme'] = $themes;
+  l10n_update_system_update($components);
+}
+
+/**
+ * Additional submit handler for language forms
  *
  * We need to refresh status when a new language is enabled / disabled
  */
 function l10n_update_languages_changed_submit($form, $form_state) {
-  module_load_include('check.inc', 'l10n_update');
-  $langcode = $form_state['values']['langcode'];
-  l10n_update_language_refresh(array($langcode));
+  if (variable_get('l10n_update_import_enabled', TRUE)) {
+    if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
+      $langcode = $form_state['values']['langcode'];
+    }
+    else {
+      $langcode = $form_state['values']['predefined_langcode'];
+    }
+
+    // Download and import translations for the newly added language.
+    module_load_include('fetch.inc', 'l10n_update');
+    $options = _l10n_update_default_update_options();
+    $batch = l10n_update_batch_update_build(array(), array($langcode), $options);
+    batch_set($batch);
+  }
 }
 
 /**
@@ -178,8 +378,7 @@ function l10n_update_languages_changed_submit($form, $form_state) {
  */
 function l10n_update_languages_delete_submit($form, $form_state) {
   $langcode = $form_state['values']['langcode'];
-  module_load_include('inc', 'l10n_update');
-  l10n_update_delete_file_history($langcode);
+  l10n_update_file_history_delete(array(), $langcode);
 }
 
 /**
@@ -190,7 +389,6 @@ function l10n_update_languages_delete_submit($form, $form_state) {
  * @see l10n_update_form_alter()
  */
 function l10n_update_locale_translate_edit_form_submit($form, &$form_state) {
-  module_load_include('inc', 'l10n_update');
   $lid = $form_state['values']['lid'];
   foreach ($form_state['values']['translations'] as $langcode => $value) {
     if (!empty($value) && $value != $form_state['complete form']['translations'][$langcode]['#default_value']) {
@@ -217,7 +415,7 @@ function l10n_update_client_save_string() {
       $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = :context AND textgroup = :textgroup", array(':source' => $_POST['source'], ':context' => '', ':textgroup' => $_POST['textgroup']))->fetchField();
 
       if (!empty($lid)) {
-        module_load_include('inc', 'l10n_update');
+        module_load_include('translation.inc', 'l10n_update');
         $report = array('skips' => 0, 'additions' => 0, 'updates' => 0, 'deletes' => 0);
         // @todo: add actual context support.
         _l10n_update_locale_import_one_string_db($report, $language->language, '', $_POST['source'], $_POST['target'], $_POST['textgroup'], NULL, LOCALE_IMPORT_OVERWRITE, L10N_UPDATE_STRING_CUSTOM);
@@ -265,232 +463,299 @@ function l10n_update_client_save_string() {
 }
 
 /**
- * Get stored list of projects
+ * Imports translations when new modules or themes are installed.
  *
- * @param boolean $refresh
- *   TRUE = refresh the project data.
- * @param boolean $disabled
- *   TRUE = get enabled AND disabled projects.
- *   FALSE = get enabled projects only.
+ * This function will start a batch to import translations for the added
+ * components.
  *
- * @return array
- *   Array of project objects keyed by project name.
+ * @param array $components
+ *   An array of arrays of component (theme and/or module) names to import
+ *   translations for, indexed by type.
  */
-function l10n_update_get_projects($refresh = FALSE, $disabled = FALSE) {
-  static $projects, $enabled;
+function l10n_update_system_update(array $components) {
+  $components += array('module' => array(), 'theme' => array());
+  $list = array_merge($components['module'], $components['theme']);
 
-  if (!isset($projects) || $refresh) {
-    if (variable_get('l10n_update_rebuild_projects', 0)) {
-      module_load_include('project.inc', 'l10n_update');
-      variable_del('l10n_update_rebuild_projects');
-      l10n_update_build_projects();
-    }
-    $projects = $enabled = array();
-    $result = db_query('SELECT * FROM {l10n_update_project}');
-    foreach ($result as $project) {
-      $projects[$project->name] = $project;
-      if ($project->status) {
-        $enabled[$project->name] = $project;
-      }
+  // Skip running the translation imports if in the installer,
+  // because it would break out of the installer flow. We have
+  // built-in support for translation imports in the installer.
+  if (!drupal_installation_attempted() && l10n_update_translatable_language_list() && variable_get('l10n_update_import_enabled', TRUE)) {
+    module_load_include('compare.inc', 'l10n_update');
+
+    // Update the list of translatable projects and start the import batch.
+    // Only when new projects are added the update batch will be triggered. Not
+    // each enabled module will introduce a new project. E.g. sub modules.
+    $projects = array_keys(l10n_update_build_projects());
+    if ($list = array_intersect($list, $projects)) {
+      module_load_include('fetch.inc', 'l10n_update');
+      // Get translation status of the projects, download and update translations.
+      $options = _l10n_update_default_update_options();
+      $batch = l10n_update_batch_update_build($list, array(), $options);
+      batch_set($batch);
     }
   }
-  return $disabled ? $projects : $enabled;
 }
 
 /**
- * Get server information, that can come from different sources.
+ * Delete translation history of modules and themes.
  *
- * - From server list provided by modules. They can provide full server information or just the url
- * - From server_url in a project, we'll fetch latest data from the server itself
+ * Only the translation history is removed, not the source strings or
+ * translations. This is not possible because strings are shared between
+ * modules and we have no record of which string is used by which module.
  *
- * @param string $name
- *   Server name e.g. localize.drupal.org
- * @param string $url
- *   Server url
- * @param boolean $refresh
- *   TRUE = refresh the server data.
+ * @param array $components
+ *   An array of arrays of component (theme and/or module) names to import
+ *   translations for, indexed by type.
+ */
+function l10n_update_system_remove($components) {
+  $components += array('module' => array(), 'theme' => array());
+  $list = array_merge($components['module'], $components['theme']);
+  if ($language_list = l10n_update_translatable_language_list()) {
+    module_load_include('compare.inc', 'l10n_update');
+    module_load_include('bulk.inc', 'l10n_update');
+
+    // Only when projects are removed, the translation files and records will be
+    // deleted. Not each disabled module will remove a project. E.g. sub modules.
+    $projects = array_keys(l10n_update_get_projects());
+    if ($list = array_intersect($list, $projects)) {
+      l10n_update_file_history_delete($list);
+
+      // Remove translation files.
+      l10n_update_delete_translation_files($list, array());
+
+      // Remove translatable projects.
+      // Followup issue http://drupal.org/node/1842362 to replace the
+      // {l10n_update_project} table. Then change this to a function call.
+      db_delete('l10n_update_project')
+        ->condition('name', $list)
+        ->execute();
+
+      // Clear the translation status.
+      l10n_update_status_delete_projects($list);
+    }
+
+  }
+}
+
+/**
+ * Gets current translation status from the {l10n_update_file} table.
  *
  * @return array
- *   Array of server data.
+ *   Array of translation file objects.
  */
-function l10n_update_server($name = NULL, $url = NULL, $refresh = FALSE) {
-  static $info, $server_list;
+function l10n_update_get_file_history() {
+  $history = &drupal_static(__FUNCTION__, array());
 
-  // Retrieve server list from modules
-  if (!isset($server_list) || $refresh) {
-    $server_list = module_invoke_all('l10n_servers');
-  }
-  // We need at least the server url to fetch all the information
-  if (!$url && $name && isset($server_list[$name])) {
-    $url = $server_list[$name]['server_url'];
-  }
-  // If we still don't have an url, cannot find this server, return false
-  if (!$url) {
-    return FALSE;
-  }
-  // Cache server information based on the url, refresh if asked
-  $cid = 'l10n_update_server:' . $url;
-  if ($refresh) {
-    unset($info);
-    cache_clear_all($cid, 'cache_l10n_update');
-  }
-  if (!isset($info[$url])) {
-    if ($cache = cache_get($cid, 'cache_l10n_update')) {
-      $info[$url] = $cache->data;
+  if (empty($history)) {
+    // Get file history from the database.
+    $result = db_query('SELECT project, language, filename, version, uri, timestamp, last_checked FROM {l10n_update_file}');
+    foreach ($result as $file) {
+      $file->langcode = $file->language;
+      $file->type = $file->timestamp ? L10N_UPDATE_CURRENT : '';
+      $history[$file->project][$file->langcode] = $file;
     }
-    else {
-      module_load_include('parser.inc', 'l10n_update');
-      if ($name && !empty($server_list[$name])) {
-        // The name is in our list, it can be full data or just an url
-        $server = $server_list[$name];
+  }
+  return $history;
+}
+
+/**
+ * Updates the {locale_file} table.
+ *
+ * @param object $file
+ *   Object representing the file just imported.
+ *
+ * @return integer
+ *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
+ *
+ * @see drupal_write_record()
+ */
+function l10n_update_update_file_history($file) {
+  // Update or write new record.
+  if (db_query("SELECT project FROM {l10n_update_file} WHERE project = :project AND language = :langcode", array(':project' => $file->project, ':langcode' => $file->langcode))->fetchField()) {
+    $update = array('project', 'language');
+  }
+  else {
+    $update = array();
+  }
+  $file->language = $file->langcode;
+  $result = drupal_write_record('l10n_update_file', $file, $update);
+  // The file history has changed, flush the static cache now.
+  // @todo Can we make this more fine grained?
+  drupal_static_reset('l10n_update_get_file_history');
+  return $result;
+}
+
+/**
+ * Deletes the history of downloaded translations.
+ *
+ * @param array $projects
+ *   Project name(s) to be deleted from the file history. If both project(s) and
+ *   language code(s) are specified the conditions will be ANDed.
+ * @param array $langcode
+ *   Language code(s) to be deleted from the file history.
+ */
+function l10n_update_file_history_delete($projects = array(), $langcodes = array()) {
+  $query = db_delete('l10n_update_file');
+  if (!empty($projects)) {
+    $query->condition('project', $projects);
+  }
+  if (!empty($langcodes)) {
+    $query->condition('language', $langcodes);
+  }
+  $query->execute();
+}
+
+/**
+ * Gets the current translation status.
+ *
+ * @todo What is 'translation status'?
+ */
+function l10n_update_get_status($projects = NULL, $langcodes = NULL) {
+  $result = array();
+  $status = variable_get('l10n_update_translation_status', array());
+  module_load_include('translation.inc', 'l10n_update');
+  $projects = $projects ? $projects : array_keys(l10n_update_get_projects());
+  $langcodes = $langcodes ? $langcodes : array_keys(l10n_update_translatable_language_list());
+
+  // Get the translation status of each project-language combination. If no
+  // status was stored, a new translation source is created.
+  foreach ($projects as $project) {
+    foreach ($langcodes as $langcode) {
+      if (isset($status[$project][$langcode])) {
+        $result[$project][$langcode] = $status[$project][$langcode];
       }
       else {
-        // This may be a new server provided by a module / package
-        $server = array('name' => $name, 'server_url' => $url);
-        // If searching by name, store the name => url mapping
-        if ($name) {
-          $server_list[$name] = $server;
+        $sources = l10n_update_build_sources(array($project), array($langcode));
+        if (isset($sources[$project][$langcode])) {
+          $result[$project][$langcode] = $sources[$project][$langcode];
         }
       }
-      // Now fetch server meta information form the server itself
-      if ($server = l10n_update_get_server($server)) {
-        cache_set($cid, $server, 'cache_l10n_update');
-        $info[$url] = $server;
-      }
-      else {
-        // If no server information, this will be FALSE. We won't search a server twice
-        $info[$url] = FALSE;
-      }
     }
   }
-  return $info[$url];
+  return $result;
 }
 
 /**
- * Implements hook_l10n_servers().
+ * Saves the status of translation sources in static cache.
  *
- * @return array
- *   Array of server data:
- *     'name'       => server name
- *     'server_url' => server url
- *     'update_url' => update url
+ * @param string $project
+ *   Machine readable project name.
+ * @param string $langcode
+ *   Language code.
+ * @param string $type
+ *   Type of data to be stored.
+ * @param array $data
+ *   File object also containing timestamp when the translation is last updated.
  */
-function l10n_update_l10n_servers() {
-  module_load_include('inc', 'l10n_update');
-  $server = l10n_update_default_server();
-  return array($server['name'] => $server);
-}
+function l10n_update_status_save($project, $langcode, $type, $data) {
+  // Followup issue: http://drupal.org/node/1842362
+  // Split status storage per module/language and expire individually. This will
+  // improve performance for large sites.
 
-/**
- * Get update history.
- *
- * @param boolean $refresh
- *   TRUE = refresh the history data.
- * @return
- *   An array of translation files indexed by project and language.
- */
-function l10n_update_get_history($refresh = NULL) {
-  static $status;
-
-  if ($refresh || !isset($status)) {
-    // Now add downloads history to projects
-    $result = db_query("SELECT * FROM {l10n_update_file}");
-    foreach ($result as $update) {
-      $status[$update->project][$update->language] = $update;
+  // Load the translation status or build it if not already available.
+  module_load_include('translation.inc', 'l10n_update');
+  $status = l10n_update_get_status();
+  if (empty($status)) {
+    $projects = l10n_update_get_projects(array($project));
+    if (isset($projects[$project])) {
+      $status[$project][$langcode] = l10n_update_source_build($projects[$project], $langcode);
     }
   }
-  return $status;
+
+  // Merge the new status data with the existing status.
+  if (isset($status[$project][$langcode])) {
+    switch ($type) {
+      case L10N_UPDATE_REMOTE:
+      case L10N_UPDATE_LOCAL:
+        // Add the source data to the status array.
+        $status[$project][$langcode]->files[$type] = $data;
+        // Check if this translation is the most recent one. Set timestamp and
+        // data type of the most recent translation source.
+        if (isset($data->timestamp) && $data->timestamp) {
+          if ($data->timestamp > $status[$project][$langcode]->timestamp) {
+            $status[$project][$langcode]->timestamp = $data->timestamp;
+            $status[$project][$langcode]->last_checked = REQUEST_TIME;
+            $status[$project][$langcode]->type = $type;
+          }
+        }
+        break;
+      case L10N_UPDATE_CURRENT:
+        $data->last_checked = REQUEST_TIME;
+        $status[$project][$langcode]->timestamp = $data->timestamp;
+        $status[$project][$langcode]->last_checked = $data->last_checked;
+        $status[$project][$langcode]->type = $type;
+        l10n_update_update_file_history($data);
+        break;
+    }
+
+    variable_set('l10n_update_translation_status', $status);
+    variable_set('l10n_update_last_check', REQUEST_TIME);
+  }
 }
 
 /**
- * Get language list.
+ * Delete language entries from the status cache.
+ *
+ * @param array $langcodes
+ *   Language code(s) to be deleted from the cache.
+ */
+function l10n_update_status_delete_languages($langcodes) {
+  if ($status = l10n_update_get_status()) {
+    foreach ($status as $project => $languages) {
+      foreach ($languages as $langcode => $source) {
+        if (in_array($langcode, $langcodes)) {
+          unset($status[$project][$langcode]);
+        }
+      }
+    }
+    variable_set('l10n_update_translation_status', $status);
+  }
+}
+
+/**
+ * Delete project entries from the status cache.
+ *
+ * @param array $projects
+ *   Project name(s) to be deleted from the cache.
+ */
+function l10n_update_status_delete_projects($projects) {
+  $status = l10n_update_get_status();
+
+  foreach ($status as $project => $languages) {
+    if (in_array($project, $projects)) {
+      unset($status[$project]);
+    }
+  }
+  variable_set('l10n_update_translation_status', $status);
+}
+
+/**
+ * Returns list of translatable languages.
  *
  * @return array
- *   Array of installed language names. English is the source language and
- *   is therefore not included.
+ *   Array of enabled languages keyed by language name. English is omitted.
  */
-function l10n_update_language_list() {
+function l10n_update_translatable_language_list() {
   $languages = locale_language_list('name');
-  // Skip English language
-  if (isset($languages['en'])) {
-    unset($languages['en']);
-  }
+  unset($languages['en']);
   return $languages;
 }
 
 /**
- * Implements hook_theme().
+ * Clear the translation status cache.
  */
-function l10n_update_theme() {
-  return array(
-    'l10n_update_project_status' => array(
-      'variables' => array('projects' => NULL, 'languages' => NULL, 'history' => NULL, 'available' => NULL, 'updates' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-    'l10n_update_single_project_wrapper' => array(
-      'project' => array('project' => NULL, 'project_status' => NULL, 'languages' => NULL, 'history' => NULL, 'updates' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-    'l10n_update_single_project_status' => array(
-      'variables' => array('project' => NULL, 'server' => NULL, 'status' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-    'l10n_update_current_release' => array(
-      'variables' => array('language' => NULL, 'release' => NULL, 'status' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-    'l10n_update_available_release' => array(
-      'variables' => array('release' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-    'l10n_update_version_status' => array(
-      'variables' => array('status' => NULL, 'type' => NULL),
-      'file' => 'l10n_update.admin.inc',
-    ),
-  );
+function l10n_update_clear_status() {
+  variable_del('l10n_update_translation_status');
+  variable_del('l10n_update_last_check');
 }
 
 /**
- * Build the warning message for when there is no data about available updates.
+ * Checks whether remote translation sources are used.
  *
- * @return sting
- *   Message text with links.
+ * @return bool
+ *   Returns TRUE if remote translations sources should be taken into account
+ *   when checking or importing translation files, FALSE otherwise.
  */
-function _l10n_update_no_data() {
-  $destination = drupal_get_destination();
-  return t('No information is available about potential new and updated translations for currently installed modules and themes. To check for updates, you may need to <a href="@run_cron">run cron</a> or you can <a href="@check_manually">check manually</a>. Please note that checking for available updates can take a long time, so please be patient.', array(
-    '@run_cron' => url('admin/reports/status/run-cron', array('query' => $destination)),
-    '@check_manually' => url('admin/config/regional/translate/update', array('query' => $destination)),
-  ));
-}
-
-/**
- * Get available updates.
- *
- * @param boolean $refresh
- *   TRUE = refresh the history data.
- *
- * @return array
- *   Array of all projects for which updates are available. For each project
- *   an array of update objects, one per language.
- */
-function l10n_update_available_updates($refresh = NULL) {
-  module_load_include('check.inc', 'l10n_update');
-  if ($available = l10n_update_available_releases($refresh)) {
-    $history = l10n_update_get_history();
-    return l10n_update_build_updates($history, $available);
-  }
-}
-
-/**
- * Implements hook_flush_caches().
- *
- * Called from update.php (among others) to flush the caches.
- */
-function l10n_update_flush_caches() {
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
-    cache_clear_all('*', 'cache_l10n_update', TRUE);
-    variable_set('l10n_update_rebuild_projects', 1);
-  }
-  return array();
+function l10n_update_use_remote_source() {
+  return variable_get('l10n_update_check_mode', L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL) == L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL;
 }

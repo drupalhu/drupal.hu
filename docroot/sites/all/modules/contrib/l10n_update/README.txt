@@ -48,7 +48,7 @@ Update interface translations
     Change "Check for updates" to "Daily" or "Weekly" instead of the default "Never".
   From now on cron will check for updated translations, and import them is required.
 
-  The status of the translations is reported on the "Status report" page at 
+  The status of the translations is reported on the "Status report" page at
   Administration > Reports.
 
   To check the translation status and execute updates manually, go to
@@ -115,27 +115,37 @@ po files, multi site and distributions
 
   Po files included in distributions should match this syntax too.
 
-Alternative sources of translation
-----------------------------------
-
-  Each project i.e. modules, themes, etc. can define alternative translation
-  servers to retrieve the translation updates from.
-  Include the following definition in the projects .info file:
-
-    l10n server = example.com
-    l10n url = http://example.com/files/translations/l10n_server.xml
+Alternative source of translation
+---------------------------------
 
   The download path pattern is normally defined in the above defined xml file.
-  You may override this path by adding a third definition in the .info file:
+  You may override the download path of the po file on a project by project
+  basis by adding this definition in the .info file:
 
     l10n path = http://example.com/files/translations/%core/%project/%project-%release.%language.po
 
+  Modules can force Locale to load the translation of an other project by
+  defining 'interface translation project' in their .info file. This can be
+  usefull for custom modules to use for example a common translation file
+
+    interface translation project = my_project
+
+  This can be used in combination with an alternative path to the translation
+  file. For example:
+
+    l10n path = sites/all/modules/custom/%project/%project.%language.po
+
+Exclude a project from translation checks and updates
+-----------------------------------------------------
+
+  Individual modules can be excluded from translation checks and updates. For
+  example custom modules or features. Add the following line to the .info file
+  to exclude a module from translation checks and updates:
+
+  interface translation project = FALSE
+
 API
 ---
-  Using hook_l10n_servers the l10n update module can be extended to use other
-  translation repositories. Which is usefull for organisations who maintain
-  their own translation.
-
   Using hook_l10n_update_projects_alter modules can alter or specify the
   translation repositories on a per module basis.
 
@@ -143,6 +153,6 @@ API
 
 Maintainers
 -----------
-  Jose Reyero
-  Gábor Hojtsy
   Erik Stielstra
+  Gábor Hojtsy
+  Jose Reyero

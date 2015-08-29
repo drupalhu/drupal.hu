@@ -6,160 +6,205 @@
  */
 
 /**
- * Project has a new release available.
+ * Page callback: Checks for translation updates and displays the status.
+ *
+ * Manually checks the translation status without the use of cron.
  */
-define('L10N_UPDATE_NOT_CURRENT', 4);
+function l10n_update_manual_status() {
+  module_load_include('compare.inc', 'l10n_update');
 
-/**
- * Project is up to date.
- */
-define('L10N_UPDATE_CURRENT', 5);
+  // Check the translation status of all translatable projects in all languages.
+  // First we clear the cached list of projects. Although not strictly
+  // necessary, this is helpful in case the project list is out of sync.
+  l10n_update_flush_projects();
+  l10n_update_check_projects();
 
-/**
- * Project's status cannot be checked.
- */
-define('L10N_UPDATE_NOT_CHECKED', -1);
-
-/**
- * No available update data was found for project.
- */
-define('L10N_UPDATE_UNKNOWN', -2);
-
-/**
- * There was a failure fetching available update data for this project.
- */
-define('L10N_UPDATE_NOT_FETCHED', -3);
-
-// Include l10n_update API
-module_load_include('check.inc', 'l10n_update');
-// And project api
-module_load_include('project.inc', 'l10n_update');
-
-/**
- * Page callback: Admin overview page.
- */
-function l10n_update_admin_overview() {
-  // For now we get package information provided by modules.
-  $projects = l10n_update_get_projects();
-  $languages = l10n_update_language_list('name');
-
-  $build = array();
-  if ($languages) {
-    $history = l10n_update_get_history();
-    $available = l10n_update_available_releases();
-    $updates = l10n_update_build_updates($history, $available);
-    $build['project_status'] = array(
-      '#theme' => 'l10n_update_project_status',
-      '#projects' => $projects,
-      '#languages' => $languages,
-      '#history' => $history,
-      '#available' => $available,
-      '#updates' => $updates,
-    );
-    $build['admin_import_form'] = drupal_get_form('l10n_update_admin_import_form', $projects, $updates);
+  // Execute a batch if required. A batch is only used when remote files
+  // are checked.
+  if (batch_get()) {
+    batch_process('admin/config/regional/translate/update');
   }
-  else {
-    $build['no_languages'] = array('#markup' => t('No translatable language defined. <a href="/admin/config/regional/language">Add a language</a>.'));
-  }
-  return $build;
+  drupal_goto('admin/config/regional/translate/update');
 }
 
 /**
- * Translation update form.
- *
- * @todo selectable packages
- * @todo check language support in server
- * @todo check file update dates
- *
- * @param $form_state
- *   Form states array.
- * @param $projects
- *   @todo $projects are not used in the form.
- * @param $updates
- *   Updates to be displayed in the form.
+ * Page callback: Translation status page.
  */
-function l10n_update_admin_import_form($form, $form_state, $projects, $updates) {
-  //module_load_include('inc', 'l10n_update');
-  // For now we get package information provided by modules
-  $projects = l10n_update_get_projects();
-  $languages = l10n_update_language_list('name');
+function l10n_update_status_form() {
+  module_load_include('compare.inc', 'l10n_update');
+  $updates = $options = array();
+  $languages_update = $languages_not_found = array();
+  $projects_update = array();
 
-  // Absence of projects is an error and only occurs if the database table
-  // was truncated. In this case we rebuild the project data.
-  if (!$projects) {
-    l10n_update_build_projects();
-    $projects = l10n_update_get_projects();
-  }
+  // @todo Calling l10n_update_build_projects() is an expensive way to
+  //   get a module name. In follow-up issue http://drupal.org/node/1842362
+  //   the project name will be stored to display use, like here.
+  $project_data = l10n_update_build_projects();
+  $languages = l10n_update_translatable_language_list();
+  $status = l10n_update_get_status();
 
-  if ($projects && $languages) {
-    $form['updates'] = array(
-      '#type' => 'value',
-      '#value' => $updates,
-    );
+  // Prepare information about projects which have available translation
+  // updates.
+  if ($languages && $status) {
+    foreach ($status as $project) {
+      foreach ($project as $langcode => $project_info) {
+        if (isset($project_data[$project_info->name])) {
+          // No translation file found for this project-language combination.
+          if (empty($project_info->type)) {
+            $updates[$langcode]['not_found'][] = array(
+              'name' => $project_info->name == 'drupal' ? t('Drupal core') : $project_data[$project_info->name]->info['name'],
+              'version' => $project_info->version,
+              'info' => _l10n_update_status_debug_info($project_info),
+            );
+            $languages_not_found[$langcode] = $langcode;
+          }
+          // Translation update found for this project-language combination.
+          elseif ($project_info->type == L10N_UPDATE_LOCAL || $project_info->type == L10N_UPDATE_REMOTE ) {
+            $local = isset($project_info->files[L10N_UPDATE_LOCAL]) ? $project_info->files[L10N_UPDATE_LOCAL] : NULL;
+            $remote = isset($project_info->files[L10N_UPDATE_REMOTE]) ? $project_info->files[L10N_UPDATE_REMOTE] : NULL;
+            $recent = _l10n_update_source_compare($local, $remote) == L10N_UPDATE_SOURCE_COMPARE_LT ? $remote : $local;
+            $updates[$langcode]['updates'][] = array(
+              'name' => $project_info->name == 'drupal' ? t('Drupal core') : $project_data[$project_info->name]->info['name'],
+              'version' => $project_info->version,
+              'timestamp' => $recent->timestamp,
+            );
+            $languages_update[$langcode] = $langcode;
+            $projects_update[$project_info->name] = $project_info->name;
+          }
+        }
+      }
+    }
+    $languages_not_found = array_diff($languages_not_found, $languages_update);
 
-    if (count($languages) > 1) {
-      $form['lang'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Languages'),
-        '#collapsible' => TRUE,
-        '#collapsed' => FALSE ,
-        '#description' => t('Select one or more languages to download and update. If you select none, all of them will be updated.'),
-      );
-      $form['lang']['languages'] = array(
-        '#type' => 'checkboxes',
-        '#options' => $languages,
+    // Build data options for the select table.
+    foreach($updates as $langcode => $update) {
+      $title = check_plain($languages[$langcode]);
+      $l10n_update_update_info = array('#theme' => 'l10n_update_update_info');
+      foreach (array('updates', 'not_found') as $update_status) {
+        if (isset($update[$update_status])) {
+          $l10n_update_update_info['#' . $update_status] = $update[$update_status];
+        }
+      }
+      $options[$langcode] = array(
+        'title' => array(
+          'class' => array('label'),
+          'data' => array(
+            '#title' => $title,
+            '#markup' => $title
+          ),
+        ),
+        'status' => array('class' => array('description', 'expand', 'priority-low'), 'data' => drupal_render($l10n_update_update_info)),
       );
     }
+    // Sort the table data on language name.
+    uasort($options, function ($a, $b) {
+      return strcasecmp($a['title']['data']['#title'], $b['title']['data']['#title']);
+    });
+  }
 
-    if ($updates) {
-      $form['actions']['download'] = array(
+  $last_checked = variable_get('l10n_update_last_check');
+  $form['last_checked'] = array(
+    '#theme' => 'l10n_update_last_check',
+    '#last' => $last_checked,
+  );
+
+  $header = array(
+    'title' => array(
+      'data' => t('Language'),
+      'class' => array('title'),
+    ),
+    'status' => array(
+      'data' => t('Status'),
+      'class' => array('status', 'priority-low'),
+    ),
+  );
+
+  if (!$languages) {
+    $empty = t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array('@add_language' => url('admin/config/regional/language')));
+  }
+  elseif (empty($options)) {
+    $empty = t('All translations up to date.');
+  }
+  else  {
+    $empty = t('No translation status available. <a href="@check">Check manually</a>.', array('@check' => url('admin/config/regional/translate/check')));
+  }
+
+  // The projects which require an update. Used by the _submit callback.
+  $form['projects_update'] = array(
+    '#type' => 'value',
+    '#value' => $projects_update,
+  );
+  $form['langcodes'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#default_value' => $languages_update,
+    '#empty' => $empty,
+    '#js_select' => TRUE,
+    '#multiple' => TRUE,
+    '#required' => TRUE,
+    '#not_found' => $languages_not_found,
+    '#after_build' => array('l10n_update_language_table'),
+    '#attributes' => array(),
+  );
+
+  $form['#attached'] = array(
+    'js' => array(
+      drupal_get_path('module', 'l10n_update') . '/js/l10n_update.admin.js',
+    ),
+    'css' => array(
+      drupal_get_path('module', 'l10n_update') . '/css/l10n_update.admin.css',
+    ),
+  );
+
+  if ($languages_update) {
+    $form['actions'] = array(
+      '#type' => 'actions',
+      'submit' => array(
         '#type' => 'submit',
         '#value' => t('Update translations'),
-      );
-    }
+      ),
+      '#attributes' => array(),
+    );
   }
-  $form['actions']['refresh'] = array(
-    '#type' => 'submit',
-    '#value' => t('Refresh information'),
-  );
+
   return $form;
 }
 
 /**
- * Submit handler for Update form.
- *
- * Handles both submit buttons to update translations and to update the
- * form information.
+ * Form validation handler for locale_translation_status_form().
  */
-function l10n_update_admin_import_form_submit($form, $form_state) {
-  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
-  $projects = l10n_update_get_projects();
-
-  if ($op == t('Update translations')) {
-    $languages = isset($form_state['values']['languages']) ? array_filter($form_state['values']['languages']) : NULL;
-    $updates = $form_state['values']['updates'];
-    $mode = variable_get('l10n_update_import_mode', LOCALE_IMPORT_KEEP);
-
-    if ($projects && $updates) {
-      module_load_include('batch.inc', 'l10n_update');
-      // Filter out updates in other languages. If no languages, all of them will be updated
-      $updates = _l10n_update_prepare_updates($updates, NULL, $languages);
-      $batch = l10n_update_batch_multiple($updates, $mode);
-      batch_set($batch);
-    }
+function l10n_update_status_form_validate($form, &$form_state) {
+  // Check if a language has been selected. 'tableselect' doesn't.
+  if (!array_filter($form_state['values']['langcodes'])) {
+    form_set_error('', t('Select a language to update.'));
   }
-  elseif ($op == t('Refresh information')) {
-    // Get current version of projects.
-    l10n_update_build_projects();
+}
 
-    // Get available translation updates and update file history.
-    if ($available = l10n_update_available_releases(TRUE)) {
-      l10n_update_flag_history($available);
-      drupal_set_message(t('Fetched information about available updates from the server'));
-    }
-    else {
-      drupal_set_message(t('Failed to fetch information about available updates from the server.'), 'error');
-    }
+/**
+ * Form submission handler for locale_translation_status_form().
+ */
+function l10n_update_status_form_submit($form, $form_state) {
+  module_load_include('fetch.inc', 'l10n_update');
+  $langcodes = array_filter($form_state['values']['langcodes']);
+  $projects = array_filter($form_state['values']['projects_update']);
+
+  // Set the translation import options. This determines if existing
+  // translations will be overwritten by imported strings.
+  $options = _l10n_update_default_update_options();
+
+  // If the status was updated recently we can immediately start fetching the
+  // translation updates. If the status is expired we clear it an run a batch to
+  // update the status and then fetch the translation updates.
+  $last_checked = variable_get('l10n_update_last_check');
+  if ($last_checked < REQUEST_TIME - L10N_UPDATE_STATUS_TTL) {
+    l10n_update_clear_status();
+    $batch = l10n_update_batch_update_build(array(), $langcodes, $options);
+    batch_set($batch);
+  }
+  else {
+    $batch = l10n_update_batch_fetch_build($projects, $langcodes, $options);
+    batch_set($batch);
   }
 }
 
@@ -167,56 +212,80 @@ function l10n_update_admin_import_form_submit($form, $form_state) {
  * Page callback: Settings form.
  */
 function l10n_update_admin_settings_form($form, &$form_state) {
-  $form['l10n_update_check_mode'] = array(
-    '#type' => 'radios',
-    '#title' => t('Update source'),
-    '#default_value' => variable_get('l10n_update_check_mode', L10N_UPDATE_CHECK_ALL),
-    '#options' => _l10n_update_admin_check_options(),
-  );
-  $form['l10n_update_import_mode'] = array(
-    '#type' => 'radios',
-    '#title' => t('Update mode'),
-    '#default_value' => variable_get('l10n_update_import_mode', LOCALE_IMPORT_KEEP),
-    '#options' => _l10n_update_admin_import_options(),
-  );
   $form['l10n_update_check_frequency'] = array(
     '#type' => 'radios',
     '#title' => t('Check for updates'),
-    '#default_value' => variable_get('l10n_update_check_frequency', 0),
+    '#default_value' => variable_get('l10n_update_check_frequency', '0'),
     '#options' => array(
-      0 => t('Never (manually)'),
-      1 => t('Daily'),
-      7 => t('Weekly'),
+      '0' => t('Never (manually)'),
+      '7' => t('Weekly'),
+      '30' => t('Monthly'),
     ),
-    '#description' => t('Select how frequently you want to automatically check for updated translations for installed modules and themes.'),
+    '#description' => t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href="@url">Check updates now</a>.', array('@url' => url('admin/config/regional/translate/check'))),
   );
+
   $form['l10n_update_check_disabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Check for updates of disabled modules and themes'),
-    '#default_value' => variable_get('l10n_update_check_disabled', 0),
-    '#description' => t('Note that this comes with a performance penalty, so it is not recommended.'),
+    '#default_value' => variable_get('l10n_update_check_disabled', FALSE),
   );
+
+  $form['l10n_update_check_mode'] = array(
+    '#type' => 'radios',
+    '#title' => t('Translation source'),
+    '#default_value' => variable_get('l10n_update_check_mode', L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL),
+    '#options' => array(
+      L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL => t('Drupal translation server and local files'),
+      L10N_UPDATE_USE_SOURCE_LOCAL => t('Local files only'),
+    ),
+    '#description' => t('The source of translation files for automatic interface translation.'),
+  );
+
   $form['l10n_update_download_store'] = array(
-    '#title' => t('Store downloaded files'),
+    '#title' => t('Translations directory'),
     '#type' => 'textfield',
-    '#default_value' => variable_get('l10n_update_download_store', ''),
-    '#description' => t('A path relative to the Drupal installation directory where translation files will be stored, e.g. sites/all/translations. Saved translation files can be reused by other installations. If left empty the downloaded translation will not be saved.'),
+    '#default_value' => variable_get('l10n_update_download_store', L10N_UPDATE_DEFAULT_TRANSLATION_PATH),
+    '#required' => TRUE,
+    '#description' => t('A path relative to the Drupal installation directory where translation files will be stored, e.g. sites/all/translations. Saved translation files can be reused by other installations.'),
   );
+
+  $form['l10n_update_import_mode'] = array(
+    '#type' => 'radios',
+    '#title' => t('Import behaviour'),
+    '#default_value' => variable_get('l10n_update_import_mode', LOCALE_IMPORT_KEEP),
+    '#options' => array(
+      LOCALE_IMPORT_KEEP => t("Don't overwrite existing translations."),
+      L10N_UPDATE_OVERWRITE_NON_CUSTOMIZED => t('Only overwrite imported translations, customized translations are kept.'),
+      LOCALE_IMPORT_OVERWRITE => t('Overwrite existing translations.'),
+    ),
+    '#description' => t('How to treat existing translations when automatically updating the interface translations.'),
+  );
+
+  $form['#submit'][] = 'l10n_update_admin_settings_form_submit';
   return system_settings_form($form);
 }
 
 /**
- * Additional validation handler for update settings.
- *
- * Check for existing files directory and creates one when required.
+ * Validation handler for translation update settings.
  */
 function l10n_update_admin_settings_form_validate($form, &$form_state) {
-  $form_values = $form_state['values'];
-  if (!empty($form_values['l10n_update_download_store'])) {
-    if (!file_prepare_directory($form_values['l10n_update_download_store'], FILE_CREATE_DIRECTORY, 'l10n_update_download_store')) {
-      form_set_error('l10n_update_download_store', t('The directory %directory does not exist or is not writable.', array('%directory' => $form_values['l10n_update_download_store'])));
-      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $form_values['l10n_update_download_store']), WATCHDOG_ERROR);
-    }
+  // Check for existing translations directory and create one if required.
+  $directory = $form_state['values']['l10n_update_download_store'];
+  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+    form_set_error('l10n_update_download_store', t('The directory %directory does not exist or is not writable.', array('%directory' => $directory)));
+    watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $directory), WATCHDOG_ERROR);
+  }
+}
+
+/**
+ * Submit handler for translation update settings.
+ */
+function l10n_update_admin_settings_form_submit($form, $form_state) {
+  // Invalidate the cached translation status when the configuration setting of
+  // 'l10n_update_check_mode' or 'check_disabled' change.
+  if ($form['l10n_update_check_mode']['#default_value'] != $form_state['values']['l10n_update_check_mode'] ||
+    $form['l10n_update_check_disabled']['#default_value'] != $form_state['values']['l10n_update_check_disabled']) {
+    l10n_update_clear_status();
   }
 }
 
@@ -232,317 +301,190 @@ function l10n_update_admin_settings_form_validate($form, &$form_state) {
 function _l10n_update_admin_import_options() {
   return array(
     LOCALE_IMPORT_OVERWRITE => t('Translation updates replace existing ones, new ones are added'),
-    LOCALE_UPDATE_OVERRIDE_DEFAULT => t('Edited translations are kept, only previously imported ones are overwritten and new translations are added'),
+    L10N_UPDATE_OVERWRITE_NON_CUSTOMIZED => t('Edited translations are kept, only previously imported ones are overwritten and new translations are added'),
     LOCALE_IMPORT_KEEP => t('All existing translations are kept, only new translations are added.'),
   );
 }
 
 /**
- * Get array of check options.
+ * Provides debug info for projects in case translation files are not found.
  *
- * @return
- *   Keyed array of source download options.
- */
-function _l10n_update_admin_check_options() {
-  return array(
-    L10N_UPDATE_CHECK_ALL => t('Local files and remote server.'),
-    L10N_UPDATE_CHECK_LOCAL => t('Local files only.'),
-    L10N_UPDATE_CHECK_REMOTE => t('Remote server only.'),
-  );
-}
-
-/**
- * Format project update status.
+ * Translations files are being fetched either from Drupal translation server
+ * and local files or only from the local filesystem depending on the
+ * "Translation source" setting at admin/config/regional/language/update.
+ * This method will produce debug information including the respective path(s)
+ * based on this setting.
  *
- * @param $variables
- *   An associative array containing:
- *    - projects: An array containing all enabled projects.
- *    - languages: An array of all enabled languages.
- *    - history: An array of the current translations per project.
- *    - available: An array of translation sources per project.
- *    - updates: An array of available translation updates per project.
- *      Only recommended translations are listed.
+ * Translations for development versions are never fetched, so the debug info
+ * for that is a fixed message.
+ *
+ * @param array $source
+ *   An array which is the project information of the source.
  *
  * @return string
- *   HTML output.
+ *   The string which contains debug information.
  */
-function theme_l10n_update_project_status($variables) {
-  $header = $rows = array();
+function _l10n_update_status_debug_info($source) {
+  $remote_path = isset($source->files['remote']->uri) ? $source->files['remote']->uri : '';
+  $local_path = isset($source->files['local']->uri) ? $source->files['local']->uri : '';
 
-  // Get module and theme data for the project title.
-  $projects = system_rebuild_module_data();
-  $projects += system_rebuild_theme_data();
-
-  foreach ($variables['projects'] as $name => $project) {
-    if (isset($variables['history'][$name])) {
-      if (isset($variables['updates'][$name])) {
-        $project_status = 'updatable';
-        $project_class = 'warning';
-      }
-      else {
-        $project_status = 'uptodate';
-        $project_class = 'ok';
-      }
-    }
-    elseif (isset($variables['available'][$name])) {
-      $project_status = 'available';
-      $project_class = 'warning';
-    }
-    else {
-      // Remote information not checked
-      $project_status = 'unknown';
-      $project_class = 'unknown';
-    }
-
-    // Get the project title and module version.
-    $project->title = isset($projects[$name]->info['name']) ? $projects[$name]->info['name'] : '';
-    $project->module_version = isset($projects[$name]->info['version']) ? $projects[$name]->info['version'] : $project->version;
-
-    // Project with related language states.
-    $row = theme('l10n_update_single_project_wrapper', array(
-      'project' => $project,
-      'project_status' => $project_status,
-      'languages' => $variables['languages'],
-      'available' => $variables['available'],
-      'history' => $variables['history'],
-      'updates' => $variables['updates'],
+  if (strpos($source->version, 'dev') !== FALSE) {
+    return t('No translation files are provided for development releases.');
+  }
+  if (l10n_update_use_remote_source() && $remote_path && $local_path) {
+    return t('File not found at %remote_path nor at %local_path', array(
+      '%remote_path' => $remote_path,
+      '%local_path' => $local_path,
     ));
-
-    $rows[$project->project_type][] = array(
-      'data' => array(
-        array(
-          'data' => $row,
-          'class' => 'l10n-update-wrapper collapsed',
-        ),
-      ),
-      'class' => array($project_class),
-    );
   }
-
-  // Build tables of update states grouped by project type. Similar to the
-  // status report by the Update module.
-  $output = '';
-  $project_types = array(
-    'core' => t('Drupal core'),
-    'module' => t('Modules'),
-    'theme' => t('Themes'),
-    'module-disabled' => t('Disabled modules'),
-    'theme-disabled' => t('Disabled themes'),
-  );
-  foreach ($project_types as $type_name => $type_label) {
-    if (!empty($rows[$type_name])) {
-      ksort($rows[$type_name]);
-      $output .= "\n<h3>" . $type_label . "</h3>\n";
-      $output .= theme('table', array('header' => $header, 'rows' => $rows[$type_name], 'attributes' => array('class' => array('update l10n-update'))));
-    }
+  elseif ($local_path) {
+    return t('File not found at %local_path', array('%local_path' => $local_path));
   }
-
-  // We use the core update module CSS to re-use the color definitions.
-  // Plus add our own css and js.
-  drupal_add_css(drupal_get_path('module', 'update') . '/update.css');
-  drupal_add_css(drupal_get_path('module', 'l10n_update') . '/css/l10n_update.admin.css');
-  drupal_add_js('misc/collapse.js');
-  drupal_add_js(drupal_get_path('module', 'l10n_update') . '/js/l10n_update.js');
-
-  return $output;
+  return t('Translation file location could not be determined.');
 }
 
 /**
- * Format project translation state with states per language.
+ * Form element callback: After build changes to the language update table.
  *
- * @param $variables
- *   An associative array containing:
- *   - project: Project data object
- *   - project_status: Project status
- *   - languages: Available languages.
- *  @return string
- *    HTML output.
+ * Adds labels to the languages and removes checkboxes from languages from which
+ * translation files could not be found.
  */
-function theme_l10n_update_single_project_wrapper($variables) {
-  $project = $variables['project'];
-  $name = $project->name;
-  $project_status = $variables['project_status'];
-  $languages = $variables['languages'];
-  $history = $variables['history'];
-  $updates = $variables['updates'];
-  $availables = $variables['available'];
-
-  // Output project title and project summary status.
-  $output = theme('l10n_update_single_project_status', array(
-    'project' => $project,
-    'server' => l10n_update_server($project->l10n_server),
-    'status' => $project_status,
-  ));
-
-  // Translation status per language is displayed in a table, one language per row.
-  // For each language the current translation is listed. And optionally the
-  // most recent update.
-  $rows = array();
-  foreach ($languages as $lang => $language) {
-    // Determine current translation status and update status.
-    $installed = isset($history[$name][$lang]) ? $history[$name][$lang] : NULL;
-    $update = isset($updates[$name][$lang]) ? $updates[$name][$lang] : NULL;
-    $available = isset($availables[$name][$lang]) ? $availables[$name][$lang] : NULL;
-    if ($installed) {
-      if ($update) {
-        $status = 'updatable';
-        $class = 'messages warning';
-      }
-      else {
-        $status = 'uptodate';
-        $class = 'ok';
-      }
+function l10n_update_language_table($form_element) {
+  // Remove checkboxes of languages without updates.
+  if ($form_element['#not_found']) {
+    foreach ($form_element['#not_found'] as $langcode) {
+      $form_element[$langcode] = array();
     }
-    elseif ($available) {
-      $status = 'available';
-      $class = 'warning';
+  }
+  return $form_element;
+}
+
+/**
+ * Returns HTML for translation edit form.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: The form that contains the language information.
+ *
+ * @see l10n_update_edit_form()
+ * @ingroup themeable
+ */
+function theme_l10n_update_edit_form_strings($variables) {
+  $output = '';
+  $form = $variables['form'];
+  $header = array(
+    t('Source string'),
+    t('Translation for @language', array('@language' => $form['#language'])),
+  );
+  $rows = array();
+  foreach (element_children($form) as $lid) {
+    $string = $form[$lid];
+    if ($string['plural']['#value']) {
+      $source = drupal_render($string['original_singular']) . '<br />' . drupal_render($string['original_plural']);
     }
     else {
-      $status = 'unknown';
-      $class = 'unknown';
+      $source = drupal_render($string['original']);
     }
-
-    // The current translation version.
-    $row = theme('l10n_update_current_release', array('language' => $language, 'release' => $installed, 'status' => $status));
-
-    // If an update is available, add it.
-    if ($update) {
-      $row .= theme('l10n_update_available_release', array('release' => $update));
-    }
-
+    $source .= empty($string['context']) ? '' : '<br /><small>' . t('In Context') . ':&nbsp;' . $string['context']['#value'] . '</small>';
     $rows[] = array(
-      'data' => array($row),
-      'class' => array($class),
+      array('data' => $source),
+      array('data' => $string['translations']),
+    );
+  }
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('No strings available.'),
+    '#attributes' => array('class' => array('locale-translate-edit-table')),
+  );
+  $output .= drupal_render($table);
+  $pager = array('#theme' => 'pager');
+  $output .= drupal_render($pager);
+  return $output;
+}
+
+/**
+ * Prepares variables for translation status information templates.
+ *
+ * Translation status information is displayed per language.
+ *
+ * Default template: l10n_update-translation-update-info.tpl.php.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - updates: The projects which have updates.
+ *   - not_found: The projects which updates are not found.
+ *
+ * @see l10n_update_status_form()
+ */
+function template_preprocess_l10n_update_update_info(&$variables) {
+  $details = array();
+  $modules = array();
+
+  // Default values
+  $variables['modules'] = array();
+  $variables['module_list'] = '';
+  $details['available_updates_list'] = array();
+
+  // Build output for available updates.
+  if (isset($variables['updates'])) {
+    $releases = array();
+    if ($variables['updates']) {
+      foreach ($variables['updates'] as $update) {
+        $modules[] = $update['name'];
+        $releases[] = t('@module (@date)', array('@module' => $update['name'], '@date' => format_date($update['timestamp'], 'html_date')));
+      }
+      $variables['modules'] = $modules;
+      $variables['module_list'] = t('Updates for: @modules', array('@modules' => implode(', ', $modules)));
+    }
+    $details['available_updates_list'] = array(
+      '#theme' => 'item_list',
+      '#items' => $releases,
     );
   }
 
-  // Output tables with translation status per language.
-  $output .= '<div class="fieldset-wrapper">' . "\n";
-  $output .= theme('table', array('header' => array(), 'rows' => $rows));
-  $output .= "</div>\n";
-
-  return $output;
+  // Build output for updates not found.
+  if (isset($variables['not_found'])) {
+    $releases = array();
+    $variables['missing_updates_status'] = format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
+    if ($variables['not_found']) {
+      foreach ($variables['not_found'] as $update) {
+        $version = $update['version'] ? $update['version'] : t('no version');
+        $releases[] = t('@module (@version).', array('@module' => $update['name'], '@version' => $version)) . ' ' . $update['info'];
+      }
+    }
+    $details['missing_updates_list'] = array(
+      '#theme' => 'item_list',
+      '#items' => $releases,
+    );
+    // Prefix the missing updates list if there is an available updates lists
+    // before it.
+    if (!empty($details['missing_updates_list']['#items'])) {
+      $details['missing_updates_list']['#prefix'] = t('Missing translations for:');
+    }
+  }
+  $variables['details'] = $details;
 }
 
 /**
- * Format a single project translation state.
+ * Prepares variables for most recent translation update templates.
+ *
+ * Displays the last time we checked for locale update data. In addition to
+ * properly formatting the given timestamp, this function also provides a "Check
+ * manually" link that refreshes the available update and redirects back to the
+ * same page.
+ *
+ * Default template: l10n_update-translation-last-check.tpl.php.
  *
  * @param $variables
  *   An associative array containing:
- *   - project: project data object.
- *   - server: (optional) remote server data object.
- *   - status: project summary status.
- *  @return string
- *    HTML output.
- */
-function theme_l10n_update_single_project_status($variables) {
-  $project = $variables['project'];
-  $server = $variables['server'];
-  $title = $project->title ? $project->title : $project->name;
-
-  $output = '<div class="project">';
-  $output .= '<span class="project-title">' . check_plain($title) . '</span>' . ' ' . check_plain($project->module_version) ;
-  if ($server = l10n_update_server($project->l10n_server)) {
-    $output .= '<span class="project-server">' . t('(translation source: !server)', array('!server' => l($server['name'], $server['link']))) . '</span>';
-  }
-  $output .= theme('l10n_update_version_status', array('status' => $variables['status']));
-  $output .= "</div>\n";
-
-  return $output;
-}
-
-/**
- * Format current translation version.
+ *   - last: The timestamp when the site last checked for available updates.
  *
- * @param $variables
- *   An associative array containing:
- *   - language: Language name.
- *   - release: Current file data.
- *   - status: Release status.
- * @return string
- *   HTML output.
+ * @see l10n_update_status_form()
  */
-function theme_l10n_update_current_release($variables) {
-  if (isset($variables['release'])) {
-    $date = $variables['release']->timestamp;
-    $version = $variables['release']->version;
-    $text = t('@language: @version (!date)', array('@language' => $variables['language'], '@version' => $version, '!date' => format_date($date, 'custom', 'Y-M-d')));
-  }
-  else {
-    $text = t('@language: <em>No installed translation</em>', array('@language' => $variables['language']));
-  }
-
-  $output = '<div class="language">';
-  $output .= $text;
-  $output .= theme('l10n_update_version_status', $variables);
-  $output .= "</div>\n";
-
-  return $output;
-}
-
-/**
- * Format current translation version.
- *
- * @param object $release
- *   Update file data.
- * @return string
- *   HTML output.
- */
-function theme_l10n_update_available_release($variables) {
-  $date = $variables['release']->timestamp;
-  $version = $variables['release']->version;
-  if (!empty($variables['release']->fileurl)) {
-    // Remote file, straight link
-    $link = l(t('Download'), $variables['release']->fileurl);
-  }
-  elseif (!empty($variables['release']->uri)) {
-    // Local file, try something
-    $link = l(t('Download'), $variables['release']->uri, array('absolute' => TRUE));
-  }
-
-  $output = '<div class="version version-recommended">';
-  $output .=  t('Recommended version: @version (!date)', array('@version' => $version, '!date' => format_date($date, 'custom', 'Y-M-d')));
-  $output .= '<span class="version-links">' . $link . '</span>';
-  $output .= "</div>\n";
-  return $output;
-}
-
-/**
- * Format version status with icon.
- *
- * @param string $status
- *   Version status: 'uptodate', 'updatable', 'available', 'unknown'.
- * @param string $type
- *   Update type: 'download', 'localfile'.
- *
- * @return sting
- *   HTML output.
- */
-function theme_l10n_update_version_status($variables) {
-  $icon = '';
-  $msg = '';
-
-  switch ($variables['status']) {
-    case 'uptodate':
-      $icon = theme('image', array('path' => 'misc/watchdog-ok.png', 'alt' => t('ok'), 'title' => t('ok')));
-      $msg = '<span class="current">' . t('Up to date') . '</span>';
-      break;
-    case 'updatable':
-      $icon = theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning')));
-      $msg = '<span class="not-current">' . t('Update available') . '</span>';
-      break;
-    case 'available':
-      $icon = theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning')));
-      $msg = '<span class="not-current">' . t('Uninstalled translation available') . '</span>';
-      break;
-    case 'unknown':
-      $icon = theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning')));
-      $msg = '<span class="not-supported">' . t('No available translations found') . '</span>';
-      break;
-  }
-  $output = '<div class="version-status">';
-  $output .= $msg;
-  $output .= '<span class="icon">' . $icon . '</span>';
-  $output .= "</div>\n";
-  return $output;
+function template_preprocess_l10n_update_last_check(&$variables) {
+  $last = $variables['last'];
+  $variables['last_checked'] = $last ? t('Last checked: !time ago', array('!time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
+  $variables['link'] = l(t('Check manually'), 'admin/config/regional/translate/check');
 }
