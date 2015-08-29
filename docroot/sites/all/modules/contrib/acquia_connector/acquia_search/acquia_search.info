@@ -1,7 +1,9 @@
 name = Acquia search
 description = "Provides integration between your Drupal site and Acquia's hosted search service."
-package = Acquia Network Connector
+package = Acquia Connector
 core = 7.x
+
+configure = admin/config/search/apachesolr/settings
 
 dependencies[] = acquia_agent
 dependencies[] = apachesolr
@@ -11,9 +13,9 @@ dependencies[] = search
 files[] = Acquia_Search_Service.php
 files[] = tests/acquia_search.test
 
-; Information added by Drupal.org packaging script on 2014-04-10
-version = "7.x-2.14"
+; Information added by Drupal.org packaging script on 2014-11-13
+version = "7.x-2.15"
 core = "7.x"
 project = "acquia_connector"
-datestamp = "1397136254"
+datestamp = "1415907497"
 

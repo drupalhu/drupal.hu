@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test endpoint for Acquia Network Connector XML-RPC calls.
+ * Test endpoint for Acquia Connector XML-RPC calls.
  */
 
 define('ACQTEST_SUBSCRIPTION_NOT_FOUND'       , 1000);

@@ -82,7 +82,7 @@ class AcquiaSPITestCase extends DrupalWebTestCase {
       case 'spi-data-sent-error':
         return 'Error sending SPI data. Consult the logs for more information.';
       case 'spi-new-def':
-        return 'There are new checks that will be performed on your site by the Acquia Network Connector';
+        return 'There are new checks that will be performed on your site by the Acquia Connector';
     }
   }
 

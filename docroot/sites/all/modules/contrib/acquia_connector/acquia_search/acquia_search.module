@@ -55,7 +55,7 @@ function acquia_search_get_environment($conf = array()) {
  * Implementation of hook_enable().
  */
 function acquia_search_enable() {
-  // Send a heartbeat so the Acquia Network knows the module is enabled.
+  // Send a heartbeat so the Acquia Subscription knows the module is enabled.
   // This causes an invocation of hook_acquia_subscription_status() which is
   // implemented in this module to set up the environment.
   _acquia_search_set_version();
@@ -510,4 +510,3 @@ function acquia_search_apachesolr_query_alter($query) {
 function _acquia_search_lower($matches) {
   return drupal_strtolower($matches[1]);
 }
-
