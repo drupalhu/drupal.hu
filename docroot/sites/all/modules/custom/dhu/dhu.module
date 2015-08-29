@@ -41,6 +41,16 @@ function dhu_preprocess_links(array &$variables) {
 }
 
 /**
+ * Implements hook_system_info_alter().
+ */
+function dhu_system_info_alter(&$info, $file, $type) {
+  $path = pathinfo($file->filename, PATHINFO_DIRNAME);
+  if (_dhu_is_custom_extension($path)) {
+    $info['interface translation project'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_update_projects_alter().
  */
 function dhu_update_projects_alter(&$projects) {
@@ -56,7 +66,7 @@ function dhu_update_projects_alter(&$projects) {
  * @param string $path
  *   File system path to a directory.
  *
- * @return boolean
+ * @return bool
  *   Return TRUE if the $path directory contains custom module or theme.
  */
 function _dhu_is_custom_extension($path) {
