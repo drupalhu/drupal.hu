@@ -155,7 +155,7 @@ function dhu_event_field_default_field_instances() {
   // Exported field_instance: 'node-esemeny-field_geofield'
   $field_instances['node-esemeny-field_geofield'] = array(
     'bundle' => 'esemeny',
-    'default_value' => array(),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -187,8 +187,14 @@ function dhu_event_field_default_field_instances() {
       'active' => 1,
       'module' => 'openlayers',
       'settings' => array(
-        'geocode_field' => 'field_helyszin',
-        'geocode_handler' => 'google',
+        'allow_edit' => 1,
+        'data_storage' => 'single',
+        'feature_types' => array(
+          'path' => 0,
+          'point' => 'point',
+          'polygon' => 0,
+        ),
+        'openlayers_map' => 'dhu_geofield_widget',
       ),
       'type' => 'geofield_openlayers',
       'weight' => 6,
