@@ -3,3 +3,5 @@
  * @file
  * Code for the Drupal.hu Core feature.
  */
+
+include_once 'dhu_core.features.inc';
