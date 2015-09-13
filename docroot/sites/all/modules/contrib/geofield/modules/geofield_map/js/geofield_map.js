@@ -1,7 +1,9 @@
 (function ($) {
   Drupal.behaviors.geofieldMap = {
     attach: function(context, settings) {
-      
+      Drupal.geoField = Drupal.geoField || {};
+      Drupal.geoField.maps = Drupal.geoField.maps || {};
+
       $('.geofieldMap', context).once('geofield-processed', function(index, element) {
         var data = undefined;
         var map_settings = [];
@@ -43,6 +45,8 @@
 
           var myOptions = {
             zoom: parseInt(map_settings.zoom),
+            minZoom: parseInt(map_settings.min_zoom),
+            maxZoom: parseInt(map_settings.max_zoom),
             mapTypeId: maptype,
             mapTypeControl: (mtc ? true : false),
             mapTypeControlOptions: {style: mtc},
@@ -59,6 +63,10 @@
           };
 
           var map = new google.maps.Map($(element).get(0), myOptions);
+          // Store a reference to the map object so other code can interact
+          // with it.
+          Drupal.geoField.maps[elemID] = map;
+
           var range = new google.maps.LatLngBounds();
 
           var infowindow = new google.maps.InfoWindow({
@@ -85,10 +93,16 @@
             }
           }
 
-          if (resetZoom) {
-            map.fitBounds(range);
+         for (first in features) break;
+         if (first!='type') {
+            if (resetZoom) {
+              map.fitBounds(range);
+            } else {
+              map.setCenter(range.getCenter());
+            }
           } else {
-            map.setCenter(range.getCenter());
+            var center = map_settings.center;
+            map.setCenter(new google.maps.LatLng(center.lat, center.lon));
           }
         }
         
