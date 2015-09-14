@@ -1,0 +1,8 @@
+name = Drupalhu theme
+description = Based on bootstrap
+core = 7.x
+base theme = bootstrap
+
+; Stylesheets
+stylesheets[all][] = css/bootstrap.css
+stylesheets[all][] = css/style.css

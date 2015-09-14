@@ -1,0 +1,36 @@
+/*** Logo */
+.logo-box {
+  margin: 0;
+  text-align: center;
+  width: auto;
+  padding: 20px 0 0;
+
+  @media (max-width: $grid-float-breakpoint - 1px) {
+    float: left;
+    padding-left: $grid-gutter-width;
+  }
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+
+  &,
+  img { @include size($logo-width, $logo-height); }
+}
+
+.logo-small {
+  &,
+  img { @include size($logo-small-width, $logo-small-height); }
+}
+
+.logo-mini  {
+  &,
+  img { @include size($logo-mini-width, $logo-mini-height); }
+}
+
+.logo-large {
+  &,
+  img { @include size($logo-large-width, $logo-large-height); }
+}

@@ -1,0 +1,32 @@
+$font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif: Georgia, "Times New Roman", Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base: $font-family-sans-serif;
+$font-family-gotham: "Gotham", Helvetica, Arial, sans-serif;
+$font-family-gotham-medium: "Gotham-Medium", Helvetica, Arial, sans-serif;
+$font-family-alegreya: "Alegreya", Georgia, "Times New Roman", Times, serif;
+$font-family-gotham-regular: "Gotham A", Helvetica, Arial, sans-serif;
+$font-family-gotham-bold: "Gotham B", Helvetica, Arial, sans-serif;
+$font-family-gotham-italic: "Gotham A", Helvetica, Arial, sans-serif;
+
+//** Load fonts from this directory.
+$icon-font-path: "../../../../../sites/all/libraries/bootstrap_sass/assets/fonts/bootstrap/";
+
+$logo-width: 152px;
+$logo-height: 24px;
+
+$logo-large-height: 44px;
+$logo-large-width: 95px;
+
+$logo-small-height: 14px;
+$logo-small-width: 30px;
+
+$logo-mini-height: 14px;
+$logo-mini-width: 30px;
+
+// Override default Bootstrap variables
+$body-bg: #fff;
+
+$border-radius-base: 3px;
+$border-radius-large: 4px;
+$border-radius-small: 0;

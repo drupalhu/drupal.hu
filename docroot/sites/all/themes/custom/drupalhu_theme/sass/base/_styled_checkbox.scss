@@ -1,0 +1,52 @@
+.styled-checkbox {
+
+  .cb-label { text-transform: uppercase; }
+  .form-checkbox-subgroup .cb-label { text-transform: none; }
+
+  input[type="checkbox"] {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+
+    & + .cb-label {
+      padding-left: 20px;
+      display: inline-block;
+      line-height: 15px;
+      vertical-align: middle;
+      cursor: pointer;
+      position: relative;
+      font-size: 12px;
+
+      i {
+        display: block;
+        position: absolute;
+        left: 0;
+        /* You should set some icon. */
+      }
+    }
+
+    // DO NOT MERGE THESE 2 selector!
+    // IE8 doesn't know about :checked selector so every rule will be dropped
+    // contains this :checked selector.
+    &:checked + .cb-label i { /* You should set some icon. */ }
+    &.checked + .cb-label i { /* You should set some icon. */ }
+
+    &.indeterminate + .cb-label i { /* You should set some icon. */ }
+  }
+
+  label.checkbox {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    min-height: 20px;
+  }
+
+  .form-checkbox-group {
+    margin-bottom: 24px;
+  }
+}

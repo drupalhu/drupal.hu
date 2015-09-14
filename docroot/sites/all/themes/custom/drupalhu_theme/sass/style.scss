@@ -1,0 +1,72 @@
+//
+// READ ME!
+//
+// Import fonts in base/_fonts.scss file!
+//
+// Define base formatting in base directory and
+// import them in _base.scss partial.
+//
+// Do not have to define all Bootstrap variables
+// or import every single Bootsrap SCSS file here.
+// If you want to override a default Bootstrap
+// variable you can redefine the value at
+// _variables.scss without the "!default" suffix.
+//
+
+// Import compass basics.
+@import "compass/css3";
+
+// Import variables
+@import "_variables";
+
+// Import bootstrap variables.
+@import "../../../../../sites/all/libraries/bootstrap_sass/assets/stylesheets/bootstrap/variables";
+
+// Import bootstrap mixins.
+@import "../../../../../sites/all/libraries/bootstrap_sass/assets/stylesheets/bootstrap/mixins";
+
+// Import custom mixins.
+@import "_mixins";
+
+// Import base formatting.
+@import "_base.scss";
+
+// Responsive mobile
+@media only screen and (max-width: ($screen-tablet - 1px)) {
+  @import '_mobile.scss';
+}
+
+// Responsive tablet and below
+@media only screen and (max-width: ($screen-desktop - 1px)) {
+  @import '_tablet_and_below.scss';
+}
+
+// Responsive tablet
+@media only screen and (min-width: $screen-tablet) and (max-width: ($screen-desktop - 1px)) {
+  @import '_tablet.scss';
+}
+
+// Responsive tablet and above
+@media only screen and (min-width: $screen-tablet) {
+  @import '_tablet_and_above.scss';
+}
+
+// Responsive desktop and below
+@media only screen and (max-width: ($screen-lg-desktop - 1px)) {
+  @import '_desktop_and_below.scss';
+}
+
+// Responsive desktop
+@media only screen and (min-width: $screen-desktop) and (max-width: ($screen-lg-desktop - 1px)) {
+  @import '_desktop.scss';
+}
+
+// Responsive desktop and above
+@media only screen and (min-width: $screen-desktop) {
+  @import '_desktop_and_above.scss';
+}
+
+// Responsive large desktop
+@media only screen and (min-width: $screen-lg-desktop) {
+  @import '_large.scss';
+}

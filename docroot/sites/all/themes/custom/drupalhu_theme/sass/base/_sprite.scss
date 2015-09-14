@@ -1,0 +1,15 @@
+.icon {
+  @include iv-sprite-background();
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/*
+// I.e. :
+.icon-magnifier {
+  // Magnifier icon is a 30x30 icon.
+  // This icon can found on the top of sprite.png left 16px.
+  @include iv-sprite(30px, 30px, -16px 0);
+}
+*/
+

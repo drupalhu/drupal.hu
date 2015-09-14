@@ -1,0 +1,25 @@
+$IE-support: true;
+
+@import "compass/css3";
+
+@import "variables";
+@import "mixins";
+
+// Import bootstrap variables and mixins.
+// Bootstrap is compiled from bootstrap.scss
+@import "../../../../../sites/all/libraries/bootstrap_sass/assets/stylesheets/bootstrap/variables";
+@import "../../../../../sites/all/libraries/bootstrap_sass/assets/stylesheets/bootstrap/mixins";
+
+//
+// Grid system
+// --------------------------------------------------
+// Container widths
+//
+// Set the container width, and override it for fixed navbars in media queries.
+
+.container { width: $container-md; }
+@include make-grid(md);
+
+// We want desktop layout for old IE browsers.
+@import 'tablet_and_above';
+@import 'desktop';

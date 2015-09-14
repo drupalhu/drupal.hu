@@ -1,0 +1,46 @@
+@mixin size($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+@mixin columns($colcount: 0, $colgap: 20px) {
+  -webkit-column-count: $colcount;
+     -moz-column-count: $colcount;
+          column-count: $colcount;
+
+  -webkit-column-gap: $colgap;
+     -moz-column-gap: $colgap;
+          column-gap: $colgap;
+}
+
+@mixin iv-text-shadow($color: #fff) {
+  text-shadow: 0 1px 0 $color;
+}
+
+@mixin iv-img-retina($file-1x, $file-2x, $width-1x: false, $height-1x: false) {
+  background-image: url("#{$file-1x}");
+
+  @media
+  only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (   min--moz-device-pixel-ratio: 2),
+  only screen and (     -o-min-device-pixel-ratio: 2/1),
+  only screen and (        min-device-pixel-ratio: 2),
+  only screen and (                min-resolution: 192dpi),
+  only screen and (                min-resolution: 2dppx) {
+    background-image: url("#{$file-2x}");
+    @if ($width-1x) {
+      background-size: $width-1x $height-1x;
+    }
+  }
+}
+
+@mixin iv-sprite-background() {
+  background-repeat: no-repeat;
+  @include iv-img-retina('../img/sprite.png', '../img/sprite-2x.png', 130px, 100px);
+}
+
+@mixin iv-sprite($width, $height, $background-position) {
+  width: $width;
+  height: $height;
+  background-position: $background-position;
+}
