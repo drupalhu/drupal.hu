@@ -19,7 +19,7 @@ dhu.node
 .htaccess.loc
 
 # sajat fejlesztoi gepen modulok
-sites/all/modules/dev
+docroot/sites/all/modules/dev
 
 # Bundler specific files
 .bundle*
