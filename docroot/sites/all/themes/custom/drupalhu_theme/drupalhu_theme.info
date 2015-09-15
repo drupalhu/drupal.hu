@@ -4,5 +4,5 @@ core = 7.x
 base theme = bootstrap
 
 ; Stylesheets
-stylesheets[all][] = css/bootstrap.css
-stylesheets[all][] = css/style.css
+stylesheets[all][] = assets/css/bootstrap.css
+stylesheets[all][] = assets/css/style.css
