@@ -6,3 +6,5 @@ base theme = bootstrap
 ; Stylesheets
 stylesheets[all][] = assets/css/bootstrap.css
 stylesheets[all][] = assets/css/style.css
+
+scripts[] = assets/js/modernizr-custom.js
