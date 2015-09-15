@@ -1,0 +1,282 @@
+/**
+ * @file
+ * Base formatting.
+ */
+@import url(//fonts.googleapis.com/css?family=Roboto+Condensed:400italic,700italic,400,700&subset=latin,cyrillic-ext,latin-ext,cyrillic);
+@import url(//fonts.googleapis.com/css?family=Alegreya:400italic&subset=latin,latin-ext);
+/* line 6, ../sass/base/_fonts.scss */
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* line 1, ../sass/base/_range.scss */
+.range-radio {
+  background: #fff;
+  height: 50px;
+}
+/* line 5, ../sass/base/_range.scss */
+.range-radio .control-label {
+  float: left;
+  color: #666;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1;
+  margin: 0 0 8px;
+}
+/* line 14, ../sass/base/_range.scss */
+.range-radio .controls {
+  background-image: -webkit-linear-gradient(top, #d9d9d9 0%, #e6e6e6 100%);
+  background-image: -o-linear-gradient(top, #d9d9d9 0%, #e6e6e6 100%);
+  background-image: linear-gradient(to bottom, #d9d9d9 0%, #e6e6e6 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFD9D9D9', endColorstr='#FFE6E6E6', GradientType=0);
+  border: 1px solid #ccc;
+  height: 10px;
+  border-radius: 5px;
+  float: left;
+  width: 100%;
+}
+/* line 23, ../sass/base/_range.scss */
+.range-radio .form-type-radio {
+  display: block;
+  width: 20%;
+  float: left;
+}
+/* line 29, ../sass/base/_range.scss */
+.range-radio .option {
+  margin: 0;
+  padding: 20px 0 0;
+  position: relative;
+  text-align: center;
+  font-style: normal;
+  color: #b2b2b2;
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+  line-height: 1;
+}
+/* line 41, ../sass/base/_range.scss */
+.range-radio .option i {
+  display: block;
+  height: 5px;
+  background: #ccc;
+  width: 1px;
+  position: absolute;
+  top: 9px;
+  left: 50%;
+}
+/* line 51, ../sass/base/_range.scss */
+.range-radio .option em {
+  font-style: normal;
+}
+/* line 54, ../sass/base/_range.scss */
+.range-radio .full-label {
+  display: none;
+}
+/* line 55, ../sass/base/_range.scss */
+.range-radio input {
+  display: none;
+}
+/* line 70, ../sass/base/_range.scss */
+.range-radio input:checked + i {
+  width: 16px;
+  height: 23px;
+  background-color: transparent;
+  top: -6px;
+  margin-left: -7px;
+  outline: 2px solid #800000;
+  border-radius: 8px;
+}
+/* line 71, ../sass/base/_range.scss */
+.range-radio input.checked + i {
+  width: 16px;
+  height: 23px;
+  background-color: transparent;
+  top: -6px;
+  margin-left: -7px;
+  outline: 2px solid #800000;
+  border-radius: 8px;
+}
+/* line 77, ../sass/base/_range.scss */
+.range-radio input:checked ~ .label-prefix {
+  color: #666;
+}
+/* line 78, ../sass/base/_range.scss */
+.range-radio input.checked ~ .label-prefix {
+  color: #666;
+}
+
+/* line 3, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox .cb-label {
+  text-transform: uppercase;
+}
+/* line 4, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox .form-checkbox-subgroup .cb-label {
+  text-transform: none;
+}
+/* line 6, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"] {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+/* line 16, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"] + .cb-label {
+  padding-left: 20px;
+  display: inline-block;
+  line-height: 15px;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  font-size: 12px;
+}
+/* line 25, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"] + .cb-label i {
+  display: block;
+  position: absolute;
+  left: 0;
+  /* You should set some icon. */
+}
+/* line 36, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"]:checked + .cb-label i {
+  /* You should set some icon. */
+}
+/* line 37, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"].checked + .cb-label i {
+  /* You should set some icon. */
+}
+/* line 39, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox input[type="checkbox"].indeterminate + .cb-label i {
+  /* You should set some icon. */
+}
+/* line 42, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox label.checkbox {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  min-height: 20px;
+}
+/* line 49, ../sass/base/_styled_checkbox.scss */
+.styled-checkbox .form-checkbox-group {
+  margin-bottom: 24px;
+}
+
+/* line 1, ../sass/base/_sprite.scss */
+.icon {
+  background-repeat: no-repeat;
+  background-image: url("../img/sprite.png");
+  display: inline-block;
+  vertical-align: middle;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  /* line 1, ../sass/base/_sprite.scss */
+  .icon {
+    background-image: url("../img/sprite-2x.png");
+    background-size: 130px 100px;
+  }
+}
+
+/*** Logo */
+/* line 2, ../sass/base/_logo.scss */
+.logo-box {
+  margin: 0;
+  text-align: center;
+  width: auto;
+  padding: 20px 0 0;
+}
+@media (max-width: 767px) {
+  /* line 2, ../sass/base/_logo.scss */
+  .logo-box {
+    float: left;
+    padding-left: 30px;
+  }
+}
+
+/* line 14, ../sass/base/_logo.scss */
+.logo {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+/* line 20, ../sass/base/_logo.scss */
+.logo,
+.logo img {
+  width: 152px;
+  height: 24px;
+}
+
+/* line 25, ../sass/base/_logo.scss */
+.logo-small,
+.logo-small img {
+  width: 30px;
+  height: 14px;
+}
+
+/* line 30, ../sass/base/_logo.scss */
+.logo-mini,
+.logo-mini img {
+  width: 30px;
+  height: 14px;
+}
+
+/* line 35, ../sass/base/_logo.scss */
+.logo-large,
+.logo-large img {
+  width: 95px;
+  height: 44px;
+}
+
+@media only screen and (max-width: 767px) {
+  /**
+   * @file
+   * Formatting for small devices (mobile).
+   */
+}
+@media only screen and (max-width: 991px) {
+  /**
+   * @file
+   * Formatting for devices tablet and smaller screens.
+   */
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  /**
+   * @file
+   * Formatting for devices tablet screens.
+   */
+}
+@media only screen and (min-width: 768px) {
+  /**
+   * @file
+   * Formatting for devices tablet and larger screens.
+   */
+}
+@media only screen and (max-width: 1199px) {
+  /**
+   * @file
+   * Formatting for devices desktop and smaller screens.
+   */
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  /**
+   * @file
+   * Formatting for desktop screens.
+   */
+}
+@media only screen and (min-width: 992px) {
+  /**
+   * @file
+   * Formatting for devices desktop and larger screens.
+   */
+}
+@media only screen and (min-width: 1200px) {
+  /**
+   * @file
+   * Formatting for large desktop.
+   */
+}
