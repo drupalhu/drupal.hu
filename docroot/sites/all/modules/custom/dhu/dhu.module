@@ -55,11 +55,28 @@ function dhu_system_info_alter(&$info, $file, $type) {
  */
 function dhu_update_projects_alter(&$projects) {
   foreach (array_keys($projects) as $project_name) {
-    $path = drupal_get_path($projects[$project_name]['project_type'], $project_name);
-    if (_dhu_is_custom_extension($path)) {
+    if (_dhu_is_custom_project($projects[$project_name])) {
       unset($projects[$project_name]);
     }
   }
+}
+
+/**
+ * @param array $project
+ *
+ * @return bool
+ */
+function _dhu_is_custom_project(array $project) {
+  $non_regular_names = array(
+    'geocode',
+    'vote_up_down',
+    'konyvlap_cimkek',
+  );
+
+  return (
+    preg_match('/^(dhu|drupalhu)/', $project['name'])
+    || in_array($project['name'], $non_regular_names)
+  );
 }
 
 /**
