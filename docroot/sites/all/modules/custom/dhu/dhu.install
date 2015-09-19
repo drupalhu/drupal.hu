@@ -173,3 +173,60 @@ function dhu_update_7108(&$sandbox) {
 
   return implode((drupal_is_cli() ? PHP_EOL : '<br />'), $messages);
 }
+
+/**
+ * Issue #226 - Fix schema anomalies.
+ */
+function dhu_update_7109() {
+  // Table {flags}.
+  $table_name = 'flags';
+  $fields = array(
+    'content_type',
+    'name',
+  );
+  $table = drupal_get_schema($table_name);
+  foreach ($fields as $field) {
+    db_change_field($table_name, $field, $field, $table['fields'][$field]);
+  }
+
+  // Table {mollom}.
+  $table_name = 'mollom';
+  $table = drupal_get_schema($table_name);
+  $keys = array(
+    'indexes' => array(
+      'captcha_id' => $table['indexes']['captcha_id'],
+    ),
+  );
+
+  // NULL value is not allowed any more.
+  db_update($table_name)
+    ->fields(array(
+      'captcha_id' => '',
+    ))
+    ->isNull('captcha_id')
+    ->execute();
+
+  db_drop_index($table_name, 'captcha_id');
+  db_change_field(
+    $table_name,
+    'captcha_id',
+    'captcha_id',
+    $table['fields']['captcha_id'],
+    $keys
+  );
+
+  // Field instance can't be loaded without the module (user_reference) which
+  // provides the field type, therefore the field_delete_instance() can't be
+  // used.
+  $field_name = 'field_assigned';
+  db_delete('field_config_instance')
+    ->condition('field_name', $field_name)
+    ->execute();
+
+  db_delete('field_config')
+    ->condition('field_name', $field_name)
+    ->execute();
+
+  db_drop_table('field_data_field_assigned');
+  db_drop_table('field_revision_field_assigned');
+}
