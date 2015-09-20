@@ -11,8 +11,8 @@ function dhu_core_filter_default_formats() {
   $formats = array();
 
   // Exported format: Szűrt HTML.
-  $formats[1] = array(
-    'format' => 1,
+  $formats['filtered_html'] = array(
+    'format' => 'filtered_html',
     'name' => 'Szűrt HTML',
     'cache' => 1,
     'status' => 1,
@@ -57,8 +57,8 @@ function dhu_core_filter_default_formats() {
   );
 
   // Exported format: Teljes HTML.
-  $formats[3] = array(
-    'format' => 3,
+  $formats['full_html'] = array(
+    'format' => 'full_html',
     'name' => 'Teljes HTML',
     'cache' => 1,
     'status' => 1,
@@ -85,8 +85,8 @@ function dhu_core_filter_default_formats() {
   );
 
   // Exported format: Plain text.
-  $formats[7] = array(
-    'format' => 7,
+  $formats['plain_text'] = array(
+    'format' => 'plain_text',
     'name' => 'Plain text',
     'cache' => 1,
     'status' => 1,

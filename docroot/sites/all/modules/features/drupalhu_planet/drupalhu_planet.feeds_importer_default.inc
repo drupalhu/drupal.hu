@@ -73,7 +73,7 @@ function drupalhu_planet_feeds_importer_default() {
           ),
         ),
         'update_existing' => '0',
-        'input_format' => '1',
+        'input_format' => 'filtered_html',
         'authorize' => 1,
         'skip_hash_check' => 0,
         'bundle' => 'feed_item',

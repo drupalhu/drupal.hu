@@ -150,3 +150,116 @@ function dhu_update_7107() {
 
   return implode('<br />', $messages);
 }
+
+/**
+ * Rename text formats which have numeric machine-name.
+ */
+function dhu_update_7108(&$sandbox) {
+  $messages = array();
+
+  $format_mapping = array(
+    '1' => 'filtered_html',
+    '3' => 'full_html',
+    '7' => 'plain_text',
+  );
+
+  // Foreign keys in tables.
+  $table_columns = array(
+    'block_custom' => array('format'),
+    'filter' => array('format'),
+    'filter_format' => array('format'),
+    'taxonomy_term_data' => array('format'),
+    'users' => array('signature_format'),
+    'webform' => array('confirmation_format'),
+  );
+
+  $fields = field_info_fields();
+
+  $field_types_with_text_format = array(
+    'text' => 'format',
+    'text_long' => 'format',
+    'text_with_summary' => 'format',
+  );
+
+  $table_prefixes = array(
+    'CURRENT' => 'field_data',
+    'REVISION' => 'field_revision',
+  );
+  foreach ($fields as $field_name => $field) {
+    if (!isset($field_types_with_text_format[$field['type']])) {
+      continue;
+    }
+
+    if ($field['storage']['type'] === 'field_sql_storage') {
+      $column_suffix = $field_types_with_text_format[$field['type']];
+      foreach ($table_prefixes as $table_type => $table_prefix) {
+        $table_name = "{$table_prefix}_{$field_name}";
+        $table_columns[$table_name] = array(
+          $field['storage']['details']['sql']["FIELD_LOAD_{$table_type}"][$table_name][$column_suffix],
+        );
+      }
+    }
+  }
+
+  foreach ($table_columns as $table_name => $columns) {
+    foreach ($columns as $column) {
+      foreach ($format_mapping as $format_id => $format_name) {
+        db_update($table_name)
+          ->fields(array($column => $format_name))
+          ->condition($column, $format_id)
+          ->isNotNull($column)
+          ->execute();
+      }
+    }
+  }
+
+  // Update variables.
+  $var_names = array(
+    'filter_default_format',
+    'filter_fallback_format',
+    'format',
+  );
+  foreach ($var_names as $var_name) {
+    $format_id = variable_get($var_name, NULL);
+    if ($format_id && isset($format_mapping[$format_id])) {
+      variable_set($var_name, $format_mapping[$format_id]);
+    }
+  }
+
+  /** @var view $view */
+  foreach (views_get_all_views() as $view) {
+    if ($view->export_type !== EXPORT_IN_DATABASE) {
+      continue;
+    }
+
+    $changed = FALSE;
+    foreach ($view->display as $view_display) {
+      foreach (array('header', 'footer', 'empty') as $area) {
+        $display_option = "{$area}_format";
+        if (!empty($view_display->display_options[$display_option])) {
+          $format_id = $view_display->display_options[$display_option];
+          if (isset($format_mapping[$format_id])) {
+            $view_display->display_options[$display_option] = $format_mapping[$format_id];
+            $changed = TRUE;
+          }
+        }
+
+        foreach (array('area', 'text') as $area_type) {
+          if (!empty($view_display->display_options[$area][$area_type]['format'])) {
+            $format_id = $view_display->display_options[$area][$area_type]['format'];
+            if (isset($format_mapping[$format_id])) {
+              $view_display->display_options[$area][$area_type]['format'] = $format_mapping[$format_id];
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->save();
+    }
+  }
+
+  return implode((drupal_is_cli() ? PHP_EOL : '<br />'), $messages);
+}
