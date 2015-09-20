@@ -24,3 +24,5 @@ docroot/sites/all/modules/dev
 # Bundler specific files
 .bundle*
 docroot/sites/all/themes/demon/vendor*
+
+/vendor/

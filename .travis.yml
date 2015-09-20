@@ -1,46 +1,46 @@
-language: php
+language: 'php'
 
-php:
-  - 5.4
-  - 5.5
+php: '5.5'
 
 matrix:
   fast_finish: true
 
 mysql:
-  database: travis_ci_drupal_hu_test
-  username: root
-  encoding: utf8
+  database: 'travis_ci_drupal_hu_test'
+  username: 'root'
+  encoding: 'utf8'
 
 before_install:
-  - sudo apt-get update > /dev/null
+  - 'sudo apt-get update > /dev/null'
 
 install:
-  # install php packages required for running a web server from drush on php 5.3
-  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+  # Install php packages required for running a web server from drush on php 5.3
+  - 'sudo apt-get install -y --force-yes php5-cgi php5-mysql'
 
-  # add composer's global bin directory to the path
-  # see: https://github.com/drush-ops/drush#install---composer
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - 'composer install'
+  - 'export PATH="${PATH}:$(pwd)/vendor/bin"'
 
-  # install drush globally
-  - composer global require drush/drush:6.*
+#before_script:
+  # Navigate out of module directory to prevent blown stack by recursive module
+  # lookup.
+  #- 'cd docroot'
 
-before_script:
-  # navigate out of module directory to prevent blown stack by recursive module lookup
-  - cd docroot
+  # Create new site, stubbing sendmail path with true to prevent delivery errors
+  # and manually resolving drush path.
+  #- "mysql -e 'CREATE DATABASE travis_ci_drupal_hu_test'"
+  #- 'php -d sendmail_path=`which true` ../vendor/bin/drush.php --yes site-install testing --db-url=mysql://root:@127.0.0.1/travis_ci_drupal_hu_test'
+  #- 'drush --yes en simpletest'
 
-  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database travis_ci_drupal_hu_test'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install testing --db-url=mysql://root:@127.0.0.1/travis_ci_drupal_hu_test
-  - drush --yes en simpletest
+  # Start a web server on port 8080, run in the background.
+  # Wait for initialization.
+  #- 'drush runserver 127.0.0.1:8080 &'
+  #- "until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done"
 
-  # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+  #- 'cd ..'
 
-script: ../scripts/run-tests.sh
+script:
+  - 'composer test'
+  #- './scripts/run-tests.sh'
 
-notifications:
-  slack: drupalhu:PaRaPcc5EKNTllHnR56jD7Pj
-
+#notifications:
+#  slack: 'drupalhu:PaRaPcc5EKNTllHnR56jD7Pj'

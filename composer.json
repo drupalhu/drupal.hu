@@ -1,0 +1,38 @@
+{
+  "name": "drupalhu/drupalhu",
+  "description": "www.drupal.hu code base",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "@todo",
+      "email": "foo@todo.bar"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "drupal/coder",
+        "version": "8.2.3",
+        "dist": {
+          "type": "tar",
+          "url": "http://ftp.drupal.org/files/projects/coder-8.x-2.3.tar.gz"
+        }
+      }
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "squizlabs/php_codesniffer": "2.3.4",
+    "drupal/coder": "8.2.3",
+    "drush/drush": "6.6.0"
+  },
+  "scripts": {
+    "test": [
+      "composer run test-lint-php",
+      "composer run test-lint-phpcs"
+    ],
+    "test-lint-php": "find ./docroot/sites/all/ -regextype posix-extended -regex '^\\./docroot/sites/all/((modules/(custom|features))|themes/(demon|mud))/.+\\.(php|inc|module|install)$' -print0 | xargs -0 -P8 -n1 php -l",
+    "test-lint-phpcs": "./vendor/bin/phpcs --report=summary --extensions=php,inc,module,install --ignore='*.features.inc,*.features.*.inc,*.field_group.inc,*.strongarm.inc,*.views_default.inc,*.pages_default.inc,*.feeds_importer_default.inc,*.openlayers_maps.inc' --standard=./vendor/drupal/coder/coder_sniffer/Drupal docroot/sites/all/modules/custom docroot/sites/all/modules/features docroot/sites/all/themes/demon docroot/sites/all/themes/mud || true"
+  }
+}
