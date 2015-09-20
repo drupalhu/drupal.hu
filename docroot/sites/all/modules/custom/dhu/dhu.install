@@ -6,6 +6,19 @@
  */
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function dhu_update_dependencies() {
+  return array(
+    'dhu' => array(
+      7107 => array(
+        'geofield' => 7202,
+      ),
+    ),
+  );
+}
+
+/**
  * Implements hook_update_N().
  *
  * Disable modules: geocode.
@@ -115,4 +128,25 @@ function dhu_update_7105() {
 function dhu_update_7106() {
     $modules_to_enable = array('recaptcha');
       module_enable($modules_to_enable);
+}
+
+/**
+ * Revert all OpenLayers layers and maps; Enable the "Drupal.hu Event" module.
+ */
+function dhu_update_7107() {
+  $messages = array();
+
+  foreach (openlayers_layers_load() as $layer) {
+    openlayers_layer_delete($layer);
+  }
+  $messages[] = t('All OpenLayers layers has been reverted to default state.');
+
+  foreach (openlayers_maps() as $map) {
+    openlayers_map_delete($map);
+  }
+  $messages[] = t('Revert all OpenLayers maps has been reverted to default state.');
+
+  module_enable(array('dhu_event'));
+
+  return implode('<br />', $messages);
 }

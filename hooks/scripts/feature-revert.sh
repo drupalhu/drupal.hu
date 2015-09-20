@@ -6,6 +6,4 @@
 
 drush_alias=$1
 
-# Revert specific modules
-
-drush @$drush_alias fr --yes drupalhu_multi_index_search
+drush @$drush_alias features-revert-all --yes

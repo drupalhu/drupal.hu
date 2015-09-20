@@ -21,14 +21,14 @@ function drupalhu_shield_settings_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'shield_pass';
-  $strongarm->value = 'bodza';
+  $strongarm->value = 'hu';
   $export['shield_pass'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'shield_print';
-  $strongarm->value = 'Hello, user: [user], pass: [pass]!';
+  $strongarm->value = 'User Name: \'[user]\' Password: \'[pass]\'';
   $export['shield_print'] = $strongarm;
 
   $strongarm = new stdClass();

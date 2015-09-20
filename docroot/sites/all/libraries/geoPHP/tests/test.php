@@ -1,10 +1,17 @@
 <?php
 
 // Uncomment to test
-# run_test();
+if (getenv("GEOPHP_RUN_TESTS") == 1) {
+  run_test();
+}
+else {
+  print "Skipping tests. Please set GEOPHP_RUN_TESTS=1 environment variable if you wish to run tests\n";
+}
 
 function run_test() {
   set_time_limit(0);
+
+  set_error_handler("FailOnError");
 
   header("Content-type: text");
 
@@ -17,7 +24,7 @@ function run_test() {
     print "GEOS is not installed.\n";
   }
 
-  foreach (scandir('./input') as $file) {
+  foreach (scandir('./input', SCANDIR_SORT_NONE) as $file) {
     $parts = explode('.',$file);
     if ($parts[0]) {
       $format = $parts[1];
@@ -27,9 +34,10 @@ function run_test() {
       test_adapters($geometry, $format, $value);
       test_methods($geometry);
       test_geometry($geometry);
+      test_detection($value, $format, $file);
     }
   }
-  print "Testing Done!";
+  print "\e[32m" . "PASS". "\e[39m\n";
 }
 
 function test_geometry($geometry) {
@@ -231,4 +239,20 @@ function test_methods($geometry) {
     //@@TODO: Run tests for output of types arrays and float
     //@@TODO: centroid function is non-compliant for collections and strings
   }
+}
+
+function test_detection($value, $format, $file) {
+  $detected = geoPHP::detectFormat($value);
+  if ($detected != $format) {
+    if ($detected) print 'detected as ' . $detected . "\n";
+    else print "format not detected\n";
+  }
+  // Make sure it loads using auto-detect
+  geoPHP::load($value);
+}
+
+function FailOnError($error_level, $error_message, $error_file, $error_line, $error_context) {
+  echo "$error_level: $error_message in $error_file on line $error_line\n";
+  echo "\e[31m" . "FAIL" . "\e[39m\n";
+  exit(1);
 }
