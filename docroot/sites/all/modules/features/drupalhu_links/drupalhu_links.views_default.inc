@@ -129,7 +129,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Az alábbi linkeket küldték be webhelyünkre. Itt a beküldés szerint fordított időrendben lapozhatóak, a legutóbb beküldött linkek találhatóak az első oldalon.';
-  $handler->display->display_options['header']['text']['format'] = '1';
+  $handler->display->display_options['header']['text']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -169,7 +169,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'A webhelyünk látogatói szerint a következő a beküldött linkek népszerűségi sorrendje a beküldés óta eltelt idő átlagával számolva.';
-  $handler->display->display_options['header']['text']['format'] = '1';
+  $handler->display->display_options['header']['text']['format'] = 'filtered_html';
   $handler->display->display_options['path'] = 'linkek/nepszeru';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Népszerű';
@@ -188,7 +188,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'A szerkesztői ajánlatok egyedi megjelenésű, prominens felhasználású, közismert vagy éppen a Drupal széleskörű alkalmazását szemléltető webhelyek.';
-  $handler->display->display_options['header']['text']['format'] = '1';
+  $handler->display->display_options['header']['text']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'AND',
@@ -256,7 +256,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
   $handler->display->display_options['footer']['area']['content'] = '<a href="/linkek/all">További weboldalalak »</a>';
-  $handler->display->display_options['footer']['area']['format'] = '1';
+  $handler->display->display_options['footer']['area']['format'] = 'filtered_html';
   $translatables['link_ajanlo'] = array(
     t('Link ajánló'),
     t('Friss linkek'),

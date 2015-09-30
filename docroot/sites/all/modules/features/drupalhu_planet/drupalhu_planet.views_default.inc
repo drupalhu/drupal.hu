@@ -50,7 +50,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['header']['text']['table'] = 'views';
   $handler->display->display_options['header']['text']['field'] = 'area';
   $handler->display->display_options['header']['text']['content'] = 'Az általunk ismert magyar Drupal témákkal is foglalkozó blogokból a Drupalhoz kapcsolódó bejegyzéseket összesítjük, így könnyebb követni a releváns magyar tartalmakat.';
-  $handler->display->display_options['header']['text']['format'] = '1';
+  $handler->display->display_options['header']['text']['format'] = 'filtered_html';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -281,7 +281,7 @@ function drupalhu_planet_views_default_views() {
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
   $handler->display->display_options['footer']['area']['content'] = '<a href="/planet">További bejegyzések »</a>';
-  $handler->display->display_options['footer']['area']['format'] = '1';
+  $handler->display->display_options['footer']['area']['format'] = 'filtered_html';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';

@@ -42,7 +42,7 @@ function konyvlap_cimkek_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Ebben a blokkban jelentetjük meg neked azokat a hasznos címkéket, amelyek talán segítenek elsőre megérteni a könyvlap mondanivalóját és célközönségét.';
-  $handler->display->display_options['header']['area']['format'] = '1';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   /* Field: Content: Drupal verzió */
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['id'] = 'taxonomy_vocabulary_10';
   $handler->display->display_options['fields']['taxonomy_vocabulary_10']['table'] = 'field_data_taxonomy_vocabulary_10';
