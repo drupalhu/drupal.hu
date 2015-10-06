@@ -76,8 +76,10 @@
 
 <header id="navbar" role="banner" class="navbar navbar-default">
 
-  <div class="logo">
-    <a href="/"><i></i></a>
+  <div class="logo-box">
+    <div class="logo">
+      <a href="/"><i></i></a>
+    </div>
   </div>
 
   <?php if (!empty($primary_nav)): ?>
@@ -90,24 +92,8 @@
     </div>
   <?php endif; ?>
 
-  <div id="social">
-    <ul class="social-media">
-      <li>
-        <a class="icon hidetext icon-facebook" href="https://www.facebook.com/drupalhu">
-          Facebook
-        </a>
-      </li>
-      <li>
-        <a class="icon hidetext icon-twitter" href="https://twitter.com/drupalhu">
-          Twitter
-        </a>
-      </li>
-      <li>
-        <a class="icon hidetext icon-rss" href="http://drupal.hu/rss">
-          RSS
-        </a>
-      </li>
-    </ul>
+  <div class="social-media">
+    <?php print site_social_links(); ?>
   </div>
 </header>
 
