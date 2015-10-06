@@ -3,8 +3,10 @@
  * Base formatting.
  */
 
-@import "base/fonts";
-@import "base/range";
-@import "base/styled_checkbox";
-@import "base/sprite";
-@import "base/logo";
+@import "base/elements/social";
+
+@import "base/scaffold/fonts";
+@import "base/scaffold/navbar";
+@import "base/scaffold/range";
+@import "base/scaffold/styled_checkbox";
+@import "base/scaffold/logo";

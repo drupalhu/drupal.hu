@@ -2,8 +2,8 @@ $IE-support: true;
 
 @import "compass/css3";
 
-@import "variables";
-@import "mixins";
+@import "_assets/_variables";
+@import "_assets/_mixins";
 
 // Import bootstrap variables and mixins.
 // Bootstrap is compiled from bootstrap.scss

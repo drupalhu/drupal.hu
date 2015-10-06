@@ -1,0 +1,10 @@
+// Import fonts
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,400italic,700,700italic&subset=latin,latin-ext);
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+}

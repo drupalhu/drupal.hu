@@ -13,11 +13,11 @@
           column-gap: $colgap;
 }
 
-@mixin iv-text-shadow($color: #fff) {
+@mixin text-shadow($color: #fff) {
   text-shadow: 0 1px 0 $color;
 }
 
-@mixin iv-img-retina($file-1x, $file-2x, $width-1x: false, $height-1x: false) {
+@mixin img-retina($file-1x, $file-2x, $width-1x: false, $height-1x: false) {
   background-image: url("#{$file-1x}");
 
   @media
@@ -34,12 +34,12 @@
   }
 }
 
-@mixin iv-sprite-background() {
+@mixin sprite-background() {
   background-repeat: no-repeat;
-  @include iv-img-retina('../img/sprite.png', '../img/sprite-2x.png', 130px, 100px);
+  @include img-retina('../img/sprite.png', '../img/sprite-2x.png', 200px, 200px);
 }
 
-@mixin iv-sprite($width, $height, $background-position) {
+@mixin sprite($width, $height, $background-position) {
   width: $width;
   height: $height;
   background-position: $background-position;

@@ -1,0 +1,80 @@
+$font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif: Georgia, "Times New Roman", Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base: $font-family-sans-serif;
+$font-family-gotham: "Gotham", Helvetica, Arial, sans-serif;
+$font-family-gotham-medium: "Gotham-Medium", Helvetica, Arial, sans-serif;
+$font-family-alegreya: "Alegreya", Georgia, "Times New Roman", Times, serif;
+$font-family-gotham-regular: "Gotham A", Helvetica, Arial, sans-serif;
+$font-family-gotham-bold: "Gotham B", Helvetica, Arial, sans-serif;
+$font-family-gotham-italic: "Gotham A", Helvetica, Arial, sans-serif;
+$notosans: "Noto Sans", sans-serif;
+
+// Now create some variables for the font stacks we want to use on this site.
+$base-font-family: $notosans;
+
+  // The font family set on the html element.
+$font-body: $notosans;
+
+//** Load fonts from this directory.
+$icon-font-path: "../../../../../sites/all/libraries/bootstrap_sass/assets/fonts/bootstrap/";
+
+$logo-width: 180px;
+$logo-height: 48px;
+
+// Override default Bootstrap variables
+$body-bg: #fff;
+
+$border-radius-base: 3px;
+$border-radius-large: 4px;
+$border-radius-small: 0;
+
+// Drupal.hu colors
+$white: #fff;
+$blue-100: #005e98;
+$blue-in-blue-50: #002637;
+$dark-blue: #00324c;
+$blue-body: #007bdf;
+$blue-body-50: #7fbedf;
+$blue: #004873;
+$blue-light: #005f99;
+$tile-link: #666;
+$text-color: #666;
+$text-link: #007bdf;
+$tile-bg: #ededed;
+$navigation-hover: #004772;
+
+// sections
+$forum-orange: #d15f22;
+$job-blue: #004873;
+$event-orange: #e8931b;
+$node-add-light-green: #96bc44;
+$node-add-dark-green: #699900;
+
+// node info colors
+$node-dark-blue: #00243b;
+$node-blue: #00324c;
+$node-light-blue: #004873;
+$node-lighter-blue: #005f99;
+
+$node-event-dark-orange: #cc8118;
+$node-event-orange: #e8931b;
+$node-event-light-orange: #eda034;
+$node-event-lighter-orange: #ffb347;
+
+$node-forum-dark-orange: #b5521d;
+$node-forum-orange: #d15f22;
+$node-forum-light-orange: #d66f39;
+$node-forum-lighter-orange: #da7f4e;
+
+$white-10: #0a709f;
+$black-25: #004870;
+
+$color-shadows: rgba(0, 0, 0, .4);
+
+$base-font-size: 14px;
+
+// The font size set on the root html element.
+$base-line-height: 24px;
+
+$base-margin: 20px;

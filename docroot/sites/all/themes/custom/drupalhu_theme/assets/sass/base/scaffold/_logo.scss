@@ -1,0 +1,29 @@
+/*** Logo */
+.logo-box {
+  margin: 20px 20px 0;
+  text-align: center;
+  width: auto;
+
+  @media (max-width: $grid-float-breakpoint - 1px) {
+    float: left;
+    padding-left: $grid-gutter-width;
+  }
+
+  .admin-menu & {
+    margin-top: 40px;
+  }
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+
+  &,
+  i { @include size($logo-width, $logo-height); }
+
+  i {
+    @include img-retina("../img/logo.png", "../img/logo-2x.png", $logo-width, $logo-height);
+    display: block;
+  }
+}
