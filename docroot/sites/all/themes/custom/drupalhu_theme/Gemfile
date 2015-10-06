@@ -1,5 +1,5 @@
 # Pull gems from RubyGems
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-# Gems
-gem 'compass', '~> 0.12.5'
+gem 'sass', '~> 3.4.9'
+gem 'compass', '~> 1.0'
