@@ -24,3 +24,4 @@ docroot/sites/all/modules/dev
 # Bundler specific files
 .bundle*
 docroot/sites/all/themes/demon/vendor*
+docroot/sites/all/themes/custom/drupalhu_theme/assets/css/style_*
