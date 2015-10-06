@@ -23,7 +23,7 @@
     padding: 11px 0;
   }
 
-  .icon {
+  .icon i {
     @include sprite-background();
     @include sprite(20px, 10px, 0 0);
     background-repeat: no-repeat;
@@ -31,20 +31,20 @@
     display: block;
   }
 
-  .icon-facebook {
+  .icon-facebook i {
     background-position: 0 0;
     width: 10px;
     height: 20px;
   }
 
-  .icon-twitter {
+  .icon-twitter i {
     background-position: -33px 0;
     width: 18px;
     height: 17px;
   }
 
-  .icon-rss {
-    background-position: -13px 0px;
+  .icon-rss i {
+    background-position: -13px 0;
     width: 18px;
     height: 20px;
   }
