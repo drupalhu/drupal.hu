@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Friss elemek a fejlécbe feature.
+ */
+
+include_once 'dhu_fresh_items.features.inc';
