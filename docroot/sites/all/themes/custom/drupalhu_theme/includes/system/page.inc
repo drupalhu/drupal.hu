@@ -4,6 +4,11 @@
  * Page related theme functions.
  */
 
+
+function drupalhu_theme_preprocess_page(&$variables) {
+  $variables['friss_elemek'] = views_embed_view('friss_elemek', 'block_1');
+}
+
 /**
  * Site social links.
  */

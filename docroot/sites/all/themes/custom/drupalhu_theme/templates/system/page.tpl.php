@@ -82,15 +82,7 @@
     </div>
   </div>
 
-  <?php if (!empty($primary_nav)): ?>
-    <div class="navbar-collapse collapse">
-      <nav role="navigation">
-        <?php if (!empty($primary_nav)): ?>
-          <?php print render($primary_nav); ?>
-        <?php endif; ?>
-      </nav>
-    </div>
-  <?php endif; ?>
+  <?php print $friss_elemek; ?>
 
   <div class="social-media">
     <?php print site_social_links(); ?>
