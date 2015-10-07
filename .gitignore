@@ -25,3 +25,4 @@ docroot/sites/all/modules/dev
 .bundle*
 docroot/sites/all/themes/demon/vendor*
 docroot/sites/all/themes/custom/drupalhu_theme/assets/css/style_*
+docroot/sites/all/themes/custom/drupalhu_theme/node_modules*
