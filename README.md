@@ -9,7 +9,10 @@ Stabil ag: [![Build Status](https://travis-ci.org/drupalhu/drupal.hu.svg?branch=
 
 ### Adatbázis beszerzése
 
-Le tudsz tölteni egy [tisztított adatbázis dump](http://dev.drupal.hu/files/druphungary-dev.tar.gz)ot,
+A [dump készítésének dátumát](http://dev.drupal.hu/files/druphungary-dev.sql.yml)
+ebben a fájlban találod.
+
+A [tisztított adatbázis dump](http://dev.drupal.hu/files/druphungary-dev.sql.gz),
 ami nem tartalmaz érzékeny adatokat. (Ha találsz benne jelezd nekünk, hogy törölni tudjuk.)
 
 ### Uj kontributor beallitasa
