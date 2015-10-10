@@ -1,26 +1,4 @@
-# Ignore configuration files that may contain sensitive information.
-files/*
-sites/*/settings*.php
 
-# Ignore paths that contain user-generated content.
-sites/*/files
-sites/*/private
-docroot/files
-
-#idea - PhpStorm
-.idea
-
-#Den
-dhu.node
-.ht-php-error.log
-
-#sass cache dirs
-.sass-cache
-.htaccess.loc
-
-# sajat fejlesztoi gepen modulok
-docroot/sites/all/modules/dev
-
-# Bundler specific files
-.bundle*
-docroot/sites/all/themes/demon/vendor*
+/docroot/files/
+/docroot/FirePHPCore/
+/docroot/sites/all/modules/dev/
