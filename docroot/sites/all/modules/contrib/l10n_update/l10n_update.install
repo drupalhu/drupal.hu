@@ -53,7 +53,7 @@ function l10n_update_schema() {
         'default' => '',
       ),
       'status' => array(
-        'description' => 'Status flag. TBD',
+        'description' => 'Status flag. If TRUE, translations of this module will be updated.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
@@ -150,6 +150,7 @@ function l10n_update_schema_alter(&$schema) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
+    'description' => 'Boolean indicating whether the translation is custom to this site.',
   );
 }
 
@@ -159,6 +160,22 @@ function l10n_update_schema_alter(&$schema) {
 function l10n_update_install() {
   db_add_field('locales_target', 'l10n_status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
   variable_set('l10n_update_rebuild_projects', 1);
+
+  // Create the translation directory. We try different alternative paths as the
+  // default may not always be writable.
+  $directories = array(
+    variable_get('l10n_update_download_store', L10N_UPDATE_DEFAULT_TRANSLATION_PATH),
+    variable_get('file_public_path', conf_path() . '/files') . '/translations',
+    'sites/default/files/translations',
+  );
+  foreach ($directories as $directory) {
+    if (file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+      variable_set('l10n_update_download_store', $directory);
+      return;
+    }
+  }
+  watchdog('l10n_update', 'The directory %directory does not exist or is not writable.', array('%directory' => $directories[0]), WATCHDOG_ERROR);
+  drupal_set_message(t('The directory %directory does not exist or is not writable.', array('%directory' => $directories[0])), 'error');
 }
 
 /**
@@ -168,78 +185,85 @@ function l10n_update_uninstall() {
   db_drop_field('locales_target', 'l10n_status');
 
   variable_del('l10n_update_check_disabled');
-  variable_del('l10n_update_check_frequency');
-  variable_del('l10n_update_check_mode');
-  variable_del('l10n_update_default_server');
+  variable_del('l10n_update_default_filename');
   variable_del('l10n_update_default_update_url');
-  variable_del('l10n_update_download_store');
+  variable_del('l10n_update_import_enabled');
   variable_del('l10n_update_import_mode');
-  variable_del('l10n_update_rebuild_projects');
-}
+  variable_del('l10n_update_check_frequency');
+  variable_del('l10n_update_last_check');
+  variable_del('l10n_update_download_store');
+  variable_del('l10n_update_translation_status');
+  variable_del('l10n_update_check_mode');}
 
 /**
  * Implements hook_requirements().
  */
 function l10n_update_requirements($phase) {
+  $requirements = array();
   if ($phase == 'runtime') {
-    $requirements['l10n_update']['title'] = t('Translation update status');
-    if (variable_get('l10n_update_check_frequency', 0)) {
-      if (l10n_update_get_projects() && l10n_update_language_list()) {
-        if (l10n_update_available_updates()) {
-          $requirements['l10n_update']['severity'] = REQUIREMENT_WARNING;
-          $requirements['l10n_update']['value'] = t('There are available updates');
-          $requirements['l10n_update']['description'] = t('There are new or updated translations available for currently installed modules and themes. To check for updates, you can visit the <a href="@check_manually">translation update page</a>.', array(
-              '@check_manually' => url('admin/config/regional/translate/update')
-            ));
+    $available_updates = array();
+    $untranslated = array();
+    $languages = l10n_update_translatable_language_list();
+
+    if ($languages) {
+      // Determine the status of the translation updates per language.
+      $status = l10n_update_get_status();
+      if ($status) {
+        foreach ($status as $project) {
+          foreach ($project as $langcode => $project_info) {
+            if (empty($project_info->type)) {
+              $untranslated[$langcode] = $languages[$langcode];
+            }
+            elseif ($project_info->type == L10N_UPDATE_LOCAL || $project_info->type == L10N_UPDATE_REMOTE) {
+              $available_updates[$langcode] = $languages[$langcode];
+            }
+          }
+        }
+
+        if ($available_updates || $untranslated) {
+          if ($available_updates) {
+            $requirements['l10n_update'] = array(
+              'title' => 'Translation update status',
+              'value' => l(t('Updates available'), 'admin/config/regional/translate/update'),
+              'severity' => REQUIREMENT_WARNING,
+              'description' => t('Updates available for: @languages. See the <a href="!updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $available_updates), '!updates' => url('admin/config/regional/translate/update'))),
+            );
+          }
+          else {
+            $requirements['l10n_update'] = array(
+              'title' => 'Translation update status',
+              'value' => t('Missing translations'),
+              'severity' => REQUIREMENT_INFO,
+              'description' => t('Missing translations for: @languages. See the <a href="!updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $untranslated), '!updates' => url('admin/config/regional/translate/update'))),
+            );
+          }
         }
         else {
-          $requirements['l10n_update']['severity'] = REQUIREMENT_OK;
-          $requirements['l10n_update']['value'] = t('All your translations are up to date');
+          $requirements['l10n_update'] = array(
+            'title' => 'Translation update status',
+            'value' => t('Up to date'),
+            'severity' => REQUIREMENT_OK,
+          );
         }
       }
       else {
-        $requirements['l10n_update']['value'] = t('No update data available');
-        $requirements['l10n_update']['severity'] = REQUIREMENT_WARNING;
-        $requirements['l10n_update']['description'] = _l10n_update_no_data();
+        $requirements['locale_translation'] = array(
+          'title' => 'Translation update status',
+          'value' => l(t('Can not determine status'), 'admin/config/regional/translate/update'),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('No translation status is available. See the <a href="!updates">Available translation updates</a> page for more information.', array('!updates' => url('admin/config/regional/translate/update'))),
+        );
       }
     }
-    else {
-      $requirements['l10n_update']['value'] = t('Not enabled');
-      $requirements['l10n_update']['severity'] = REQUIREMENT_INFO;
+  }
+  if ($phase == 'update') {
+    // Make sure the 'translations' stream wrapper class gets registered.
+    // This is needed when upgrading to 7.x-2.x.
+    if (!class_exists('TranslationsStreamWrapper')) {
+      registry_rebuild();
     }
-    return $requirements;
   }
-  // We must always return array, the installer doesn't use module_invoke_all()
-  return array();
-}
-
-/**
- * Add status field to locales_target.
- */
-function l10n_update_update_6001() {
-  if (!db_field_exists('locales_target', 'l10n_status')) {
-    db_add_field('locales_target', 'l10n_status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
-  }
-  return t('Added l10n_status field to locales_target.');
-}
-
-/**
- * Change status field name to l10n_status.
- */
-function l10n_update_update_6002() {
-  // I18n Strings module adds a 'status' column to 'locales_target' table.
-  // L10n Update module previously added a column with the same name. To avoid
-  // any collision we change the column name here, but only if it was added by
-  // L10n Update module.
-  if (!db_field_exists('locales_target', 'l10n_status') && db_field_exists('locales_target', 'status') && !db_table_exists('i18n_strings')) {
-    db_change_field('locales_target', 'status', 'l10n_status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
-  }
-  // Just in case someone did install I18n Strings, we still need to make sure
-  // the 'l10n_status' column gets created.
-  elseif (!db_field_exists('locales_target', 'l10n_status')) {
-    db_add_field('locales_target', 'l10n_status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
-  }
-  return t('Resolved possible l10n_status field conflict in locales_target.');
+  return $requirements;
 }
 
 /**
@@ -285,15 +309,57 @@ function l10n_update_update_7004() {
 }
 
 /**
- * Rebuild registry for 'translations' stream wrapper.
+ * Migration to 7.x-2.x branch.
  */
-function l10n_update_update_7005() {
-  registry_rebuild();
+function l10n_update_update_7200() {
+  // Make sure the 'translations' stream wrapper class gets registered.
+  if (!class_exists('TranslationsStreamWrapper')) {
+    registry_rebuild();
+  }
+
+  if (!variable_get('l10n_update_download_store', '')) {
+    variable_set('l10n_update_download_store', 'sites/all/translations');
+  }
+  // Create the translation directory. We try different alternative paths as the
+  // default may not always be writable.
+  $directories = array(
+    variable_get('l10n_update_download_store', L10N_UPDATE_DEFAULT_TRANSLATION_PATH),
+    variable_get('file_public_path', conf_path() . '/files') . '/translations',
+    'sites/default/files/translations',
+  );
+  foreach ($directories as $directory) {
+    if (file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+      variable_set('l10n_update_download_store', $directory);
+      return;
+    }
+  }
+  watchdog('l10n_update', 'The directory %directory does not exist or is not writable.', array('%directory' => $directories[0]), WATCHDOG_ERROR);
+  drupal_set_message(t('The directory %directory does not exist or is not writable.', array('%directory' => $directories[0])), 'error');
+
+  // Translation source 'Remote server only' is no longer supported. Use 'Remote
+  // and local' instead.
+  $mode = variable_get('l10n_update_check_mode', 3); // L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL
+  if ($mode == 1) {
+    variable_set('l10n_update_check_mode', 3); // L10N_UPDATE_USE_SOURCE_REMOTE_AND_LOCAL
+  }
+
+  // Daily cron updates are no longer supported. Use weekly instead.
+  $frequency = variable_get('l10n_update_check_frequency', '0');
+  if ($frequency == '1') {
+    variable_set('l10n_update_check_frequency', '7');
+  }
+
+  // Clean up deprecated variables.
+  variable_del('l10n_update_default_server');
+  variable_del('l10n_update_default_server_url');
+  variable_del('l10n_update_rebuild_projects');
 }
 
 /**
- * Rebuild registry after removing the stream wrapper.
+ * Sets the default translation files directory.
  */
-function l10n_update_update_7006() {
-  registry_rebuild();
+function l10n_update_update_7201() {
+  if (!variable_get('l10n_update_download_store', '')) {
+   variable_set('l10n_update_download_store', 'sites/all/translations');
+  }
 }

@@ -2,186 +2,197 @@
 
 /**
  * @file
- *   Reusable API for creating and running l10n update batches.
+ *   Batch process to check the availability of remote or local po files.
  */
-
-// module_load_include will not work in batch.
-include_once 'l10n_update.check.inc';
 
 /**
- * Create a batch to just download files.
- *
- * @param $updates
- *   Translations sources to be downloaded.
- *   Note: All update sources must have a 'fileurl'.
- * @return array
- *   A batch definition for this download.
+ * Load the common translation API.
  */
-function l10n_update_batch_download($updates) {
-  foreach ($updates as $update) {
-    $id = $update->filename;
-    $operations[] = array('_l10n_update_batch_download', array($id, $update));
+// @todo Combine functions differently in files to avoid unnecessary includes.
+// Follow-up issue http://drupal.org/node/1834298
+require_once __DIR__ . '/l10n_update.translation.inc';
+
+/**
+ * Batch operation callback: Check status of a remote and local po file.
+ *
+ * Checks the presence and creation time po translation files in located at
+ * remote server location and local file system.
+ *
+ * @param string $project
+ *   Machine name of the project for which to check the translation status.
+ * @param string $langcode
+ *   Language code of the language for which to check the translation.
+ * @param array $options
+ *   Optional, an array with options that can have the following elements:
+ *   - 'finish_feedback': Whether or not to give feedback to the user when the
+ *     batch is finished. Optional, defaults to TRUE.
+ *   - 'use_remote': Whether or not to check the remote translation file.
+ *     Optional, defaults to TRUE.
+ * @param array $context
+ *   The batch context.
+*/
+function l10n_update_batch_status_check($project, $langcode, $options = array(), &$context) {
+  $failure = $checked = FALSE;
+  $options += array(
+    'finish_feedback' => TRUE,
+    'use_remote' => TRUE,
+  );
+  $source = l10n_update_get_status(array($project), array($langcode));
+  $source = $source[$project][$langcode];
+
+  // Check the status of local translation files.
+  if (isset($source->files[L10N_UPDATE_LOCAL])) {
+    if ($file = l10n_update_source_check_file($source)) {
+      l10n_update_status_save($source->name, $source->langcode, L10N_UPDATE_LOCAL, $file);
+    }
+    $checked = TRUE;
   }
-  return _l10n_update_create_batch($operations);
-}
 
-/**
- * Create a batch to just import files.
- *
- * All update sources must have a 'uri'.
- *
- * @param $updates
- *   Translations sources to be imported.
- *   Note: All update sources must have a 'fileurl'.
- * @param $import_mode
- *   Import mode. How to treat existing and modified translations.
- * @return array
- *   A batch definition for this import.
- */
-function l10n_update_batch_import($updates, $import_mode) {
-  foreach ($updates as $update) {
-    $id = $update->filename;
-    $operations[] = array('_l10n_update_batch_import', array($id, $update, $import_mode));
-  }
-  return _l10n_update_create_batch($operations);
-}
-
-/**
- * Create a big batch for multiple projects and languages.
- *
- * @param $updates
- *   Array of update sources to be run.
- * @param $mode
- *   Import mode. How to treat existing and modified translations.
- * @return array
- */
-function l10n_update_batch_multiple($updates, $import_mode) {
-  foreach ($updates as $update) {
-    $id = $update->filename;
-    if ($update->type == 'download') {
-      $operations[] = array('_l10n_update_batch_download', array($id, $update));
-      $operations[] = array('_l10n_update_batch_import', array($id, NULL, $import_mode));
+  // Check the status of remote translation files.
+  if ($options['use_remote'] && isset($source->files[L10N_UPDATE_REMOTE])) {
+    $remote_file = $source->files[L10N_UPDATE_REMOTE];
+    module_load_include('http.inc', 'l10n_update');
+    if ($result = l10n_update_http_check($remote_file->uri)) {
+      // Update the file object with the result data. In case of a redirect we
+      // store the resulting uri.
+      if (!empty($result->updated)) {
+        $remote_file->uri = isset($result->redirect_url) ? $result->redirect_url : $remote_file->uri;
+        $remote_file->timestamp = $result->updated;
+        l10n_update_status_save($source->name, $source->langcode, L10N_UPDATE_REMOTE, $remote_file);
+      }
+      // @todo What to do with when the file is not found (404)? To prevent
+      //   re-checking within the TTL (1day, 1week) we can set a last_checked
+      //   timestamp or cache the result.
+      $checked = TRUE;
     }
     else {
-      $operations[] = array('_l10n_update_batch_import', array($id, $update, $import_mode));
+      $failure = TRUE;
     }
-    // This one takes always parameters from results.
-    $operations[] = array('_l10n_update_batch_history', array($id));
   }
-  if (!empty($operations)) {
-    return _l10n_update_create_batch($operations);
+
+  // Provide user feedback and record success or failure for reporting at the
+  // end of the batch.
+  if ($options['finish_feedback'] && $checked) {
+    $context['results']['files'][] = $source->name;
   }
+  if ($failure && !$checked) {
+    $context['results']['failed_files'][] = $source->name;
+  }
+  $context['message'] = t('Checked translation for %project.', array('%project' => $source->project));
 }
 
 /**
- * Create batch stub for this module.
+ * Batch finished callback: Set result message.
  *
- * @param $operations
- *   Operations to perform in this batch.
- * @return array
- *   A batch definition:
- *   - 'operations': Batch operations
- *   - 'title': Batch title.
- *   - 'init_message': Initial batch UI message.
- *   - 'error_message': Batch error message.
- *   - 'file': File containing callback function.
- *   - 'finished': Batch completed callback function.
+ * @param boolean $success
+ *   TRUE if batch successfully completed.
+ * @param array $results
+ *   Batch results.
  */
-function _l10n_update_create_batch($operations = array()) {
-  $t = get_t();
-  $batch = array(
-    'operations'    => $operations,
-    'title'         => $t('Updating translation.'),
-    'init_message'  => $t('Downloading and importing files.'),
-    'error_message' => $t('Error importing interface translations'),
-    'file'          => drupal_get_path('module', 'l10n_update') . '/l10n_update.batch.inc',
-    'finished'      => '_l10n_update_batch_finished',
-  );
-  return $batch;
-}
-
-/**
- * Batch process: Download a file.
- *
- * @param $id
- *   Batch id to identify batch results.
- *   Result of this batch function are stored in $context['result']
- *   identified by this $id.
- * @param $file
- *   File to be downloaded.
- * @param $context
- *   Batch context array.
- */
-function _l10n_update_batch_download($id, $file, &$context) {
-  $t = get_t();
-  if (l10n_update_source_download($file)) {
-    $context['message'] = $t('Importing: %name.', array('%name' => $file->filename));
-    $context['results'][$id] = array('file' => $file);
+function l10n_update_batch_status_finished($success, $results) {
+  if ($success) {
+    if (isset($results['failed_files'])) {
+        if (module_exists('dblog')) {
+          $message = format_plural(count($results['failed_files']), 'One translation file could not be checked. <a href="@url">See the log</a> for details.', '@count translation files could not be checked. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+        }
+        else {
+          $message = format_plural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
+        }
+        drupal_set_message($message, 'error');
+    }
+    if (isset($results['files'])) {
+      drupal_set_message(format_plural(
+        count($results['files']),
+        'Checked available interface translation updates for one project.',
+        'Checked available interface translation updates for @count projects.'
+      ));
+    }
+    if (!isset($results['failed_files']) && !isset($results['files'])) {
+      drupal_set_message(t('Nothing to check.'));
+    }
+    variable_set('l10n_update_last_check', REQUEST_TIME);
   }
   else {
-    $context['results'][$id] = array('file' => $file, 'fail' => TRUE);
+    drupal_set_message(t('An error occurred trying to check available interface translation updates.'), 'error');
   }
 }
 
 /**
- * Batch process: Update the download history table.
+ * Batch operation: Download a remote translation file.
  *
- * @param $id
- *   Batch id to identify batch results.
- *   Result of this batch function are stored in $context['result']
- *   identified by this $id.
- * @param $context
- *   Batch context array.
+ * Downloads a remote gettext file into the translations directory. When
+ * successfully the translation status is updated.
+ *
+ * @param string $project
+ *   Name of the translatable project.
+ * @param string $langcode
+ *   Language code.
+ * @param array $context
+ *   The batch context.
+ *
+ * @see l10n_update_batch_fetch_import()
  */
-function _l10n_update_batch_history($id, &$context) {
-  $t = get_t();
-  // The batch import is performed in a number of steps. History update is
-  // always the last step. The details of the downloaded/imported file are
-  // stored in $context['results'] array.
-  if (isset($context['results'][$id]['file']) && !isset($context['results'][$id]['fail'])) {
-    $file = $context['results'][$id]['file'];
-    l10n_update_source_history($file);
-    $context['message'] = $t('Imported: %name.', array('%name' => $file->filename));
+function l10n_update_batch_fetch_download($project, $langcode, &$context) {
+  $sources = l10n_update_get_status(array($project), array($langcode));
+  if (isset($sources[$project][$langcode])) {
+    $source = $sources[$project][$langcode];
+    if (isset($source->type) && $source->type == L10N_UPDATE_REMOTE) {
+      if ($file = l10n_update_download_source($source->files[L10N_UPDATE_REMOTE], 'translations://')) {
+        $context['message'] = t('Downloaded translation for %project.', array('%project' => $source->project));
+        l10n_update_status_save($source->name, $source->langcode, L10N_UPDATE_LOCAL, $file);
+      }
+      else {
+        $context['results']['failed_files'][] = $source->files[L10N_UPDATE_REMOTE];
+      }
+    }
   }
 }
 
 /**
  * Batch process: Import translation file.
  *
- * This takes a file parameter or continues from previous batch
- * which should have downloaded a file.
+ * Imports a gettext file from the translation directory. When successfully the
+ * translation status is updated.
  *
- * @param $id
- *   Batch id to identify batch results.
- *   Result of this batch function are stored in $context['result']
- *   identified by this $id.
- * @param $file
- *   File to be imported. If empty, the file will be taken from $context['results'].
- * @param $mode
- *   Import mode. How to treat existing and modified translations.
- * @param $context
- *   Batch context array.
+ * @param string $project
+ *   Name of the translatable project.
+ * @param string $langcode
+ *   Language code.
+ * @param array $options
+ *   Array of import options.
+ * @param array $context
+ *   The batch context.
+ *
+ * @see l10n_update_batch_import_files()
+ * @see l10n_update_batch_fetch_download()
  */
-function _l10n_update_batch_import($id, $file, $mode, &$context) {
-  $t = get_t();
-  // The batch import is performed in two or three steps.
-  // If import is performed after file download the file details of the download
-  // are used which are stored in the $context['results'] array.
-  // If a locally stored file is imported, the file details are placed in $file.
-  if (empty($file) && isset($context['results'][$id]['file']) && !isset($context['results'][$id]['fail'])) {
-    $file = $context['results'][$id]['file'];
-  }
-  if ($file) {
-    // Create a result if none exists yet.
-    if (!isset($context['results'][$id])) {
-      $context['results'][$id] = array();
-    }
-    if ($import_result = l10n_update_source_import($file, $mode)) {
-      $context['message'] = $t('Imported: %name.', array('%name' => $file->filename));
-      $context['results'][$id] = array_merge((array)$context['results'][$id], $import_result, array('file' => $file));
-    }
-    else {
-      $context['results'][$id] = array_merge((array)$context['results'][$id], array('fail' => TRUE), array('file' => $file));
+function l10n_update_batch_fetch_import($project, $langcode, $options, &$context) {
+  $sources = l10n_update_get_status(array($project), array($langcode));
+  if (isset($sources[$project][$langcode])) {
+    $source = $sources[$project][$langcode];
+    if (isset($source->type)) {
+      if ($source->type == L10N_UPDATE_REMOTE || $source->type == L10N_UPDATE_LOCAL) {
+        $file = $source->files[L10N_UPDATE_LOCAL];
+        module_load_include('bulk.inc', 'l10n_update');
+        $options += array(
+          'message' => t('Importing translation for %project.', array('%project' => $source->project)),
+        );
+        // Import the translation file. For large files the batch operations is
+        // progressive and will be called repeatedly until finished.
+        l10n_update_batch_import($file, $options, $context);
+
+        // The import is finished.
+        if (isset($context['finished']) && $context['finished'] == 1) {
+          // The import is successful.
+          if (isset($context['results']['files'][$file->uri])) {
+            $context['message'] = t('Imported translation for %project.', array('%project' => $source->project));
+
+            // Save the data of imported source into the {l10n_update_file} table and
+            // update the current translation status.
+            l10n_update_status_save($project, $langcode, L10N_UPDATE_CURRENT, $source->files[L10N_UPDATE_LOCAL]);
+          }
+        }
+      }
     }
   }
 }
@@ -189,92 +200,47 @@ function _l10n_update_batch_import($id, $file, $mode, &$context) {
 /**
  * Batch finished callback: Set result message.
  *
- * @param $success
- *   TRUE if batch succesfully completed.
- * @param $results
+ * @param boolean $success
+ *   TRUE if batch successfully completed.
+ * @param array
  *   Batch results.
  */
-function _l10n_update_batch_finished($success, $results) {
-  $totals = array();    // Sum of added, updated and deleted translations.
-  $total_skip = 0;      // Sum of skipped translations
-  $messages = array();  // User feedback messages.
-  $project_fail = $project_success = array(); // Project names of succesfull and failed imports.
-  $t = get_t();
-
+function l10n_update_batch_fetch_finished($success, $results) {
+  module_load_include('bulk.inc', 'l10n_update');
   if ($success) {
-    // Summarize results of added, updated, deleted and skiped translations.
-    // Added, updated and deleted are summarized per language to be displayed accordingly.
-    foreach ($results as $result) {
-      if (isset($result['fail'])) {
-        // Collect project names of the failed imports.
-        $project_fail[$result['file']->name] = $result['file']->name;
-      }
-      else {
-        $language = $result['language'];
-
-        // Initialize variables to prevent PHP Notices.
-        if (!isset($totals[$language])) {
-          $totals[$language] = array();
-          $totals[$language]['add'] = $totals[$language]['update'] = $totals[$language]['delete'] = 0;
-        }
-
-        // Summarize added, updated, deleted and skiped translations.
-        $totals[$language]['add'] += $result['add'];
-        $totals[$language]['update'] += $result['update'];
-        $totals[$language]['delete'] += $result['delete'];
-        $total_skip += $result['skip'];
-
-        // Collect project names of the succesfull imports.
-        $project_success[$result['file']->name] = $result['file']->name;
-      }
-    }
-
-    // Messages of succesfull translation update results.
-    if ($project_success) {
-      $messages[] = format_plural(count($project_success), 'One project updated: @projects.', '@count projects updated: @projects.', array('@projects' => implode(', ', $project_success)));
-      $languages = language_list();
-      foreach ($totals as $language => $total) {
-        $messages[] = $t('%language translation strings added: !add, updated: !update, deleted: !delete.', array(
-          '%language' => $languages[$language]->name,
-          '!add' => $total['add'],
-          '!update' => $total['update'],
-          '!delete' => $total['delete'],
-        ));
-      }
-      drupal_set_message(implode("<br />\n", $messages));
-
-      // Warning for disallowed HTML.
-      if ($total_skip) {
-        drupal_set_message(
-          format_plural(
-            $total_skip,
-            'One translation string was skipped because it contains disallowed HTML. See !log_messages for details.',
-            '@count translation strings were skipped because they contain disallowed HTML. See !log_messages for details.',
-            array('!log_messages' => l(t('Recent log messages'), 'admin/reports/dblog'))),
-        'warning');
-      }
-
-      // Clear cache and force refresh of JavaScript translations and rebuild
-      // the menu as strings may have changed.
-      foreach (array_keys($totals) as $langcode) {
-        _locale_invalidate_js($langcode);
-      }
-      cache_clear_all('locale:', 'cache', TRUE);
-      menu_rebuild();
-    }
-
-    // Error for failed imports.
-    if ($project_fail) {
-      drupal_set_message(
-        format_plural(
-          count($project_fail),
-          'Translations of one project were not imported: @projects.',
-          'Translations of @count projects were not imported: @projects',
-          array('@projects' => implode(', ', $project_fail))),
-      'error');
-    }
+    variable_set('l10n_update_last_check', REQUEST_TIME);
   }
-  else {
-    drupal_set_message($t('Error importing translations.'), 'error');
+  l10n_update_batch_finished($success, $results);
+}
+
+
+
+/**
+ * Downloads a translation file from a remote server.
+ *
+ * @param object $source_file
+ *   Source file object with at least:
+ *   - "uri": uri to download the file from.
+ *   - "project": Project name.
+ *   - "langcode": Translation language.
+ *   - "version": Project version.
+ *   - "filename": File name.
+ * @param string $directory
+ *   Directory where the downloaded file will be saved. Defaults to the
+ *   temporary file path.
+ *
+ * @return object
+ *   File object if download was successful. FALSE on failure.
+ */
+function l10n_update_download_source($source_file, $directory = 'temporary://') {
+  if ($uri = system_retrieve_file($source_file->uri, $directory)) {
+    $file = clone($source_file);
+    $file->type = L10N_UPDATE_LOCAL;
+    $file->uri = $uri;
+    $file->directory = $directory;
+    $file->timestamp = filemtime($uri);
+    return $file;
   }
+  watchdog('l10n_update', 'Unable to download translation file @uri.', array('@uri' => $source_file->uri), WATCHDOG_ERROR);
+  return FALSE;
 }
