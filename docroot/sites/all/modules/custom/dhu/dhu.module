@@ -39,3 +39,28 @@ function dhu_preprocess_links(array &$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_update_projects_alter().
+ */
+function dhu_update_projects_alter(&$projects) {
+  foreach (array_keys($projects) as $project_name) {
+    $path = drupal_get_path($projects[$project_name]['project_type'], $project_name);
+    if (_dhu_is_custom_extension($path)) {
+      unset($projects[$project_name]);
+    }
+  }
+}
+
+/**
+ * @param string $path
+ *   File system path to a directory.
+ *
+ * @return boolean
+ *   Return TRUE if the $path directory contains custom module or theme.
+ */
+function _dhu_is_custom_extension($path) {
+  $pattern = '@^sites/all/(modules/(custom|features))|(themes/(?!(bootstrap|omega|zen)))/@';
+
+  return (bool) preg_match($pattern, $path);
+}
