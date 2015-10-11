@@ -150,3 +150,26 @@ function dhu_update_7107() {
 
   return implode('<br />', $messages);
 }
+
+/**
+ * Uninstall PHP module.
+ */
+function dhu_update_7108(&$sandbox) {
+  $messages = array();
+
+  module_disable(array('php'));
+  $messages[] = t('The PHP module has been disabled.');
+
+  drupal_uninstall_modules(array('php'));
+  $messages[] = t('The PHP module has been uninstalled.');
+
+  db_delete('filter_format')
+    ->condition('format', 'php_code')
+    ->execute();
+
+  db_delete('filter')
+    ->condition('module', 'php')
+    ->execute();
+
+  return implode((drupal_is_cli() ? PHP_EOL : '<br />'), $messages);
+}
