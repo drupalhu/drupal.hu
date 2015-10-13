@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Send site profile information (NSPI) and system data to Acquia Network.
+ *   Send site profile information (NSPI) and system data to Acquia Insight.
  */
 
 // Version of SPI data format.
@@ -60,7 +60,7 @@ function acquia_spi_cron() {
 function acquia_spi_menu() {
   $items['system/acquia-spi-send'] = array(
     'title' => 'Acquia SPI Send',
-    'description' => 'Send SPI data to Acquia Network.',
+    'description' => 'Send SPI data to Acquia Insight.',
     'page callback' => '_acquia_spi_send',
     'access callback' => '_acquia_spi_send_access',
   );
@@ -163,7 +163,7 @@ function _acquia_spi_send() {
         $message[] = t('SPI data sent.');
       }
       if (!empty($response['nspi_messages'])) {
-        $message[] = t('Acquia Network returned the following messages. Further information may be in the logs.');
+        $message[] = t('Acquia Insight returned the following messages. Further information may be in the logs.');
         foreach ($response['nspi_messages'] as $nspi_message) {
           $message[] = check_plain($nspi_message);
         }
@@ -418,7 +418,7 @@ function acquia_spi_update_definition() {
 }
 
 /**
- * Gather full SPI data and send to Acquia Network.
+ * Gather full SPI data and send to Acquia Insight.
  *
  * @param string $method Optional identifier for the method initiating request.
  *   Values could be 'cron' or 'menu callback' or 'drush'.
@@ -462,7 +462,7 @@ function acquia_spi_handle_server_response($spi_response) {
 }
 
 /**
- * Send data to Acquia Network.
+ * Send data to Acquia Insight.
  *
  * Note, call acquia_spi_send_full_spi() to support SPI response actions.
  *
@@ -478,7 +478,7 @@ function acquia_spi_handle_server_response($spi_response) {
 function acquia_spi_send_data($spi) {
   // Do nothing unless we have credentials.
   if (!acquia_agent_has_credentials()) {
-    watchdog('acquia spi', 'Connect your site to a valid subscription on the Acquia Network to send SPI data', array(), WATCHDOG_ERROR);
+    watchdog('acquia spi', 'Connect your site to a valid Acquia Subscription to send SPI data', array(), WATCHDOG_ERROR);
     return FALSE;
   }
   // acquia_agent_network_address() sets remote server protocol.
@@ -562,6 +562,9 @@ function acquia_spi_get() {
   // Check for node access modules.
   $additional_data['node_access_modules'] = module_implements("node_access", TRUE);
 
+  // Check for drupal_fast_404 usage.
+  $additional_data['fast_404'] = acquia_spi_get_fast404();
+
   if (!empty($security_review_results)) {
     $additional_data['security_review'] = $security_review_results['security_review'];
   }
@@ -617,6 +620,48 @@ function acquia_spi_get() {
 
     return array_merge($spi, $spi_ssl);
   }
+}
+
+/**
+ * Check to see if fast_404 is enabled in settings.php. Fast 404 is enabled when
+ * the "drupal_fast_404()" function is uncommented in settings.php. Since it's
+ * difficult, if not impossible to safely tell if the drupal_fast_404() function
+ * is uncommented in settings.php (or any files included by settings.php), we'll
+ * instead compare a theoretically known 404 to the expected fast 404 return.
+ *
+ * @return array
+ *   An array of fast 404 data, with keys:
+ *   - enabled: boolean indicating whether drupal_fast_404() is enabled or not
+ *   - base_url: the base URL used to check for a valid 404.
+ *   - response_code: the HTTP response code provided during the 404 check.
+ *
+ */
+function acquia_spi_get_fast404() {
+
+  global $base_url;
+
+  $path = sprintf('acquia-connector-fast-404-check-%s.css', uniqid());
+  $url  = rtrim($base_url, DIRECTORY_SEPARATOR) . base_path() . $path;
+
+  $response = drupal_http_request($url);
+  $expected = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+  $expected = strtr($expected, array('@path' => base_path() . $path));
+
+  if (isset($response->code) && $response->code != 404) {
+    watchdog('acquia spi', 'A fast 404 test to @url returned a non-404 result (@code): @error.', array(
+      '@url' => $url,
+      '@code' => $response->code,
+      '@error' => $response->error,
+    ), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  return array(
+    'enabled' => isset($response->data) && $response->data == $expected,
+    'base_url' => rtrim($base_url, DIRECTORY_SEPARATOR),
+    'response_code' => isset($response->code) ? $response->code : NULL,
+  );
+
 }
 
 /**
@@ -1742,10 +1787,10 @@ function acquia_spi_set_variables($set_variables) {
   }
   if (!empty($saved)) {
     variable_set('acquia_spi_saved_variables', array('variables' => $saved, 'time' => time()));
-    watchdog('acquia spi', 'Saved variables from the Acquia Network: @variables', array('@variables' => implode(', ', $saved)), WATCHDOG_INFO);
+    watchdog('acquia spi', 'Saved variables from Acquia Insight: @variables', array('@variables' => implode(', ', $saved)), WATCHDOG_INFO);
   }
   else {
-    watchdog('acquia spi', 'Did not save any variables from the Acquia Network.', array(), WATCHDOG_INFO);
+    watchdog('acquia spi', 'Did not save any variables from Acquia Insight.', array(), WATCHDOG_INFO);
   }
 }
 

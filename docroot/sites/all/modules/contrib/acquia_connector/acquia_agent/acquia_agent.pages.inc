@@ -40,7 +40,7 @@ function acquia_agent_migrate_page() {
     }
   }
   else {
-    $error = 'Missing Acquia Network credentials. Please enter your Acquia Network Identifier and Key.';
+    $error = 'Missing Acquia Subscription credentials. Please enter your Acquia Subscription Identifier and Key.';
   }
 
   // If there was an error.
@@ -212,15 +212,15 @@ function acquia_agent_automatic_setup_form($form, &$form_state) {
 
 function _acquia_agent_automatic_setup_form_start(&$form_state) {
   $form = array(
-    '#prefix' => t('Log in or <a href="!url">configure manually</a> to connect your site to the Acquia Network.', array('!url' => url('admin/config/system/acquia-agent/credentials'))),
+    '#prefix' => t('Log in or <a href="!url">configure manually</a> to connect your site to Acquia.', array('!url' => url('admin/config/system/acquia-agent/credentials'))),
     'email' => array(
       '#type' => 'textfield',
-      '#title' => t('Enter the email address you use to login to the Acquia Network:'),
+      '#title' => t('Enter the email address you use to sign in to Acquia:'),
       '#required' => TRUE,
     ),
     'pass' => array(
       '#type' => 'password',
-      '#title' => t('Enter your Acquia Network password:'),
+      '#title' => t('Enter your Acquia account password:'),
       '#description' => t('Your password will not be stored locally and will be sent securely to Acquia.com. <a href="!url" target="_blank">Forgot password?</a>', array('!url' => url('https://accounts.acquia.com/user/password'))),
       '#size' => 32,
       '#required' => TRUE,
@@ -281,7 +281,7 @@ function acquia_agent_automatic_setup_form_validate($form, &$form_state) {
     }
     elseif (!$result) {
       // Email doesn't exist.
-      form_set_error('email', t('Account not found on the Acquia Network.'));
+      form_set_error('email', t("We didn't find an Acquia account with that email address."));
     }
     else {
       // Build hashed password from account password settings for further
@@ -304,20 +304,20 @@ function acquia_agent_automatic_setup_form_submit($form, &$form_state) {
   }
   // Don't set message or redirect if multistep.
   if (!form_get_errors() && empty($form_state['rebuild'])) {
-    // Check subscription and send a heartbeat to Acquia Network via XML-RPC.
+    // Check subscription and send a heartbeat to Acquia Insight via XML-RPC.
     // Our status gets updated locally via the return data.
     $active = acquia_agent_check_subscription();
     // Redirect to the path without the suffix.
     $form_state['redirect'] = array('admin/config/system/acquia-agent');
     cache_clear_all();
     if ($active && count($active) > 1) {
-      drupal_set_message(t('<h3>Connection successful!</h3>You are now connected to the Acquia Network.'));
+      drupal_set_message(t('<h3>Connection successful!</h3>You are now connected to Acquia Insight.'));
     }
   }
 }
 
 function _acquia_agent_automatic_start_submit(&$form_state) {
-  // Make hashed password signed request to Acquia Network for subscriptions.
+  // Make hashed password signed request to Acquia for subscriptions.
   $body = array(
     'email' => $form_state['values']['email'],
   );
@@ -365,7 +365,7 @@ function acquia_agent_settings_credentials($form, &$form_state) {
   $identifier = acquia_agent_settings('acquia_identifier');
   $key = acquia_agent_settings('acquia_key');
 
-  $form['#prefix'] = t('Enter your <a href="!net">identifer and key</a> from your subscriptions overview or <a href="!url">log in</a> to connect your site to the Acquia Network.', array('!net' => url('https://insight.acquia.com/subscriptions'), '!url' => url('admin/config/system/acquia-agent/setup')));
+  $form['#prefix'] = t('Enter your <a href="!net">identifer and key</a> from your subscriptions overview or <a href="!url">log in</a> to connect your site to Acquia Insight.', array('!net' => url('https://insight.acquia.com/subscriptions'), '!url' => url('admin/config/system/acquia-agent/setup')));
   $form['acquia_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('Identifier'),
@@ -436,14 +436,14 @@ function acquia_agent_settings_credentials_submit($form, &$form_state) {
   variable_set('acquia_key', $form_state['values']['acquia_key']);
   variable_set('acquia_identifier', $form_state['values']['acquia_identifier']);
   variable_set('acquia_subscription_name', $form_state['sub']['site_name']);
-  // Check subscription and send a heartbeat to Acquia Network via XML-RPC.
+  // Check subscription and send a heartbeat to Acquia Insight via XML-RPC.
   // Our status gets updated locally via the return data.
   $active = acquia_agent_check_subscription();
   // Redirect to the path without the suffix.
   $form_state['redirect'] = array('admin/config/system/acquia-agent');
   cache_clear_all();
   if ($active && count($active) > 1) {
-    drupal_set_message(t('<h3>Connection successful!</h3>You are now connected to the Acquia Network.'));
+    drupal_set_message(t('<h3>Connection successful!</h3>You are now connected to Acquia Insight.'));
   }
 }
 
@@ -501,7 +501,7 @@ function acquia_agent_settings_form($form, &$form_state, $banner) {
   }
 
   if (empty($_POST)) {
-    // Check our connection to the Acquia Network and validity of the credentials.
+    // Check our connection to Acquia and validity of the credentials.
     $acquia_network_address = acquia_agent_settings('acquia_network_address');
     if (!acquia_agent_valid_credentials($identifier, $key, $acquia_network_address)) {
       $error_message = acquia_agent_connection_error_message();
@@ -514,7 +514,7 @@ function acquia_agent_settings_form($form, &$form_state, $banner) {
   }
 
   $form['connected'] = array(
-    '#markup' => t('<h3>Connected to the Acquia Network</h3>'),
+    '#markup' => t('<h3>Connected to Acquia Insight</h3>'),
   );
   if (!empty($subscription)) {
     $form['subscription'] = array(
@@ -523,12 +523,12 @@ function acquia_agent_settings_form($form, &$form_state, $banner) {
   }
   $form['connection'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Acquia Network Settings'),
+    '#title' => t('Acquia Subscription Settings'),
     '#collapsible' => FALSE,
   );
   $form['connection']['acquia_dynamic_banner'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Receive updates from Acquia Network'),
+    '#title' => t('Receive updates from Acquia Insight'),
     '#default_value' => variable_get('acquia_dynamic_banner', FALSE),
   );
 
@@ -671,7 +671,7 @@ function acquia_agent_an_info_header() {
 
   $l_opt = array('attributes' => array('target' => '_blank'));
   $output  = '<div class="an-wrapper">';
-  $output .= '<h2 id="an-info-header">' . t('Acquia Network', array('@acquia-network' => 'http://acquia.com/products-services/acquia-network')) . '</h2>';
+  $output .= '<h2 id="an-info-header">' . t('Acquia Subscription', array('@acquia-network' => 'http://acquia.com/products-services/acquia-network')) . '</h2>';
   $output .= '<p class="an-slogan">' . t('A suite of products and services to create & maintain killer web experiences built on Drupal') . '</p>';
   $output .= '<div id="an-info-box">';
   $output .=   '<div class="cell with-arrow an-left">';

@@ -49,14 +49,14 @@ function acquia_spi_requirements($phase) {
         $ago = REQUEST_TIME - $last_sent;
         if ($ago >= 60 * 60 * 36) { // 1.5 days ago.
           $severity = REQUIREMENT_WARNING;
-          $description = 'SPI data has not been reported to the Acquia Network for more than a day.<br/>';
+          $description = 'SPI data has not been reported to the Acquia Subscription for more than a day.<br/>';
         }
         else {
           $severity = REQUIREMENT_OK;
         }
         if (!$use_cron) {
           $config_url = url('admin/config/system/acquia-agent');
-          $description .= 'You are not sending SPI data via Drupal\'s cron system. <a href="!config-page">View Acquia Network configuration</a> for details.<br/>';
+          $description .= 'You are not sending SPI data via Drupal\'s cron system. <a href="!config-page">View Acquia Subscription configuration</a> for details.<br/>';
         }
         else {
           $interval = variable_get('acquia_spi_cron_interval', 30);
@@ -73,7 +73,7 @@ function acquia_spi_requirements($phase) {
           $value = t('Last sent !time ago', array('!time' => format_interval($ago)));
         }
         $requirements['acquia_spi'] = array(
-          'title' => t('Acquia Network SPI'),
+          'title' => t('Acquia SPI'),
           'severity' => $severity,
           'value' => $value,
           'description' => t($description, array('!interval' => $interval, '!config-page' => $config_url, '!spi-send' => url('system/acquia-spi-send', array('query' => array('destination' => 'admin/reports/status', 'key' => $key))))),
@@ -111,7 +111,7 @@ function acquia_spi_requirements($phase) {
         $variables['%modules'] = $modules;
       }
       $requirements['acquia_spi_test'] = array(
-        'title'       => t('Acquia Network SPI Custom Tests'),
+        'title'       => t('Acquia SPI Custom Tests'),
         'description' => t($description, $variables),
         'value'       => t($value, $variables),
         'severity'    => $severity,

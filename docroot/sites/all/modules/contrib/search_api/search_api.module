@@ -270,6 +270,7 @@ function search_api_theme() {
       'machine_name' => '',
       'description' => NULL,
       'item_type' => NULL,
+      'datasource_config' => NULL,
       'enabled' => NULL,
       'server' => NULL,
       'options' => array(),
@@ -646,8 +647,9 @@ function search_api_search_api_index_insert(SearchApiIndex $index) {
  * Implements hook_search_api_index_update().
  */
 function search_api_search_api_index_update(SearchApiIndex $index) {
-  // Call the datasource update function with the table this module provides.
+  // Call the datasource update function with the tables this module provides.
   search_api_index_update_datasource($index, 'search_api_item');
+  search_api_index_update_datasource($index, 'search_api_item_string_id');
 
   // If the server was changed, we have to call the appropriate service class
   // hook methods.
@@ -684,26 +686,15 @@ function search_api_search_api_index_update(SearchApiIndex $index) {
   }
 
   // If the fields were changed, call the appropriate service class hook method
-  // and re-index the content, if necessary. Also, clear the fields cache.
+  // and re-index the content, if necessary.
   $old_fields = $index->original->options + array('fields' => array());
   $old_fields = $old_fields['fields'];
   $new_fields = $index->options + array('fields' => array());
   $new_fields = $new_fields['fields'];
   if ($old_fields != $new_fields) {
-    cache_clear_all($index->getCacheId(), 'cache', TRUE);
     if ($index->server) {
       $index->server()->fieldsUpdated($index);
     }
-  }
-
-  // If additional fields changed, clear the index's specific cache which
-  // includes them.
-  $old_additional = $index->original->options + array('additional fields' => array());
-  $old_additional = $old_additional['additional fields'];
-  $new_additional = $index->options + array('additional fields' => array());
-  $new_additional = $new_additional['additional fields'];
-  if ($old_additional != $new_additional) {
-    cache_clear_all($index->getCacheId() . '-0-1', 'cache');
   }
 
   // If the index's enabled or read-only status is being changed, queue or
@@ -867,6 +858,8 @@ function search_api_entity_insert($entity, $type) {
   list($id) = entity_extract_ids($type, $entity);
   if (isset($id)) {
     search_api_track_item_insert($type, array($id));
+    $combined_id = $type . '/' . $id;
+    search_api_track_item_insert('multiple', array($combined_id));
   }
 }
 
@@ -877,6 +870,8 @@ function search_api_entity_insert($entity, $type) {
  * datasource controller and calls search_api_track_item_change() for the
  * updated items.
  *
+ * It also checks whether the entity's bundle changed and acts accordingly.
+ *
  * @see search_api_search_api_item_type_info()
  */
 function search_api_entity_update($entity, $type) {
@@ -885,9 +880,20 @@ function search_api_entity_update($entity, $type) {
   if (!entity_get_property_info($type)) {
     return;
   }
-  list($id) = entity_extract_ids($type, $entity);
+  list($id, , $new_bundle) = entity_extract_ids($type, $entity);
+
+  // Check if the entity's bundle changed.
+  if (isset($entity->original)) {
+    list(, , $old_bundle) = entity_extract_ids($type, $entity->original);
+    if ($new_bundle != $old_bundle) {
+      _search_api_entity_datasource_bundle_change($type, $id, $old_bundle, $new_bundle);
+    }
+  }
+
   if (isset($id)) {
     search_api_track_item_change($type, array($id));
+    $combined_id = $type . '/' . $id;
+    search_api_track_item_change('multiple', array($combined_id));
   }
 }
 
@@ -909,6 +915,28 @@ function search_api_entity_delete($entity, $type) {
   list($id) = entity_extract_ids($type, $entity);
   if (isset($id)) {
     search_api_track_item_delete($type, array($id));
+    $combined_id = $type . '/' . $id;
+    search_api_track_item_delete('multiple', array($combined_id));
+  }
+}
+
+/**
+ * Implements hook_field_attach_rename_bundle().
+ *
+ * This is implemented on behalf of the SearchApiEntityDataSourceController
+ * datasource controller, to update any bundle settings that contain the changed
+ * bundle.
+ */
+function search_api_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+  foreach (search_api_index_load_multiple(FALSE, array('item_type' => $entity_type)) as $index) {
+    $bundles = &$index->options['datasource']['bundles'];
+    if (isset($bundles) && ($pos = array_search($bundle_old, $bundles)) !== FALSE) {
+      $bundles[$pos] = $bundle_new;
+      $index->save();
+      // Clear all caches that could contain the bundle information.
+      $index->resetCaches();
+      drupal_static_reset('search_api_get_datasource_controller');
+    }
   }
 }
 
@@ -946,15 +974,18 @@ function search_api_flush_caches() {
 function search_api_search_api_item_type_info() {
   $types = array();
 
-  foreach (entity_get_property_info() as $type => $property_info) {
-    if ($info = entity_get_info($type)) {
-      $types[$type] = array(
-        'name' => $info['label'],
-        'datasource controller' => 'SearchApiEntityDataSourceController',
-        'entity_type' => $type,
-      );
-    }
+  foreach (search_api_entity_type_options_list() as $type => $label) {
+    $types[$type] = array(
+      'name' => $label,
+      'datasource controller' => 'SearchApiEntityDataSourceController',
+      'entity_type' => $type,
+    );
   }
+
+  $types['multiple'] = array(
+    'name' => t('Multiple types'),
+    'datasource controller' => 'SearchApiCombinedEntityDataSourceController',
+  );
 
   return $types;
 }
@@ -1037,6 +1068,11 @@ function search_api_search_api_alter_callback_info() {
     'description' => t('Exclude unpublished nodes from the index. <strong>Caution:</strong> This only affects the indexed nodes themselves. If an enabled node has references to disabled nodes, those will still be indexed (or displayed) normally.'),
     'class' => 'SearchApiAlterNodeStatus',
   );
+  $callbacks['search_api_alter_user_status'] = array(
+    'name' => t('Exclude blocked users'),
+    'description' => t('Exclude blocked users from the index. <strong>Caution:</strong> This only affects the indexed users themselves. If an active user account includes a reference to a disabled user, that reference will still be indexed (or displayed) normally.'),
+    'class' => 'SearchApiAlterUserStatus',
+  );
 
   return $callbacks;
 }
@@ -1111,7 +1147,10 @@ function search_api_track_item_insert($type, array $item_ids) {
   }
 
   try {
-    search_api_get_datasource_controller($type)->trackItemInsert($item_ids, $indexes);
+    $returned_indexes = search_api_get_datasource_controller($type)->trackItemInsert($item_ids, $indexes);
+    if (isset($returned_indexes)) {
+      $indexes = $returned_indexes;
+    }
   }
   catch (SearchApiException $e) {
     $vars['%item_type'] = $type;
@@ -1148,7 +1187,10 @@ function search_api_track_item_change($type, array $item_ids) {
     return;
   }
   try {
-    search_api_get_datasource_controller($type)->trackItemChange($item_ids, $indexes);
+    $returned_indexes = search_api_get_datasource_controller($type)->trackItemChange($item_ids, $indexes);
+    if (isset($returned_indexes)) {
+      $indexes = $returned_indexes;
+    }
     foreach ($indexes as $index) {
       if (!empty($index->options['index_directly'])) {
         // For indexes with the index_directly option set, queue the items to be
@@ -1223,7 +1265,10 @@ function search_api_track_item_delete($type, array $item_ids) {
   $indexes = search_api_index_load_multiple(FALSE, $conditions);
   if ($indexes) {
     try {
-      search_api_get_datasource_controller($type)->trackItemDelete($item_ids, $indexes);
+      $changed_indexes = search_api_get_datasource_controller($type)->trackItemDelete($item_ids, $indexes);
+      if (isset($changed_indexes)) {
+        $indexes = $changed_indexes;
+      }
     }
     catch (SearchApiException $e) {
       $vars['%item_type'] = $type;
@@ -1233,8 +1278,9 @@ function search_api_track_item_delete($type, array $item_ids) {
 
   // Then, delete it from all servers. Servers of disabled indexes have to be
   // considered, too!
-  unset($conditions['enabled']);
-  foreach (search_api_index_load_multiple(FALSE, $conditions) as $index) {
+  $conditions['enabled'] = 0;
+  $indexes = array_merge($indexes, search_api_index_load_multiple(FALSE, $conditions));
+  foreach ($indexes as $index) {
     try {
       if ($server = $index->server()) {
         $server->deleteItems($item_ids, $index);
@@ -1963,7 +2009,14 @@ function search_api_search_api_query_alter(SearchApiQueryInterface $query) {
       }
     }
     else {
-      watchdog('search_api', 'An illegal user UID was given for node access: @uid.', array('@uid' => $query->getOption('search_api_access_account', $user)), WATCHDOG_WARNING);
+      $account = $query->getOption('search_api_access_account', '(' . t('none') . ')');
+      if (is_object($account)) {
+        $account = $account->uid;
+      }
+      if (!is_scalar($account)) {
+        $account = var_export($account, TRUE);
+      }
+      watchdog('search_api', 'An illegal user UID was given for node access: @uid.', array('@uid' => $account), WATCHDOG_WARNING);
     }
   }
 }
@@ -2181,6 +2234,9 @@ function search_api_index_update_datasource(SearchApiIndex $index, $table, $colu
  *   The $fields array with additional "value" and "original_type" keys set.
  */
 function search_api_extract_fields(EntityMetadataWrapper $wrapper, array $fields, array $value_options = array()) {
+  $value_options += array(
+    'identifier' => TRUE,
+  );
   // If $wrapper is a list of entities, we have to aggregate their field values.
   $wrapper_info = $wrapper->info();
   if (search_api_is_list_type($wrapper_info['type'])) {
@@ -2218,19 +2274,31 @@ function search_api_extract_fields(EntityMetadataWrapper $wrapper, array $fields
       $info['original_type'] = $info['type'];
       if (isset($wrapper->$field)) {
         try {
-          $info['value'] = $wrapper->$field->value($value_options);
-          // For fulltext fields with options, also include the option labels.
-          if (search_api_is_text_type($info['type']) && $wrapper->$field->optionsList('view')) {
-            _search_api_add_option_values($info['value'], $wrapper->$field->optionsList('view'));
-          }
+          // Set the original type according to the field wrapper's info.
           $property_info = $wrapper->$field->info();
           $info['original_type'] = $property_info['type'];
-          // For entities, we extract the entity ID instead of the whole object.
-          // @todo Use 'identifier' => TRUE instead of always loading the object.
-          $t = search_api_extract_inner_type($property_info['type']);
-          if (isset($entity_infos[$t])) {
-            // If no object is set, set this field to NULL.
-            $info['value'] = $info['value'] ? _search_api_extract_entity_value($wrapper->$field, search_api_is_text_type($info['type'])) : NULL;
+
+          // Extract the basic value from the field wrapper.
+          $info['value'] = $wrapper->$field->value($value_options);
+
+          // For entities, we need to take care to differentiate between
+          // entities with ID 0 and empty fields. In the latter case, the
+          // wrapper's value() method returns, when called with "identifier =
+          // TRUE", FALSE instead of the (more logical) NULL.
+          $is_entity = isset($entity_infos[search_api_extract_inner_type($property_info['type'])]);
+          if ($is_entity && $info['value'] === FALSE) {
+            $info['value'] = NULL;
+          }
+
+          // If we index the field as fulltext, we also include the entity label
+          // or option list label, if applicable.
+          if (search_api_is_text_type($info['type']) && isset($info['value'])) {
+            if ($wrapper->$field->optionsList('view')) {
+              _search_api_add_option_values($info['value'], $wrapper->$field->optionsList('view'));
+            }
+            elseif ($is_entity) {
+              $info['value'] = _search_api_extract_entity_value($wrapper->$field, TRUE);
+            }
           }
         }
         catch (EntityMetadataWrapperException $e) {
@@ -2779,6 +2847,66 @@ function search_api_index_options_list() {
 }
 
 /**
+ * Options list callback for entity types.
+ *
+ * Will only include entity types which specify entity property information.
+ *
+ * @return string[]
+ *   An array of entity type machine names mapped to their human-readable
+ *   names.
+ */
+function search_api_entity_type_options_list() {
+  $types = array();
+  foreach (array_keys(entity_get_property_info()) as $type) {
+    $info = entity_get_info($type);
+    if ($info) {
+      $types[$type] = $info['label'];
+    }
+  }
+  return $types;
+}
+
+/**
+ * Options list callback for entity type bundles.
+ *
+ * Will include all bundles for all entity types which specify entity property
+ * information, in a format combining both entity type and bundle.
+ *
+ * @return string[]
+ *   An array of bundle identifiers mapped to their human-readable names.
+ */
+function search_api_combined_bundle_options_list() {
+  $types = array();
+  foreach (array_keys(entity_get_property_info()) as $type) {
+    $info = entity_get_info($type);
+    if (!empty($info['bundles'])) {
+      foreach ($info['bundles'] as $bundle => $bundle_info) {
+        $types["$type:$bundle"] = $bundle_info['label'];
+      }
+    }
+  }
+  return $types;
+}
+
+/**
+ * Retrieves a human-readable label for a multi-type index item.
+ *
+ * Provided as a non-object alternative to
+ * SearchApiCombinedEntityDataSourceController::getItemLabel() so it can be used
+ * as a getter callback.
+ *
+ * @param object $item
+ *   An item of the "multiple" item type.
+ *
+ * @return string|null
+ *   Either a human-readable label for the item, or NULL if none is available.
+ */
+function search_api_get_multi_type_item_label($item) {
+  $label = entity_label($item->item_type, $item->{$item->item_type});
+  return $label ? $label : NULL;
+}
+
+/**
  * Shutdown function which indexes all queued items, if any.
  */
 function _search_api_index_queued_items() {
@@ -2892,6 +3020,42 @@ function _search_api_deep_copy(array $array) {
     }
   }
   return $copy;
+}
+
+/**
+ * Reacts to a change in the bundle of an entity.
+ *
+ * Used as a helper function in search_api_entity_update().
+ *
+ * @param $type
+ *   The entity's type.
+ * @param $id
+ *   The entity's ID.
+ * @param $old_bundle
+ *   The entity's previous bundle.
+ * @param $new_bundle
+ *   The entity's new bundle.
+ */
+function _search_api_entity_datasource_bundle_change($type, $id, $old_bundle, $new_bundle) {
+  $controller = search_api_get_datasource_controller($type);
+  $conditions = array(
+    'enabled' => 1,
+    'item_type' => $type,
+    'read_only' => 0,
+  );
+  foreach (search_api_index_load_multiple(FALSE, $conditions) as $index) {
+    if (!empty($index->options['datasource']['bundles'])) {
+      $bundles = drupal_map_assoc($index->options['datasource']['bundles']);
+      if (empty($bundles[$new_bundle]) != empty($bundles[$old_bundle])) {
+        if (empty($bundles[$new_bundle])) {
+          $controller->trackItemDelete(array($id), array($index));
+        }
+        else {
+          $controller->trackItemInsert(array($id), array($index));
+        }
+      }
+    }
+  }
 }
 
 /**

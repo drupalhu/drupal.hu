@@ -30,8 +30,11 @@ is important.
  3. Put your site into offline mode.
  4. Download and install the memcache module.
  5. If you have previously been running the memcache module, run update.php.
- 6. Edit settings.php to configure the servers, clusters and bins that memcache
-    is supposed to use.
+ 6. Optionally edit settings.php to configure the servers, clusters and bins
+    for memcache to use. If you skip this step the Drupal module will attempt to
+    talk to the memcache server on port 11211 on the local host, storing all
+    data in a single bin. This is sufficient for most smaller, single-server
+    installations.
  7. Edit settings.php to make memcache the default cache class, for example:
       $conf['cache_backends'][] = 'sites/all/modules/memcache/memcache.inc';
       $conf['cache_default_class'] = 'MemCacheDrupal';
@@ -106,7 +109,7 @@ The memcache-lock.inc file included with this module can be used as a drop-in
 replacement for the database-mediated locking mechanism provided by Drupal
 core. To enable, define the following in your settings.php:
 
-$conf['lock_inc'] = 'sites/all/modules/memcache/memcache-lock.inc';
+  $conf['lock_inc'] = 'sites/all/modules/memcache/memcache-lock.inc';
 
 Locks are written in the 'semaphore' table, which will map to the 'default'
 memcache cluster unless you explicitly configure a 'semaphore' cluster.
@@ -116,14 +119,45 @@ memcache cluster unless you explicitly configure a 'semaphore' cluster.
 Memcache includes stampede protection for rebuilding expired and invalid cache
 items.  To enable stampede protection, define the following in settings.php:
 
-$conf['memcache_stampede_protection'] = TRUE;
+  $conf['memcache_stampede_protection'] = TRUE;
 
-To avoid lock stampedes, it is important that you enable the memacache lock
+To avoid lock stampedes, it is important that you enable the memcache lock
 implementation when enabling stampede protection -- enabling stampede protection
-without enabling the Memache lock implementation can cause worse performance.
+without enabling the Memcache lock implementation can cause worse performance and
+can result in dropped locks due to key-length truncation.
 
-Only change the following values if you're sure you know what you're doing,
-which requires reading the memcachie.inc code.
+Memcache stampede protection is primarily designed to benefit the following
+caching pattern: a miss on a cache_get() for a specific cid is immediately
+followed by a cache_set() for that cid. Of course, this is not the only caching
+pattern used in Drupal, so stampede protection can be selectively disabled for
+optimal performance.  For example, a cache miss in Drupal core's
+module_implements() won't execute a cache_set until drupal_page_footer()
+calls module_implements_write_cache() which can occur much later in page
+generation.  To avoid long hanging locks, stampede protection should be
+disabled for these delayed caching patterns.
+
+Memcache stampede protection can be disabled for entire bins, specific cid's in
+specific bins, or cid's starting with a specific prefix in specific bins. For
+example:
+
+  $conf['memcache_stampede_protection_ignore'] = array(
+    // Ignore stampede protection for the entire 'cache_example' bin.
+    'cache_example',
+    // Ignore some cids in 'cache_bootstrap'.
+    'cache_bootstrap' => array(
+      'module_implements',
+      'variables',
+      'schema:runtime:*',
+      'theme_registry:runtime:*',
+    ),
+    // Ignore all cids in the 'cache' bin starting with 'i18n:string:'
+    'cache' => array(
+      'i18n:string:*',
+    ),
+  );
+
+Only change the following stampede protection tunables if you're sure you know
+what you're doing, which requires first reading the memcache.inc code.
 
 The value passed to lock_acquire, defaults to '15':
   $conf['memcache_stampede_semaphore'] = 15;
@@ -239,7 +273,6 @@ go to 'cluster2'. All other bins go to 'default'.
                                  'cache_menu' => 'cluster2');
   );
 
-
 ## PREFIXING ##
 
 If you want to have multiple Drupal installations share memcached instances,
@@ -248,26 +281,64 @@ array of settings.php:
 
 $conf['memcache_key_prefix'] = 'something_unique';
 
-Note: if the length of your prefix + key + bin combine to be more than 250
-characters, they will be automatically hashed. Memcache only supports key
-lengths up to 250 bytes. You can optionally configure the hashing algorithm
-used, however sha1 was selected as the default because it performs quickly with
-minimal collisions.
+## MAXIMUM LENGTHS ##
 
-$conf['memcache_key_hash_algorithm'] = 'sha1';
+If the length of your prefix + key + bin combine to be more than 250 characters,
+they will be automatically hashed. Memcache only supports key lengths up to 250
+bytes. You can optionally configure the hashing algorithm used, however sha1 was
+selected as the default because it performs quickly with minimal collisions.
 
 Visit http://www.php.net/manual/en/function.hash-algos.php to learn more about
 which hash algorithms are available.
 
+$conf['memcache_key_hash_algorithm'] = 'sha1';
+
+You can also tune the maximum key length BUT BE AWARE this doesn't affect
+memcached's server-side limitations -- this value is primarily exposed to allow
+you to further shrink the length of keys to optimize network performance.
+Specifying a length larger than 250 will almost certainly lead to problems
+unless you know what you're doing.
+
+$conf['memcache_key_max_length'] = 250;
+
+By default, the memcached server can store objects up to 1 MiB in size. It's
+possible to increase the memcached page size to support larger objects, but this
+can also lead to wasted memory. Alternatively, the Drupal memcache module splits
+these large objects into smaller pieces. By default, the Drupal memcache module
+splits objects into 1 MiB sized pieces. You can modify this with the following
+tunable to match any special server configuration you may have. NOTE: Increasing
+this value without making changes to your memcached server can result in
+failures to cache large items.
+
+(Note: 1 MiB = 1024 x 1024 = 1048576.)
+
+$conf['memcache_data_max_length'] = 1048576;
+
+It is generally undesirable to store excessively large objects in memcache as
+this can result in a performance penalty. Because of this, by default the Drupal
+memcache module logs any time an object is cached that has to be split into
+multiple pieces. If this is generating too many watchdog logs, you should first
+understand why these objects are so large and if anything can be done to make
+them smaller. If you determine that the large size is valid and is not causing
+you any unnecessary performance penalty, you can tune the following variable to
+minimize or disable this logging. Set the value to a positive integer to only
+log when an object is split into this many or more pieces. For example, if
+memcache_data_max_length is set to 1048576 and memcache_log_data_pieces is set
+to 5, watchdog logs will only be written when an object is split into 5 or more
+pieces (objects >4 MiB in size). Or, to to completely disable logging set
+memcache_log_data_pieces to 0 or FALSE.
+
+$conf['memcache_log_data_pieces'] = 2;
+
 ## MULTIPLE SERVERS ##
 
 To use this module with multiple memcached servers, it is important that you set
-the hash strategy to consistent. This is controlled in the PHP extension, not the
-Drupal module.
+the hash strategy to consistent. This is controlled in the PHP extension, not
+the Drupal module.
 
 If using PECL memcache:
-Edit /etc/php.d/memcache.ini (path may changed based on package/distribution) and
-set the following:
+Edit /etc/php.d/memcache.ini (path may changed based on package/distribution)
+and set the following:
 memcache.hash_strategy=consistent
 
 You need to reload apache httpd after making that change.
@@ -356,7 +427,7 @@ tag and execute as a script with 'drush scr' to perform further debugging.
         $cid = 'memcache_requirements_test';
         $value = 'OK';
         // Temporarily store a test value in memcache.
-        cache_set($cid, $value, 'cache', 60);
+        cache_set($cid, $value);
         // Retreive the test value from memcache.
         $data = cache_get($cid);
         if (!isset($data->data) || $data->data !== $value) {
@@ -409,10 +480,10 @@ An example configuration block is below, this block also illustrates our
 default options (selected through performance testing). These options will be
 set unless overridden in settings.php.
 
-$conf['memcache_options'] = array(
-  Memcached::OPT_COMPRESSION => FALSE,
-  Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
-);
+  $conf['memcache_options'] = array(
+    Memcached::OPT_COMPRESSION => FALSE,
+    Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
+  );
 
 These are as follows:
 
@@ -435,3 +506,20 @@ Other options you could experiment with:
       reported that this can speed up the Binary protocol (see above). This
       tells the TCP stack to send packets immediately and without waiting for
       a full payload, reducing per-packet network latency (disabling "Nagling").
+
+It's possible to enable SASL authentication as documented here:
+  http://php.net/manual/en/memcached.setsaslauthdata.php
+  https://code.google.com/p/memcached/wiki/SASLHowto
+
+SASL authentication requires a memcached server with SASL support (version 1.4.3
+or greater built with --enable-sasl and started with the -S flag) and the PECL
+memcached client version 2.0.0 or greater also built with SASL support. Once
+these requirements are satisfied you can then enable SASL support in the Drupal
+memcache module by enabling the binary protocol and setting
+memcache_sasl_username and memcache_sasl_password in settings.php. For example:
+
+  $conf['memcache_options'] = array(
+    Memcached::OPT_BINARY_PROTOCOL => TRUE,
+  );
+  $conf['memcache_sasl_username'] = 'yourSASLUsername';
+  $conf['memcache_sasl_password'] = 'yourSASLPassword';
