@@ -339,6 +339,20 @@ class MemCacheSavingCase extends MemcacheTestCase {
   }
 
   /**
+   * Test saving and restoring a very large value (>1MiB).
+   */
+  function testLargeValue() {
+    $this->checkVariable(array_fill(0, 500000, rand()));
+  }
+
+  /**
+   * Test save and restoring a string with a long key and a very large value.
+   */
+  function testLongKeyLargeValue() {
+    $this->checkVariable(array_fill(0, 500000, rand()), $this->randomName(300));
+  }
+
+  /**
    * Check or a variable is stored and restored properly.
    */
   public function checkVariable($var, $key = 'test_var') {
@@ -682,6 +696,77 @@ class MemCacheClearCase extends MemcacheTestCase {
 
     $data = $this->drupalGetAJAX('memcache-test/get/' . $random_key);
     $this->assertFalse($data, 'Cache was properly flushed.');
+  }
+
+}
+
+/**
+ * Tests memcache stampede protection.
+ */
+class MemCacheStampedeProtection extends MemcacheTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Memcache stampede protection',
+      'description' => 'Tests memcache stampede protection.',
+      'group' => 'Memcache',
+    );
+  }
+
+  /**
+   * Tests the opt out functionality of stampede protection using a unit test.
+   */
+  public function testStampedeProtectionIgnoringUnit() {
+    global $conf;
+
+    // Setup a new test bin, to be able to override the used class.
+    $conf['cache_flush_test_bin'] = 0;
+    $conf['cache_class_test_bin'] = 'MockMemCacheDrupal';
+
+    $conf['cache_flush_test_bin_2'] = 0;
+    $conf['cache_class_test_bin_2'] = 'MockMemCacheDrupal';
+
+    // Setup stampede protection.
+    $conf['memcache_stampede_protection'] = TRUE;
+    $conf['memcache_stampede_protection_ignore'] = array(
+      'test_bin',
+      'test_bin_2' => array(
+        'cid_no_prefix',
+        'cid_with_prefix:*',
+      ),
+    );
+
+    // Ensure the mock object is used.
+    /** @var \MockMemCacheDrupal $cache_object_bin */
+    $cache_object_bin = _cache_get_object('test_bin');
+    $this->assertEqual(get_class($cache_object_bin), 'MockMemCacheDrupal');
+    /** @var \MockMemCacheDrupal $cache_object_bin2 */
+    $cache_object_bin2 = _cache_get_object('test_bin_2');
+    $this->assertEqual(get_class($cache_object_bin2), 'MockMemCacheDrupal');
+
+    // Test ignoring of an entire bin.
+    $this->assertFalse($cache_object_bin->stampedeProtected('test_cid'), t('Disable stampede protection for cid contained in a disabled bin.'));
+    $this->assertFalse($cache_object_bin->stampedeProtected('cid_no_prefix'), t('Disable stampede protection for cid without prefix in a disabled bin.'));
+    $this->assertFalse($cache_object_bin->stampedeProtected('cid_with_prefix:example'), t('Disable stampede protection for cid with prefix in a disabled bin.'));
+
+    // Test ignoring of specific CIDs.
+    $this->assertTrue($cache_object_bin2->stampedeProtected('test_cid'), t('Don\'t disable stampede protection for a specific non-matching cid.'));
+    $this->assertFalse($cache_object_bin2->stampedeProtected('cid_no_prefix'), t('Disable stampede protection for a specific cid.'));
+    $this->assertFalse($cache_object_bin2->stampedeProtected('cid_with_prefix:example'), t('Disable stampede protection for a specific cid with disabled prefix.'));
+    $this->assertTrue($cache_object_bin2->stampedeProtected('cid_with_other_prefix:example'), t('Don\'t disable stampede protection for a specific cid with a different prefix.'));
+  }
+
+}
+
+include_once dirname(__DIR__) . '/memcache.inc';
+
+/**
+ * Wraps the MemCacheDrupal class in order to be able to call a protected method.
+ */
+class MockMemCacheDrupal extends MemCacheDrupal {
+
+  public function stampedeProtected($cid) {
+    return parent::stampedeProtected($cid);
   }
 
 }

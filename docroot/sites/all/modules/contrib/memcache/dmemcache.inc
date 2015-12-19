@@ -11,6 +11,8 @@
  *   memcache-session.inc
  */
 
+define('MEMCACHED_E2BIG', 37);
+
 global $_dmemcache_stats;
 $_dmemcache_stats = array('all' => array(), 'ops' => array());
 
@@ -46,9 +48,31 @@ function dmemcache_set($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
   if ($mc || ($mc = dmemcache_object($bin))) {
     if ($mc instanceof Memcached) {
       $rc = $mc->set($full_key, $value, $exp);
+      if (empty($rc)) {
+        // If there was a MEMCACHED_E2BIG error, split the value into pieces
+        // and cache them individually.
+        if ($mc->getResultCode() == MEMCACHED_E2BIG) {
+          $rc = _dmemcache_set_pieces($key, $value, $exp, $bin, $mc);
+        }
+      }
     }
     else {
+      // The PECL Memcache library throws an E_NOTICE level error, which
+      // $php_errormsg doesn't catch, so we need to log it ourselves.
+      // Catch it with our own error handler.
+      drupal_static_reset('_dmemcache_error_handler');
+      set_error_handler('_dmemcache_error_handler');
       $rc = $mc->set($full_key, $value, MEMCACHE_COMPRESSED, $exp);
+      // Restore the Drupal error handler.
+      restore_error_handler();
+      if (empty($rc)) {
+        // If the object was too big, split the value into pieces and cache
+        // them individually.
+        $dmemcache_errormsg = &drupal_static('_dmemcache_error_handler');
+        if (!empty($dmemcache_errormsg) && (strpos($dmemcache_errormsg, 'SERVER_ERROR object too large for cache') !== FALSE || strpos($dmemcache_errormsg, 'SERVER_ERROR out of memory storing object') !== FALSE)) {
+          $rc = _dmemcache_set_pieces($key, $value, $exp, $bin, $mc);
+        }
+      }
     }
   }
 
@@ -60,6 +84,122 @@ function dmemcache_set($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
 }
 
 /**
+ * A temporary error handler which keeps track of the most recent error.
+ */
+function _dmemcache_error_handler($errno, $errstr) {
+  $dmemcache_errormsg = &drupal_static(__FUNCTION__);
+  $dmemcache_errormsg = $errstr;
+  return TRUE;
+}
+
+/**
+ *  Split a large item into pieces and place them into memcache
+ *
+ * @param string $key
+ *   The string with which you will retrieve this item later.
+ * @param mixed $value
+ *   The item to be stored.
+ * @param int $exp
+ *   (optional) Expiration time in seconds. If it's 0, the item never expires
+ *   (but memcached server doesn't guarantee this item to be stored all the
+ *   time, it could be deleted from the cache to make place for other items).
+ * @param string $bin
+ *   (optional) The name of the Drupal subsystem that is making this call.
+ *   Examples could be 'cache', 'alias', 'taxonomy term' etc. It is possible to
+ *   map different $bin values to different memcache servers.
+ * @param object $mc
+ *   (optional) The memcache object. Normally this value is
+ *   determined automatically based on the bin the object is being stored to.
+ *
+ * @return bool
+ */
+function _dmemcache_set_pieces($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
+  static $recursion = 0;
+  if (!empty($value->multi_part_data) || !empty($value->multi_part_pieces)) {
+    // Prevent an infinite loop.
+    return FALSE;
+  }
+
+  // Recursion happens when __dmemcache_piece_cache outgrows the largest
+  // memcache slice (1 MiB by default) -- prevent an infinite loop and later
+  // generate a watchdog error.
+  if ($recursion) {
+    return FALSE;
+  }
+  $recursion++;
+
+  $full_key = dmemcache_key($key);
+
+  // Cache the name of this key so if it is deleted later we know to also
+  // delete the cache pieces.
+  if (!dmemcache_piece_cache_set($full_key, $exp)) {
+    // We're caching a LOT of large items. Our piece_cache has exceeded the
+    // maximum memcache object size (default of 1 MiB).
+    $piece_cache = &drupal_static('dmemcache_piece_cache', array());
+    register_shutdown_function('watchdog', 'memcache', 'Too many over-sized cache items (!count) has caused the dmemcache_piece_cache to exceed the maximum memcache object size (default of 1 MiB). Now relying on memcache auto-expiration to eventually clean up over-sized cache pieces upon deletion.', array('!count' => count($piece_cache)), WATCHDOG_ERROR);
+  }
+
+  if (variable_get('memcache_log_data_pieces', 2)) {
+    timer_start('memcache_split_data');
+  }
+
+  // We need to split the item into pieces, so convert it into a string.
+  if (is_string($value)) {
+    $data = $value;
+    $serialized = FALSE;
+  }
+  else {
+    $data = serialize($value);
+    $serialized = TRUE;
+  }
+
+  // Account for any metadata stored alongside the data.
+  $max_len = variable_get('memcache_data_max_length', 1048576) - (512 + strlen($full_key));
+  $pieces = str_split($data, $max_len);
+
+  $piece_count = count($pieces);
+
+  // Create a placeholder item containing data about the pieces.
+  $cache = new stdClass;
+  // $key gets run through dmemcache_key() later inside dmemcache_set().
+  $cache->cid = $key;
+  $cache->created = REQUEST_TIME;
+  $cache->expire = $exp;
+  $cache->data = new stdClass;
+  $cache->data->serialized = $serialized;
+  $cache->data->piece_count = $piece_count;
+  $cache->multi_part_data = TRUE;
+  $result = dmemcache_set($cache->cid, $cache, $exp, $bin, $mc);
+
+  // Create a cache item for each piece of data.
+  foreach ($pieces as $id => $piece) {
+    $cache = new stdClass;
+    $cache->cid = _dmemcache_key_piece($key, $id);
+    $cache->created = REQUEST_TIME;
+    $cache->expire = $exp;
+    $cache->data = $piece;
+    $cache->multi_part_piece = TRUE;
+
+    $result &= dmemcache_set($cache->cid, $cache, $exp, $bin, $mc);
+  }
+
+  if (variable_get('memcache_log_data_pieces', 2) && $piece_count >= variable_get('memcache_log_data_pieces', 2)) {
+    if (function_exists('format_size')) {
+      $data_size = format_size(strlen($data));
+    }
+    else {
+      $data_size = number_format(strlen($data)) . ' byte';
+    }
+    register_shutdown_function('watchdog', 'memcache', 'Spent !time ms splitting !bytes object into !pieces pieces, cid = !key', array('!time' => timer_read('memcache_split_data'), '!bytes' => $data_size, '!pieces' => $piece_count, '!key' => dmemcache_key($key, $bin)), WATCHDOG_WARNING);
+  }
+
+  $recursion--;
+
+  // TRUE if all pieces were saved correctly.
+  return $result;
+}
+
+/**
  * Add an item into memcache.
  *
  * @param string $key
@@ -67,19 +207,18 @@ function dmemcache_set($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
  * @param mixed $value
  *   The item to be stored.
  * @param int $exp
- *   Parameter expire is expiration time in seconds. If it's 0, the
- *   item never expires (but memcached server doesn't guarantee this item to be
- *   stored all the time, it could be deleted from the cache to make place for
- *   other items).
+ *   (optional) Expiration time in seconds. If it's 0, the item never expires
+ *   (but memcached server doesn't guarantee this item to be stored all the
+ *   time, it could be deleted from the cache to make place for other items).
  * @param string $bin
- *   The name of the Drupal subsystem that is making this call.
+ *   (optional) The name of the Drupal subsystem that is making this call.
  *   Examples could be 'cache', 'alias', 'taxonomy term' etc. It is possible
  *   to map different $bin values to different memcache servers.
  * @param object $mc
- *   Optionally pass in the memcache object.  Normally this value is
+ *   (optional) The memcache object. Normally this value is
  *   determined automatically based on the bin the object is being stored to.
- * @param int $flag
- *   If using the older memcache PECL extension as opposed to the
+ * @param bool $flag
+ *   (optional) If using the older memcache PECL extension as opposed to the
  *   newer memcached PECL extension, the MEMCACHE_COMPRESSED flag can be set
  *   to use zlib to store a compressed copy of the item.  This flag option is
  *   completely ignored when using the newer memcached PECL extension.
@@ -131,6 +270,10 @@ function dmemcache_get($key, $bin = 'cache', $mc = NULL) {
     $php_errormsg = '';
 
     $result = @$mc->get($full_key);
+    // This is a multi-part value.
+    if (is_object($result) && !empty($result->multi_part_data)) {
+      $result = _dmemcache_get_pieces($result->data, $result->cid, $bin, $mc);
+    }
 
     if (!empty($php_errormsg)) {
       register_shutdown_function('watchdog', 'memcache', 'Exception caught in dmemcache_get: !msg', array('!msg' => $php_errormsg), WATCHDOG_WARNING);
@@ -144,6 +287,60 @@ function dmemcache_get($key, $bin = 'cache', $mc = NULL) {
   }
 
   return $result;
+}
+
+/**
+ * Retrieve a value from the cache.
+ *
+ * @param $item
+ *   The placeholder cache item from _dmemcache_set_pieces().
+ * @param $key
+ *   The key with which the item was stored.
+ * @param string $bin
+ *   (optional) The bin in which the item was stored.
+ * @param object $mc
+ *   (optional) The memcache object. Normally this value is
+ *   determined automatically based on the bin the object is being stored to.
+ *
+ * @return object|bool
+ *   The item which was originally saved or FALSE.
+ */
+function _dmemcache_get_pieces($item, $key, $bin = 'cache', $mc = NULL) {
+  // Create a list of keys for the pieces of data.
+  for ($id = 0; $id < $item->piece_count; $id++) {
+    $keys[] = _dmemcache_key_piece($key, $id);
+  }
+
+  // Retrieve all the pieces of data.
+  $pieces = dmemcache_get_multi($keys, $bin, $mc);
+  if (count($pieces) != $item->piece_count) {
+    // Some of the pieces don't exist, so our data cannot be reconstructed.
+    return FALSE;
+  }
+
+  // Append all of the pieces together.
+  $data = '';
+  foreach ($pieces as $piece) {
+    $data .= $piece->data;
+  }
+  unset($pieces);
+
+  // If necessary unserialize the item.
+  return empty($item->serialized) ? $data : unserialize($data);
+}
+
+/**
+ * Generates a key name for a multi-part data piece based on the sequence ID.
+ *
+ * @param int $id
+ *   The sequence ID of the data piece.
+ * @param int $key
+ *   The original CID of the cache item.
+ *
+ * @return string
+ */
+function _dmemcache_key_piece($key, $id) {
+  return dmemcache_key('_multi'. (string)$id . "-$key");
 }
 
 /**
@@ -205,6 +402,10 @@ function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
   $cid_results = array();
   $cid_lookup = array_flip($full_keys);
   foreach ($results as $key => $value) {
+    // This is a multi-part value.
+    if (is_object($value) && !empty($value->multi_part_data)) {
+      $value = _dmemcache_get_pieces($value->data, $value->cid, $bin, $mc);
+    }
     $cid_results[$cid_lookup[$key]] = $value;
   }
 
@@ -234,6 +435,47 @@ function dmemcache_delete($key, $bin = 'cache', $mc = NULL) {
   $rc = FALSE;
   if ($mc || ($mc = dmemcache_object($bin))) {
     $rc = $mc->delete($full_key, 0);
+
+    if ($rc) {
+      // If the delete succeeded, we now check to see if this item has multiple
+      // pieces also needing to be cleaned up. If the delete failed, we assume
+      // these keys have already expired or been deleted (memcache will
+      // auto-expire eventually if we're wrong).
+      if ($piece_cache = dmemcache_piece_cache_get($full_key)) {
+        // First, remove from the piece_cache so we don't try and delete it
+        // again in another thread, then delete the actual cache data pieces.
+        dmemcache_piece_cache_set($full_key, NULL);
+        $next_id = 0;
+        do {
+          // Generate the cid of the next data piece.
+          $piece_key = _dmemcache_key_piece($key, $next_id);
+          $full_key = dmemcache_key($piece_key, $bin);
+          $next_id++;
+
+          // Keep deleting pieces until the operation fails. We accept that
+          // this could lead to orphaned pieces as memcache will auto-expire
+          // them eventually.
+        } while ($mc->delete($full_key, 0));
+
+        // Perform garbage collection for keys memcache has auto-expired. If we
+        // don't do this, this variable could grow over enough time as a slow
+        // memory leak.
+        // @todo: Consider moving this to hook_cron() and requiring people to
+        // enable the memcache module.
+        timer_start('memcache_gc_piece_cache');
+        $gc_counter = 0;
+        $piece_cache = &drupal_static('dmemcache_piece_cache', array());
+        foreach ($piece_cache as $cid => $expires) {
+          if (REQUEST_TIME > $expires) {
+            $gc_counter++;
+            dmemcache_piece_cache_set($cid, NULL);
+          }
+        }
+        if ($gc_counter) {
+          register_shutdown_function('watchdog', 'memcache', 'Spent !time ms in garbage collection cleaning !count stale keys from the dmemcache_piece_cache.', array('!time' => timer_read('memcache_gc_piece_cache'), '!count' => $gc_counter), WATCHDOG_WARNING);
+        }
+      }
+    }
   }
 
   if ($collect_stats) {
@@ -399,6 +641,9 @@ function dmemcache_instance() {
     $memconf = variable_get('memcache_options', array());
     foreach ($memconf as $key => $value) {
       $memcache->setOption($key, $value);
+    }
+    if ($sasl_username = variable_get('memcache_sasl_username', '') && $sasl_password = variable_get('memcache_sasl_password', '')) {
+      $memcache->setSaslAuthData($sasl_username, $sasl_password);
     }
     return $memcache;
   }
@@ -618,15 +863,90 @@ function dmemcache_key($key, $bin = 'cache') {
   }
   $full_key = urlencode($prefix . $bin . '-' . $key);
 
-  // Memcache only supports key lengths up to 250 bytes.  If we have generated
-  // a longer key, we shrink it to an acceptible length with a configurable
-  // hashing algorithm. Sha1 was selected as the default as it performs
-  // quickly with minimal collisions.
-  if (strlen($full_key) > 250) {
-    $full_key = urlencode(hash(variable_get('memcache_key_hash_algorithm', 'sha1'), $prefix . $bin . '-' . $key));
+  // Memcache truncates keys longer than 250 characters[*]. This could lead to
+  // cache collisions, so we hash keys that are longer than this while still
+  // retaining as much of the key bin and name as possible to aid in debugging.
+  // The hashing algorithm used is configurable, with sha1 selected by default
+  // as it performs quickly with minimal collisions. You can enforce shorter
+  // keys by setting memcache_key_max_length in settings.php.
+  // [*]https://github.com/memcached/memcached/blob/master/doc/protocol.txt#L47
+  $maxlen = variable_get('memcache_key_max_length', 250);
+  if (strlen($full_key) > $maxlen) {
+    $full_key = urlencode($prefix . $bin) . '-' . hash(variable_get('memcache_key_hash_algorithm', 'sha1'), $key);
+    $full_key .= '-' . substr(urlencode($key), 0, ($maxlen - 1) - strlen($full_key) - 1);
   }
 
   return $full_key;
+}
+
+/**
+ * Track active keys with multi-piece values, necessary for efficient cleanup.
+ *
+ * We can't use variable_get/set for tracking this information because if the
+ * variables array grows >1M and has to be split into pieces we'd get stuck in
+ * an infinite loop. Storing this information in memcache means it can be lost,
+ * but in that case the pieces will still eventually be auto-expired by
+ * memcache.
+ *
+ * @param string $cid
+ *   The cid of the root multi-piece value.
+ * @param integer $exp
+ *   Timestamp when the cached item expires. If NULL, the $cid will be deleted.
+ *
+ * @return bool
+ *   TRUE on succes, FALSE otherwise.
+ */
+function dmemcache_piece_cache_set($cid, $exp = NULL) {
+  // Always refresh cached copy to minimize multi-thread race window.
+  $piece_cache = &drupal_static('dmemcache_piece_cache', array());
+  $piece_cache = dmemcache_get('__dmemcache_piece_cache');
+
+  if (isset($exp)) {
+    if ($exp <= 0) {
+      // If no expiration time is set, defaults to 30 days.
+      $exp = REQUEST_TIME + 2592000;
+    }
+    $piece_cache[$cid] = $exp;
+  }
+  else {
+    unset($piece_cache[$cid]);
+  }
+
+  return dmemcache_set('__dmemcache_piece_cache', $piece_cache);
+}
+
+/**
+ * Determine if a key has multi-piece values.
+ *
+ *
+ * @param string $cid
+ *   The cid to check for multi-piece values.
+ *
+ * @return integer
+ *   Expiration time if key has multi-piece values, otherwise FALSE.
+ */
+function dmemcache_piece_cache_get($name) {
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['piece_cache'] = &drupal_static('dmemcache_piece_cache', FALSE);
+  }
+  $piece_cache = &$drupal_static_fast['piece_cache'];
+
+  if (!is_array($piece_cache)) {
+    $piece_cache = dmemcache_get('__dmemcache_piece_cache');
+    // On a website with no over-sized cache pieces, initialize the variable so
+    // we never load it more than once per page versus once per DELETE.
+    if (!is_array($piece_cache)) {
+      dmemcache_set('__dmemcache_piece_cache', array());
+    }
+  }
+
+  if (isset($piece_cache[$name])) {
+    // Return the expiration time of the multi-piece cache item.
+    return $piece_cache[$name];
+  }
+  // Item doesn't have multiple pieces.
+  return FALSE;
 }
 
 /**

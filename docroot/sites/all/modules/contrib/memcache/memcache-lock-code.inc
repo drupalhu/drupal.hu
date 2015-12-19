@@ -39,7 +39,7 @@ function lock_acquire($name, $timeout = 30) {
   if (dmemcache_add($name, _lock_id(), $timeout, 'semaphore')) {
     $locks[$name] = _lock_id();
   }
-  elseif ($result = dmemcache_get($name, 'semaphore') && isset($locks[$name]) && $locks[$name] == _lock_id()) {
+  elseif (($result = dmemcache_get($name, 'semaphore')) && isset($locks[$name]) && $locks[$name] == $result) {
     // Only renew the lock if we already set it and it has not expired.
     dmemcache_set($name, _lock_id(), $timeout, 'semaphore');
   }
@@ -133,9 +133,11 @@ function lock_wait($name, $delay = 30) {
 function lock_release($name) {
   global $locks;
 
-  dmemcache_delete($name, 'semaphore');
-  // We unset unconditionally since caller assumes lock is released anyway.
-  unset($locks[$name]);
+  if (dmemcache_get($name, 'semaphore') == $locks[$name]) {
+    dmemcache_delete($name, 'semaphore');
+    // We unset unconditionally since caller assumes lock is released anyway.
+    unset($locks[$name]);
+  }
 }
 
 /**

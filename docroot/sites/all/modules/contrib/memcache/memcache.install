@@ -69,6 +69,9 @@ function memcache_requirements($phase) {
       $requirements['memcache_extension']['severity'] = REQUIREMENT_ERROR;
       $requirements['memcache_extension']['value'] = $t('Required PHP extension not found. Install the <a href="http://php.net/manual/en/book.memcache.php">memcache</a> (recommended) or <a href="http://php.net/manual/en/book.memcached.php">memcached</a> extension.');
     }
+    else {
+      $requirements['memcache_extension']['value'] = $t('PHP %extension Extension', array('%extension' => $memcache ? $t('Memcache') : $t('Memcached')));
+    }
   }
   if ($phase == 'runtime') {
     $errors = array();
@@ -124,7 +127,7 @@ function memcache_requirements($phase) {
         $cid = 'memcache_requirements_test';
         $value = 'OK';
         // Temporarily store a test value in memcache.
-        cache_set($cid, $value, 'cache', 60);
+        cache_set($cid, $value);
         // Retreive the test value from memcache.
         $data = cache_get($cid);
         if (!isset($data->data) || $data->data !== $value) {
@@ -139,6 +142,12 @@ function memcache_requirements($phase) {
         // An unexpected exception occurred.
         $errors[] = $t('Unexpected failure when testing memcache configuration.');
       }
+      // Core's lock implementation can cause worse performance together with
+      // stampede protection. Plus, long keys will be truncated resulting in
+      // dropped locks.
+      if (variable_get('memcache_stampede_protection', FALSE) && strpos(variable_get('lock_inc', 'includes/lock.inc'), 'includes/lock.inc') !== FALSE) {
+        $warnings[] = $t('Drupal\'s core lock implementation (%core) is not supported by memcache stampede protection. Enable the memcache lock implementation (%memcache) or disable memcache stampede protection.', array('%core' => 'includes/lock.inc', '%memcache' => drupal_get_path('module', 'memcache') . "/memcache-lock.inc"));
+      }
     }
 
     if (!empty($errors)) {
@@ -147,11 +156,11 @@ function memcache_requirements($phase) {
       $errors = array_merge($errors, $warnings);
       unset($warnings);
       $requirements['memcache_extension']['severity'] = REQUIREMENT_ERROR;
-      $requirements['memcache_extension']['description'] = $t('There is a problem with your memcache configuration, check the Drupal logs for additional errors. Please review %readme for help resolving the following !issue: !errors', array('%readme' => 'README.txt', '!issue' => format_plural(count($errors), 'issue', 'issues'), '!errors' => '<ul><li>' . implode('<li>', $errors)));
+      $requirements['memcache_extension']['description'] = $t('There is a problem with your memcache configuration, check the Drupal logs for additional errors. Please review %readme for help resolving the following !issue: !errors', array('%readme' => drupal_get_path('module', 'memcache') . '/' . 'README.txt', '!issue' => format_plural(count($errors), 'issue', 'issues'), '!errors' => '<ul><li>' . implode('<li>', $errors)));
     }
     elseif (!empty($warnings)) {
       $requirements['memcache_extension']['severity'] = REQUIREMENT_WARNING;
-      $requirements['memcache_extension']['description'] = $t('There is a problem with your memcache configuration. Please review %readme for help resolving the following !issue: !warnings', array('%readme' => 'README.txt', '!issue' => format_plural(count($warnings), 'issue', 'issues'), '!warnings' => '<ul><li>' . implode('<li>', $warnings)));
+      $requirements['memcache_extension']['description'] = $t('There is a problem with your memcache configuration. Please review %readme for help resolving the following !issue: !warnings', array('%readme' => drupal_get_path('module', 'memcache') . '/' . 'README.txt', '!issue' => format_plural(count($warnings), 'issue', 'issues'), '!warnings' => '<ul><li>' . implode('<li>', $warnings)));
     }
     else {
       $requirements['memcache_extension']['severity'] = REQUIREMENT_OK;
