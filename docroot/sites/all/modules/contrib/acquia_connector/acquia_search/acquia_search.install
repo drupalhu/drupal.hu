@@ -18,7 +18,7 @@ function acquia_search_requirements($phase) {
       $severity = REQUIREMENT_ERROR;
     }
     $requirements['acquia_search_credentials'] = array(
-      'description' => $t('In order to use Acquia search module you must have an Acquia Network subscription. Please enter your Acquia Network subscription keys.'),
+      'description' => $t('In order to use Acquia search module you must have an Acquia subscription. Please enter your Acquia subscription keys.'),
       'severity' => $severity,
       'value' => '',
     );
