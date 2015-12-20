@@ -265,20 +265,10 @@ pre {
   float: right;
 }
 
-#block-drupalorg-scraper-releases {
-  padding: 9px 5px 0 5px;
-}
-
-#block-drupalorg-scraper-releases h2 {
-  margin: 10px 30px 0 0;
-}
-
 #triptych #block-views-exp-dhusearch-page h2,
 #triptych .block-search-api-page h2,
 #triptych #block-views-exp-dhusearch-page div,
-#triptych .block-search-api-page div,
-#block-drupalorg-scraper-releases h2,
-#block-drupalorg-scraper-releases div {
+#triptych .block-search-api-page div {
   float: left;
 }
 
@@ -1178,17 +1168,36 @@ fieldset {
 /**
  * Download block
  */
-#block-drupalorg-scraper-releases .current,
-#block-drupalorg-scraper-releases .previous {
-  float: none;
+#block-drupalorg-scraper-releases {
+  padding: 9px 5px 0 9px;
 }
-
-#block-drupalorg-scraper-releases .previous a {
+#block-drupalorg-scraper-releases > h2 {
+  margin: 10px 16px 0 0;
+  float: left;
+}
+#block-drupalorg-scraper-releases > .content > div {
+  float: left;
+}
+#block-drupalorg-scraper-releases > .content a {
   color: grey;
 }
-
-#block-drupalorg-scraper-releases .previous a:hover {
+#block-drupalorg-scraper-releases > .content a:hover {
   color: black;
+}
+#block-drupalorg-scraper-releases > .content a.translation-download {
+  padding-right: 0;
+}
+#block-drupalorg-scraper-releases > .content .highlight {
+  padding-top: 0.35em;
+  padding-right: 0.2em;
+  font-size: 2em;
+  font-weight: bold;
+}
+#block-drupalorg-scraper-releases > .content .highlight a {
+  color: #34495e;
+}
+#block-drupalorg-scraper-releases > .content .highlight a:hover {
+  color: #4e6d8d;
 }
 
 /**
