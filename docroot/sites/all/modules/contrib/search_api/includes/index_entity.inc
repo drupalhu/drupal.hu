@@ -115,7 +115,8 @@ class SearchApiIndex extends Entity {
   public $item_type;
 
   /**
-   * An array of options for configuring this index. The layout is as follows:
+   * An array of options for configuring this index. The layout is as follows
+   * (with all keys being optional):
    * - cron_limit: The maximum number of items to be indexed per cron batch.
    * - index_directly: Boolean setting whether entities are indexed immediately
    *   after they are created or updated.
@@ -150,6 +151,8 @@ class SearchApiIndex extends Entity {
    *   - weight: Used for sorting the processors.
    *   - settings: Processor-specific settings, configured via the processor's
    *     configuration form.
+   * - datasource: Datasource-specific settings, configured via the datasource's
+   *   configuration form.
    *
    * @var array
    */
@@ -172,8 +175,8 @@ class SearchApiIndex extends Entity {
   /**
    * Constructor as a helper to the parent constructor.
    */
-  public function __construct(array $values = array()) {
-    parent::__construct($values, 'search_api_index');
+  public function __construct(array $values = array(), $entity_type = 'search_api_index') {
+    parent::__construct($values, $entity_type);
   }
 
   /**
@@ -435,7 +438,6 @@ class SearchApiIndex extends Entity {
     }
     return $this->server()->query($this, $options);
   }
-
 
   /**
    * Indexes items on this index.
@@ -1005,12 +1007,14 @@ class SearchApiIndex extends Entity {
   }
 
   /**
-   * Reset internal static caches.
+   * Reset internal caches.
    *
    * Should be used when things like fields or data alterations change to avoid
    * using stale data.
    */
   public function resetCaches() {
+    cache_clear_all($this->getCacheId(''), 'cache', TRUE);
+
     $this->datasource = NULL;
     $this->server_object = NULL;
     $this->callbacks = NULL;

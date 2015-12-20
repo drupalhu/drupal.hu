@@ -153,7 +153,9 @@ interface SearchApiQueryInterface {
    *
    * @param string $field
    *   The field to sort by. The special fields 'search_api_relevance' (sort by
-   *   relevance) and 'search_api_id' (sort by item id) may be used.
+   *   relevance) and 'search_api_id' (sort by item id) may be used. Also, if
+   *   the search server supports the "search_api_random_sort" feature, the
+   *   "search_api_random_sort" special field can be used to sort randomly.
    * @param string $order
    *   The order to sort items in - either 'ASC' or 'DESC'.
    *
@@ -226,6 +228,9 @@ interface SearchApiQueryInterface {
    *
    * This method should always be called by execute() and contain all necessary
    * operations before the query is passed to the server's search() method.
+   *
+   * @throws SearchApiException
+   *   If any error occurred during the preparation of the query.
    */
   public function preExecute();
 
@@ -583,6 +588,10 @@ class SearchApiQuery implements SearchApiQueryInterface {
       'search_api_relevance' => array('type' => 'decimal'),
       'search_api_id' => array('type' => 'integer'),
     );
+    if ($this->getIndex()->server()->supportsFeature('search_api_random_sort')) {
+      $fields['search_api_random'] = array('type' => 'integer');
+    }
+
     if (empty($fields[$field])) {
       throw new SearchApiException(t('Trying to sort on unknown field @field.', array('@field' => $field)));
     }
@@ -717,6 +726,9 @@ class SearchApiQuery implements SearchApiQueryInterface {
   public function postExecute(array &$results) {
     // Postprocess results.
     $this->index->postprocessSearchResults($results, $this);
+
+    // Let modules alter the results.
+    drupal_alter('search_api_results', $results, $this);
   }
 
   /**
@@ -915,8 +927,11 @@ interface SearchApiQueryFilterInterface {
    * Return all conditions and nested filters contained in this filter.
    *
    * @return array
-   *   An array containing this filter's subfilters. Each of these is either an
-   *   array (field, value, operator), or another SearchApiFilter object.
+   *   An array containing this filter's subfilters. Each of these is either a
+   *   condition, represented as a numerically indexed array with the arguments
+   *   of a previous SearchApiQueryFilterInterface::condition() call (field,
+   *   value, operator); or a nested filter, represented by a
+   *   SearchApiQueryFilterInterface filter object.
    */
   public function &getFilters();
 
