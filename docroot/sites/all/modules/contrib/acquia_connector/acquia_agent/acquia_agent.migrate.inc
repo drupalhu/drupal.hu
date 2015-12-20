@@ -309,8 +309,8 @@ function acquia_migrate_batch_finished($success, $results, $operations) {
       drupal_set_message($message);
     }
     else {
-      $message = t('Migrate success. You can see import progress on the !network.', array(
-        '!network' => l(t('Acquia Network'), $migration['network_url'], array('external' => TRUE)),
+      $message = t('Migrate success. You can see import progress on the !network page.', array(
+        '!network' => l(t('Acquia Cloud > Workflow'), $migration['network_url'], array('external' => TRUE)),
       ));
       drupal_set_message($message);
     }
