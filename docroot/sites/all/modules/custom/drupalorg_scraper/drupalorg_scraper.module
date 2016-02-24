@@ -1,137 +1,128 @@
 <?php
 /**
  * @file
- * Drupal usage fetcher.
- *
- * Napi egyszer leolvassa a Drupal.org nyitólapról hogy hányan
- * haszálják a Drupalt hány országban, és ezeket megjeleníti egy blokkban.
- *
- * Egy másik blokkban pedig az aktuális Drupal 6, 7 verzióhoz és fordításaihoz
- * ad letöltés linket.
- *
- * @author Várady Zoltán <zoltan@farm.co.hu>
+ * Drupal release fetcher.
  */
 
 /**
- * Leszedi a statisztikákat és a friss drupal változatokat a drupal.org-ról.
+ * Default value for the minimum supported major Drupal core version.
  */
-function drupalorg_scraper_scrape() {
-  _drupalorg_scrape_headcount();
-  _drupalorg_scrape_releases();
-}
+define('DRUPALORG_SCRAPER_MAJOR_MIN', 6);
 
 /**
- * Beolvassa a drupal.org nyitólapot és lementi a statisztikát változókba.
+ * Default value for the maximum supported major Drupal core version.
  */
-function _drupalorg_scrape_headcount() {
-  $page = drupal_http_request("http://drupal.org/home");
-  $res = preg_match(
-    "/front-drupal-stats[^0-9]+([0-9,]+).*people in[^0-9]+([0-9]+).*countries.*speaking[^0-9]+([0-9]+).*languages/",
-    $page->data, $matches
+define('DRUPALORG_SCRAPER_MAJOR_MAX', 8);
+
+/**
+ * Implements hook_theme().
+ */
+function drupalorg_scraper_theme() {
+  return array(
+    'drupalorg_scraper_releases' => array(
+      'variables' => array(
+        'releases' => array(),
+        'highlight' => NULL,
+      ),
+    ),
   );
-  if ($res) {
-    // Nem kell a vessző.
-    $people = (int) preg_replace("/[^0-9\\.]/", "", $matches[1]);
-    $countries = (int) $matches[2];
-    $languages = (int) $matches[3];
-    // Csak értelmes válaszokat fogadunk el.
-    if ($people > 500000) {
-      variable_set("drupalorg_scraper_people", $people);
-    }
-    if ($countries > 100) {
-      variable_set("drupalorg_scraper_countries", $countries);
-    }
-    if ($languages > 100) {
-      variable_set("drupalorg_scraper_languages", $languages);
-    }
-  }
-}
-
-/**
- * Scrape releases from Drupal.org.
- *
- * Letölti a friss Drupal verziókat és fordításaikat, és eltárolja a
- * drupalorg_scraper_releases változóban.
- */
-function _drupalorg_scrape_releases() {
-  $page = drupal_http_request(
-    "http://localize.drupal.org/translate/languages/hu"
-  );
-  $releases = array();
-
-  for ($i = 6; $i < 8; $i++) {
-    $releases[$i] = _drupalorg_scrape_release($i);
-    $releases[$i]['translation'] = _drupalorg_scrape_translation(
-      $page->data, $i
-    );
-  }
-
-  if ($releases[6]['version'] && $releases[7]['version']) {
-    variable_set("drupalorg_scraper_releases", $releases);
-  }
-}
-
-/**
- * Letölti az aktuális Drupal változat számát és egy letöltés linket.
- *
- * @param int $major
- *   Drupal fő verziószám, pl. 6 vagy 7
- *
- * @return array|bool
- *   Release info array or FALSE on error.
- */
-function _drupalorg_scrape_release($major = 7) {
-  module_load_include('inc', 'update', 'update.fetch');
-
-  $url = "http://updates.drupal.org/release-history/drupal/$major.x";
-  $xml = drupal_http_request($url);
-  if (isset($xml->data)) {
-    $data = $xml->data;
-  }
-  if (!empty($data)) {
-    $available = update_parse_xml($data);
-    $current_release = array_shift($available['releases']);
-    return $current_release;
-  }
-
-  return FALSE;
-}
-
-/**
- * Kibogarássza az aktuális Drupal változat fordítás linkjét.
- *
- * @param string $html
- *   A html oldal szövege ahonnan ki kell mazsolázni a linket.
- * @param int $major
- *   Drupal fő verziószám, pl. 6 vagy 7.
- *
- * @return string|bool
- *   Letöltés link, vagy FALSE ha nincs találat.
- */
-function _drupalorg_scrape_translation($html, $major = 7) {
-  $res = preg_match(
-    "|(http://ftp.drupal.org/files/translations/$major.x/drupal/drupal-$major.[0-9]+.hu.po)|",
-    $html, $matches
-  );
-  if ($res) {
-    return $matches[1];
-  }
-
-  return FALSE;
 }
 
 /**
  * Implements hook_block_info().
  */
 function drupalorg_scraper_block_info() {
-  $blocks['headcount'] = array(
-    'info' => 'X személy Y országból...',
+  return array(
+    'releases' => array(
+      'info' => t('Drupal download links'),
+    ),
   );
-  $blocks['releases'] = array(
-    'info' => 'Drupal + fordítás letöltés',
-  );
+}
 
-  return $blocks;
+/**
+ * @param string $delta
+ *
+ * @return array|null
+ */
+function drupalorg_scraper_block_configure_defaults($delta = '') {
+  switch ($delta) {
+    case 'releases':
+      return array(
+        'visible' => array(
+          '8:stable' => '8:stable',
+          '7:stable' => '7:stable',
+          '6:stable' => '6:stable',
+        ),
+        'lang_code' => 'hu',
+      );
+
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function drupalorg_scraper_block_configure($delta = '') {
+  $form = array();
+
+  switch ($delta) {
+    case 'releases':
+      $releases = drupalorg_scraper_release_history_all();
+      $key = 'drupalorg_scraper_block_releases';
+
+      $config = variable_get($key, drupalorg_scraper_block_configure_defaults($delta));
+
+      $form[$key] = array(
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
+        '#title' => t('Drupal.org Scraper settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+        'visible' => array(
+          '#type' => 'checkboxes',
+          '#required' => TRUE,
+          '#title' => t('Visible releases'),
+          '#default_value' => $config['visible'],
+          '#options' => array(),
+        ),
+        'lang_code' => array(
+          '#type' => 'textfield',
+          '#required' => TRUE,
+          '#title' => t('Language code'),
+          '#description' => t(
+            'Language code for the download links of translations.'
+          ),
+          '#default_value' => $config['lang_code'],
+        ),
+      );
+
+      foreach ($releases as $major => $release_history) {
+        foreach ($release_history['latest'] as $release_type => $r) {
+          if ($r !== NULL) {
+            $form[$key]['visible']['#options']["$major:$release_type"] = "$major.x $release_type";
+          }
+        }
+      }
+      break;
+
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function drupalorg_scraper_block_save($delta = '', $edit = array()) {
+  switch ($delta) {
+    case 'releases':
+      $key = 'drupalorg_scraper_block_releases';
+      variable_set($key, $edit[$key]);
+      break;
+
+  }
 }
 
 /**
@@ -140,36 +131,35 @@ function drupalorg_scraper_block_info() {
 function drupalorg_scraper_block_view($delta = '') {
   $block = array();
   switch ($delta) {
-    case 'headcount':
-      $block['subject'] = '';
-      $block['content'] = array(
-        '#theme' => 'headcount',
-        '#people' => variable_get("drupalorg_scraper_people", 611388),
-        '#countries' => variable_get("drupalorg_scraper_countries", 228),
-        '#languages' => variable_get("drupalorg_scraper_languages", 182),
-      );
-      break;
-
     case 'releases':
+      // @todo Translatable.
       $block['subject'] = '+ Letöltés';
       $block['content'] = array(
-        '#theme' => 'releases',
-        '#releases' => variable_get(
-          "drupalorg_scraper_releases", array(
-            6 => array(
-              'version' => '6.22',
-              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-6.22.tar.gz',
-              'translation' => 'http://ftp.drupal.org/files/translations/6.x/drupal/drupal-6.22.hu.po',
-            ),
-            7 => array(
-              'version' => '7.2',
-              'download_link' => 'http://ftp.drupal.org/files/projects/drupal-7.2.tar.gz',
-              'translation' => 'http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.2.hu.po',
-            ),
-
-          )
-        ),
+        '#theme' => 'drupalorg_scraper_releases',
+        '#releases' => array(),
+        '#highlight' => NULL,
       );
+      $config = variable_get('drupalorg_scraper_block_releases', drupalorg_scraper_block_configure_defaults($delta));
+      $visible_releases = array_keys($config['visible'], TRUE);
+      $releases = drupalorg_scraper_release_history_all();
+      foreach ($visible_releases as $release_id) {
+        list($major, $release_type) = explode(':', $release_id);
+        if (!isset($releases[$major]['latest'][$release_type])) {
+          continue;
+        }
+
+        $release_key = $releases[$major]['latest'][$release_type];
+        $release = $releases[$major]['releases']['release'][$release_key];
+        $release['translation'] = drupalorg_scraper_release_translation_url($release, $config['lang_code']);
+
+        $block['content']['#releases'][$release_id] = $release;
+
+        if ($release_type === 'stable'
+          && (!$block['content']['#highlight'] || version_compare($block['content']['#highlight'], $release_id) === -1)
+        ) {
+          $block['content']['#highlight'] = $release_id;
+        }
+      }
       break;
 
   }
@@ -178,37 +168,272 @@ function drupalorg_scraper_block_view($delta = '') {
 }
 
 /**
- * Implements hook_theme().
+ * @param bool $reset
+ *
+ * @return array
  */
-function drupalorg_scraper_theme() {
-  return array(
-    'headcount' => array(
-      'variables' => array(
-        'people' => 611388,
-        'countries' => 228,
-        'languages' => 182,
+function drupalorg_scraper_release_history_all($reset = FALSE) {
+  $major_min = variable_get('drupalorg_scraper_major_min', DRUPALORG_SCRAPER_MAJOR_MIN);
+  $major_max = variable_get('drupalorg_scraper_major_max', DRUPALORG_SCRAPER_MAJOR_MAX);
+
+  $release_history = array();
+  for ($major = $major_max; $major >= $major_min; $major--) {
+    $release_history[$major] = drupalorg_scraper_release_history($major, $reset);
+  }
+
+  return $release_history;
+}
+
+/**
+ * @param int $version_major
+ * @param bool $reset
+ *
+ * @return array
+ */
+function drupalorg_scraper_release_history($version_major, $reset = FALSE) {
+  $cache_id = "drupalorg_scraper:release_history:$version_major";
+
+  if (!$reset) {
+    $cache = cache_get($cache_id);
+    if ($cache) {
+      return $cache->data;
+    }
+  }
+
+  $xml = drupalorg_scraper_release_history_xml($version_major);
+  $release_history = drupalorg_scraper_release_history_parse($xml);
+  cache_set($cache_id, $release_history, 'cache', 86400);
+
+  return $release_history;
+}
+
+/**
+ * @param int $version_major
+ *
+ * @return array
+ */
+function drupalorg_scraper_release_history_xml($version_major) {
+  $project_status_url = drupalorg_scraper_release_history_url_base();
+  $project = system_get_info('module', 'system');
+  $response = drupal_http_request(
+    "$project_status_url/{$project['project']}/$version_major.x",
+    array(
+      'headers' => array(
+        'Accept' => 'text/xml,application/xml',
+        'Accept-Charset' => 'utf-8',
       ),
-      'template' => 'headcount',
+    )
+  );
+
+  return $response->code === '200' ? $response->data : FALSE;
+}
+
+/**
+ * @param string $xml
+ *
+ * @return array|false
+ */
+function drupalorg_scraper_release_history_parse($xml) {
+  if (!$xml) {
+    return FALSE;
+  }
+
+  $doc = new DOMDocument('1.0', 'utf-8');
+  $doc->loadXML($xml);
+
+  if ($doc->childNodes->length === 0 || $doc->childNodes->item(0)->nodeName !== 'project') {
+    return FALSE;
+  }
+
+  $info = array();
+
+  for ($i = 0; $i < $doc->childNodes->item(0)->childNodes->length; $i++) {
+    _drupalorg_scraper_release_history_parse(
+      $doc->childNodes->item(0)->childNodes->item($i),
+      $info,
+      array()
+    );
+  }
+
+  $info += array(
+    'releases' => array(),
+    'latest' => array(
+      'stable' => NULL,
+      'rc' => NULL,
+      'beta' => NULL,
+      'alpha' => NULL,
+      'dev' => NULL,
     ),
-    'releases' => array(
-      'variables' => array(
-        'releases' => array(),
-      ),
-      'template' => 'releases',
-    ),
+  );
+  $info['releases'] += array('release' => array());
+
+  foreach ($info['releases']['release'] as $r => $release) {
+    $stability = drupalorg_scraper_release_stability($release);
+    if ($stability && !isset($info['latest'][$stability])) {
+      $info['latest'][$stability] = $r;
+    }
+    elseif ($stability) {
+      $prev_index = $info['latest'][$stability];
+      $prev_version = $info['releases']['release'][$prev_index]['version'];
+      if (version_compare($prev_version, $release['version']) === -1) {
+        $info['latest'][$stability] = $r;
+      }
+    }
+  }
+
+  return $info;
+}
+
+/**
+ * @param DOMNode $node
+ *
+ * @param array $info
+ * @param array $parents
+ */
+function _drupalorg_scraper_release_history_parse(DOMNode $node, array &$info, array $parents) {
+  $collections = array(
+    'terms/term',
+    'releases/release',
+    'releases/release/*/files/file',
+    'releases/release/*/terms/term',
+  );
+  switch ($node->nodeType) {
+    case XML_ELEMENT_NODE:
+      if ($node->childNodes->length === 1
+        && $node->childNodes->item(0)->nodeName === '#text'
+        && $node->childNodes->item(0)->nodeType === XML_TEXT_NODE
+      ) {
+        $info[$node->nodeName] = $node->childNodes->item(0)->textContent;
+
+        return;
+      }
+
+      $parents[] = $node->nodeName;
+      $parents_path = implode('/', $parents);
+      if (in_array($parents_path, $collections)) {
+        $parents[] = '*';
+        $index = isset($info[$node->nodeName]) ? count($info[$node->nodeName]) : 0;
+        $info[$node->nodeName][$index] = array();
+        for ($i = 0; $i < $node->childNodes->length; $i++) {
+          _drupalorg_scraper_release_history_parse(
+            $node->childNodes->item($i),
+            $info[$node->nodeName][$index],
+            $parents
+          );
+        }
+      }
+      else {
+        $info[$node->nodeName] = array();
+        for ($i = 0; $i < $node->childNodes->length; $i++) {
+          _drupalorg_scraper_release_history_parse(
+            $node->childNodes->item($i),
+            $info[$node->nodeName],
+            $parents
+          );
+        }
+      }
+      break;
+
+  }
+}
+
+/**
+ * @param array $release
+ *
+ * @return bool|string
+ */
+function drupalorg_scraper_release_stability(array $release) {
+  if ($release['status'] !== 'published') {
+    return FALSE;
+  }
+
+  if (isset($release['version_extra'])) {
+    return rtrim($release['version_extra'], '0123456789');
+  }
+
+  $pattern_m = '/^[1-9]([0-9]*)$/';
+  $pattern_o = '/^[0-9]+$/';
+  $major = isset($release['version_major']) && preg_match($pattern_m, $release['version_major']);
+  $minor = isset($release['version_minor']) && preg_match($pattern_o, $release['version_minor']);
+  $patch = isset($release['version_patch']) && preg_match($pattern_o, $release['version_patch']);
+  $semantic = $release['version_major'] >= 8;
+
+  return (($semantic && $major && $minor && $patch) || (!$semantic && $major && $patch)) ? 'stable' : FALSE;
+}
+
+/**
+ * @param array $release
+ * @param string $lang_code
+ *
+ * @return null|string
+ */
+function drupalorg_scraper_release_translation_url(array $release, $lang_code) {
+  if ($release['version_major'] >= 8 || $lang_code === 'en') {
+    return NULL;
+  }
+
+  return strtr(
+    'http://ftp.drupal.org/files/translations/MAJOR.x/drupal/drupal-VERSION.LANG.po',
+    array(
+      'MAJOR' => $release['version_major'],
+      'VERSION' => $release['version'],
+      'LANG' => $lang_code,
+    )
   );
 }
 
 /**
- * Implements hook_cron().
+ * @return string
  */
-function drupalorg_scraper_cron() {
-  // Elég ha napi egyszer lefut.
-  $last_run = variable_get('drupalorg_scraper_last_run', 20100101);
-  $today = (int) strftime('%Y%m%d');
-  if ($today > $last_run) {
-    drupalorg_scraper_scrape();
-    watchdog('drupalorg_scraper', 'Scraped usage statistics from drupal.org');
-    variable_set('drupalorg_scraper_last_run', $today);
+function drupalorg_scraper_release_history_url_base() {
+  $project = system_get_info('module', 'system');
+
+  if (module_exists('update')) {
+    module_load_include('inc', 'update', 'update.fetch');
+
+    return _update_get_fetch_url_base($project);
   }
+
+  return isset($project['info']['project status url']) ? $project['info']['project status url'] : 'http://updates.drupal.org/release-history';
+}
+
+/**
+ * Implements theme_drupalorg_scraper_releases().
+ */
+function theme_drupalorg_scraper_releases(array $vars) {
+  $output = '';
+  foreach ($vars['releases'] as $release_id => $release) {
+    $output .= '<div' . ($vars['highlight'] === $release_id ? ' class="highlight">' : '>');
+
+    $output .= l(
+      $release['version'], $release['download_link'], array(
+        'external' => TRUE,
+        'attributes' => array(
+          'class' => array('project-download'),
+          'title' => t(
+            'Download Drupal @ver', array('@ver' => $release['version_major'])
+          ),
+        ),
+      )
+    );
+
+    if (!empty($release['translation'])) {
+      $output .= l(
+        t('Translation'), $release['translation'], array(
+          'external' => TRUE,
+          'attributes' => array(
+            'class' => array('translation-download'),
+            'title' => t(
+              'Hungarian language package for @ver.x version',
+              array('@ver' => $release['version_major'])
+            ),
+          ),
+        )
+      );
+    }
+
+    $output .= '</div>';
+  }
+
+  return $output;
 }
