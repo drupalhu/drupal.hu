@@ -202,7 +202,7 @@ function drupalorg_scraper_release_history($version_major, $reset = FALSE) {
 
   $xml = drupalorg_scraper_release_history_xml($version_major);
   $release_history = drupalorg_scraper_release_history_parse($xml);
-  cache_set($cache_id, $release_history, 'cache', 86400);
+  cache_set($cache_id, $release_history, 'cache', REQUEST_TIME + 7200);
 
   return $release_history;
 }
