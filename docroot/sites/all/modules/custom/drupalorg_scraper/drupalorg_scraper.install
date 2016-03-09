@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Drupal.org Scraper module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function drupalorg_scraper_uninstall() {
+  variable_del('drupalorg_scraper_block_releases');
+  variable_del('drupalorg_scraper_major_min');
+  variable_del('drupalorg_scraper_major_max');
+}
+
+/**
+ * Delete the unused variables.
+ */
+function drupalorg_scraper_update_7101() {
+  variable_del('drupalorg_scraper_countries');
+  variable_del('drupalorg_scraper_languages');
+  variable_del('drupalorg_scraper_last_run');
+  variable_del('drupalorg_scraper_people');
+  variable_del('drupalorg_scraper_releases');
+}

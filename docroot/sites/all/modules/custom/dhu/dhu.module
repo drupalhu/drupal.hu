@@ -39,3 +39,38 @@ function dhu_preprocess_links(array &$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function dhu_system_info_alter(&$info, $file, $type) {
+  $path = pathinfo($file->filename, PATHINFO_DIRNAME);
+  if (_dhu_is_custom_extension($path)) {
+    $info['interface translation project'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_update_projects_alter().
+ */
+function dhu_update_projects_alter(&$projects) {
+  foreach (array_keys($projects) as $project_name) {
+    $path = drupal_get_path($projects[$project_name]['project_type'], $project_name);
+    if (_dhu_is_custom_extension($path)) {
+      unset($projects[$project_name]);
+    }
+  }
+}
+
+/**
+ * @param string $path
+ *   File system path to a directory.
+ *
+ * @return bool
+ *   Return TRUE if the $path directory contains custom module or theme.
+ */
+function _dhu_is_custom_extension($path) {
+  $pattern = '@^sites/all/(modules/(custom|features))|(themes/(?!(bootstrap|omega|zen)))/@';
+
+  return (bool) preg_match($pattern, $path);
+}

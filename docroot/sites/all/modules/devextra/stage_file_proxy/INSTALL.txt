@@ -1,19 +1,22 @@
-Enable the module.
+STEPS TO INSTALL:
+=========
+1. Enable the module.
 
-To use Stage File Proxy, you must add variables to $conf in settings.php:
+2. Add variables to $conf in settings.php:
 
 REQUIRED:
 =========
 
-The origin website. 
+The origin website.
 
 $conf['stage_file_proxy_origin'] = 'http://example.com'; // no trailing slash
 
 If the site is using HTTP Basic Authentication (the browser popup for username
-and password) you can embed those in the url. Be sure to URL encode any 
+and password) you can embed those in the url. Be sure to URL encode any
 special characters:
 
-For a username of myusername and password letme&in the configuration would be:
+For example, setting a user name of "myusername" and password as, "letme&in" the
+configuration would be the following:
 
 $conf['stage_file_proxy_origin'] = 'http://myusername:letme%26in@example.com';
 
@@ -51,9 +54,9 @@ $conf['stage_file_proxy_sslversion'] = 3;
 Default is 3.
 
 CURL will try to figure out which ssl version to use, but if it fails to do that
-properly it can lead to getting an empty file and a 0 status code. The default is
-3 which seems relatively common, but if you get 0 byte files you can try changing
-it to 2.
+properly it can lead to getting an empty file and a 0 status code. The default
+is 3 which seems relatively common, but if you get 0 byte files you can try
+changing it to 2.
 
 DRUSH USERS
 ===========
@@ -73,6 +76,6 @@ add the following to your dev site alias file:
 
 In order for this to work, you must copy the file
 drush/examples/sync_enable.drush.inc to your ~/.drush folder.
-For more informatoin, see:
+For more information, see:
 
 http://drupalcode.org/project/drush.git/blob/HEAD:/examples/sync_enable.drush.inc

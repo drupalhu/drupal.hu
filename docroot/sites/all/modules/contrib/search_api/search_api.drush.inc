@@ -121,6 +121,39 @@ function search_api_drush_command() {
     'aliases' => array('sapi-sis'),
   );
 
+  $items['search-api-server-list'] = array(
+    'description' => 'List all search servers.',
+    'examples' => array(
+      'drush search-api-server-list' => dt('List all search servers.'),
+      'drush sapi-sl' => dt('Alias to list all search servers.'),
+    ),
+    'aliases' => array('sapi-sl'),
+  );
+
+  $items['search-api-server-enable'] = array(
+    'description' => 'Enable a search server.',
+    'examples' => array(
+      'drush search-api-server-e my_solr_server' => dt('Enable the !server search server.', array('!server' => 'my_solr_server')),
+      'drush sapi-se my_solr_server' => dt('Alias to enable the !server search server.', array('!server' => 'my_solr_server')),
+    ),
+    'arguments' => array(
+      'server_id' => dt('The numeric ID or machine name of a search server to enable.'),
+    ),
+    'aliases' => array('sapi-se'),
+  );
+
+  $items['search-api-server-disable'] = array(
+    'description' => 'Disable a search server.',
+    'examples' => array(
+      'drush search-api-server-disable' => dt('Disable the !server search server.', array('!server' => 'my_solr_server')),
+      'drush sapi-sd' => dt('Alias to disable the !server search server.', array('!server' => 'my_solr_server')),
+    ),
+    'arguments' => array(
+      'server_id' => dt('The numeric ID or machine name of a search server to disable.'),
+    ),
+    'aliases' => array('sapi-sd'),
+  );
+
   return $items;
 }
 
@@ -297,46 +330,72 @@ function drush_search_api_index($index_id = NULL, $limit = NULL, $batch_size = N
   if (empty($indexes)) {
     return;
   }
+
+  $process_batch = FALSE;
   foreach ($indexes as $index) {
-    // Get the number of remaing items to index.
-    try {
-      $datasource = $index->datasource();
-    }
-    catch (SearchApiException $e) {
-      drush_log($e->getMessage(), 'error');
-      continue;
-    }
-    $index_status = $datasource->getIndexStatus($index);
-    $remaining = $index_status['total'] - $index_status['indexed'];
-    if ($remaining <= 0) {
-      drush_log(dt("The index !index is up to date.", array('!index' => $index->name)), 'ok');
-      continue;
-    }
-
-    // Get the number of items to index per batch run.
-    if (!isset($batch_size)) {
-      $batch_size = empty($index->options['cron_limit']) ? SEARCH_API_DEFAULT_CRON_LIMIT : $index->options['cron_limit'];
-    }
-    elseif ($batch_size <= 0) {
-      $batch_size = $remaining;
-    }
-
-    // Get the number items to index.
-    if (!isset($limit) || !is_int($limit += 0) || $limit <= 0) {
-      $limit = $remaining;
-    }
-
-    drush_log(dt("Indexing a maximum number of !limit items (!batch_size items per batch run) for the index !index.", array('!index' => $index->name, '!limit' => $limit, '!batch_size' => $batch_size)), 'ok');
-
-    // Create the batch.
-    if (!_search_api_batch_indexing_create($index, $batch_size, $limit, $remaining, TRUE)) {
-      drush_log(dt("Couldn't create a batch, please check the batch size and limit parameters."), 'error');
-    }
-    else {
-      // Launch the batch process.
-      drush_backend_batch_process();
+    if (_drush_search_api_batch_indexing_create($index, $limit, $batch_size)) {
+      $process_batch = TRUE;
     }
   }
+
+  if ($process_batch) {
+    drush_backend_batch_process();
+  }
+}
+
+/**
+ * Creates and sets a batch for indexing items for a particular index.
+ *
+ * @param SearchApiIndex $index
+ *   The index for which items should be indexed.
+ * @param int $limit
+ *   (optional) The maximum number of items to index, or NULL to index all
+ *   items.
+ * @param int $batch_size
+ *   (optional) The number of items to index per batch, or NULL to index all
+ *   items at once.
+ *
+ * @return bool
+ *   TRUE if batch was created, FALSE otherwise.
+ */
+function _drush_search_api_batch_indexing_create(SearchApiIndex $index, $limit = NULL, $batch_size = NULL) {
+  // Get the number of remaining items to index.
+  try {
+    $datasource = $index->datasource();
+  }
+  catch (SearchApiException $e) {
+    drush_log($e->getMessage(), 'error');
+    return FALSE;
+  }
+  $index_status = $datasource->getIndexStatus($index);
+  $remaining = $index_status['total'] - $index_status['indexed'];
+  if ($remaining <= 0) {
+    drush_log(dt("The index !index is up to date.", array('!index' => $index->name)), 'ok');
+    return FALSE;
+  }
+
+  // Get the number of items to index per batch run.
+  if (!isset($batch_size)) {
+    $batch_size = empty($index->options['cron_limit']) ? SEARCH_API_DEFAULT_CRON_LIMIT : $index->options['cron_limit'];
+  }
+  elseif ($batch_size <= 0) {
+    $batch_size = $remaining;
+  }
+
+  // Get the total number of items to index.
+  if (!isset($limit) || !is_int($limit += 0) || $limit <= 0) {
+    $limit = $remaining;
+  }
+
+  drush_log(dt("Indexing a maximum number of !limit items (!batch_size items per batch run) for the index !index.", array('!index' => $index->name, '!limit' => $limit, '!batch_size' => $batch_size)), 'ok');
+
+  // Create the batch.
+  if (!_search_api_batch_indexing_create($index, $batch_size, $limit, $remaining, TRUE)) {
+    drush_log(dt("Couldn't create a batch, please check the batch size and limit parameters."), 'error');
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**
@@ -482,7 +541,8 @@ function search_api_drush_get_server($server_id = NULL) {
   $servers = search_api_server_load_multiple($ids);
   if (empty($servers)) {
     drush_set_error(dt('Invalid server_id or no servers present.'));
-    // @todo: Maybe add logic to print table of all servers.
+    drush_print();
+    drush_search_api_server_list();
   }
   return $servers;
 }
@@ -506,4 +566,76 @@ function search_api_drush_static($function) {
   }
   $index[$function] = TRUE;
   return FALSE;
+}
+
+/**
+ * Lists all search servers.
+ */
+function drush_search_api_server_list() {
+  if (search_api_drush_static(__FUNCTION__)) {
+    return;
+  }
+  $servers = search_api_server_load_multiple(FALSE);
+  if (empty($servers)) {
+    drush_print(dt('There are no servers present.'));
+    return;
+  }
+  $rows[] = array(
+    dt('Machine name'),
+    dt('Name'),
+    dt('Status'),
+  );
+  foreach ($servers as $server) {
+    $row = array(
+      $server->machine_name,
+      $server->name,
+      $server->enabled ? dt('enabled') : dt('disabled'),
+    );
+    $rows[] = $row;
+  }
+  drush_print_table($rows);
+}
+
+/**
+ * Enables a search server.
+ *
+ * @param int|string $server_id
+ *   The numeric ID or machine name of the server to enable.
+ */
+function drush_search_api_server_enable($server_id = NULL) {
+  if (!isset($server_id)) {
+    drush_print(dt('Please provide a valid server id.'));
+    return;
+  }
+  $server = search_api_server_load($server_id);
+  if (empty($server)) {
+    drush_print(dt('The server was not able to load.'));
+    return;
+  }
+  else {
+    $server->update(array('enabled' => 1));
+    drush_print(dt('The server was enabled successfully.'));
+  }
+}
+
+/**
+ * Disables a search server.
+ *
+ * @param int|string $server_id
+ *   The numeric ID or machine name of the server to disable.
+ */
+function drush_search_api_server_disable($server_id = NULL) {
+  if (!isset($server_id)) {
+    drush_print(dt('Please provide a valid server id.'));
+    return;
+  }
+  $server = search_api_server_load($server_id);
+  if (empty($server)) {
+    drush_print(dt('The server was not able to load.'));
+    return;
+  }
+  else {
+    $server->update(array('enabled' => 0));
+    drush_print(dt('The server was disabled successfully.'));
+  }
 }

@@ -93,7 +93,6 @@ class SearchApiMultiRowEntityView extends views_plugin_row {
           '#title' => t('View mode for @entity_name entities', array(
             '@entity_name' => $entity_info[$entity_type]['label'],
           )),
-          '#default_value' => $this->options['view_mode'],
           '#description' => format_plural(
             count($this->indexes['entity_types'][$entity_type]),
             'This view mode will be used to render entities from the following index: %indexes',
@@ -103,6 +102,9 @@ class SearchApiMultiRowEntityView extends views_plugin_row {
             )
           ),
         );
+        if (!empty($this->options['view_mode'][$entity_type])) {
+          $form['view_mode'][$entity_type]['#default_value'] = $this->options['view_mode'][$entity_type];
+        }
       }
       else {
         // For entity types that only have one view mode, there's no meaningful
