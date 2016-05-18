@@ -2,6 +2,7 @@ name = Demon
 description = Theme for drupal.hu site.
 version = 0624-1.0 beta
 core = 7.x
+base theme = bootstrap
 
 logo = logo.jpg
 
