@@ -1,6 +1,5 @@
 name = Demon
 description = Theme for drupal.hu site.
-package = Core
 version = 0624-1.0 beta
 core = 7.x
 
