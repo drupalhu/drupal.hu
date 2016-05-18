@@ -63,7 +63,7 @@ function drupalhu_links_views_default_views() {
   $handler->display->display_options['fields']['field_webshot']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['field_webshot']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_webshot']['settings'] = array(
-    'image_style' => '',
+    'image_style' => 'thumbnail',
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_webshot']['group_column'] = 'fid';
@@ -97,14 +97,6 @@ function drupalhu_links_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: A szerkesztő ajánlja (field_pick) */
-  $handler->display->display_options['filters']['field_pick_value']['id'] = 'field_pick_value';
-  $handler->display->display_options['filters']['field_pick_value']['table'] = 'field_data_field_pick';
-  $handler->display->display_options['filters']['field_pick_value']['field'] = 'field_pick_value';
-  $handler->display->display_options['filters']['field_pick_value']['value'] = array(
-    1 => '1',
-  );
-  $handler->display->display_options['filters']['field_pick_value']['group'] = 1;
 
   /* Display: Friss blokk */
   $handler = $view->new_display('block', 'Friss blokk', 'block_1');

@@ -10,7 +10,7 @@
 function drupalhu_links_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-link-body'
+  // Exported field_instance: 'node-link-body'.
   $field_instances['node-link-body'] = array(
     'bundle' => 'link',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function drupalhu_links_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-link-field_link'
+  // Exported field_instance: 'node-link-field_link'.
   $field_instances['node-link-field_link'] = array(
     'bundle' => 'link',
     'default_value' => NULL,
@@ -132,7 +132,7 @@ function drupalhu_links_field_default_field_instances() {
     'widget_type' => 'link',
   );
 
-  // Exported field_instance: 'node-link-field_pick'
+  // Exported field_instance: 'node-link-field_pick'.
   $field_instances['node-link-field_pick'] = array(
     'bundle' => 'link',
     'default_value' => array(
@@ -223,7 +223,7 @@ function drupalhu_links_field_default_field_instances() {
     'widget_type' => 'optionwidgets_onoff',
   );
 
-  // Exported field_instance: 'node-link-field_webshot'
+  // Exported field_instance: 'node-link-field_webshot'.
   $field_instances['node-link-field_webshot'] = array(
     'bundle' => 'link',
     'deleted' => 0,
@@ -234,7 +234,7 @@ function drupalhu_links_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => '',
+          'image_style' => 'thumbnail',
         ),
         'type' => 'image',
         'weight' => 13,
@@ -273,7 +273,7 @@ function drupalhu_links_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-link-taxonomy_vocabulary_7'
+  // Exported field_instance: 'node-link-taxonomy_vocabulary_7'.
   $field_instances['node-link-taxonomy_vocabulary_7'] = array(
     'bundle' => 'link',
     'default_value' => NULL,
@@ -310,7 +310,7 @@ function drupalhu_links_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-link-taxonomy_vocabulary_8'
+  // Exported field_instance: 'node-link-taxonomy_vocabulary_8'.
   $field_instances['node-link-taxonomy_vocabulary_8'] = array(
     'bundle' => 'link',
     'default_value' => NULL,
@@ -350,7 +350,7 @@ function drupalhu_links_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-link-upload'
+  // Exported field_instance: 'node-link-upload'.
   $field_instances['node-link-upload'] = array(
     'bundle' => 'link',
     'deleted' => 0,
