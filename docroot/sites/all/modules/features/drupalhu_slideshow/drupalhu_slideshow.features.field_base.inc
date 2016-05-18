@@ -10,7 +10,7 @@
 function drupalhu_slideshow_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_slideshow_description'
+  // Exported field_base: 'field_slideshow_description'.
   $field_bases['field_slideshow_description'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function drupalhu_slideshow_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_slideshow_image'
+  // Exported field_base: 'field_slideshow_image'.
   $field_bases['field_slideshow_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -53,7 +53,7 @@ function drupalhu_slideshow_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_slideshow_url'
+  // Exported field_base: 'field_slideshow_url'.
   $field_bases['field_slideshow_url'] = array(
     'active' => 1,
     'cardinality' => 1,
