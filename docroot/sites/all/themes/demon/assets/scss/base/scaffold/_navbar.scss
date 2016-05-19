@@ -1,0 +1,12 @@
+.navbar-default {
+  background-color: transparent;
+  border: 0;
+
+  .navbar-nav > li > a {
+    color: $link;
+
+    &:hover {
+      color: $link-hover;
+    }
+  }
+}

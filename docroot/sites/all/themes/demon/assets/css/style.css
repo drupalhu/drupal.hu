@@ -1,3 +1,14 @@
+.navbar-default {
+  background-color: transparent;
+  border: 0;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #0678be;
+}
+.navbar-default .navbar-nav > li > a:hover {
+  color: #53b0eb;
+}
+
 body {
   background-color: #fff;
 }
@@ -641,7 +652,7 @@ h1#page-title {
 
 .social-wrapper a {
   display: block;
-  background-image: url("../images/social.png");
+  background-image: url("../img/social.png");
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;

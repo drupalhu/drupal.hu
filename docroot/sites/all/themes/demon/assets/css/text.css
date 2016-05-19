@@ -1,9 +1,3 @@
-/*
-	960 Grid System ~ Text CSS.
-	Learn more ~ http://960.gs/
-
-	Licensed under GPL and MIT.
-*/
 /* `Basic HTML
 ----------------------------------------------------------------------------------------------------*/
 body {
@@ -67,12 +61,12 @@ h6 {
 }
 
 a {
-  color: #0678BE;
+  color: #0678be;
   text-decoration: none;
 }
 
 a:hover {
-  color: #53B0EB;
+  color: #53b0eb;
 }
 
 /* `Spacing

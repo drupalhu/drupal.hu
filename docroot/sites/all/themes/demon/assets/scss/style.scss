@@ -1,6 +1,15 @@
 // Import compass basics.
 @import "compass/css3";
 
+// Import variables
+@import '_assets/variables';
+
+// Import custom mixins.
+@import '_assets/mixins';
+
+// Import base formatting.
+@import 'base';
+
 body {
   background-color: #fff;
 }
@@ -607,7 +616,7 @@ h1#page-title {
 }
 .social-wrapper a {
   display: block;
-  background-image: url("../images/social.png");
+  background-image: url("../img/social.png");
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;

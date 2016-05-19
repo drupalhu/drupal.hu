@@ -1,9 +1,9 @@
-/*
-	960 Grid System ~ Text CSS.
-	Learn more ~ http://960.gs/
+// Import variables
+@import '_assets/variables';
 
-	Licensed under GPL and MIT.
-*/
+// Import custom mixins.
+@import '_assets/mixins';
+
 
 /* `Basic HTML
 ----------------------------------------------------------------------------------------------------*/
@@ -69,12 +69,12 @@ h6 {
 
 
 a {
-  color: #0678BE;
+  color: $link;
   text-decoration: none;
 }
 
 a:hover {
-  color: #53B0EB;
+  color: $link-hover;
 }
 
 
