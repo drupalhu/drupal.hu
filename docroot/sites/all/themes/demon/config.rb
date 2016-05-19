@@ -1,8 +1,8 @@
 # Require any additional compass plugins here.
 
-sass_dir           = "sass"
+sass_dir           = "assets/scss"
 http_path          = "/dist"
-css_dir            = "css"
+css_dir            = "assets/css"
 
 # You can select your preferred output style here (can be overridden via the command line):
 #output_style = :expanded or :nested or :compact or :compressed

@@ -6,11 +6,11 @@ base theme = bootstrap
 
 logo = logo.jpg
 
-stylesheets[all][] = css/text.css
-stylesheets[all][] = css/search.css
-stylesheets[all][] = css/frontpage.css
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/voteupdown.css
+stylesheets[all][] = assets/css/text.css
+stylesheets[all][] = assets/css/search.css
+stylesheets[all][] = assets/css/frontpage.css
+stylesheets[all][] = assets/css/style.css
+stylesheets[all][] = assets/css/voteupdown.css
 
 scripts[] = colorbox_register.js
 
