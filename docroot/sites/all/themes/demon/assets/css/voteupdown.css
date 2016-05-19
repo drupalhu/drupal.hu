@@ -7,7 +7,7 @@
 .vud-widget-upanddown .down-inactive,
 .vud-widget-upanddown .up-active,
 .vud-widget-upanddown .down-active {
-  background: url(../images/hands.png) no-repeat scroll 0 0 transparent;
+  background: url(../img/hands.png) no-repeat scroll 0 0 transparent;
   display: block;
   float: left;
   font-weight: bold;

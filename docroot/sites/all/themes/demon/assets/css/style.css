@@ -5,7 +5,7 @@ body {
 a.button, span.button {
   display: inline-block;
   padding-left: 8px;
-  background: url(../images/green-button-start.png) no-repeat 0 50%;
+  background: url(../img/green-button-start.png) no-repeat 0 50%;
   text-decoration: none;
 }
 
@@ -15,7 +15,7 @@ a.button span, span.button span {
   line-height: 36px;
   vertical-align: middle;
   color: #fff;
-  background: url(../images/green-button-end.png) no-repeat 100% 50%;
+  background: url(../img/green-button-end.png) no-repeat 100% 50%;
 }
 
 /**
@@ -331,7 +331,7 @@ pre {
   vertical-align: middle;
   font-size: 24px;
   color: #8B8B7F;
-  background: url(../images/drupal-logo-oxigen.jpg) no-repeat 0 50%;
+  background: url(../img/drupal-logo-oxigen.jpg) no-repeat 0 50%;
 }
 
 #block-drupalorg-scraper-headcount em {
@@ -341,7 +341,7 @@ pre {
 
 #main {
   margin-bottom: 36px;
-  background: url(../images/sidebar-bkg.jpg) repeat-y 100% 0;
+  background: url(../img/sidebar-bkg.jpg) repeat-y 100% 0;
   position: relative;
 }
 
@@ -410,7 +410,7 @@ div#block-views-recent-planet-block img {
   margin: 0;
   overflow: hidden;
   border: none;
-  background: transparent url(../images/tabs-border.png) repeat-x left bottom;
+  background: transparent url(../img/tabs-border.png) repeat-x left bottom;
 }
 
 .tabs ul.primary li {
@@ -489,7 +489,7 @@ ul.action-links li {
 .view a.button-action,
 ul.action-links li a {
   padding-left: 18px;
-  background: url(../images/add.png) no-repeat left center;
+  background: url(../img/add.png) no-repeat left center;
   margin: 0 10px 0 0;
 }
 
@@ -976,7 +976,7 @@ li.search-result h3 {
 /* content dependant rules */
 #block-block-26 {
   height: 302px;
-  background: url(../images/highlight-1-bkg.png) 50% 0;
+  background: url(../img/highlight-1-bkg.png) 50% 0;
 }
 
 #block-block-30 p {
@@ -1012,7 +1012,7 @@ li.search-result h3 {
   float: left;
   width: 435px;
   height: 302px;
-  background: #064771 url(../images/hetvege2011-csoport.jpg) no-repeat scroll bottom left;
+  background: #064771 url(../img/hetvege2011-csoport.jpg) no-repeat scroll bottom left;
 }
 
 #hetvege2011-hir span {
@@ -1043,7 +1043,7 @@ li.search-result h3 {
   font-size: 20px;
   line-height: normal;
   height: 111px;
-  background: transparent url(../images/hetvege2011-button-bg.jpg) repeat-x scroll left top;
+  background: transparent url(../img/hetvege2011-button-bg.jpg) repeat-x scroll left top;
   position: relative;
 }
 

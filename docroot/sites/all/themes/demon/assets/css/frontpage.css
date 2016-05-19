@@ -40,7 +40,7 @@ body.front #front h2.pane-title {
   width: 18px;
   height: 30px;
   top: 130px;
-  background-image: url("../images/slide_control.png");
+  background-image: url("../img/slide_control.png");
   background-image: transparent;
   background-repeat: no-repeat;
 }
