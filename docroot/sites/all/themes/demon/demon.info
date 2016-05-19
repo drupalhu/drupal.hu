@@ -12,8 +12,6 @@ stylesheets[all][] = assets/css/frontpage.css
 stylesheets[all][] = assets/css/style.css
 stylesheets[all][] = assets/css/voteupdown.css
 
-scripts[] = colorbox_register.js
-
 regions[header] = Header
 regions[help] = Help
 regions[front_highlighted] = Front Highlighted
