@@ -17,15 +17,8 @@
   color: #53b0eb;
 }
 
-.navbar .primary {
-  float: right;
-  margin-right: -25px;
-  margin-top: 11px;
-}
 .navbar .primary li > a {
-  border-right: 1px solid #E6E6E6;
   font-size: 16px;
-  padding: 15px 25px;
   vertical-align: middle;
   color: #000;
   text-decoration: none;
@@ -72,6 +65,9 @@
 .region-triptych .views-exposed-widget {
   margin-left: 0;
   margin-top: 0;
+}
+.region-triptych .views-submit-button {
+  padding-right: 0;
 }
 .region-triptych .form-submit {
   -moz-border-radius: 3px;
@@ -179,6 +175,38 @@
 
   .navbar-default.container {
     max-width: 992px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #navbar {
+    padding-top: 40px;
+    margin-top: 0;
+  }
+
+  .menu-secondary {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .navbar .primary {
+    float: right;
+    margin-right: -25px;
+    margin-top: 11px;
+  }
+  .navbar .primary li > a {
+    border-right: 1px solid #E6E6E6;
+    padding: 15px 25px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .region-triptych .col-md-4 {
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 3px;
+  }
+  .region-triptych .views-widget-filter-search_api_multi_fulltext {
+    width: 72%;
   }
 }
 body {

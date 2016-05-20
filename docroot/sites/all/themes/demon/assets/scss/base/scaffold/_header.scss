@@ -42,6 +42,10 @@
     margin-top: 0;
   }
 
+  .views-submit-button {
+    padding-right: 0;
+  }
+
   .form-submit {
     @include border-radius(3px);
     background: none repeat scroll 0 0 #34495E;

@@ -15,6 +15,16 @@
   @import 'desktop_lg';
 }
 
+// Above tablet
+@media only screen and (min-width: ($screen-tablet)){
+  @import 'tablet_above';
+}
+
+// Responsive mobile
+@media only screen and (max-width: ($screen-tablet - 1px)) {
+  @import 'mobile';
+}
+
 
 body {
   background-color: #fff;
