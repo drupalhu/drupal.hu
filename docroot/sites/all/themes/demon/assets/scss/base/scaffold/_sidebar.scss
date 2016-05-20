@@ -23,14 +23,46 @@
   }
 
   .menu {
+    list-style: circle;
     margin-bottom: 0;
 
     li {
-      margin: 0 0 0 1.5em;
+      margin: 0;
+
+      a {
+        padding: 0;
+
+        &:hover {
+          background-color: transparent;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .view-job {
+    .views-row {
+      padding-bottom: 1em;
+      margin-bottom: 1em;
+      border-bottom: 1px solid #E3E2E2;
+    }
+
+    .views-row-last {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .views-field-created span {
+      font-size: 10px;
+      color: #888;
+    }
+
+    h4 {
+      margin-top: 0;
     }
   }
 }
-
 
 .jump {
   position: absolute;

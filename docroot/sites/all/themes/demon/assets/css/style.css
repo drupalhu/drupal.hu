@@ -184,10 +184,35 @@
   padding: 10px 17px;
 }
 .region-sidebar-first .menu {
+  list-style: circle;
   margin-bottom: 0;
 }
 .region-sidebar-first .menu li {
-  margin: 0 0 0 1.5em;
+  margin: 0;
+}
+.region-sidebar-first .menu li a {
+  padding: 0;
+}
+.region-sidebar-first .menu li a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+.region-sidebar-first .view-job .views-row {
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #E3E2E2;
+}
+.region-sidebar-first .view-job .views-row-last {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+.region-sidebar-first .view-job .views-field-created span {
+  font-size: 10px;
+  color: #888;
+}
+.region-sidebar-first .view-job h4 {
+  margin-top: 0;
 }
 
 .jump {
@@ -1023,23 +1048,6 @@ body.node-type-forum div.node-forum {
 
 .view-job .views-exposed-form .views-exposed-widgets {
   margin-bottom: 0;
-}
-
-#sidebar-first .view-job .views-row {
-  padding-bottom: 1em;
-  margin-bottom: 1em;
-  border-bottom: 1px solid #E3E2E2;
-}
-
-#sidebar-first .view-job .views-row-last {
-  padding-bottom: 0;
-  margin-bottom: 0;
-  border-bottom: 0;
-}
-
-#sidebar-first .view-job .views-field-created span {
-  font-size: 10px;
-  color: #888;
 }
 
 #sidebar-first .more-link {
