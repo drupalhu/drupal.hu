@@ -10,7 +10,7 @@
 function dhu_job_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_article-comment_body'
+  // Exported field_instance: 'comment-comment_node_article-comment_body'.
   $field_instances['comment-comment_node_article-comment_body'] = array(
     'bundle' => 'comment_node_article',
     'default_value' => NULL,
@@ -43,7 +43,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'comment-comment_node_job-comment_body'
+  // Exported field_instance: 'comment-comment_node_job-comment_body'.
   $field_instances['comment-comment_node_job-comment_body'] = array(
     'bundle' => 'comment_node_job',
     'default_value' => NULL,
@@ -76,7 +76,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'comment-comment_node_page-comment_body'
+  // Exported field_instance: 'comment-comment_node_page-comment_body'.
   $field_instances['comment-comment_node_page-comment_body'] = array(
     'bundle' => 'comment_node_page',
     'default_value' => NULL,
@@ -109,7 +109,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-body'
+  // Exported field_instance: 'node-job-body'.
   $field_instances['node-job-body'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -151,7 +151,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_buzzwords'
+  // Exported field_instance: 'node-job-field_buzzwords'.
   $field_instances['node-job-field_buzzwords'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -188,7 +188,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_advantage'
+  // Exported field_instance: 'node-job-field_job_advantage'.
   $field_instances['node-job-field_job_advantage'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -228,7 +228,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_announcer_gives'
+  // Exported field_instance: 'node-job-field_job_announcer_gives'.
   $field_instances['node-job-field_job_announcer_gives'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -268,7 +268,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_contact_email'
+  // Exported field_instance: 'node-job-field_job_contact_email'.
   $field_instances['node-job-field_job_contact_email'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -307,7 +307,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_contact_person'
+  // Exported field_instance: 'node-job-field_job_contact_person'.
   $field_instances['node-job-field_job_contact_person'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -347,7 +347,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_contact_phone'
+  // Exported field_instance: 'node-job-field_job_contact_phone'.
   $field_instances['node-job-field_job_contact_phone'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -387,7 +387,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_due_date'
+  // Exported field_instance: 'node-job-field_job_due_date'.
   $field_instances['node-job-field_job_due_date'] = array(
     'bundle' => 'job',
     'deleted' => 0,
@@ -402,6 +402,7 @@ function dhu_job_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 8,
@@ -415,6 +416,7 @@ function dhu_job_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 4,
@@ -448,7 +450,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_expectations'
+  // Exported field_instance: 'node-job-field_job_expectations'.
   $field_instances['node-job-field_job_expectations'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -488,7 +490,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_experience'
+  // Exported field_instance: 'node-job-field_job_experience'.
   $field_instances['node-job-field_job_experience'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -525,7 +527,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_organization'
+  // Exported field_instance: 'node-job-field_job_organization'.
   $field_instances['node-job-field_job_organization'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -565,7 +567,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_other_language'
+  // Exported field_instance: 'node-job-field_job_other_language'.
   $field_instances['node-job-field_job_other_language'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -602,7 +604,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_remotely'
+  // Exported field_instance: 'node-job-field_job_remotely'.
   $field_instances['node-job-field_job_remotely'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -640,7 +642,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_summary'
+  // Exported field_instance: 'node-job-field_job_summary'.
   $field_instances['node-job-field_job_summary'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -680,7 +682,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_job_timing'
+  // Exported field_instance: 'node-job-field_job_timing'.
   $field_instances['node-job-field_job_timing'] = array(
     'bundle' => 'job',
     'default_value' => NULL,
@@ -718,7 +720,7 @@ function dhu_job_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-job-field_place_of_work'
+  // Exported field_instance: 'node-job-field_place_of_work'.
   $field_instances['node-job-field_place_of_work'] = array(
     'bundle' => 'job',
     'default_value' => NULL,

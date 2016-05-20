@@ -254,6 +254,7 @@ function dhu_job_views_default_views() {
   $handler->display->display_options['fields']['field_place_of_work']['field'] = 'field_place_of_work';
   $handler->display->display_options['fields']['field_place_of_work']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_place_of_work']['element_label_type'] = 'strong';
+  $handler->display->display_options['fields']['field_place_of_work']['hide_empty'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
