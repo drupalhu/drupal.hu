@@ -10,6 +10,12 @@
 // Import base formatting.
 @import 'base';
 
+// Responsive large desktop
+@media only screen and (min-width: $screen-lg-desktop) {
+  @import 'desktop_lg';
+}
+
+
 body {
   background-color: #fff;
 }
@@ -160,92 +166,12 @@ pre {
 	margin-left: 1em;
 }
 
-#logo {
-  height: 68px;
-  padding-top: 34px;
-
-  img {
-    width: 195px;
-  }
-}
-
 #header-content {
   height: 44px;
 }
 
-#main-menu {
-  height: 60px;
-}
-
-#main-menu ul li {
-  padding: 0;
-  margin: 0;
-  display: inline-block;
-  border-right: 1px solid #E6E6E6;
-  font-size: 16px;
-  line-height: 1;
-}
-
-#main-menu ul li.last {
-  border-right: 0;
-}
-
 #main-menu-links {
   text-align: right;
-}
-
-#main-menu ul li a {
-  display: inline-block;
-  padding: 0 25px;
-  height: 60px;
-  line-height: 60px;
-  vertical-align: middle;
-  color: #000;
-  text-decoration: none;
-}
-
-#main-menu ul li.last a {
-  padding-right: 5px;
-}
-#main-menu ul li a:hover {
-  color: #555;
-}
-
-#triptych-wrapper {
-  height: 64px;
-}
-#triptych .grid-8:first-child{
-  margin-left: 0;
-  width: 317px;
-}
-#triptych .grid-8:last-child{
-  margin-right: 0;
-  width: 313px;
-}
-#triptych div.region {
-  height: 54px;
-  background-color: #F6F6F2;
-}
-
-#triptych h2, #triptych h3 {
-  font-size: 18px;
-  font-weight: normal;
-  white-space: nowrap;
-  padding: 0;
-  margin: 0;
-}
-
-#triptych table {
-  width: 100%;
-  border: 0;
-}
-
-#triptych table td {
-  height: 54px;
-  padding: 3px 5px;
-  vertical-align: middle;
-  font-size: 12px;
-  border: 0;
 }
 
 #triptych a {
@@ -1121,49 +1047,6 @@ fieldset {
  * Download block
  */
 
-#block-drupalorg-scraper-releases {
-
-  padding: 9px 5px 0 9px;
-
-  > h2 {
-    margin: 10px 16px 0 0;
-    float: left;
-  }
-
-  > .content {
-    > div {
-      float: left;
-    }
-
-    a {
-      color: grey;
-
-      &:hover {
-        color: black;
-      }
-
-      &.translation-download {
-        padding-right: 0;
-      }
-    }
-
-    .highlight {
-      padding-top: 0.35em;
-      padding-right: 0.2em;
-
-      font-size: 2em;
-      font-weight: bold;
-
-      a {
-        color: #34495e;
-
-        &:hover {
-          color: #4e6d8d;
-        }
-      }
-    }
-  }
-}
 
 /**
  * node type list
