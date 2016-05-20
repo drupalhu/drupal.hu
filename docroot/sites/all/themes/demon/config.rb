@@ -10,7 +10,7 @@ css_dir            = "assets/css"
     output_style = :expanded
     line_comments = false
     disable_warnings = false
-    disable_warnings = false
+    sourcemap = true
     sass_options = {:quiet => true}
   end
 
