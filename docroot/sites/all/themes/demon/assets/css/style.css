@@ -161,6 +161,46 @@
   margin-right: 3px;
 }
 
+.well {
+  background-color: #F6F6F2;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  position: relative;
+}
+
+.region-sidebar-first {
+  padding-bottom: 24px;
+}
+.region-sidebar-first .block-title {
+  margin-bottom: 0.2em;
+  padding: 8px 16px;
+  border-bottom: 2px solid #fff;
+  letter-spacing: -1px;
+  background-color: #e3e2e2;
+}
+.region-sidebar-first .block-content {
+  padding: 10px 17px;
+}
+.region-sidebar-first .menu {
+  margin-bottom: 0;
+}
+.region-sidebar-first .menu li {
+  margin: 0 0 0 1.5em;
+}
+
+.jump {
+  position: absolute;
+  bottom: 20px;
+  left: 15px;
+  width: 100%;
+  border-left: 5px solid #BFBFBF;
+}
+.jump a {
+  padding: 0.5em;
+}
+
 .navbar .logo {
   height: 68px;
 }
@@ -207,6 +247,11 @@
   }
   .region-triptych .views-widget-filter-search_api_multi_fulltext {
     width: 72%;
+  }
+
+  .node img {
+    width: 100%;
+    height: auto;
   }
 }
 body {
@@ -917,39 +962,6 @@ body.node-type-forum div.node-forum {
   margin-bottom: 0;
 }
 
-#sidebar-first {
-  background-color: #F6F6F2;
-}
-
-#sidebar-first .region {
-  padding: 0 0 24px 0;
-}
-
-#sidebar-first ul.menu {
-  margin-bottom: 0;
-}
-
-#sidebar-first ul.menu li {
-  margin: 0 0 0 1.5em;
-}
-
-#sidebar-first .block {
-  padding-top: 24px;
-  padding-top: 0;
-}
-
-#sidebar-first .block .content {
-  padding: 0 10px 16px 10px;
-}
-
-#sidebar-first .block h2 {
-  margin-bottom: 0.2em;
-  padding: 8px 16px 8px 16px;
-  border-bottom: 2px solid #fff;
-  letter-spacing: -1px;
-  background-color: #e3e2e2;
-}
-
 #sidebar-first #block-book-navigation,
 #sidebar-first .block-search-api-facets {
   background-color: #E6FCB6;
@@ -1002,22 +1014,6 @@ body.node-type-forum div.node-forum {
 
 #sidebar-first .search-api-facets li a.active {
   color: #0678BE;
-}
-
-#sidebar-first {
-  position: relative;
-}
-
-#jump-to-top {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 310px;
-  border-left: 5px solid #BFBFBF;
-}
-
-#jump-to-top a {
-  padding: 0.5em;
 }
 
 /* job */
