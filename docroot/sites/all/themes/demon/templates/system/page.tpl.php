@@ -74,16 +74,6 @@
  */
 ?>
 <header id="navbar" role="banner" class="<?php print $navbar_classes; ?>">
-  <?php if (!empty($secondary_nav)): ?>
-    <div class="clearfix <?php print $container_class; ?>">
-      <nav role="navigation">
-        <?php if (!empty($secondary_nav)): ?>
-          <?php print render($secondary_nav); ?>
-        <?php endif; ?>
-      </nav>
-    </div>
-  <?php endif; ?>
-
   <div class="<?php print $container_class; ?>">
     <div class="navbar-header">
       <?php if ($logo): ?>
@@ -101,6 +91,18 @@
         </button>
       <?php endif; ?>
     </div>
+
+    <?php if (!empty($secondary_nav)): ?>
+      <div class="navbar-collapse collapse menu-secondary clearfix <?php print $container_class; ?>">
+        <div class="">
+          <nav role="navigation">
+            <?php if (!empty($secondary_nav)): ?>
+              <?php print render($secondary_nav); ?>
+            <?php endif; ?>
+          </nav>
+        </div>
+      </div>
+    <?php endif; ?>
 
     <?php if (!empty($primary_nav) || !empty($page['navigation'])): ?>
       <div class="navbar-collapse collapse">
