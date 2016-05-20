@@ -37,16 +37,6 @@
   background-color: #f6f6f2;
   min-height: 60px;
 }
-.region-triptych .col-md-4 {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-.region-triptych .first {
-  padding-left: 0;
-}
-.region-triptych .last {
-  padding-right: 0;
-}
 .region-triptych h2,
 .region-triptych h3 {
   font-size: 18px;
@@ -60,14 +50,21 @@
   padding: 6px 0 0 12px;
 }
 .region-triptych .views-widget-filter-search_api_multi_fulltext {
-  width: 69%;
+  width: 68%;
+  margin-right: 5px;
 }
 .region-triptych .views-exposed-widget {
   margin-left: 0;
-  margin-top: 0;
+  margin-top: 7px;
+  float: none;
+  display: inline-block;
+  padding: 0;
 }
 .region-triptych .views-submit-button {
   padding-right: 0;
+  width: 27%;
+  position: relative;
+  top: -3px;
 }
 .region-triptych .form-submit {
   -moz-border-radius: 3px;
@@ -242,6 +239,18 @@
     max-width: 992px;
   }
 }
+@media only screen and (min-width: 992px) {
+  .region-triptych .col-md-4 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .region-triptych .first {
+    padding-left: 0;
+  }
+  .region-triptych .last {
+    padding-right: 0;
+  }
+}
 @media only screen and (min-width: 768px) {
   #navbar {
     padding-top: 40px;
@@ -261,7 +270,25 @@
   }
   .navbar .primary li > a {
     border-right: 1px solid #E6E6E6;
-    padding: 15px 25px;
+    padding: 15px 13px;
+    font-size: 14px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .region-triptych .col-md-4 {
+    margin-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  .region-triptych .first {
+    padding-left: 0;
+  }
+  .region-triptych .middle {
+    padding-right: 0;
+  }
+  .region-triptych .last {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 @media only screen and (max-width: 767px) {
@@ -269,9 +296,6 @@
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 3px;
-  }
-  .region-triptych .views-widget-filter-search_api_multi_fulltext {
-    width: 72%;
   }
 
   .node img {
@@ -1315,3 +1339,5 @@ fieldset {
   border-bottom: 1px solid #bdbdbd;
   padding-bottom: 8px;
 }
+
+/*# sourceMappingURL=style.css.map */

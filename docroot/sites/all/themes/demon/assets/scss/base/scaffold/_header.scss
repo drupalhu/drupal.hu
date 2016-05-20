@@ -6,19 +6,6 @@
     min-height: 60px;
   }
 
-  .col-md-4 {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .first {
-    padding-left: 0;
-  }
-
-  .last {
-    padding-right: 0;
-  }
-
   h2,
   h3 {
     font-size: 18px;
@@ -34,16 +21,23 @@
   }
 
   .views-widget-filter-search_api_multi_fulltext {
-    width: 69%;
+    width: 68%;
+    margin-right: 5px;
   }
 
   .views-exposed-widget {
     margin-left: 0;
-    margin-top: 0;
+    margin-top: 7px;
+    float: none;
+    display: inline-block;
+    padding: 0;
   }
 
   .views-submit-button {
     padding-right: 0;
+    width: 27%;
+    position: relative;
+    top: -3px;
   }
 
   .form-submit {

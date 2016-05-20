@@ -15,9 +15,19 @@
   @import 'desktop_lg';
 }
 
+// Above desktop
+@media only screen and (min-width: $screen-desktop) {
+  @import 'desktop_above';
+}
+
 // Above tablet
 @media only screen and (min-width: ($screen-tablet)){
   @import 'tablet_above';
+}
+
+// Responsive tablet
+@media only screen and (min-width: $screen-tablet) and (max-width: ($screen-desktop - 1px)) {
+  @import 'tablet';
 }
 
 // Responsive mobile
