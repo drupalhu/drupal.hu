@@ -233,7 +233,6 @@
 }
 
 .more-link {
-  padding-top: 2em;
   text-align: right;
 }
 
@@ -326,6 +325,18 @@
   .node img {
     width: 100%;
     height: auto;
+  }
+
+  body.front .panel-3col-33-stacked .panel-col-first,
+  body.front .panel-3col-33-stacked .panel-col,
+  body.front .panel-3col-33-stacked .panel-col-last {
+    width: 100%;
+    float: none;
+  }
+  body.front .panel-3col-33-stacked .panel-col-first .inside,
+  body.front .panel-3col-33-stacked .panel-col .inside,
+  body.front .panel-3col-33-stacked .panel-col-last .inside {
+    margin: 0;
   }
 }
 body {

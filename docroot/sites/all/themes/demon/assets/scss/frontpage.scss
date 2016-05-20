@@ -115,20 +115,9 @@ body.front .view-job h4 {
  */
 body.front .view-link-ajanlo {
   .views-row {
-    display: inline-block;
-    width: 216px;
     vertical-align: top;
-    padding: 0 5px 0 15px;
-    border-right: 1px solid #ECF0F5;
-
-    &:first-child {
-      padding-left: 0;
-    }
-    &:last-child {
-      border-right: 0;
-      padding-right: 0;
-    }
   }
+
   .views-field-title {
     margin-bottom: 0;
     margin-top: 5px;
@@ -143,8 +132,9 @@ body.front .view-link-ajanlo {
       }
     }
   }
-  //.views-field-title,
+
   .view-footer {
     margin-top: 10px;
+    clear: both;
   }
 }
