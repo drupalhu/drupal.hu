@@ -32,6 +32,13 @@
   border-right: 1px solid #E6E6E2;
 }
 
+.not-logged-in {
+  .vud-widget-upanddown .up-score .up-current-score,
+  .vud-widget-upanddown .down-score .down-current-score {
+    margin-left: 0;
+  }
+}
+
 .vud-widget-upanddown .up-score .up-current-score,
 .vud-widget-upanddown .down-score .down-current-score {
   margin-left: 35px;
