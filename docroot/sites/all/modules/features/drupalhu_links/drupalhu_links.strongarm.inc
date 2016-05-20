@@ -117,6 +117,12 @@ function drupalhu_links_strongarm() {
       'print' => array(
         'custom_settings' => FALSE,
       ),
+      'diff_standard' => array(
+        'custom_settings' => FALSE,
+      ),
+      'token' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
   );
   $export['field_bundle_settings_node__link'] = $strongarm;
@@ -164,6 +170,27 @@ function drupalhu_links_strongarm() {
   $strongarm->name = 'node_submitted_link';
   $strongarm->value = 1;
   $export['node_submitted_link'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_link_pattern';
+  $strongarm->value = 'linkek/[node:title]';
+  $export['pathauto_node_link_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_vocabulary_7_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_vocabulary_7_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_vocabulary_8_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_vocabulary_8_pattern'] = $strongarm;
 
   return $export;
 }

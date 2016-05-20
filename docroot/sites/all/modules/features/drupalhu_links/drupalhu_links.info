@@ -51,4 +51,7 @@ features[variable][] = menu_parent_link
 features[variable][] = node_options_link
 features[variable][] = node_preview_link
 features[variable][] = node_submitted_link
+features[variable][] = pathauto_node_link_pattern
+features[variable][] = pathauto_taxonomy_term_vocabulary_7_pattern
+features[variable][] = pathauto_taxonomy_term_vocabulary_8_pattern
 features[views_view][] = link_ajanlo
