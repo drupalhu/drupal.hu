@@ -231,6 +231,9 @@
 .region-sidebar-first .more-link {
   padding-top: 2em;
 }
+.region-sidebar-first .block ul {
+  padding-left: 20px;
+}
 
 .more-link {
   text-align: right;
@@ -252,6 +255,10 @@
 }
 .navbar .logo img {
   width: 195px;
+}
+
+.page-header {
+  border-bottom: 0;
 }
 
 @media only screen and (min-width: 1200px) {
