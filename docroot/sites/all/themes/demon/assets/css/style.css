@@ -1,3 +1,20 @@
+.main-container {
+  margin-bottom: 40px;
+}
+
+.footer-columns {
+  background-color: #F6F6F2;
+  border-top: 1px solid #bfbfbe;
+  padding: 20px 0 0;
+}
+
+.footer {
+  margin-top: 0;
+  border-top: 1px solid #a4a4a2;
+  background-color: #bfbfbe;
+  text-align: center;
+}
+
 .container {
   max-width: 992px;
 }
@@ -210,6 +227,14 @@
 }
 .region-sidebar-first .view-job h4 {
   margin-top: 0;
+}
+.region-sidebar-first .more-link {
+  padding-top: 2em;
+}
+
+.more-link {
+  padding-top: 2em;
+  text-align: right;
 }
 
 .jump {
@@ -1074,10 +1099,6 @@ body.node-type-forum div.node-forum {
   margin-bottom: 0;
 }
 
-#sidebar-first .more-link {
-  padding-top: 2em;
-}
-
 .node-job .field {
   margin-bottom: 10px;
 }
@@ -1133,13 +1154,6 @@ li.search-result h3 {
 #block-block-26 {
   height: 302px;
   background: url(../img/highlight-1-bkg.png) 50% 0;
-}
-
-#block-block-30 p {
-  /* trademark */
-  margin-top: 1em;
-  text-align: center;
-  font-size: 0.857em;
 }
 
 /* Planet and other node listings */

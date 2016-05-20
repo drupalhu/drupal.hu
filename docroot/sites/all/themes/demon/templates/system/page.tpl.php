@@ -180,21 +180,25 @@
 </div>
 
 <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn']): ?>
-  <div id="footer-columns" class="clearfix <?php print $container_class; ?>">
-    <div id="footer-first-col" class="col-md-4">
-      <?php print render($page['footer_firstcolumn']); ?>
-    </div>
-    <div id="footer-middle-col" class="col-md-4">
-      <?php print render($page['footer_secondcolumn']); ?>
-    </div>
-    <div id="footer-last-col" class="col-md-4">
-      <?php print render($page['footer_thirdcolumn']); ?>
+  <div class="footer-columns" class="clearfix">
+    <div class="<?php print $container_class; ?>">
+      <div id="footer-first-col" class="col-md-4">
+        <?php print render($page['footer_firstcolumn']); ?>
+      </div>
+      <div id="footer-middle-col" class="col-md-4">
+        <?php print render($page['footer_secondcolumn']); ?>
+      </div>
+      <div id="footer-last-col" class="col-md-4">
+        <?php print render($page['footer_thirdcolumn']); ?>
+      </div>
     </div>
   </div> <!-- /#footer-columns -->
 <?php endif; ?>
 
 <?php if (!empty($page['footer'])): ?>
-  <footer class="footer <?php print $container_class; ?>">
-    <?php print render($page['footer']); ?>
+  <footer class="footer">
+    <div class="<?php print $container_class; ?>">
+      <?php print render($page['footer']); ?>
+    </div>
   </footer>
 <?php endif; ?>
