@@ -166,8 +166,13 @@
     </section>
 
     <?php if (!empty($page['sidebar_first'])): ?>
-      <aside class="col-sm-3" role="complementary">
+      <aside class="col-sm-4" role="complementary">
         <?php print render($page['sidebar_first']); ?>
+        <?php if (!$is_front): ?>
+          <div class="jump">
+            <a href="#main-content"><?php print t('Back to top'); ?></a>
+          </div>
+        <?php endif; ?>
       </aside>  <!-- /#sidebar-first -->
     <?php endif; ?>
 
