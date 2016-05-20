@@ -121,9 +121,9 @@
   <div class="clearfix <?php print $container_class; ?>">
     <?php if ($page['triptych_first'] || $page['triptych_middle'] || $page['triptych_last']): ?>
       <div class="region-triptych">
-        <div class="col-md-4 first"><?php print render($page['triptych_first']); ?></div>
-        <div class="col-md-4 middle"><?php print render($page['triptych_middle']); ?></div>
-        <div class="col-md-4 last"><?php print render($page['triptych_last']); ?></div>
+        <div class="col-md-4 col-sm-4 col-xs-12 first"><?php print render($page['triptych_first']); ?></div>
+        <div class="col-md-4 col-sm-4 col-xs-12 middle"><?php print render($page['triptych_middle']); ?></div>
+        <div class="col-md-4 col-sm-4 col-xs-12 last"><?php print render($page['triptych_last']); ?></div>
       </div>
     <?php endif; ?>
   </div>
