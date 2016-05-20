@@ -104,7 +104,7 @@
 
     <?php if (!empty($primary_nav) || !empty($page['navigation'])): ?>
       <div class="navbar-collapse collapse">
-        <nav role="navigation">
+        <nav role="navigation" class="primary">
           <?php if (!empty($primary_nav)): ?>
             <?php print render($primary_nav); ?>
           <?php endif; ?>
@@ -118,9 +118,11 @@
 
   <div class="clearfix <?php print $container_class; ?>">
     <?php if ($page['triptych_first'] || $page['triptych_middle'] || $page['triptych_last']): ?>
-      <div class="col-md-4"><?php print render($page['triptych_first']); ?></div>
-      <div class="col-md-4"><?php print render($page['triptych_middle']); ?></div>
-      <div class="col-md-4"><?php print render($page['triptych_last']); ?></div>
+      <div class="region-triptych">
+        <div class="col-md-4 first"><?php print render($page['triptych_first']); ?></div>
+        <div class="col-md-4 middle"><?php print render($page['triptych_middle']); ?></div>
+        <div class="col-md-4 last"><?php print render($page['triptych_last']); ?></div>
+      </div>
     <?php endif; ?>
   </div>
   <?php if (!empty($page['header'])): ?>
