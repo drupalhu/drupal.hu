@@ -261,6 +261,28 @@
   border-bottom: 0;
 }
 
+.social-wrapper {
+  float: right;
+}
+.social-wrapper a {
+  display: block;
+  width: 24px;
+  height: 24px;
+  text-indent: -9000px;
+  color: transparent;
+  float: left;
+  margin-left: 10px;
+}
+.social-wrapper a.twitter {
+  background-image: url("../img/svg/twitter-with-circle.svg");
+}
+.social-wrapper a.facebook {
+  background-image: url("../img/svg/facebook-with-circle.svg");
+}
+.social-wrapper a.linkedin {
+  background-image: url("../img/svg/linkedin-with-circle.svg");
+}
+
 @media only screen and (min-width: 1200px) {
   .container {
     max-width: 992px;
@@ -895,37 +917,6 @@ h1#page-title {
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 1px solid #F6F6F2;
-}
-
-/**
- * social links in node
- */
-.social-wrapper {
-  float: right;
-}
-
-.social-wrapper a {
-  display: block;
-  background-image: url("../img/social.png");
-  background-repeat: no-repeat;
-  width: 24px;
-  height: 24px;
-  text-indent: -9000px;
-  color: transparent;
-  float: left;
-  margin-left: 10px;
-}
-
-.social-wrapper a.twitter {
-  background-position: 0 0;
-}
-
-.social-wrapper a.facebook {
-  background-position: -30px 0;
-}
-
-.social-wrapper a.linkedin {
-  background-position: -60px 0;
 }
 
 /* Forum */
