@@ -182,13 +182,13 @@
 <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn']): ?>
   <div class="footer-columns" class="clearfix">
     <div class="<?php print $container_class; ?>">
-      <div id="footer-first-col" class="col-md-4">
+      <div id="footer-first-col" class="col-md-4 col-sm-4 col-xs-12">
         <?php print render($page['footer_firstcolumn']); ?>
       </div>
-      <div id="footer-middle-col" class="col-md-4">
+      <div id="footer-middle-col" class="col-md-4 col-sm-4 col-xs-12">
         <?php print render($page['footer_secondcolumn']); ?>
       </div>
-      <div id="footer-last-col" class="col-md-4">
+      <div id="footer-last-col" class="col-md-4 col-sm-4 col-xs-12">
         <?php print render($page['footer_thirdcolumn']); ?>
       </div>
     </div>

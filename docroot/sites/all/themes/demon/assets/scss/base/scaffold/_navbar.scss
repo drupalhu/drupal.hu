@@ -8,6 +8,12 @@
     &:hover {
       color: $link-hover;
     }
+
+    &.active {
+      background-color: transparent;
+      text-decoration: underline;
+      color: $link-hover;
+    }
   }
 }
 
@@ -20,6 +26,15 @@
 
     &:hover {
       color: #555;
+    }
+
+    &.active {
+      background-color: transparent;
+      text-decoration: underline;
+
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
 

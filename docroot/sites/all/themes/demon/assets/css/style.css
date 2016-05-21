@@ -33,6 +33,11 @@
 .navbar-default .navbar-nav.secondary > li > a:hover {
   color: #53b0eb;
 }
+.navbar-default .navbar-nav.secondary > li > a.active {
+  background-color: transparent;
+  text-decoration: underline;
+  color: #53b0eb;
+}
 
 .navbar .primary li > a {
   font-size: 16px;
@@ -42,6 +47,13 @@
 }
 .navbar .primary li > a:hover {
   color: #555;
+}
+.navbar .primary li > a.active {
+  background-color: transparent;
+  text-decoration: underline;
+}
+.navbar .primary li > a.active:hover {
+  background-color: transparent;
 }
 .navbar .primary li.last a {
   border-right: 0;
@@ -243,7 +255,7 @@
   position: absolute;
   bottom: 20px;
   left: 15px;
-  width: 100%;
+  width: 70%;
   border-left: 5px solid #BFBFBF;
 }
 .jump a {
@@ -412,27 +424,6 @@
   background-image: url("../img/svg/linkedin-with-circle.svg");
 }
 
-@media only screen and (min-width: 1200px) {
-  .container {
-    max-width: 992px;
-  }
-
-  .navbar-default.container {
-    max-width: 992px;
-  }
-}
-@media only screen and (min-width: 992px) {
-  .region-triptych .col-md-4 {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-  .region-triptych .first {
-    padding-left: 0;
-  }
-  .region-triptych .last {
-    padding-right: 0;
-  }
-}
 @media only screen and (min-width: 768px) {
   #navbar {
     padding-top: 40px;
@@ -452,8 +443,8 @@
   }
   .navbar .primary li > a {
     border-right: 1px solid #E6E6E6;
-    padding: 15px 13px;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 15px 25px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -472,12 +463,25 @@
     padding-left: 0;
     padding-right: 0;
   }
+
+  .navbar .primary li > a {
+    padding: 15px 13px;
+    font-size: 14px;
+  }
 }
 @media only screen and (max-width: 767px) {
   .region-triptych .col-md-4 {
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 3px;
+  }
+
+  .region-sidebar-first {
+    margin-top: 30px;
+  }
+
+  .jump {
+    bottom: 0;
   }
 
   .node img {
@@ -495,6 +499,27 @@
   body.front .panel-3col-33-stacked .panel-col .inside,
   body.front .panel-3col-33-stacked .panel-col-last .inside {
     margin: 0;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .container {
+    max-width: 992px;
+  }
+
+  .navbar-default.container {
+    max-width: 992px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .region-triptych .col-md-4 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .region-triptych .first {
+    padding-left: 0;
+  }
+  .region-triptych .last {
+    padding-right: 0;
   }
 }
 body {

@@ -10,16 +10,6 @@
 // Import base formatting.
 @import 'base';
 
-// Responsive large desktop
-@media only screen and (min-width: $screen-lg-desktop) {
-  @import 'desktop_lg';
-}
-
-// Above desktop
-@media only screen and (min-width: $screen-desktop) {
-  @import 'desktop_above';
-}
-
 // Above tablet
 @media only screen and (min-width: ($screen-tablet)){
   @import 'tablet_above';
@@ -33,6 +23,16 @@
 // Responsive mobile
 @media only screen and (max-width: ($screen-tablet - 1px)) {
   @import 'mobile';
+}
+
+// Responsive large desktop
+@media only screen and (min-width: $screen-lg-desktop) {
+  @import 'desktop_lg';
+}
+
+// Above desktop
+@media only screen and (min-width: $screen-desktop) {
+  @import 'desktop_above';
 }
 
 
