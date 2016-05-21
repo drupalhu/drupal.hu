@@ -173,3 +173,17 @@ function dhu_update_7108(&$sandbox) {
 
   return implode((drupal_is_cli() ? PHP_EOL : '<br />'), $messages);
 }
+
+/**
+ * Revert feature to redesign.
+ */
+function dhu_update_7110() {
+  features_include();
+  $modules = array(
+    'drupalhu_links',
+  );
+
+  foreach ($modules as $module) {
+    features_revert_module($module);
+  }
+}
