@@ -178,6 +178,9 @@ function dhu_update_7108(&$sandbox) {
  * Revert feature to redesign.
  */
 function dhu_update_7110() {
+  $modules_to_enable = array('jquery_update');
+  module_enable($modules_to_enable);
+
   features_include();
   $modules = array(
     'drupalhu_links',
