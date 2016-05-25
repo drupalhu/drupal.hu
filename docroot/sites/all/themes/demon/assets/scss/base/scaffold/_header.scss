@@ -21,7 +21,7 @@
   }
 
   .views-widget-filter-search_api_multi_fulltext {
-    width: 68%;
+    width: 65%;
     margin-right: 5px;
   }
 
@@ -34,10 +34,10 @@
   }
 
   .views-submit-button {
-    padding-right: 0;
     width: 27%;
-    position: relative;
-    top: -3px;
+    position: absolute;
+    top: 6px;
+    right: 12px;
   }
 
   .form-submit {
