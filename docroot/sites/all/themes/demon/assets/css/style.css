@@ -484,6 +484,10 @@
     bottom: 0;
   }
 
+  .comment p {
+    word-wrap: break-word;
+  }
+
   .node img {
     width: 100%;
     height: auto;
