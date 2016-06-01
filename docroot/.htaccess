@@ -85,9 +85,11 @@ DirectoryIndex index.php index.html index.htm
   # On the live domain redirect to HTTPS with www.
   # In the Acquia cloud the %{HTTP:X-Forwarded-Proto} header is set by Varnish
   # but in other environments this header can be missing.
-  RewriteCond "%{HTTP:X-Forwarded-Proto}"   ^https$ [OR]
-  RewriteCond "%{HTTPS}"                    ^on$
-  RewriteRule ^(.*)$                        http://www.drupal.hu%{REQUEST_URI} [L,R=301]
+  RewriteCond "%{HTTP:X-Forwarded-Proto}" ^https$      [OR]
+  RewriteCond "%{HTTPS}"                  ^on$         [OR]
+  RewriteCond "%{ENV:protossl}"           ^s$          [OR]
+  RewriteCond "%{HTTP_HOST}"              ^drupal\.hu$
+  RewriteRule ^(.*)$                      http://www.drupal.hu%{REQUEST_URI} [L,R=301]
 #  RewriteCond "%{HTTP:X-Forwarded-Proto}:%{HTTP_HOST}"   ^http:(www\.){0,1}drupal\.hu$       [OR]
 #  RewriteCond "%{HTTP:X-Forwarded-Proto}:%{HTTP_HOST}"   ^https:drupal\.hu$
 #  RewriteRule ^(.*)$                                     https://www.drupal.hu%{REQUEST_URI} [L,R=301]
