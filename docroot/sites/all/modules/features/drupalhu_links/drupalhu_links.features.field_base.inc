@@ -10,7 +10,7 @@
 function drupalhu_links_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_link'
+  // Exported field_base: 'field_link'.
   $field_bases['field_link'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -40,7 +40,7 @@ function drupalhu_links_field_default_field_bases() {
     'type_name' => 'link',
   );
 
-  // Exported field_base: 'field_pick'
+  // Exported field_base: 'field_pick'.
   $field_bases['field_pick'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -71,7 +71,7 @@ function drupalhu_links_field_default_field_bases() {
     'type_name' => 'link',
   );
 
-  // Exported field_base: 'field_webshot'
+  // Exported field_base: 'field_webshot'.
   $field_bases['field_webshot'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -93,7 +93,7 @@ function drupalhu_links_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'taxonomy_vocabulary_7'
+  // Exported field_base: 'taxonomy_vocabulary_7'.
   $field_bases['taxonomy_vocabulary_7'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -120,7 +120,7 @@ function drupalhu_links_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'taxonomy_vocabulary_8'
+  // Exported field_base: 'taxonomy_vocabulary_8'.
   $field_bases['taxonomy_vocabulary_8'] = array(
     'active' => 1,
     'cardinality' => -1,

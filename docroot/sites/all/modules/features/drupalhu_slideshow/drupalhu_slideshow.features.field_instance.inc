@@ -10,7 +10,7 @@
 function drupalhu_slideshow_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-slideshow_item-field_slideshow_description'
+  // Exported field_instance: 'node-slideshow_item-field_slideshow_description'.
   $field_instances['node-slideshow_item-field_slideshow_description'] = array(
     'bundle' => 'slideshow_item',
     'default_value' => NULL,
@@ -50,7 +50,7 @@ function drupalhu_slideshow_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-slideshow_item-field_slideshow_image'
+  // Exported field_instance: 'node-slideshow_item-field_slideshow_image'.
   $field_instances['node-slideshow_item-field_slideshow_image'] = array(
     'bundle' => 'slideshow_item',
     'deleted' => 0,
@@ -100,7 +100,7 @@ function drupalhu_slideshow_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-slideshow_item-field_slideshow_url'
+  // Exported field_instance: 'node-slideshow_item-field_slideshow_url'.
   $field_instances['node-slideshow_item-field_slideshow_url'] = array(
     'bundle' => 'slideshow_item',
     'default_value' => NULL,
