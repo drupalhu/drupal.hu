@@ -173,3 +173,12 @@ function dhu_update_7108(&$sandbox) {
 
   return implode((drupal_is_cli() ? PHP_EOL : '<br />'), $messages);
 }
+
+/**
+ * Disable Browserclass module.
+ */
+function dhu_update_7109(&$sandbox) {
+  module_disable(array(
+    'browserclass',
+  ));
+}
