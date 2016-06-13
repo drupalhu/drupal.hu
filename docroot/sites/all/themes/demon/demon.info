@@ -1,20 +1,16 @@
 name = Demon
 description = Theme for drupal.hu site.
-package = Core
 version = 0624-1.0 beta
 core = 7.x
+base theme = bootstrap
 
 logo = logo.jpg
 
-stylesheets[all][] = css/reset.css
-stylesheets[all][] = css/text.css
-stylesheets[all][] = css/search.css
-stylesheets[all][] = css/frontpage.css
-stylesheets[all][] = css/960_24_col.css
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/voteupdown.css
-
-scripts[] = colorbox_register.js
+stylesheets[all][] = assets/css/text.css
+stylesheets[all][] = assets/css/search.css
+stylesheets[all][] = assets/css/frontpage.css
+stylesheets[all][] = assets/css/style.css
+stylesheets[all][] = assets/css/voteupdown.css
 
 regions[header] = Header
 regions[help] = Help

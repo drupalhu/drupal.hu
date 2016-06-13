@@ -1,0 +1,25 @@
+.social-wrapper {
+  float: right;
+
+  a {
+    display: block;
+    width: 24px;
+    height: 24px;
+    text-indent: -9000px;
+    color: transparent;
+    float: left;
+    margin-left: 10px;
+
+    &.twitter {
+      background-image: url("../img/svg/twitter-with-circle.svg");
+    }
+
+    &.facebook {
+      background-image: url("../img/svg/facebook-with-circle.svg");
+    }
+
+    &.linkedin {
+      background-image: url("../img/svg/linkedin-with-circle.svg");
+    }
+  }
+}
