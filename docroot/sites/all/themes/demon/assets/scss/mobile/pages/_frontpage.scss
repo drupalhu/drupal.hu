@@ -1,0 +1,12 @@
+body.front {
+  .panel-3col-33-stacked .panel-col-first,
+  .panel-3col-33-stacked .panel-col,
+  .panel-3col-33-stacked .panel-col-last {
+    width: 100%;
+    float: none;
+
+    .inside {
+      margin: 0;
+    }
+  }
+}

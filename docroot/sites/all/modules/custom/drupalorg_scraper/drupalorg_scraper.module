@@ -403,7 +403,7 @@ function drupalorg_scraper_release_history_url_base() {
 function theme_drupalorg_scraper_releases(array $vars) {
   $output = '';
   foreach ($vars['releases'] as $release_id => $release) {
-    $output .= '<div' . ($vars['highlight'] === $release_id ? ' class="highlight">' : '>');
+    $output .= '<div' . ($vars['highlight'] === $release_id ? ' class="highlight">' : ' class="not-prefered">');
 
     $output .= l(
       $release['version'], $release['download_link'], array(

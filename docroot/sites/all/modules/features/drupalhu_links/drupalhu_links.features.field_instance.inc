@@ -276,7 +276,7 @@ function drupalhu_links_field_default_field_instances() {
   // Exported field_instance: 'node-link-taxonomy_vocabulary_7'.
   $field_instances['node-link-taxonomy_vocabulary_7'] = array(
     'bundle' => 'link',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => 'Magyar Drupal webhelyek bemutatója',
     'display' => array(

@@ -1,0 +1,44 @@
+.navbar-default {
+  background-color: transparent;
+  border: 0;
+
+  .navbar-nav.secondary > li > a {
+    color: $link;
+
+    &:hover {
+      color: $link-hover;
+    }
+
+    &.active {
+      background-color: transparent;
+      text-decoration: underline;
+      color: $link-hover;
+    }
+  }
+}
+
+.navbar .primary {
+  li > a {
+    font-size: 16px;
+    vertical-align: middle;
+    color: $black;
+    text-decoration: none;
+
+    &:hover {
+      color: #555;
+    }
+
+    &.active {
+      background-color: transparent;
+      text-decoration: underline;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  li.last a {
+    border-right: 0;
+  }
+}
