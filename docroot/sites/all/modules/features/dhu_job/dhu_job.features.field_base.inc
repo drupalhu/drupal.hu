@@ -10,7 +10,7 @@
 function dhu_job_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_buzzwords'
+  // Exported field_base: 'field_buzzwords'.
   $field_bases['field_buzzwords'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -57,7 +57,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_job_advantage'
+  // Exported field_base: 'field_job_advantage'.
   $field_bases['field_job_advantage'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -76,7 +76,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_job_announcer_gives'
+  // Exported field_base: 'field_job_announcer_gives'.
   $field_bases['field_job_announcer_gives'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -95,7 +95,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_job_contact_email'
+  // Exported field_base: 'field_job_contact_email'.
   $field_bases['field_job_contact_email'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -110,7 +110,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'email',
   );
 
-  // Exported field_base: 'field_job_contact_person'
+  // Exported field_base: 'field_job_contact_person'.
   $field_bases['field_job_contact_person'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -131,7 +131,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_job_contact_phone'
+  // Exported field_base: 'field_job_contact_phone'.
   $field_bases['field_job_contact_phone'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -152,7 +152,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_job_due_date'
+  // Exported field_base: 'field_job_due_date'.
   $field_bases['field_job_due_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -181,7 +181,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_job_expectations'
+  // Exported field_base: 'field_job_expectations'.
   $field_bases['field_job_expectations'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -200,7 +200,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_job_experience'
+  // Exported field_base: 'field_job_experience'.
   $field_bases['field_job_experience'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -226,7 +226,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_job_organization'
+  // Exported field_base: 'field_job_organization'.
   $field_bases['field_job_organization'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -247,7 +247,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_job_other_language'
+  // Exported field_base: 'field_job_other_language'.
   $field_bases['field_job_other_language'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -273,7 +273,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_job_remotely'
+  // Exported field_base: 'field_job_remotely'.
   $field_bases['field_job_remotely'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -299,7 +299,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_job_summary'
+  // Exported field_base: 'field_job_summary'.
   $field_bases['field_job_summary'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -320,7 +320,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_job_timing'
+  // Exported field_base: 'field_job_timing'.
   $field_bases['field_job_timing'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -347,7 +347,7 @@ function dhu_job_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_place_of_work'
+  // Exported field_base: 'field_place_of_work'.
   $field_bases['field_place_of_work'] = array(
     'active' => 1,
     'cardinality' => 1,
