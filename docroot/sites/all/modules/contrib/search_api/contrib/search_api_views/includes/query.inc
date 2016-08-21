@@ -344,13 +344,15 @@ class SearchApiViewsQuery extends views_plugin_query {
     // FALSE.
     $skip_result_count = $this->query->getOption('skip result count', TRUE);
     if ($skip_result_count) {
-      $skip_result_count = !$this->pager->use_count_query() && empty($view->get_total_rows);
+      $skip_result_count = !$this->pager || (!$this->pager->use_count_query() && empty($view->get_total_rows));
       $this->query->setOption('skip result count', $skip_result_count);
     }
 
     try {
       // Trigger pager pre_execute().
-      $this->pager->pre_execute($this->query);
+      if ($this->pager) {
+        $this->pager->pre_execute($this->query);
+      }
 
       // Views passes sometimes NULL and sometimes the integer 0 for "All" in a
       // pager. If set to 0 items, a string "0" is passed. Therefore, we unset
@@ -385,7 +387,9 @@ class SearchApiViewsQuery extends views_plugin_query {
       $view->execute_time = microtime(TRUE) - $start;
 
       // Trigger pager post_execute().
-      $this->pager->post_execute($view->result);
+      if ($this->pager) {
+        $this->pager->post_execute($view->result);
+      }
     }
     catch (Exception $e) {
       $this->errors[] = $e->getMessage();
@@ -444,7 +448,7 @@ class SearchApiViewsQuery extends views_plugin_query {
 
       // Gather any fields from the search results.
       if (!empty($result['fields'])) {
-        $row['_entity_properties'] += $result['fields'];
+        $row['_entity_properties'] += search_api_get_sanitized_field_values($result['fields']);
       }
 
       // Check whether we need to extract any properties from the result item.
@@ -538,7 +542,7 @@ class SearchApiViewsQuery extends views_plugin_query {
    * query backend.
    */
   public function get_result_wrappers($results, $relationship = NULL, $field = NULL) {
-    $type = $this->index->item_type;
+    $type = $this->index->getEntityType() ? $this->index->getEntityType() : $this->index->item_type;
     $wrappers = array();
     $load_items = array();
     foreach ($results as $row_index => $row) {
