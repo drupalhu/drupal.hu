@@ -10,7 +10,7 @@
 function dhu_event_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_datum'
+  // Exported field_base: 'field_datum'.
   $field_bases['field_datum'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -37,7 +37,7 @@ function dhu_event_field_default_field_bases() {
     'type' => 'date',
   );
 
-  // Exported field_base: 'field_geofield'
+  // Exported field_base: 'field_geofield'.
   $field_bases['field_geofield'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -87,7 +87,7 @@ function dhu_event_field_default_field_bases() {
     'type' => 'geofield',
   );
 
-  // Exported field_base: 'field_helyszin'
+  // Exported field_base: 'field_helyszin'.
   $field_bases['field_helyszin'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -108,7 +108,7 @@ function dhu_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'taxonomy_vocabulary_5'
+  // Exported field_base: 'taxonomy_vocabulary_5'.
   $field_bases['taxonomy_vocabulary_5'] = array(
     'active' => 1,
     'cardinality' => -1,

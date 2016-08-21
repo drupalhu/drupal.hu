@@ -10,7 +10,7 @@
 function dhu_event_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_esemeny-comment_body'
+  // Exported field_instance: 'comment-comment_node_esemeny-comment_body'.
   $field_instances['comment-comment_node_esemeny-comment_body'] = array(
     'bundle' => 'comment_node_esemeny',
     'default_value' => NULL,
@@ -44,7 +44,7 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-body'
+  // Exported field_instance: 'node-esemeny-body'.
   $field_instances['node-esemeny-body'] = array(
     'bundle' => 'esemeny',
     'default_value' => NULL,
@@ -88,7 +88,7 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-field_datum'
+  // Exported field_instance: 'node-esemeny-field_datum'.
   $field_instances['node-esemeny-field_datum'] = array(
     'bundle' => 'esemeny',
     'deleted' => 0,
@@ -103,6 +103,7 @@ function dhu_event_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -116,6 +117,7 @@ function dhu_event_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
@@ -152,10 +154,10 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-field_geofield'
+  // Exported field_instance: 'node-esemeny-field_geofield'.
   $field_instances['node-esemeny-field_geofield'] = array(
     'bundle' => 'esemeny',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -201,7 +203,7 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-field_helyszin'
+  // Exported field_instance: 'node-esemeny-field_helyszin'.
   $field_instances['node-esemeny-field_helyszin'] = array(
     'bundle' => 'esemeny',
     'default_value' => NULL,
@@ -240,7 +242,7 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-taxonomy_vocabulary_5'
+  // Exported field_instance: 'node-esemeny-taxonomy_vocabulary_5'.
   $field_instances['node-esemeny-taxonomy_vocabulary_5'] = array(
     'bundle' => 'esemeny',
     'default_value' => NULL,
@@ -278,7 +280,7 @@ function dhu_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-esemeny-upload'
+  // Exported field_instance: 'node-esemeny-upload'.
   $field_instances['node-esemeny-upload'] = array(
     'bundle' => 'esemeny',
     'deleted' => 0,

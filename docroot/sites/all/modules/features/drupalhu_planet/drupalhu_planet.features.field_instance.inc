@@ -10,7 +10,7 @@
 function drupalhu_planet_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-feed-body'
+  // Exported field_instance: 'node-feed-body'.
   $field_instances['node-feed-body'] = array(
     'bundle' => 'feed',
     'default_value' => NULL,
@@ -54,7 +54,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed-taxonomy_vocabulary_12'
+  // Exported field_instance: 'node-feed-taxonomy_vocabulary_12'.
   $field_instances['node-feed-taxonomy_vocabulary_12'] = array(
     'bundle' => 'feed',
     'default_value' => NULL,
@@ -89,7 +89,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed-upload'
+  // Exported field_instance: 'node-feed-upload'.
   $field_instances['node-feed-upload'] = array(
     'bundle' => 'feed',
     'deleted' => 0,
@@ -144,7 +144,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed_item-body'
+  // Exported field_instance: 'node-feed_item-body'.
   $field_instances['node-feed_item-body'] = array(
     'bundle' => 'feed_item',
     'default_value' => NULL,
@@ -188,7 +188,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed_item-field_external_tags'
+  // Exported field_instance: 'node-feed_item-field_external_tags'.
   $field_instances['node-feed_item-field_external_tags'] = array(
     'bundle' => 'feed_item',
     'default_value' => NULL,
@@ -229,7 +229,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed_item-field_forras'
+  // Exported field_instance: 'node-feed_item-field_forras'.
   $field_instances['node-feed_item-field_forras'] = array(
     'bundle' => 'feed_item',
     'default_value' => NULL,
@@ -282,7 +282,7 @@ function drupalhu_planet_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-feed_item-taxonomy_vocabulary_12'
+  // Exported field_instance: 'node-feed_item-taxonomy_vocabulary_12'.
   $field_instances['node-feed_item-taxonomy_vocabulary_12'] = array(
     'bundle' => 'feed_item',
     'default_value' => NULL,
