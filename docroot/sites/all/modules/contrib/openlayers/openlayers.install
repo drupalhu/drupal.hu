@@ -164,21 +164,29 @@ function openlayers_schema() {
         'type' => 'numeric',
         'not null' => TRUE,
         'description' => "Leftmost value in this projection's coordinates",
+        'precision' => 10,
+        'scale' => 0,
       ),
       'projectedextentbottom' => array(
         'type' => 'numeric',
         'not null' => TRUE,
         'description' => "Bottommost value in this projection's coordinates",
+        'precision' => 10,
+        'scale' => 0,
       ),
       'projectedextentright' => array(
         'type' => 'numeric',
         'not null' => TRUE,
         'description' => "Rightmost value in this projection's coordinates",
+        'precision' => 10,
+        'scale' => 0,
       ),
       'projectedextenttop' => array(
         'type' => 'numeric',
         'not null' => TRUE,
         'description' => "Topmost value in this projection's coordinates",
+        'precision' => 10,
+        'scale' => 0,
       ),
       // TODO Hopefully never used
       'data' => array(
@@ -374,7 +382,7 @@ function openlayers_update_7202() {
  */
 function openlayers_update_7204() {
   openlayers_update_create_projection_table();
-  
+
   foreach (openlayers_layers_load() as $key => $layer) {
     if ($layer->export_type != 1) continue;
     if (isset($layer->data['baselayer'])) {
@@ -400,7 +408,7 @@ function openlayers_update_7205() {
  */
 function openlayers_update_7206() {
   openlayers_update_create_projection_table();
-  
+
   foreach (openlayers_layers_load() as $key => $layer) {
     if ($layer->export_type != 1) continue;
     if ($layer->data['layer_type'] != 'openlayers_layer_type_tms') continue;
@@ -423,7 +431,7 @@ function openlayers_update_create_projection_table() {
   } else {
     $hasRun = TRUE;
   }
-  
+
   // Create projection table
   $openlayers_projections_schema = array(
     'description' => 'Storage for user defined OpenLayers projections.',
@@ -500,7 +508,7 @@ function openlayers_update_create_projection_table() {
  */
 function openlayers_update_7207() {
   openlayers_update_create_projection_table();
-  
+
   // Migrate stored layers
   foreach (openlayers_layers_load(TRUE) as $key => $layer) {
     $projections = array();
