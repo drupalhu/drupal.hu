@@ -10,7 +10,7 @@
 function konyvlap_cimkek_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-book-field_voc_celkozonseg'
+  // Exported field_instance: 'node-book-field_voc_celkozonseg'.
   $field_instances['node-book-field_voc_celkozonseg'] = array(
     'bundle' => 'book',
     'default_value' => NULL,
@@ -46,7 +46,7 @@ function konyvlap_cimkek_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book-field_voc_szint'
+  // Exported field_instance: 'node-book-field_voc_szint'.
   $field_instances['node-book-field_voc_szint'] = array(
     'bundle' => 'book',
     'default_value' => NULL,

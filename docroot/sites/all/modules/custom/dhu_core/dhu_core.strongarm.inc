@@ -45,5 +45,12 @@ function dhu_core_strongarm() {
   $strongarm->value = 'internal';
   $export['openlayers_source_type'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_vocabulary_5_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_vocabulary_5_pattern'] = $strongarm;
+
   return $export;
 }

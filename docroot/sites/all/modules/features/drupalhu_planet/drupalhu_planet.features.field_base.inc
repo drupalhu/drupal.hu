@@ -10,7 +10,7 @@
 function drupalhu_planet_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_external_tags'
+  // Exported field_base: 'field_external_tags'.
   $field_bases['field_external_tags'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -36,7 +36,7 @@ function drupalhu_planet_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_forras'
+  // Exported field_base: 'field_forras'.
   $field_bases['field_forras'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -65,7 +65,7 @@ function drupalhu_planet_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'taxonomy_vocabulary_12'
+  // Exported field_base: 'taxonomy_vocabulary_12'.
   $field_bases['taxonomy_vocabulary_12'] = array(
     'active' => 1,
     'cardinality' => -1,

@@ -32,3 +32,4 @@ features[variable][] = openlayers_source
 features[variable][] = openlayers_source_external
 features[variable][] = openlayers_source_internal_variant
 features[variable][] = openlayers_source_type
+features[variable][] = pathauto_taxonomy_term_vocabulary_5_pattern

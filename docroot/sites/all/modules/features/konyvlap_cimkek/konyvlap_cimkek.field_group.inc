@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function konyvlap_cimkek_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -38,7 +38,11 @@ function konyvlap_cimkek_field_group_info() {
       ),
     ),
   );
-  $export['group_book_vocs|node|book|form'] = $field_group;
+  $field_groups['group_book_vocs|node|book|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Szótárak');
+
+  return $field_groups;
 }
