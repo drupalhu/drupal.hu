@@ -58,13 +58,13 @@ fi
 drush sql-drop --database='default'
 
 echo "Import database dump $source_sql_name"
-drush --database='default' sql-cli -A < "${source_sql_name}"
+drush --database='default' --strict='0' sql-cli -A < "${source_sql_name}"
 
 drush cc all
 drush pm-disable acquia_spi --yes
 
 echo 'Run DB cleanup script: ../hooks/scripts/db-scrub.stage.mysql'
-drush --database='default' sql-cli -A < "../hooks/scripts/db-scrub.stage.mysql"
+drush --database='default' --strict='0' sql-cli -A < '../hooks/scripts/db-scrub.stage.mysql'
 
 dump_sql_name="../backup/${ac_site}-dev.sql"
 dump_sql_base=$(basename "$dump_sql_name")
