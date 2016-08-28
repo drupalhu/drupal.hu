@@ -57,7 +57,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   protected $request_handler = NULL;
 
   /**
-   * Overrides SearchApiAbstractService::configurationForm().
+   * {@inheritdoc}
    */
   public function configurationForm(array $form, array &$form_state) {
     if ($this->options) {
@@ -80,6 +80,8 @@ class SearchApiSolrService extends SearchApiAbstractService {
       'retrieve_data' => FALSE,
       'highlight_data' => FALSE,
       'skip_schema_check' => FALSE,
+      'log_query' => FALSE,
+      'log_response' => FALSE,
       'solr_version' => '',
       'http_method' => 'AUTO',
       // Default to TRUE for new servers, but to FALSE for existing ones.
@@ -176,6 +178,10 @@ class SearchApiSolrService extends SearchApiAbstractService {
       '#type' => 'textfield',
       '#title' => t('Username'),
       '#default_value' => $options['http_user'],
+      // This prefix with no-op text and password field will keep most browsers
+      // from autocompleting these fields, which is hardly ever what the user
+      // wants.
+      '#prefix' => '<input type="text" style="display:none" /><input type="password" style="display:none" />',
     );
     $form['http']['http_pass'] = array(
       '#type' => 'password',
@@ -210,6 +216,11 @@ class SearchApiSolrService extends SearchApiAbstractService {
       '#description' => t('When retrieving result data from the Solr server, try to highlight the search terms in the returned fulltext fields.'),
       '#default_value' => $options['highlight_data'],
     );
+    // Highlighting retrieved data only makes sense when we retrieve data.
+    // (Actually, internally it doesn't really matter. However, from a user's
+    // perspective, having to check both probably makes sense.)
+    $form['advanced']['highlight_data']['#states']['invisible']
+    [':input[name="options[form][advanced][retrieve_data]"]']['checked'] = FALSE;
     $form['advanced']['skip_schema_check'] = array(
       '#type' => 'checkbox',
       '#title' => t('Skip schema verification'),
@@ -228,12 +239,6 @@ class SearchApiSolrService extends SearchApiAbstractService {
       ),
       '#default_value' => $options['solr_version'],
     );
-    // Highlighting retrieved data only makes sense when we retrieve data.
-    // (Actually, internally it doesn't really matter. However, from a user's
-    // perspective, having to check both probably makes sense.)
-    $form['advanced']['highlight_data']['#states']['invisible']
-        [':input[name="options[form][advanced][retrieve_data]"]']['checked'] = FALSE;
-
     $form['advanced']['http_method'] = array(
       '#type' => 'select',
       '#title' => t('HTTP method'),
@@ -244,6 +249,18 @@ class SearchApiSolrService extends SearchApiAbstractService {
         'POST' => 'POST',
         'GET' => 'GET',
       ),
+    );
+    $form['advanced']['log_query'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Log search requests'),
+      '#description' => t('Log all outgoing Solr search requests.'),
+      '#default_value' => $options['log_query'],
+    );
+    $form['advanced']['log_response'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Log search results'),
+      '#description' => t('Log all search result responses received from Solr. NOTE: This may slow down your site since all response data (including possible retrieved data) will be saved in the Drupal log.'),
+      '#default_value' => $options['log_response'],
     );
 
     if (module_exists('search_api_autocomplete')) {
@@ -271,7 +288,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Overrides SearchApiAbstractService::configurationFormValidate().
+   * {@inheritdoc}
    */
   public function configurationFormValidate(array $form, array &$values, array &$form_state) {
     if (isset($values['port']) && (!is_numeric($values['port']) || $values['port'] < 0 || $values['port'] > 65535)) {
@@ -280,7 +297,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Overrides SearchApiAbstractService::configurationFormSubmit().
+   * {@inheritdoc}
    */
   public function configurationFormSubmit(array $form, array &$values, array &$form_state) {
     // Since the form is nested into another, we can't simply use #parents for
@@ -429,8 +446,8 @@ class SearchApiSolrService extends SearchApiAbstractService {
                 $status = 'error';
               }
               elseif (substr($stats_summary['@schema_version'], 0, 9) != 'drupal-4.') {
-                $variables['@url'] = url(drupal_get_path('module', 'search_api_solr') . '/INSTALL.txt');
-                $message = t('You are using an incompatible schema.xml configuration file. Please follow the instructions in the <a href="@url">INSTALL.txt</a> file for setting up Solr.', $variables);
+                $variables['@url'] = url('https://www.drupal.org/node/1999310');
+                $message = t('You are using an incompatible schema.xml configuration file. Please follow the instructions in <a href="@url">the handbook</a> for setting up Solr.', $variables);
                 drupal_set_message($message, 'error');
                 $status = 'error';
               }
@@ -495,7 +512,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Overrides SearchApiAbstractService::addIndex().
+   * {@inheritdoc}
    */
   public function addIndex(SearchApiIndex $index) {
     if (module_exists('search_api_multi') && module_exists('search_api_views')) {
@@ -504,7 +521,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Overrides SearchApiAbstractService::fieldsUpdated().
+   * {@inheritdoc}
    */
   public function fieldsUpdated(SearchApiIndex $index) {
     if (module_exists('search_api_multi') && module_exists('search_api_views')) {
@@ -525,7 +542,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Overrides SearchApiAbstractService::removeIndex().
+   * {@inheritdoc}
    */
   public function removeIndex($index) {
     if (module_exists('search_api_multi') && module_exists('search_api_views')) {
@@ -536,7 +553,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Implements SearchApiServiceInterface::indexItems().
+   * {@inheritdoc}
    */
   public function indexItems(SearchApiIndex $index, array $items) {
     $documents = array();
@@ -772,6 +789,17 @@ class SearchApiSolrService extends SearchApiAbstractService {
    *
    * It is up to the caller to ensure $ids is a valid query when the method is
    * called in this fashion.
+   *
+   * @param array|string $ids
+   *   Either an array containing the ids of the items that should be deleted,
+   *   or 'all' if all items should be deleted. Other formats might be
+   *   recognized by implementing classes, but these are not standardized.
+   * @param SearchApiIndex $index
+   *   The index from which items should be deleted, or NULL if all indexes on
+   *   this server should be cleared (then, $ids has to be 'all').
+   *
+   * @throws SearchApiException
+   *   If an error occurred while trying to delete the items.
    */
   public function deleteItems($ids = 'all', SearchApiIndex $index = NULL) {
     $this->connect();
@@ -804,7 +832,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Implements SearchApiServiceInterface::search().
+   * {@inheritdoc}
    */
   public function search(SearchApiQueryInterface $query) {
     $time_method_called = microtime(TRUE);
@@ -955,7 +983,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
           // If the fq consists only of a filter on this field, replace it with
           // a range.
           $preg_field = preg_quote($escaped_field, '/');
-          if (preg_match('/^' . $preg_field . ':\["?(\*|\d+(?:\.\d+)?)"? TO "?(\*|\d+(?:\.\d+)?)"?\]$/', $value, $m)) {
+          if (preg_match('/^(?:\{!tag[^}]+\})?' . $preg_field . ':\["?(\*|\d+(?:\.\d+)?)"? TO "?(\*|\d+(?:\.\d+)?)"?\]$/', $value, $m)) {
             unset($fq[$key]);
             if ($m[1] && is_numeric($m[1])) {
               $min_radius = isset($min_radius) ? max($min_radius, $m[1]) : $m[1];
@@ -1080,6 +1108,18 @@ class SearchApiSolrService extends SearchApiAbstractService {
               if (substr($f, 0, 3) == 'ss_') {
                 $f = 'sort_' . substr($f, 3);
               }
+
+              // The default Solr schema provides a virtual field named
+              // "random_SEED" that can be used to randomly sort the results;
+              // the field is available only at query-time.
+              if ($group_sort_field == 'search_api_random') {
+                $params = $query->getOption('search_api_random_sort', array());
+                // Random seed: getting the value from parameters or computing a
+                // new one.
+                $seed = !empty($params['seed']) ? $params['seed'] : mt_rand();
+                $f = 'random_' . $seed;
+              }
+
               $order = strtolower($order);
               $group_params['group.sort'][] = $f . ' ' . $order;
             }
@@ -1327,6 +1367,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
       foreach ($response->highlighting->$id->content as $snippet) {
         $snippet = strip_tags($snippet);
         $snippet = preg_replace('/^.*>|<.*$/', '', $snippet);
+        $snippet = check_plain($snippet);
         $snippet = $this->formatHighlighting($snippet);
         // The created fragments sometimes have leading or trailing punctuation.
         // We remove that here for all common cases, but take care not to remove
@@ -1336,11 +1377,16 @@ class SearchApiSolrService extends SearchApiAbstractService {
       }
     }
     if (!empty($this->options['highlight_data'])) {
+      $prefix = variable_get('search_api_solr_highlight_prefix', 'tm_');
+      $prefix_length = strlen($prefix);
       foreach ($field_mapping as $search_api_property => $solr_property) {
-        if (substr($solr_property, 0, 3) == 'tm_' && !empty($response->highlighting->$id->$solr_property)) {
-          // Contrary to above, we here want to preserve HTML, so we just
-          // replace the [HIGHLIGHT] tags with the appropriate format.
-          $fields[$search_api_property] = $this->formatHighlighting($response->highlighting->$id->$solr_property);
+        if (substr($solr_property, 0, $prefix_length) == $prefix && !empty($response->highlighting->$id->$solr_property)) {
+          $value = $response->highlighting->$id->$solr_property;
+          $value = $this->sanitizeHighlightValue($value, $search_api_property);
+          $fields[$search_api_property] = array(
+            '#value' => $this->formatHighlighting($value),
+            '#sanitize_callback' => FALSE,
+          );
         }
       }
     }
@@ -1349,12 +1395,33 @@ class SearchApiSolrService extends SearchApiAbstractService {
   }
 
   /**
-   * Changes highlighting tags from our custom, HTML-safe ones to HTML.
+   * Sanitizes a highlighted field value.
    *
-   * @param string|array $snippet
-   *   The snippet(s) to format.
+   * @param string|array $value
+   *   Either a highlighted field value, or an array of such values.
+   * @param string|null $field_id
+   *   (optional) The ID of the field for which this sanitizing occurs, if any.
    *
    * @return string|array
+   *   The sanitized input.
+   */
+  protected function sanitizeHighlightValue($value, $field_id = NULL) {
+    if (is_array($value)) {
+      foreach ($value as $i => $nested_value) {
+        $value[$i] = $this->sanitizeHighlightValue($nested_value, $field_id);
+      }
+      return $value;
+    }
+    return check_plain(strip_tags($value));
+  }
+
+  /**
+   * Changes highlighting tags from our custom, HTML-safe ones to HTML.
+   *
+   * @param string|string[] $snippet
+   *   The snippet(s) to format.
+   *
+   * @return string|string[]
    *   The snippet(s), properly formatted as HTML.
    */
   protected function formatHighlighting($snippet) {
@@ -1557,10 +1624,10 @@ class SearchApiSolrService extends SearchApiAbstractService {
       }
       elseif ($f instanceof SearchApiQueryFilterInterface) {
         $q = $this->createFilterQueries($f, $solr_fields, $fields);
-        if ($filter->getConjunction() != $f->getConjunction()) {
+        if ($filter->getConjunction() != $f->getConjunction() && count($q) > 1) {
           // $or == TRUE means the nested filter has conjunction AND, and vice versa
           $sep = $or ? ' ' : ' OR ';
-          $fq[] = count($q) == 1 ? reset($q) : '((' . implode(')' . $sep . '(', $q) . '))';
+          $fq[] = '((' . implode(')' . $sep . '(', $q) . '))';
         }
         else {
           $fq = array_merge($fq, $q);
@@ -1604,7 +1671,6 @@ class SearchApiSolrService extends SearchApiAbstractService {
     if ($value === NULL) {
       return ($operator == '=' ? '*:* AND -' : '') . "$field:[* TO *]";
     }
-    $value = trim($value);
     $value = $this->formatFilterValue($value, search_api_extract_inner_type($field_info['type']));
     switch ($operator) {
       case '<>':
@@ -1717,7 +1783,7 @@ class SearchApiSolrService extends SearchApiAbstractService {
     }
 
     if (!empty($this->options['highlight_data'])) {
-      $highlight_params['hl.fl'] = 'tm_*';
+      $highlight_params['hl.fl'] = variable_get('search_api_solr_highlight_prefix', 'tm_') . '*';
       $highlight_params['hl.snippets'] = 1;
       $highlight_params['hl.fragsize'] = 0;
       if (!empty($this->options['excerpt'])) {
