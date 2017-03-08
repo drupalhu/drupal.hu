@@ -115,6 +115,30 @@ po files, multi site and distributions
 
   Po files included in distributions should match this syntax too.
 
+Missing translations
+--------------------
+
+  If you see "Missing translations for ..." on the Translate interface update
+  page this means that Localization Update module was not able to find a
+  translation file for one or more of your modules or themes. This is usually
+  the case with features, but can also occur with custom modules.
+
+  In case of custom modules, remove the line "project = ..." from the .info
+  file. Only use "project = ..." for modules that are available at drupal.org or
+  custom modules for which an alternative source of translation is provided (see
+  below). In case of a feature add the feature machine name to 'Project' at
+  admin/config/regional/language/update > Disable update. This will prevent
+  Localization Update module from checking for updates for this feature.
+
+  If "missing translations" lists all your enabled modules the webserver has no
+  access to ftp.drupal.org. Contact your hosting to allow access.
+
+  If only a few of your contributed modules are in the list, first verify that
+  the translation is actually missing by visiting the listed URL of the .po file
+  (for example "http://ftp.drupal.org/files/translations/7.x/views/views.hu.po")
+  When the file is not found, you either try again later or contact a
+  translation administrator of your language at https://localize.drupal.org/.
+
 Alternative source of translation
 ---------------------------------
 
@@ -126,7 +150,7 @@ Alternative source of translation
 
   Modules can force Locale to load the translation of an other project by
   defining 'interface translation project' in their .info file. This can be
-  usefull for custom modules to use for example a common translation file
+  useful for custom modules to use for example a common translation file
 
     interface translation project = my_project
 
@@ -150,6 +174,16 @@ API
   translation repositories on a per module basis.
 
   See l10n_update.api.php for more information.
+
+Using a Proxy
+-------------
+
+  Use the cURL HTTP Request module (https://drupal.org/project/chr) if your
+  website is behind a proxy. If you want to use an alternative http request
+  function, set the 'drupal_http_request_function', the same way as you would
+  set it to override Drupal core's http_request function:
+
+    $conf['drupal_http_request_function'] = 'my_custom_http_request';
 
 Maintainers
 -----------

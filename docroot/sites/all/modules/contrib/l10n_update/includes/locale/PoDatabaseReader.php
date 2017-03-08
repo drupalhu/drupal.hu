@@ -50,7 +50,7 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Constructor, initializes with default options.
    */
-  function __construct() {
+  public function __construct() {
     $this->setOptions(array());
     $this->storage = new StringDatabaseStorage();
   }
@@ -72,14 +72,14 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Get the options used by the reader.
    */
-  function getOptions() {
+  public function getOptions() {
     return $this->_options;
   }
 
   /**
    * Set the options for the current reader.
    */
-  function setOptions(array $options) {
+  public function setOptions(array $options) {
     $options += array(
       'customized' => FALSE,
       'not_customized' => FALSE,
@@ -91,7 +91,7 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Implements PoMetadataInterface::getHeader().
    */
-  function getHeader() {
+  public function getHeader() {
     return new PoHeader($this->getLangcode());
   }
 
@@ -101,7 +101,7 @@ class PoDatabaseReader implements PoReaderInterface {
    * @throws Exception
    *   Always, because you cannot set the PO header of a reader.
    */
-  function setHeader(PoHeader $header) {
+  public function setHeader(PoHeader $header) {
     throw new \Exception('You cannot set the PO header in a reader.');
   }
 
@@ -166,9 +166,9 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Implements PoReaderInterface::readItem().
    */
-  function readItem() {
+  public function readItem() {
     if ($string = $this->readString()) {
-      $values = (array)$string;
+      $values = (array) $string;
       $poItem = new PoItem();
       $poItem->setFromArray($values);
       return $poItem;
