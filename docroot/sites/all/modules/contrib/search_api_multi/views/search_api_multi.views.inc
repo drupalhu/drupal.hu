@@ -37,7 +37,7 @@ function search_api_multi_views_data() {
           'description' => t('Results from the @index index.', array('@index' => $index->name)),
         );
         if (empty($entity_types[$index->item_type])) {
-          $info += $index->datasource()->getMetadataWrapper()->info();
+          $info += $index->entityWrapper()->info();
         }
         entity_views_field_definition($index_id, $info, $table);
 
@@ -93,6 +93,7 @@ function search_api_multi_views_data() {
     $table['search_api_multi_id']['field']['type'] = 'text';
     $table['search_api_multi_id']['field']['handler'] = 'entity_views_handler_field_text';
     $table['search_api_multi_id']['sort']['handler'] = 'SearchApiViewsHandlerSort';
+    $table['search_api_multi_id']['sort']['real field'] = 'search_api_id';
 
     $table['search_api_multi_index']['title'] = t('Index');
     $table['search_api_multi_index']['help'] = t('The search indexes that will be searched.');

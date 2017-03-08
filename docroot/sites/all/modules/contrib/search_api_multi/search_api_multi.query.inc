@@ -62,11 +62,15 @@ interface SearchApiMultiQueryInterface {
    *
    * @param string $conjunction
    *   The conjunction to use for the filter - either 'AND' or 'OR'.
+   * @param string[] $tags
+   *   (Optional) An arbitrary set of tags. Can be used to identify this filter
+   *   down the line if necessary. This is primarily used by the facet system
+   *   to support OR facet queries.
    *
    * @return SearchApiQueryFilterInterface
    *   A filter object that is set to use the specified conjunction.
    */
-  public function createFilter($conjunction = 'AND');
+  public function createFilter($conjunction = 'AND', array $tags = array());
 
   /**
    * Sets the keys to search for.
@@ -518,9 +522,9 @@ class SearchApiMultiQuery implements SearchApiMultiQueryInterface {
   /**
    * {@inheritdoc}
    */
-  public function createFilter($conjunction = 'AND') {
+  public function createFilter($conjunction = 'AND', array $tags = array()) {
     $filter_class = $this->options['filter class'];
-    return new $filter_class($conjunction);
+    return new $filter_class($conjunction, $tags);
   }
 
   /**
@@ -981,7 +985,12 @@ class SearchApiMultiQuery implements SearchApiMultiQueryInterface {
         $comp = $a['score'] - $b['score'];
       }
       elseif ($key == 'search_api_id') {
-        $comp = $a['id'] - $b['id'];
+        if (is_numeric($a['id']) && is_numeric($b['id'])) {
+          $comp = $a['id'] - $b['id'];
+        }
+        else {
+          $comp = strnatcasecmp($a['id'], $b['id']);
+        }
       }
       else {
         list($index_id, $field) = explode(':', $key, 2);
@@ -1135,6 +1144,61 @@ class SearchApiMultiQuery implements SearchApiMultiQueryInterface {
    */
   public function &getOptions() {
     return $this->options;
+  }
+
+  /**
+   * Implements the magic __toString() method to simplify debugging.
+   */
+  public function __toString() {
+    $ret = '';
+    if ($this->indexes) {
+      $indexes = array();
+      foreach ($this->indexes as $index) {
+        $indexes[] = $index->machine_name;
+      }
+      $ret .= 'Indexes: ' . implode(', ', $indexes) . "\n";
+    }
+    $ret .= 'Keys: ' . str_replace("\n", "\n  ", var_export($this->orig_keys, TRUE)) . "\n";
+    if (isset($this->keys)) {
+      $ret .= 'Parsed keys: ' . str_replace("\n", "\n  ", var_export($this->keys, TRUE)) . "\n";
+      $ret .= 'Searched fields: ' . (isset($this->fields) ? implode(', ', $this->fields) : '[ALL]') . "\n";
+    }
+    if ($filter = (string) $this->filter) {
+      $filter = str_replace("\n", "\n  ", $filter);
+      $ret .= "Filters:\n  $filter\n";
+    }
+    if ($this->sort) {
+      $sort = array();
+      foreach ($this->sort as $field => $order) {
+        $sort[] = "$field $order";
+      }
+      $ret .= 'Sorting: ' . implode(', ', $sort) . "\n";
+    }
+    $options = $this->sanitizeOptions($this->options);
+    $options = str_replace("\n", "\n  ", var_export($options, TRUE));
+    $ret .= 'Options: ' . $options . "\n";
+    return $ret;
+  }
+
+  /**
+   * Sanitizes an array of options in a way that plays nice with var_export().
+   *
+   * @param array $options
+   *   An array of options.
+   *
+   * @return array
+   *   The sanitized options.
+   */
+  protected function sanitizeOptions(array $options) {
+    foreach ($options as $key => $value) {
+      if (is_object($value)) {
+        $options[$key] = 'object (' . get_class($value) . ')';
+      }
+      elseif (is_array($value)) {
+        $options[$key] = $this->sanitizeOptions($value);
+      }
+    }
+    return $options;
   }
 
 }

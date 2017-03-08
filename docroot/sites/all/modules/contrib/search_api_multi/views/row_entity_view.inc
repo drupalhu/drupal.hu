@@ -159,6 +159,9 @@ class SearchApiMultiRowEntityView extends views_plugin_row {
     if (isset($this->indexes['incompatibles'][$index])) {
       return NULL;
     }
+    if (empty($this->wrappers[$this->view->row_index]->$index)) {
+      return NULL;
+    }
     return $this->wrappers[$this->view->row_index]->$index;
   }
 

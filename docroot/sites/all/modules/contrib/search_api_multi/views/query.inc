@@ -88,7 +88,7 @@ class SearchApiMultiViewsQuery extends SearchApiViewsQuery {
         'description' => t('Results from the @index index.', array('@index' => $index->name)),
       );
       if (!$entity_type) {
-        $info['property info'][$index_id] += $index->datasource()->getMetadataWrapper()->info();
+        $info['property info'][$index_id] += $index->entityWrapper()->info();
       }
     }
 
@@ -120,8 +120,14 @@ class SearchApiMultiViewsQuery extends SearchApiViewsQuery {
     foreach ($results as $row_index => $row) {
       $index_id = $row->_entity_properties['search_api_multi_index'];
       if ($indexes[$index_id]) {
-        $index = $indexes[$index_id];
-        $item = is_scalar($row->entity) ? $load_items[$index->item_type][$row->entity] : $row->entity;
+        if (is_scalar($row->entity)) {
+          $index = $indexes[$index_id];
+          if (empty($load_items[$index->item_type][$row->entity])) {
+            continue;
+          }
+          $row->entity = $load_items[$index->item_type][$row->entity];
+        }
+        $item = $row->entity;
         $data = new stdClass();
         $data->{$index_id} = $item;
         $wrappers[$row_index] = entity_metadata_wrapper('search_api_multi', $data, $info);
