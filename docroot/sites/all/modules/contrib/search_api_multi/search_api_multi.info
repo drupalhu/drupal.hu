@@ -13,9 +13,9 @@ files[] = views/handler_filter_options.inc
 files[] = views/query.inc
 files[] = views/row_entity_view.inc
 
-; Information added by Drupal.org packaging script on 2015-08-30
-version = "7.x-1.3"
+; Information added by Drupal.org packaging script on 2017-02-28
+version = "7.x-1.4"
 core = "7.x"
 project = "search_api_multi"
-datestamp = "1440962946"
+datestamp = "1488275288"
 
