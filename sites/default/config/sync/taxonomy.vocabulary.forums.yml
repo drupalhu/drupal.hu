@@ -1,0 +1,14 @@
+uuid: ac26bc3b-4d6e-42c6-a207-f955ab61bd31
+langcode: hu
+status: true
+dependencies:
+  enforced:
+    module:
+      - forum
+_core:
+  default_config_hash: mflVSHt4N6ABP4asGcCrKD0Qvf7y9WO_Cs_v5vCjOrw
+name: Forums
+vid: forums
+description: 'Forum navigation vocabulary'
+hierarchy: 1
+weight: -10

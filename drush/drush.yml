@@ -1,0 +1,13 @@
+
+drush:
+  paths:
+    config:
+      - 'drush/drush.local.yml'
+
+command:
+  site:
+    install:
+      options:
+        sites-subdir: 'default'
+        locale: 'hu'
+        account-pass: 'admin'

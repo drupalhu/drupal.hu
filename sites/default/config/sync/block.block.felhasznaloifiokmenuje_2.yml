@@ -1,0 +1,24 @@
+uuid: 5a367bf5-8160-483a-b269-695be0cc3d6d
+langcode: hu
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - dhub
+id: felhasznaloifiokmenuje_2
+theme: dhub
+region: header
+weight: 1
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'Felhasználói fiók menüje'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

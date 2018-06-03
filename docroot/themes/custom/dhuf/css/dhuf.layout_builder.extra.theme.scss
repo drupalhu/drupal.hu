@@ -1,0 +1,8 @@
+
+@import "./vars";
+
+.layout-builder--layout__region {
+  > .contextual-region {
+    background-color: $dhuf-color-pale;
+  }
+}

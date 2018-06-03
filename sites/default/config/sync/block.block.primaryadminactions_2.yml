@@ -1,0 +1,18 @@
+uuid: 1672968e-3ebd-46e2-8dea-f11969ad97ea
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - dhub
+id: primaryadminactions_2
+theme: dhub
+region: breadcrumb
+weight: 0
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,13 @@
+uuid: 62ba08ea-2e26-4d6a-9725-2663f54800c1
+langcode: hu
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: 'Azonosított felhasználó'
+weight: 1
+is_admin: false
+permissions:
+  - 'access content'
+  - 'view media'

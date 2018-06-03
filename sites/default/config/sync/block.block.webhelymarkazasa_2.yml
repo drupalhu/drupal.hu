@@ -1,0 +1,23 @@
+uuid: acfc34ef-1bba-42d1-9161-7768cfcd9e96
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - dhub
+id: webhelymarkazasa_2
+theme: dhub
+region: header
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Webhely márkázása'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility: {  }

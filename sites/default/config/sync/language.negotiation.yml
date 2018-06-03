@@ -1,0 +1,13 @@
+session:
+  parameter: language
+url:
+  source: path_prefix
+  prefixes:
+    hu: hu
+    '': null
+  domains:
+    hu: ''
+selected_langcode: site_default
+_core:
+  default_config_hash: 9LSMPHoktS71bRmcgT4Y8yJMITMyeE77phiZVj9Vruo
+langcode: hu

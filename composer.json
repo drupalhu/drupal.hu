@@ -1,0 +1,121 @@
+{
+    "name": "drupalhu/drupalhu",
+    "type": "project",
+    "description": "Code base of drupal.hu.",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "repositories": {
+        "drupal-8": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "composer/installers": "^1.5",
+        "cweagans/composer-patches": "^1.6",
+        "drupal-composer/drupal-scaffold": "^2.5",
+        "drupal/adminimal_admin_toolbar": "^1.7",
+        "drupal/adminimal_theme": "^1.3",
+        "drupal/core": "^8.5",
+        "drush/drush": "^9.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dhu\\Composer\\": "src-dev/Composer"
+        }
+    },
+    "extra": {
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
+        "drupal-scaffold": {
+            "source": "https://cgit.drupalcode.org/drupal/plain/{path}?h={version}",
+            "excludes": [
+                "sites/development.services.yml",
+                "sites/default/example.settings.my.php",
+                "sites/example.settings.local.php",
+                "google123.html",
+                "robots.txt",
+                ".csslintrc",
+                ".editorconfig",
+                ".eslintignore",
+                ".eslintrc.json",
+                ".gitattributes"
+            ],
+            "includes": [
+                "sites/default/example.settings.my.php"
+            ],
+            "initial": {
+                "sites/default/default.services.yml": "sites/default/services.yml",
+                "sites/default/default.settings.php": "sites/default/settings.php"
+            },
+            "omit-defaults": false
+        },
+        "installer-types": [
+            "bower-asset",
+            "npm-asset"
+        ],
+        "installer-paths": {
+            "docroot/core": [
+                "type:drupal-core"
+            ],
+            "docroot/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "docroot/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "docroot/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "docroot/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "docroot/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "docroot/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ],
+            "docroot/libraries/slick": [
+                "npm-asset/slick-carousel"
+            ],
+            "docroot/libraries/{$name}": [
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
+            ],
+            "drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ]
+        }
+    },
+    "scripts": {
+        "pre-install-cmd": [
+            "Dhu\\Composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-install-cmd": [
+            "Dhu\\Composer\\ScriptHandler::createRequiredFiles",
+            "robo --ansi composer:post-install-cmd"
+        ],
+        "pre-update-cmd": [
+            "Dhu\\Composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-update-cmd": [
+            "Dhu\\Composer\\ScriptHandler::createRequiredFiles",
+            "robo --ansi composer:post-update-cmd"
+        ],
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+    }
+}

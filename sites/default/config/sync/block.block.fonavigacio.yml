@@ -1,0 +1,24 @@
+uuid: 1e20b0d6-5c8b-4a94-ba78-a0b236a89773
+langcode: hu
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - dhuf
+id: fonavigacio
+theme: dhuf
+region: primary_menu
+weight: -1
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Fő navigáció'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

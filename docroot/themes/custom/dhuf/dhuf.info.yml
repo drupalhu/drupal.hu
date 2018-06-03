@@ -1,0 +1,41 @@
+core: '8.x'
+
+package: 'Drupal.hu'
+type: 'theme'
+name: 'Drupal.hu - Frontend'
+version: '8.x-1.0-dev'
+description: 'Frontend theme for Drupal.hu'
+base theme: 'bartik'
+
+libraries:
+  - 'dhuf/global-styling'
+
+libraries-extend:
+  contextual/drupal.contextual-links:
+    - 'dhuf/layout_builder.extra'
+  layout_builder/drupal.layout_builder:
+    - 'dhuf/layout_builder.extra'
+
+#ckeditor_stylesheets:
+#  - 'css/dhuf.ckeditor.foo.css'
+
+regions:
+  header: 'Header'
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  highlighted: 'Highlighted'
+  featured_top: 'Featured top'
+  breadcrumb: 'Breadcrumb'
+  content: 'Content'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  featured_bottom_first: 'Featured bottom first'
+  featured_bottom_second: 'Featured bottom second'
+  featured_bottom_third: 'Featured bottom third'
+  footer_first: 'Footer first'
+  footer_second: 'Footer second'
+  footer_third: 'Footer third'
+  footer_fourth: 'Footer fourth'
+  footer_fifth: 'Footer fifth'

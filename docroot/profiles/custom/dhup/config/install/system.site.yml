@@ -1,0 +1,14 @@
+uuid: cbe11686-45b5-4030-9876-8a8834a1bc65
+name: 'Drupal.hu'
+mail: no-reply@drupal.hu
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+langcode: hu
+default_langcode: hu
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI

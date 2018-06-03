@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Drupal.hu base functions.
+ */
+
+/**
+ * Implements hook_modules_installed().
+ */
+function dhu_core_modules_installed($modules) {
+  if (in_array('forum', $modules)) {
+    dhu_core_delete_first_forum_topic();
+  }
+}
+
+function dhu_core_delete_first_forum_topic() {
+  /** @var \Drupal\taxonomy\TermStorageInterface $termStorage */
+  $termStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $terms = $termStorage->loadByProperties([
+    'name' => t('General discussion'),
+    'description' => '',
+    'vid' => 'forums',
+    'forum_container' => 0,
+  ]);
+
+  /** @var \Drupal\taxonomy\TermInterface $termGeneralDiscussion */
+  $termGeneralDiscussion = reset($terms);
+  if ($termGeneralDiscussion) {
+    $termGeneralDiscussion->delete();
+  }
+}

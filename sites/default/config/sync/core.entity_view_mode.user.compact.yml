@@ -1,0 +1,12 @@
+uuid: 447a5842-019f-4ae7-a3c5-929eeee8dd73
+langcode: hu
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: 71CSAr_LNPcgu6D6jI4INl1KATkahmeyUFBETAWya8g
+id: user.compact
+label: Tömör
+targetEntityType: user
+cache: true

@@ -1,0 +1,11 @@
+#global-styling:
+#  css:
+#    layout:
+#      css/components/dhuf.foo.layout.css: {  }
+
+layout_builder.extra:
+  css:
+    layout:
+      css/chphuf.layout_builder.extra.layout.css: {  }
+    theme:
+      css/chphuf.layout_builder.extra.theme.css: {  }

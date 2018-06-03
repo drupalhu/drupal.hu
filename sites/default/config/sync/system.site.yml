@@ -1,0 +1,14 @@
+uuid: ef1a6582-4250-4739-b2e5-1316d872fc0b
+name: Drupal.hu
+mail: admin@drupal.hu
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+langcode: hu
+default_langcode: hu
+_core:
+  default_config_hash: PppYSnx5JUXJWVIv3MNQ7AfjIYtiQex6zcOvPJgX7IQ

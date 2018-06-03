@@ -1,0 +1,24 @@
+uuid: 177c9bec-cffc-4df3-9238-dba5dfff8c17
+langcode: hu
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - dhuf
+id: felhasznaloifiokmenuje
+theme: dhuf
+region: header
+weight: -3
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'Felhasználói fiók menüje'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

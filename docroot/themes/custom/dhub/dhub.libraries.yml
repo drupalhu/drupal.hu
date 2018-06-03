@@ -1,0 +1,6 @@
+layout_builder.extra:
+  css:
+    layout:
+      css/dhub.layout_builder.extra.layout.css: {}
+    theme:
+      css/dhub.layout_builder.extra.theme.css: {}

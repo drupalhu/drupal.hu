@@ -1,0 +1,20 @@
+uuid: ab43c1ee-225c-4507-8f0f-d07016bd4db7
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - dhuf
+id: uzenetek
+theme: dhuf
+region: content
+weight: -1
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Üzenetek
+  provider: system
+  label_display: '0'
+visibility: {  }

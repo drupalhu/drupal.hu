@@ -1,0 +1,9 @@
+
+extends: 'stylelint-config-recommended'
+
+plugins:
+  - 'stylelint-order'
+  - 'stylelint-scss'
+
+rules:
+  scss/selector-no-redundant-nesting-selector: true

@@ -1,0 +1,13 @@
+uuid: f9431039-ad01-4c11-8eea-7e2832c26da3
+langcode: hu
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Névtelen felhasználó'
+weight: 0
+is_admin: false
+permissions:
+  - 'access content'
+  - 'view media'

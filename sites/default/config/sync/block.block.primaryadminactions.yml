@@ -1,0 +1,18 @@
+uuid: 1b272173-245c-4528-8025-9bf3a9adc678
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - dhuf
+id: primaryadminactions
+theme: dhuf
+region: highlighted
+weight: 0
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }
