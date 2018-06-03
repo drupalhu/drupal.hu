@@ -1,3 +1,0 @@
-name = Drupal checker
-description = "Checks if a given URL runs on Drupal."
-core = 7.x

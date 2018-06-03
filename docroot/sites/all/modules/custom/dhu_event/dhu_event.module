@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Drupal.hu - Event feature.
- */
-
-include_once 'dhu_event.features.inc';

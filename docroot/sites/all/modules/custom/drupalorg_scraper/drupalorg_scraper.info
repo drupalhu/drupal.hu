@@ -1,7 +1,0 @@
-name = Drupal.org Scraper
-description = Fetches how many people use Drupal from drupal.org
-package = Drupal.hu
-core = 7.x
-version = "7.1"
-
-dependencies[] = update

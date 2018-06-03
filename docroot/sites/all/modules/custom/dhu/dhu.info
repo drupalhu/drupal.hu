@@ -1,6 +1,0 @@
-name = Custom hacks for drupal.hu
-description = Custom hacks for drupal.hu.
-core = 7.x
-package = Drupalhu
-version = 7.x-1.0
-project = dhu

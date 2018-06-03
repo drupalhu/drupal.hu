@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Drupal.hu címlap feature.
- */
-
-include_once 'drupalhu_cimlap.features.inc';
