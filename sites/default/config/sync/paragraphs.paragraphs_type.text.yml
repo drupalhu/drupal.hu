@@ -1,0 +1,14 @@
+uuid: 55bf78fa-e25f-4dee-8d4c-33e24a96ca83
+langcode: hu
+status: true
+dependencies:
+  module:
+    - paragraphs_viewmode
+id: text
+label: Szöveg
+icon_uuid: null
+description: ''
+behavior_plugins:
+  paragraphs_viewmode_behavior:
+    override_mode: default
+    override_available: {  }

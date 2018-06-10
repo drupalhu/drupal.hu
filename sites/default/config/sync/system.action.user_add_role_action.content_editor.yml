@@ -1,0 +1,14 @@
+uuid: 760f455b-d1ac-4812-87be-40d6ba597a82
+langcode: hu
+status: true
+dependencies:
+  config:
+    - user.role.content_editor
+  module:
+    - user
+id: user_add_role_action.content_editor
+label: 'Add the Tartalom szerkesztő role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: content_editor

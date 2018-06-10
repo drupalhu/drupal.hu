@@ -8,9 +8,9 @@ dependencies:
 _core:
   default_config_hash: rRWxAX-IQkJ5viACQRovRkC784EyCl9493GU_G23n2Q
 id: files
-label: Files
+label: Fájlok
 module: file
-description: 'Find and manage files.'
+description: 'Fájlok keresése és kezelése.'
 tag: default
 base_table: file_managed
 base_field: fid
@@ -19,7 +19,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Mester
     position: 0
     display_options:
       access:
@@ -40,13 +40,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Filter
+          submit_button: Szűrő
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
       pager:
         type: mini
         options:
@@ -55,16 +55,16 @@ display:
           id: 0
           total_pages: 0
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
+            previous: '‹ Előző'
+            next: 'Következő ›'
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Elemek száma oldalanként'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '- Mind -'
             offset: false
-            offset_label: Offset
+            offset_label: Eltolás
       style:
         type: table
         options:
@@ -187,7 +187,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Name
+          label: Név
           exclude: false
           alter:
             alter_text: false
@@ -250,7 +250,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'MIME type'
+          label: 'MIME típus'
           exclude: false
           alter:
             alter_text: false
@@ -302,7 +302,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Size
+          label: Méret
           exclude: false
           alter:
             alter_text: false
@@ -354,7 +354,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Status
+          label: Állapot
           exclude: false
           alter:
             alter_text: false
@@ -398,8 +398,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_false: Temporary
-            format_custom_true: Permanent
+            format_custom_false: Ideiglenes
+            format_custom_true: Állandó
           plugin_id: field
           entity_type: file
           entity_field: status
@@ -410,7 +410,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Upload date'
+          label: 'Feltöltés dátuma'
           exclude: false
           alter:
             alter_text: false
@@ -466,7 +466,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Changed date'
+          label: 'Módosítás dátuma'
           exclude: false
           alter:
             alter_text: false
@@ -522,7 +522,7 @@ display:
           relationship: fid
           group_type: sum
           admin_label: ''
-          label: 'Used in'
+          label: 'Ez használja'
           exclude: false
           alter:
             alter_text: false
@@ -586,7 +586,7 @@ display:
           exposed: true
           expose:
             operator_id: filemime_op
-            label: Filename
+            label: Fájlnév
             description: ''
             use_operator: false
             operator: filename_op
@@ -626,7 +626,7 @@ display:
           exposed: true
           expose:
             operator_id: filemime_op
-            label: 'MIME type'
+            label: 'MIME típus'
             description: ''
             use_operator: false
             operator: filemime_op
@@ -666,7 +666,7 @@ display:
           exposed: true
           expose:
             operator_id: status_op
-            label: Status
+            label: Állapot
             description: ''
             use_operator: false
             operator: status_op
@@ -695,7 +695,7 @@ display:
           entity_type: file
           entity_field: status
       sorts: {  }
-      title: Files
+      title: Fájlok
       header: {  }
       footer: {  }
       empty:
@@ -704,7 +704,7 @@ display:
           table: views
           field: area_text_custom
           empty: true
-          content: 'No files available.'
+          content: 'Nincsenek elérhető fájlok.'
           plugin_id: text_custom
       relationships:
         fid:
@@ -731,13 +731,13 @@ display:
   page_1:
     display_plugin: page
     id: page_1
-    display_title: 'Files overview'
+    display_title: 'Fájlok áttekintése'
     position: 1
     display_options:
       path: admin/content/files
       menu:
         type: tab
-        title: Files
+        title: Fájlok
         description: ''
         menu_name: admin
         weight: 0
@@ -768,7 +768,7 @@ display:
   page_2:
     display_plugin: page
     id: page_2
-    display_title: 'File usage'
+    display_title: 'Fájl használata'
     position: 2
     display_options:
       display_description: ''
@@ -794,16 +794,16 @@ display:
           id: 0
           total_pages: 0
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
+            previous: '‹ Előző'
+            next: 'Következő ›'
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Elemek száma oldalanként'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '- Mind -'
             offset: false
-            offset_label: Offset
+            offset_label: Eltolás
       filters: {  }
       filter_groups:
         operator: AND
@@ -816,7 +816,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Entity
+          label: Entitás
           exclude: false
           alter:
             alter_text: false
@@ -866,7 +866,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Entity type'
+          label: Entitástípus
           exclude: false
           alter:
             alter_text: false
@@ -915,7 +915,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Registering module'
+          label: 'Használó modul'
           exclude: false
           alter:
             alter_text: false
@@ -964,7 +964,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Use count'
+          label: 'Használatok száma'
           exclude: false
           alter:
             alter_text: false
@@ -1015,7 +1015,7 @@ display:
           suffix: ''
           plugin_id: numeric
       group_by: false
-      title: 'File usage'
+      title: 'Fájl használata'
       arguments:
         fid:
           id: fid
@@ -1028,9 +1028,9 @@ display:
           exception:
             value: all
             title_enable: false
-            title: All
+            title: Mind
           title_enable: true
-          title: 'File usage information for {{ arguments.fid }}'
+          title: '{{ arguments.fid }} fájlhasználati információi'
           default_argument_type: fixed
           default_argument_options:
             argument: ''

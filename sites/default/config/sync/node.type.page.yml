@@ -1,0 +1,19 @@
+uuid: 952836e3-d580-4447-83ce-59eb7de9605b
+langcode: hu
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+      - footer
+    parent: 'main:'
+name: Oldal
+type: page
+description: 'Általános statikus oldal'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

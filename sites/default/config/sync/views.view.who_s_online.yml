@@ -7,9 +7,9 @@ dependencies:
 _core:
   default_config_hash: m0vmYmhrzMR6S_IC0UlK0Cl-q5lEvL8-EbxbbcDtk34
 id: who_s_online
-label: 'Who''s online block'
+label: 'Jelenlévő felhasználók blokk'
 module: user
-description: 'Shows the user names of the most recently active users, and the total number of active users.'
+description: 'Megmutatja a legutóbb aktív felhasználókat és az aktív felhasználók számát.'
 tag: default
 base_table: users_field_data
 base_field: uid
@@ -18,7 +18,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Mester
     position: 0
     display_options:
       access:
@@ -39,13 +39,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: Alkalmaz
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
       pager:
         type: some
         options:
@@ -126,8 +126,8 @@ display:
           exposed: false
           expose:
             operator_id: access_op
-            label: 'Last access'
-            description: 'A user is considered online for this long after they have last viewed a page.'
+            label: 'Utolsó tevékenység'
+            description: 'Meghatározza, hogy mennyi ideig kell egy felhasználót a webhelyen lévőnek tekinteni, miután egy oldalt megtekintett.'
             use_operator: false
             operator: access_op
             identifier: access
@@ -169,7 +169,7 @@ display:
           plugin_id: date
           entity_type: user
           entity_field: access
-      title: 'Who''s online'
+      title: 'Jelenlévő felhasználók'
       header:
         result:
           id: result
@@ -179,7 +179,7 @@ display:
           group_type: group
           admin_label: ''
           empty: false
-          content: 'There are currently @total users online.'
+          content: 'Jelenleg @total felhasználó van online.'
           plugin_id: result
       footer: {  }
       empty:
@@ -192,7 +192,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'There are currently 0 users online.'
+          content: 'Jelenleg 0 felhasználó van bejelentkezve.'
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }
@@ -207,11 +207,11 @@ display:
   who_s_online_block:
     display_plugin: block
     id: who_s_online_block
-    display_title: 'Who''s online'
+    display_title: 'Jelenlévő felhasználók'
     position: 1
     display_options:
-      block_description: 'Who''s online'
-      display_description: 'A list of users that are currently logged in.'
+      block_description: 'Jelenlévő felhasználók'
+      display_description: 'Egy lista a jelenleg bejelentkezett felhasználókról.'
       display_extenders: {  }
     cache_metadata:
       contexts:

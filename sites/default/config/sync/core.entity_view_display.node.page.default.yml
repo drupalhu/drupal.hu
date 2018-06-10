@@ -1,0 +1,56 @@
+uuid: 69dd0dd3-0516-4c47-8b7f-cfb8a0c72b4f
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.field.node.page.dhu_body
+    - node.type.page
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          f383a0ff-0960-469a-bfe0-d45b4025a7cf:
+            uuid: f383a0ff-0960-469a-bfe0-d45b4025a7cf
+            region: content
+            configuration:
+              id: 'field_block:node:page:dhu_body'
+              label: Törzs
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_revisions_entity_view
+                settings:
+                  view_mode: default
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+id: node.page.default
+targetEntityType: node
+bundle: page
+mode: default
+content:
+  dhu_body:
+    type: entity_reference_revisions_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

@@ -7,9 +7,9 @@ dependencies:
 _core:
   default_config_hash: o_8fSWHZOVIbydZACGsSX09DtuJhqkRmNOzcVj-4bQI
 id: who_s_new
-label: 'Who''s new'
+label: 'Új felhasználók'
 module: user
-description: 'Shows a list of the newest user accounts on the site.'
+description: 'Egy listát jelenít meg a webhely legfrissebb felhasználói fiókjairól.'
 tag: default
 base_table: users_field_data
 base_field: uid
@@ -18,7 +18,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Mester
     position: 0
     display_options:
       access:
@@ -39,13 +39,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: Alkalmaz
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
       pager:
         type: some
         options:
@@ -160,7 +160,7 @@ display:
           plugin_id: date
           entity_type: user
           entity_field: created
-      title: 'Who''s new'
+      title: 'Új felhasználók'
       header: {  }
       footer: {  }
       empty: {  }
@@ -177,12 +177,12 @@ display:
   block_1:
     display_plugin: block
     id: block_1
-    display_title: 'Who''s new'
+    display_title: 'Új felhasználók'
     position: 1
     display_options:
-      display_description: 'A list of new users'
-      block_description: 'Who''s new'
-      block_category: User
+      display_description: 'Új felhasználók egy listája'
+      block_description: 'Új felhasználók'
+      block_category: Felhasználó
       display_extenders: {  }
     cache_metadata:
       contexts:

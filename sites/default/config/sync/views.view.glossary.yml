@@ -10,9 +10,9 @@ dependencies:
 _core:
   default_config_hash: _12Vkw1VGBz_s0_W_LLVCrBPpioNSnB6zcd1lUAQubM
 id: glossary
-label: Glossary
+label: Szójegyzék
 module: node
-description: 'All content, by letter.'
+description: 'Minden tartalom, kezdőbetűk szerint csoportosítva.'
 tag: default
 base_table: node_field_data
 base_field: nid
@@ -20,7 +20,7 @@ core: '8'
 display:
   default:
     id: default
-    display_title: Master
+    display_title: Mester
     display_plugin: default
     position: 0
     display_options:
@@ -43,13 +43,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: Alkalmaz
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
       pager:
         type: mini
         options:
@@ -59,12 +59,12 @@ display:
           total_pages: 0
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Elemek száma oldalanként'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '- Mind -'
             offset: false
-            offset_label: Offset
+            offset_label: Eltolás
           tags:
             previous: ‹‹
             next: ››
@@ -77,7 +77,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Title
+          label: Cím
           exclude: false
           alter:
             alter_text: false
@@ -124,7 +124,7 @@ display:
           id: name
           table: users_field_data
           field: name
-          label: Author
+          label: Szerző
           relationship: uid
           plugin_id: field
           type: user_name
@@ -176,7 +176,7 @@ display:
           id: changed
           table: node_field_data
           field: changed
-          label: 'Last update'
+          label: 'Legutóbbi frissítés'
           type: timestamp
           settings:
             date_format: long
@@ -364,7 +364,7 @@ display:
       tags: {  }
   attachment_1:
     id: attachment_1
-    display_title: Attachment
+    display_title: Csatolmány
     display_plugin: attachment
     position: 2
     display_options:
@@ -432,7 +432,7 @@ display:
       tags: {  }
   page_1:
     id: page_1
-    display_title: Page
+    display_title: Oldal
     display_plugin: page
     position: 1
     display_options:
@@ -442,7 +442,7 @@ display:
       path: glossary
       menu:
         type: normal
-        title: Glossary
+        title: Szójegyzék
         weight: 0
         menu_name: main
         parent: ''

@@ -1,0 +1,13 @@
+uuid: 63f9f2c4-139b-4260-b6b5-8d97056b52b0
+langcode: hu
+status: true
+dependencies: {  }
+id: image
+label: Kép
+description: ''
+source: image
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_image
+field_map: {  }

@@ -1,0 +1,28 @@
+uuid: 901d56cc-64c5-4ad6-b80a-7b810bc4a090
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.dhu_text
+    - paragraphs.paragraphs_type.text_image
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    long_full: long_full
+    inline: '0'
+    long: '0'
+    plain_text: '0'
+id: paragraph.text_image.dhu_text
+field_name: dhu_text
+entity_type: paragraph
+bundle: text_image
+label: Szöveg
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

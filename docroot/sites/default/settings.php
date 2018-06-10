@@ -684,6 +684,7 @@ $settings['maintenance_theme'] = 'dhuf';
 # $config['user.settings']['anonymous'] = 'Visitor';
 
 $config['locale.settings']['translation']['path'] = "../$site_path/translations";
+$config['field_ui.settings']['field_prefix'] = 'dhu_';
 
 /**
  * Fast 404 pages:

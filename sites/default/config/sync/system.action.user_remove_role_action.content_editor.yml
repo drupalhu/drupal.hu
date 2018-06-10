@@ -1,0 +1,14 @@
+uuid: 3a3df0bb-254d-4c2f-be90-c21bf1350151
+langcode: hu
+status: true
+dependencies:
+  config:
+    - user.role.content_editor
+  module:
+    - user
+id: user_remove_role_action.content_editor
+label: 'Remove the Tartalom szerkesztő role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: content_editor

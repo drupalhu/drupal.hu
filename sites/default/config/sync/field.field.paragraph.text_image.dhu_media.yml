@@ -1,0 +1,28 @@
+uuid: 3f68ebbc-5dcb-4341-b81d-b00113180834
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.dhu_media
+    - media.type.image
+    - paragraphs.paragraphs_type.text_image
+id: paragraph.text_image.dhu_media
+field_name: dhu_media
+entity_type: paragraph
+bundle: text_image
+label: Média
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

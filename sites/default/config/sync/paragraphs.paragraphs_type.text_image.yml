@@ -1,0 +1,16 @@
+uuid: d583d7e2-1d47-4aac-92c5-41cfc924be99
+langcode: hu
+status: true
+dependencies:
+  module:
+    - paragraphs_viewmode
+id: text_image
+label: 'Szöveg és kép'
+icon_uuid: null
+description: ''
+behavior_plugins:
+  paragraphs_viewmode_behavior:
+    enabled: true
+    override_mode: default
+    override_available:
+      default: default

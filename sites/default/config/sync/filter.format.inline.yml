@@ -1,0 +1,23 @@
+uuid: 3e38d037-8fff-4319-a51d-09497e5046b1
+langcode: hu
+status: true
+dependencies: {  }
+name: Bevezető
+format: inline
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<abbr class="ft-*"> <acronym class="ft-*"> <cite class="ft-*"> <code class="ft-*"> <del class="ft-*"> <dfn class="ft-*"> <em class="ft-*"> <ins class="ft-*"> <kbd class="ft-*"> <strong class="ft-*"> <samp class="ft-*"> <var class="ft-*"> <a href hreflang> <bdo class="ft-*"> <br> <q class="ft-*"> <sub class="ft-*"> <sup class="ft-*"> <u class="ft-*"> <s class="ft-*"> <ul> <li> <ol> <blockquote> <img src alt data-entity-type data-entity-uuid> <p> <span lang dir class="ft-*">'
+      filter_html_help: true
+      filter_html_nofollow: false
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: 10
+    settings: {  }

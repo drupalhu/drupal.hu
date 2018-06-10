@@ -1,0 +1,17 @@
+uuid: 264d569e-bb88-4c29-9325-75e3ebbff7f8
+langcode: hu
+status: true
+dependencies: {  }
+name: 'Hosszú (Teljes)'
+format: long_full
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<abbr class="ft-*"> <acronym class="ft-*"> <a href hreflang class="ft-*"> <bdo class="ft-*"> <blockquote cite class="ft-*"> <br> <cite class="ft-*"> <code class="ft-*"> <dd class="ft-*"> <del class="ft-*"> <dfn class="ft-*"> <dl class="ft-*"> <dt class="ft-*"> <em class="ft-*"> <h2 id class="ft-*"> <h3 id class="ft-*"> <h4 id class="ft-*"> <h5 id class="ft-*"> <h6 id class="ft-*"> <ins class="ft-*"> <kbd class="ft-*"> <li class="ft-*"> <q class="ft-*"> <samp class="ft-*"> <s class="ft-*"> <strong class="ft-*"> <sub class="ft-*"> <sup class="ft-*"> <u class="ft-*"> <var class="ft-*"> <img src alt data-entity-type data-entity-uuid> <ul type class="ft-* ft-column-2 ft-column-3 ft-column-4"> <ol start type class="ft-* ft-column-2 ft-column-3 ft-column-4"> <p class="ft-* ft-column-2 ft-column-3 ft-column-4"> <hr> <span lang dir class="ft-*">'
+      filter_html_help: true
+      filter_html_nofollow: false

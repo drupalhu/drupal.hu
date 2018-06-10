@@ -8,6 +8,6 @@ dependencies:
 _core:
   default_config_hash: ASMYOUZX4c3xSgNTeKYhnhde-J9Zq899Z-gV2emoyr8
 id: comment_forum
-label: Comment_forum
+label: Fórummegjegyzés
 target_entity_type_id: node
-description: 'Default comment field'
+description: 'Alapértelmezett hozzászólásmező'

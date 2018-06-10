@@ -1,0 +1,21 @@
+uuid: 17b0a533-63a1-4402-9c61-498adab7d766
+langcode: hu
+status: true
+dependencies:
+  module:
+    - entity_reference_revisions
+    - node
+    - paragraphs
+id: node.dhu_body
+field_name: dhu_body
+entity_type: node
+type: entity_reference_revisions
+settings:
+  target_type: paragraph
+module: entity_reference_revisions
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
