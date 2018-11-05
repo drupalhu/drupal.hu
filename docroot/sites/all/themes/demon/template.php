@@ -240,15 +240,21 @@ function demon_facebook_link($variables) {
   return $link;
 }
 
-function job_link($variables) {
-  if ($variables['logged_in'] === TRUE) {
-    print l(t('Add new job'), 'node/add/job', array('attributes' => array('class' => array('button-action'))));
+/**
+ * @return string
+ */
+function job_link(array $variables) {
+  $path = 'node/add/job';
+  $options = [
+    'attributes' => [
+      'class' => ['button-action'],
+    ],
+  ];
+
+  if (empty($variables['logged_in'])) {
+    $path = 'user/login';
+    $options['query']['destination'] = 'node/add/job';
   }
-  else {
-    print l(t('Add new job'), 'user/login', array(
-        'query' => array('destination' => 'node/add/job'),
-        'attributes' => array('class' => array('button-action'))
-      )
-    );
-  }
+
+  return l(t('Add new job'), $path, $options);
 }
