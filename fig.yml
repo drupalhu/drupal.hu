@@ -2,17 +2,25 @@ web:
   image: tanarurkerem/drupal-dev
   links:
     - mysql
+    - solr
+    - memcache
   volumes:
-  - docroot:/var/www/html
-  - .:/home/dev
-  - dockerfiles:/var/www/site-php
+    - docroot:/var/www/html
+    - .:/home/dev
+    - dockerfiles:/var/www/site-php
   ports:
-  - "80:80"
+    - "80:80"
   environment:
-  - MYSQL_HOST=mysql
+    - MYSQL_HOST=mysql
   working_dir: /var/www/html
   entrypoint: /home/dev/scripts/docker-init.sh
 mysql:
   image: mysql
   environment:
-  - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_ROOT_PASSWORD=root
+  volumes:
+    - /var/lib/mysql/drupal
+solr:
+  image: tanarurkerem/docker-solr
+memcache:
+  image: borja/docker-memcached

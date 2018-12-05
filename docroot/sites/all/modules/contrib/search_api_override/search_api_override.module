@@ -1,0 +1,277 @@
+<?php
+
+/**
+ * @file
+ * Module file to hook into server definition, to alter the given settings.
+ *
+ * Mode
+ * ----
+ *
+ * The module uses one of two modes:
+ * - load: the server configuration is overriden on every server load. This way
+ *   the settings cannot be overriden via the backend.
+ * - default: the server configuration is set via the default hook. This way the
+ *   configuration is set on inital import or a features revert for the given
+ *   feature. By choosing that option, you can override the settings in the
+ *   backend.
+ *
+ * Example:
+ * @code
+ * $conf['search_api_override_mode'] = 'load';
+ * @endcode
+ *
+ * Which mode you shall use, depends on your needs. If you want to make sure the
+ * settings are never changed by and admin user, you should use the 'load'
+ * method. That way, it could only be changed in code.
+ *
+ * Server settings
+ * ---------------
+ *
+ * You can override specific settings by providing the overriding configuration
+ * by setting a config array in the settings.php: 'search_api_override_servers'.
+ *
+ * Each array represents an override for one server. The definition is keyed by
+ * the machine name of the server. Ech definition may consist of the following
+ * options - all are optional:
+ * - name: Admin title of the server
+ * - description: Admin description of the server
+ * - options: array of server specific configuration. Options will be merged
+ *   with the existing one. This way not all options have to be defined when
+ *   overring. E.g. in case of Solr, you could only override the path, but need
+ *   not explecitely set the host or port.
+ *
+ * Example:
+ * @code
+ * $conf['search_api_override_servers'] = array(
+ *   'solr-server-id' => array(
+ *     'name' => 'Solr Server (Overridden)',
+ *     'description' => 'An overridden description',
+ *     'options' => array(
+ *        // We do not have to set all values.
+ *       'host' => '127.0.0.1',
+ *       'port' => 8983,
+ *       'path' => '/solr',
+ *     ),
+ *   ),
+ * );
+ * @endcode
+ * Note: This is an example as solr configurations vary.
+ *
+ */
+
+/**
+ * Implements hook_default_search_api_server_alter().
+ */
+function search_api_override_default_search_api_server_alter(&$defaults) {
+  $settings = search_api_override_settings();
+
+  // Only change the settings this way if we use the 'default' mode.
+  if (!empty($settings['mode']) && $settings['mode'] == 'default') {
+    foreach ($defaults as $machine_name => &$server) {
+      if (!empty($settings['servers'][$machine_name])) {
+        _search_api_override_apply_single_override($server, $settings['servers'][$machine_name]);
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_search_api_server_load().
+ */
+function search_api_override_search_api_server_load($servers) {
+  // Get the solr host overrides.
+  $settings = search_api_override_settings();
+
+  // Only proceed if we are in "load" mode.
+  if (!empty($settings['mode']) && $settings['mode'] == 'load') {
+    foreach ($servers as &$server) {
+      // Check if we got an override setting for the given server.
+      if (!empty($settings['servers'][$server->machine_name])) {
+        _search_api_override_apply_single_override($server, $settings['servers'][$server->machine_name]);
+      }
+    }
+  }
+}
+
+/**
+ * Replaces the server configuration with the given override array.
+ *
+ * @param SearchApiServer $server
+ *   The search api server object being overriden.
+ * @param array $override
+ *   The override configuration for the given server, it may contain those keys:
+ *   - name: Administrative title for the server
+ *   - description: Administrative description for the server
+ *   - options: Server specific options
+ */
+function _search_api_override_apply_single_override($server, $override) {
+  // We can override the name, if it was explecitely set.
+  if (isset($override['name'])) {
+    $server->name = $override['name'];
+  }
+  // We can do this for the description too.
+  if (isset($override['description'])) {
+    $server->description = $override['description'];
+  }
+  // Override each option, one by one, so we do not have to set the full
+  // array in the override.
+  if (!empty($override['options']) && is_array($override['options'])) {
+    foreach ($override['options'] as $key => $value) {
+      $server->options[$key] = $value;
+    }
+  }
+}
+
+/**
+ * Wrapper to get settings for search_api_override.
+ *
+ * @return array
+ *   - mode
+ *   - servers
+ */
+function search_api_override_settings() {
+  $mode = variable_get('search_api_override_mode', '');
+  $servers = variable_get('search_api_override_servers', array());
+
+  // If none of the current settings is provided, we fall back to one of the
+  // old formats.
+  if (empty($mode) && empty($servers)) {
+    return _search_api_override_get_settings_from_legacy();
+  }
+
+  return array(
+    'mode' => $mode,
+    'servers' => $servers,
+  );
+}
+
+/**
+ * Helps to get legacy info from search_api_solr_overrides or old version.
+ * @return array
+ */
+function _search_api_override_get_settings_from_legacy() {
+  $mode = '';
+  $servers = array();
+
+  // Option 1: there is an old setting from search_api_override.
+  $search_api_override_server_settings = variable_get('search_api_override_server_settings', array());
+  if (!empty($search_api_override_server_settings)) {
+    $mode = 'default';
+    foreach ($search_api_override_server_settings as $name => $options) {
+      $servers[$name] = array(
+        'options' => $options,
+      );
+    }
+  }
+  // Option 2: the module replaced search_api_solr_override.
+  else {
+    $overrides = variable_get('search_api_solr_overrides', array());
+    if (!empty($overrides)) {
+      $mode = 'load';
+      // The old search_api_solr_overrides format, is the new one of this
+      // module.
+      $servers = $overrides;
+    }
+  }
+
+  return array(
+    'mode' => $mode,
+    'servers' => $servers,
+  );
+}
+
+/**
+ * Implements hook_form_search_api_admin_server_edit_alter().
+ */
+function search_api_override_form_search_api_admin_server_edit_alter(&$form, &$form_state) {
+  // We provide information about the server settings beeing overriden, if
+  // configuration for this server exists.
+  $server = $form_state['server'];
+  $settings = search_api_override_settings();
+  if (!empty($settings['mode'])  && !empty($settings['servers'][$server->machine_name])) {
+
+
+    switch ($settings['mode']) {
+      case 'default':
+        // When features is enabled we provide additional information on where
+        // the settings are stored.
+        if (module_exists('features')) {
+          $components = features_get_component_map('search_api_server');
+          if (!empty($components[$server->machine_name])) {
+            $message = t('Settings for this server are provided in the Search API Override configuration. The next time an associated feature is reverted, the settings will be reset to that configuration.');
+            $message .= '<br/>' . t('List of associated features: @list.', array('@list' => implode(', ', $components[$server->machine_name])));
+          }
+          else {
+            $message = t('Settings for this server are provided in the Search API Override configuration. But there is no feature holding these settings, so you cannot revert them.');
+          }
+        }
+        else {
+          $message = t('Settings for this server are provided in the Search API Override configuration. But Features module is not activated, so you could control reverting these settings.');
+        }
+
+        break;
+      case 'load';
+        $message = t('The settings for this server are provided by Search API Override in "load" mode. You cannot change the settings for that configuration.');
+
+        // @todo: maybe disable appropriate form fields.
+        break;
+    }
+
+    // Output the message for any of the two modes.
+    if (!empty($message)) {
+      // Add the current configuration to the message.
+      $config = format_string('$conf[\'search_api_override_servers\'][\'@name\'] = @vardump;', array(
+        '@name' => $server->machine_name,
+        '@vardump' => var_export($settings['servers'][$server->machine_name], TRUE),
+      ));
+      $message .= '<br/>' . t('The overriding configuration is: <pre>!config;</pre> You may change that in your settings.php.', array('!config' => $config));
+      drupal_set_message($message, 'warning');
+    }
+  }
+}
+
+/**
+ * Implements hook_form_features_admin_components_alter().
+ */
+function search_api_override_form_features_admin_components_alter(&$form, &$form_state) {
+  // We add a warning to the features overview page, when the settings of a
+  // Search API server are provided by Search API Override.
+
+  // We need the module name to identify the feature, otherwise we cannot
+  // proceed
+  if (empty($form['module']['#value'])) {
+    return;
+  }
+
+  $feature_name = $form['module']['#value'];
+  $feature_info = features_get_features($feature_name);
+
+  // If the feature holds search_api_server configuration, we check them against
+  // our settings.
+  if (!empty($feature_info->info['features']['search_api_server'])) {
+
+    $feature_servers = $feature_info->info['features']['search_api_server'];
+
+    $settings = search_api_override_settings();
+
+    if (!empty($settings['servers'])) {
+      $intersect = array_intersect($feature_servers, array_keys($settings['servers']));
+      if (count($intersect)) {
+        // We provide a warning message with links to the search api server
+        // settings for the overriden servers.
+        $links = array();
+        foreach ($intersect as $server) {
+          $links[] = l($server, 'admin/config/search/search_api/server/' . $server . '/edit', array(
+            'attributes' => array('title' => t('Search API server @server settings page', array('@server' => $server)))
+          ));
+        }
+        $message = t('Server settings for some Search API servers are overriden via %mode-mode. Look at their settings page for more details: !links.', array(
+          '!links' => implode(', ', $links),
+          '%mode' => $settings['mode'],
+        ));
+        drupal_set_message($message, 'warning');
+      }
+    }
+  }
+}
