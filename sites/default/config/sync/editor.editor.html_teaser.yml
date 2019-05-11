@@ -1,0 +1,59 @@
+uuid: 329ce2b5-9140-4c79-80d2-607eb5e1efa6
+langcode: hu
+status: true
+dependencies:
+  config:
+    - filter.format.html_teaser
+  module:
+    - ckeditor
+format: html_teaser
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Block
+          items:
+            - Format
+        -
+          name: Listák
+          items:
+            - BulletedList
+            - NumberedList
+            - '-'
+            - Indent
+            - Outdent
+        -
+          name: Formázás
+          items:
+            - Bold
+            - Italic
+            - '-'
+            - Superscript
+            - Subscript
+            - '-'
+            - SpecialChar
+        -
+          name: Hivatkozások
+          items:
+            - DrupalLink
+            - DrupalUnlink
+        -
+          name: Eszközök
+          items:
+            - Source
+            - ShowBlocks
+  plugins:
+    language:
+      language_list: un
+    stylescombo:
+      styles: ''
+image_upload:
+  status: false
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null

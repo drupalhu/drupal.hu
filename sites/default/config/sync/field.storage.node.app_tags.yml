@@ -1,0 +1,20 @@
+uuid: 108c1671-d669-433d-9eb8-fcc56f598458
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.app_tags
+field_name: app_tags
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 5
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

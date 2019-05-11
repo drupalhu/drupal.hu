@@ -16,15 +16,11 @@
  * at the bottom of 'sites/example.com/settings.php'.
  */
 
-//$databases['default']['default']['username'] = '';
-//$databases['default']['default']['password'] = '';
+$databases['default']['default']['username'] = '';
+$databases['default']['default']['password'] = '';
 
-$databases['source']['default'] = $databases['default']['default'];
-$databases['source']['default']['database'] = preg_replace(
-  '/__default$/',
-  '__source',
-  $databases['source']['default']['database']
-);
+$databases['drupalhu7']['default'] = $databases['default']['default'];
+$databases['drupalhu7']['default']['database'] = 'drupalhu7__default';
 
 /**
  * Assertions.
@@ -139,7 +135,3 @@ $settings['rebuild_access'] = TRUE;
  * directory.
  */
 $settings['skip_permissions_hardening'] = TRUE;
-
-$settings['trusted_host_patterns'] = [
-  '^drupal_hu\.localhost$',
-];

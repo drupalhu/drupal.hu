@@ -1,0 +1,20 @@
+uuid: 6a7527cb-e27f-4296-8ffe-5b3ffa3d4e20
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appf
+id: appf_messages
+theme: appf
+region: content
+weight: -2
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Állapot üzenetek'
+  provider: system
+  label_display: '0'
+visibility: {  }

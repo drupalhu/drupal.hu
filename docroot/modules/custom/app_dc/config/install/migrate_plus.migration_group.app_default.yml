@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: app_default
+label: 'App - Default'
+description: 'Imports default contents, which are strongly recommended after a fresh site install.'
+source_type: 'YAML'
+module: app_dc
+shared_configuration:
+  source:
+    plugin: migrate_dc_yaml
+    fileDir: ../sites/default/content/app_default

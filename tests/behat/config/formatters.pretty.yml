@@ -1,0 +1,17 @@
+
+default:
+  formatters:
+    pretty:
+      output_path: 'php://stdout'
+      output_styles:
+        passed:        ['green']
+        passed_param:  ['green',   null,  ['bold']]
+        undefined:     ['yellow',  null,  ['bold', 'underscore']]
+        pending:       ['yellow',  null,  [        'underscore']]
+        pending_param: ['yellow',  null,  ['bold', 'underscore']]
+        failed:        ['white',   'red']
+        failed_param:  ['white',   'red', ['bold']]
+        skipped:       ['cyan']
+        skipped_param: ['cyan',    null,  ['bold']]
+        comment:       ['default']
+        tag:           ['magenta']

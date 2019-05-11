@@ -1,4 +1,4 @@
-uuid: 62ba08ea-2e26-4d6a-9725-2663f54800c1
+uuid: 76dfb3d5-7e40-4a75-9757-0a583287f1da
 langcode: hu
 status: true
 dependencies: {  }
@@ -10,6 +10,11 @@ weight: 1
 is_admin: false
 permissions:
   - 'access content'
-  - 'use text format inline'
-  - 'use text format long'
+  - 'create forum content'
+  - 'legal re-accept data_protection'
+  - 'legal re-accept terms_of_use'
+  - 'legal view data_protection'
+  - 'legal view terms_of_use'
+  - 'use text format html_body'
+  - 'use text format html_teaser'
   - 'view media'

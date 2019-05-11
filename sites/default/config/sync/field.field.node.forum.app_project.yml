@@ -1,0 +1,29 @@
+uuid: 542af183-e786-4aef-8aa5-e0d0cacae406
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_project
+    - node.type.forum
+    - taxonomy.vocabulary.project
+id: node.forum.app_project
+field_name: app_project
+entity_type: node
+bundle: forum
+label: Projekt
+description: 'Melyik modulhoz, modulokhoz kapcsolódik a téma?'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      project: project
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

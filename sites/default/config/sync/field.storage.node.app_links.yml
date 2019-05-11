@@ -1,0 +1,19 @@
+uuid: 36363636-a8bb-48c2-8980-e063f8a0fd72
+langcode: hu
+status: true
+dependencies:
+  module:
+    - link
+    - node
+id: node.app_links
+field_name: app_links
+entity_type: node
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

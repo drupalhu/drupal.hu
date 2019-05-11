@@ -1,0 +1,22 @@
+uuid: 8ac58bcf-d7d8-419b-84fe-5fd3661d7df2
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.data_protection
+    - field.storage.entity_legal_document_version.entity_legal_document_text
+  module:
+    - text
+id: entity_legal_document_version.data_protection.entity_legal_document_text
+field_name: entity_legal_document_text
+entity_type: entity_legal_document_version
+bundle: data_protection
+label: 'Document text'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

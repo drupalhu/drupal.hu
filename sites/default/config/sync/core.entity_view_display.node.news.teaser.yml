@@ -1,0 +1,52 @@
+uuid: 232ff5f2-2ee4-4a63-88f8-63c64b7ccd71
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.news.app_attachments
+    - field.field.node.news.app_body
+    - field.field.node.news.app_date
+    - field.field.node.news.app_drupal_version
+    - field.field.node.news.app_image
+    - field.field.node.news.app_teaser
+    - field.field.node.news.comment_forum
+    - image.style.media_library
+    - node.type.news
+  module:
+    - media
+    - text
+    - user
+id: node.news.teaser
+targetEntityType: node
+bundle: news
+mode: teaser
+content:
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: content
+    third_party_settings: {  }
+  app_teaser:
+    type: text_default
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_attachments: true
+  app_body: true
+  app_date: true
+  app_drupal_version: true
+  comment_forum: true
+  langcode: true

@@ -1,0 +1,11 @@
+uuid: c9ed6869-2734-4aa2-9f19-470bd6e43124
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.note
+id: node.note
+target_entity_type_id: node
+target_bundle: note
+default_langcode: current_interface
+language_alterable: false

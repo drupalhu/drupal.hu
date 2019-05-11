@@ -1,0 +1,25 @@
+uuid: 46999230-5b8d-46a5-ad4c-9f663cb1659b
+langcode: hu
+status: true
+dependencies:
+  content:
+    - 'block_content:simple:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+  module:
+    - block_content
+  theme:
+    - appf
+id: appf_trademark
+theme: appf
+region: footer
+weight: -4
+provider: null
+plugin: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+settings:
+  id: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+  label: Védjegy
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

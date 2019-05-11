@@ -1,0 +1,11 @@
+uuid: 9ae83c9d-b910-4a11-92c6-8557a5ca4f05
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.casestudy
+id: node.casestudy
+target_entity_type_id: node
+target_bundle: casestudy
+default_langcode: current_interface
+language_alterable: false

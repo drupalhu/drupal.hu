@@ -1,0 +1,12 @@
+uuid: 219e0804-b207-480c-b780-8de580541653
+langcode: hu
+status: false
+dependencies:
+  module:
+    - entity_legal
+_core:
+  default_config_hash: s_pkVooQXQS-ndYAHs9LZcfNaNejDoLXUFAbSkr7wPM
+id: entity_legal_document.full
+label: Teljes
+targetEntityType: entity_legal_document
+cache: true

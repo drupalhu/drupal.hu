@@ -1,0 +1,21 @@
+uuid: 5c96fd17-ee03-4fae-a8ab-4b0d80c3de9f
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.aggregator_feed.app_category
+  module:
+    - aggregator
+    - options
+id: aggregator_feed.aggregator_feed.app_category
+field_name: app_category
+entity_type: aggregator_feed
+bundle: aggregator_feed
+label: Kategória
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,20 @@
+uuid: 80484a20-574e-497b-b1b3-7b7822b2a4db
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appb
+id: appb_messages
+theme: appb
+region: highlighted
+weight: -4
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Állapot üzenetek'
+  provider: system
+  label_display: '0'
+visibility: {  }

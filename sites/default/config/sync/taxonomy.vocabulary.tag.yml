@@ -1,0 +1,8 @@
+uuid: f77d15b8-d14c-49a3-9f8d-a9d597d0a72f
+langcode: hu
+status: true
+dependencies: {  }
+name: Címkék
+vid: tag
+description: ''
+weight: 0

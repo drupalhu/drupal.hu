@@ -1,0 +1,20 @@
+uuid: 5e196180-3ce8-494c-8f64-032c9eb03bc7
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appb
+id: appb_secondary_local_tabs
+theme: appb
+region: pre_content
+weight: 0
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Másodlagos fülek'
+  provider: core
+  label_display: '0'
+  primary: false
+  secondary: true
+visibility: {  }

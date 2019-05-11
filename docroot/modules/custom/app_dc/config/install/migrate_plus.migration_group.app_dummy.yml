@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: app_dummy
+label: 'App - Dummy'
+description: 'Imports dummy contents, which are help developers to test manually the site functionality.'
+source_type: 'YAML'
+module: app_dc
+shared_configuration:
+  source:
+    plugin: migrate_dc_yaml
+    fileDir: ../sites/default/content/app_dummy

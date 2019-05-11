@@ -1,0 +1,25 @@
+uuid: 02989a40-f783-43aa-b1c1-be47f80573a2
+langcode: hu
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - appf
+id: appf_mainnavigation
+theme: appf
+region: navigation
+weight: -5
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Elsődleges navigáció'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

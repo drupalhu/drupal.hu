@@ -1,0 +1,34 @@
+uuid: 3d621cff-acbc-4011-a910-7aafbe392d91
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.register
+    - field.field.user.user.app_homepage
+    - field.field.user.user.app_introduction
+    - field.field.user.user.app_picture
+  module:
+    - user
+id: user.user.register
+targetEntityType: user
+bundle: user
+mode: register
+content:
+  account:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  legal_terms_of_use:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_homepage: true
+  app_introduction: true
+  app_picture: true
+  langcode: true
+  language: true
+  path: true
+  timezone: true

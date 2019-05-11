@@ -1,0 +1,11 @@
+uuid: 5a2d1a97-88eb-4d11-8384-effde053a6ac
+langcode: hu
+status: true
+dependencies: {  }
+name: Feljegyzés
+type: note
+description: ''
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

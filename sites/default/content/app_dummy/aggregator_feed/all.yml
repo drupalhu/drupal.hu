@@ -1,0 +1,19 @@
+
+drupal.org.core:
+  title: Biztonsági figyelmeztetések (core)
+  url: http://drupal.org/security/rss.xml
+  link: https://www.drupal.org/security
+  app_category: security_announcement
+
+drupal.org.contrib:
+  title: Biztonsági figyelmeztetések (contrib)
+  url: http://drupal.org/security/contrib/rss.xml
+  link: https://www.drupal.org/security
+  app_category: security_announcement
+
+gizi:
+  title: Gizi RSS csatornája
+  url: http://hup.hu/node/feed
+  link: http://hup.hu/node
+  app_category: planet
+  app_author: Gizi

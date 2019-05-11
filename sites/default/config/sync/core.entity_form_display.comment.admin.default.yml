@@ -1,0 +1,43 @@
+uuid: 5b93ba27-ea6e-42d9-92f2-f381a33311a0
+langcode: hu
+status: true
+dependencies:
+  config:
+    - comment.type.admin
+    - field.field.comment.admin.comment_body
+  module:
+    - text
+id: comment.admin.default
+targetEntityType: comment
+bundle: admin
+mode: default
+content:
+  author:
+    weight: -2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  comment_body:
+    type: text_textarea
+    weight: 11
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  subject:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

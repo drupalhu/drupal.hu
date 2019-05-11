@@ -1,0 +1,12 @@
+uuid: a578c4b1-2045-41da-9a0a-a4cc3d4fb43e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - aggregator
+_core:
+  default_config_hash: 0LZvohlEB6FpI9Irz7wHVLBVKGcjHzhvI8mCzjHndrc
+id: aggregator_item.summary
+label: Összegzés
+targetEntityType: aggregator_item
+cache: true

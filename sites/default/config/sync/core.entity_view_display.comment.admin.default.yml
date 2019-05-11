@@ -1,0 +1,28 @@
+uuid: c56ded3c-8794-4dd6-a035-74f3bd3b4f88
+langcode: hu
+status: true
+dependencies:
+  config:
+    - comment.type.admin
+    - field.field.comment.admin.comment_body
+  module:
+    - text
+id: comment.admin.default
+targetEntityType: comment
+bundle: admin
+mode: default
+content:
+  comment_body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

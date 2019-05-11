@@ -1,4 +1,4 @@
-uuid: 63f9f2c4-139b-4260-b6b5-8d97056b52b0
+uuid: 02208675-0f12-4444-8df0-7cc0f178791d
 langcode: hu
 status: true
 dependencies: {  }
@@ -10,4 +10,5 @@ queue_thumbnail_downloads: false
 new_revision: false
 source_configuration:
   source_field: field_media_image
-field_map: {  }
+field_map:
+  name: name

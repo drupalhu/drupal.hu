@@ -1,4 +1,4 @@
-uuid: c784d2fc-7552-46ba-9980-d70537ae235d
+uuid: b23a1999-46f3-4073-95b7-d9f681f733d9
 langcode: hu
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
 _core:
   default_config_hash: wTJRNzsLVTenCALONNlVfgm_pBOlqucSPuVFLOD56ck
 id: user_admin_people
-label: Felhasználók
+label: Emberek
 module: user
 description: 'A webhellyel kapcsolatban álló emberek keresése és adminisztrációja.'
 tag: default
@@ -592,7 +592,7 @@ display:
           exposed: true
           expose:
             operator_id: combine_op
-            label: 'Név vagy email tartalmazza'
+            label: 'Név vagy e-mail tartalmazza'
             description: ''
             use_operator: false
             operator: combine_op
@@ -842,7 +842,7 @@ display:
           plugin_id: date
           entity_type: user
           entity_field: created
-      title: Felhasználók
+      title: Emberek
       empty:
         area_text_custom:
           id: area_text_custom
@@ -897,7 +897,7 @@ display:
         context: ''
       tab_options:
         type: normal
-        title: Felhasználók
+        title: Emberek
         description: 'Felhasználói fiókok kezelése, szerepkörök és jogosultságok.'
         menu_name: admin
         weight: 0

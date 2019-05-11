@@ -1,0 +1,27 @@
+uuid: 933268af-e158-4da3-be76-9b2deb28da68
+langcode: hu
+status: true
+dependencies:
+  module:
+    - aggregator
+    - options
+id: aggregator_feed.app_category
+field_name: app_category
+entity_type: aggregator_feed
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: security_announcement
+      label: 'Biztonsági bejelentések'
+    -
+      value: planet
+      label: Planet
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

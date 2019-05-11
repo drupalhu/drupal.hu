@@ -3,11 +3,12 @@ session:
 url:
   source: path_prefix
   prefixes:
-    hu: hu
-    '': null
+    hu: ''
+    en: en
   domains:
     hu: ''
+    en: ''
 selected_langcode: site_default
 _core:
-  default_config_hash: 9LSMPHoktS71bRmcgT4Y8yJMITMyeE77phiZVj9Vruo
+  default_config_hash: uEePITI9tV6WqzmsTb7MfPCi5yPWXSxAN1xeLcYFQbM
 langcode: hu

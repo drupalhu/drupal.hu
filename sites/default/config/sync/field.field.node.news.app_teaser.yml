@@ -1,0 +1,28 @@
+uuid: 0efb8f47-f24a-4e94-b159-e9b441741ae4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_teaser
+    - node.type.news
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_teaser: html_teaser
+    html_body: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.news.app_teaser
+field_name: app_teaser
+entity_type: node
+bundle: news
+label: Bevezető
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

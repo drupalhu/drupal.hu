@@ -1,0 +1,16 @@
+trademark:
+  uuid: d7acbe44-1cfb-4bf8-8294-ca25c40ef603
+  info: Védjegy
+  app_body:
+    -
+      value: >
+        <p>A Drupal <a href="http://buytaert.net/">Dries Buytaert</a> bejegyzett
+        <a href="http://www.drupal.com/trademark">védjegye</a>.</p>
+
+hosting_thanksgiving:
+  uuid: 6a290725-ba59-4318-891c-52834d6a4bbb
+  info: Hosting köszönet nyilvánítás
+  app_body:
+    -
+      value: >
+        <p>A drupal.hu hosting szolgáltatója az <a href="https://www.acquia.com/products-services/acquia-cloud">Acquia Cloud</a>.

@@ -1,0 +1,93 @@
+uuid: 93e23295-6663-4130-915c-c9322d0f765e
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.comment_forum.default
+    - core.entity_view_mode.node.full
+    - field.field.node.news.app_attachments
+    - field.field.node.news.app_body
+    - field.field.node.news.app_date
+    - field.field.node.news.app_drupal_version
+    - field.field.node.news.app_image
+    - field.field.node.news.app_teaser
+    - field.field.node.news.comment_forum
+    - image.style.media_library
+    - node.type.news
+  module:
+    - comment
+    - datetime_range
+    - file
+    - media
+    - text
+    - user
+id: node.news.full
+targetEntityType: node
+bundle: news
+mode: full
+content:
+  app_attachments:
+    weight: 4
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  app_body:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_date:
+    weight: 1
+    label: inline
+    settings:
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
+  app_drupal_version:
+    weight: 5
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: ''
+    third_party_settings: {  }
+  app_teaser:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  comment_forum:
+    type: comment_default
+    weight: 7
+    region: content
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+  links:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

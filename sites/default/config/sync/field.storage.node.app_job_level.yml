@@ -1,0 +1,30 @@
+uuid: 207e76db-bb63-4cf6-972a-3ac019b079ec
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.app_job_level
+field_name: app_job_level
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: junior
+      label: kezdő
+    -
+      value: intermediate
+      label: középhaladó
+    -
+      value: senior
+      label: haladó
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

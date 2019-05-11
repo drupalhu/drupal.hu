@@ -1,0 +1,18 @@
+uuid: 3fc39d2a-f7c5-4c5d-bd9d-2706d66f1384
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appf
+id: appf_primaryadminactions
+theme: appf
+region: content
+weight: -3
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Elsődleges adminisztrátori műveletek'
+  provider: core
+  label_display: '0'
+visibility: {  }

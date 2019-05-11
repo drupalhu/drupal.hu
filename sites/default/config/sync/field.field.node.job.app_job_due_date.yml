@@ -1,0 +1,21 @@
+uuid: db414682-b559-4b5f-b875-26781803acf4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_due_date
+    - node.type.job
+  module:
+    - datetime
+id: node.job.app_job_due_date
+field_name: app_job_due_date
+entity_type: node
+bundle: job
+label: 'Jelentkezés határideje'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

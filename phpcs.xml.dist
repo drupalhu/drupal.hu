@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ruleset
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+  name="custom">
+
+  <description>Project specific overrides.</description>
+
+  <config name="ignore_warnings_on_exit" value="0" />
+  <config name="ignore_errors_on_exit" value="0" />
+
+  <arg name="ignore" value="*.css,*.md,*.txt"/>
+  <arg name="colors"/>
+  <arg name="extensions" value="php/php,module/php,profile/php,theme/php,install/php,engine/php"/>
+
+  <rule ref="Drupal">
+    <exclude name="Drupal.Commenting.ClassComment.Missing"/>
+    <exclude name="Drupal.Commenting.FunctionComment.Missing"/>
+    <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
+    <exclude name="Drupal.Commenting.FunctionComment.MissingParamComment"/>
+    <exclude name="Drupal.Commenting.FunctionComment.MissingReturnComment"/>
+    <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
+  </rule>
+
+  <rule ref="Drupal.Files.LineLength">
+    <properties>
+      <property name="lineLimit" value="120"/>
+    </properties>
+  </rule>
+
+  <rule ref="DrupalPractice"/>
+
+  <file>./docroot/modules/custom/</file>
+
+  <file>./docroot/themes/custom/</file>
+  <exclude-pattern>./docroot/themes/custom/*/.bundle/</exclude-pattern>
+  <exclude-pattern>./docroot/themes/custom/*/bootstrap/</exclude-pattern>
+  <exclude-pattern>./docroot/themes/custom/*/node_modules/</exclude-pattern>
+
+  <file>./drush/Commands/custom/</file>
+
+</ruleset>

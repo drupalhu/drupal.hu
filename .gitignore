@@ -1,30 +1,46 @@
 
+/artifacts/
 /bin/
 
 /docroot/core/
+/docroot/libraries/
 /docroot/modules/contrib/
+/docroot/profiles/contrib/
 /docroot/themes/contrib/
-
+/docroot/themes/custom/*/.bundle/
 /docroot/themes/custom/*/node_modules/
-/docroot/themes/custom/*/css/**/*.css
-/docroot/themes/custom/*/styleguide/
+/docroot/themes/custom/*/bootstrap/
+/docroot/themes/custom/*/css/**.css
+/docroot/themes/custom/*/css/**.css.map
+
+/docroot/sites/simpletest/
 
 /docroot/sites/*/files/
 /docroot/sites/*/settings.local.php
-/docroot/sites/*/default.services.yml
-/docroot/sites/*/default.settings.php
+/docroot/sites/*/local.drush.yml
+/docroot/sites/*/local.services.yml
 
-/docroot/sites/development.services.yml
-/docroot/sites/example.sites.php
-/docroot/.ht.router.php
-/docroot/web.config
+/drush/Commands/contrib/
+/drush/drush.local.yml
 
-/local/
-
+/sites/*/backup/
+/sites/*/php_storage/
 /sites/*/private/
-/sites/*/translations/
 /sites/*/temporary/
 /sites/*/hash_salt.txt
 
-/tmp/
+/reports/
+
+/tests/behat/behat.local.yml
 /vendor/
+
+/composer.local.example.lock
+/composer.local.json
+/composer.local.lock
+
+/.env
+
+/phpcs.xml
+/phpunit.xml
+
+/.phpbrewrc

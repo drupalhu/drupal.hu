@@ -1,0 +1,11 @@
+type: module
+name: 'App - Default and Dummy Content'
+description: 'Migration definition for default and dummy contents'
+package: 'App'
+core: '8.x'
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_drupal
+  - migrate_plus:migrate_plus
+  - migrate_tools:migrate_tools
+  - migrate_dc:migrate_dc

@@ -1,0 +1,11 @@
+uuid: 920bf034-ed70-4c2c-936b-1192d35413b6
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.forums
+id: taxonomy_term.forums
+target_entity_type_id: taxonomy_term
+target_bundle: forums
+default_langcode: hu
+language_alterable: false

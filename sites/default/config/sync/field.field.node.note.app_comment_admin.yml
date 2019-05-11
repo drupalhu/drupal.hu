@@ -1,0 +1,33 @@
+uuid: 2a1eabfa-ba7d-4cd6-b726-cb85231fe0df
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_comment_admin
+    - node.type.note
+  module:
+    - comment
+id: node.note.app_comment_admin
+field_name: app_comment_admin
+entity_type: node
+bundle: note
+label: Hozzászólások
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    status: 2
+    cid: 0
+    last_comment_timestamp: 0
+    last_comment_name: null
+    last_comment_uid: 0
+    comment_count: 0
+default_value_callback: ''
+settings:
+  default_mode: 1
+  per_page: 50
+  anonymous: 0
+  form_location: true
+  preview: 1
+field_type: comment

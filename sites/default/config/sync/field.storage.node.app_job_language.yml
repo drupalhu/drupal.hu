@@ -1,0 +1,36 @@
+uuid: ba43664f-d317-478c-9d4b-f396cda6bf95
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.app_job_language
+field_name: app_job_language
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: hu
+      label: magyar
+    -
+      value: en
+      label: angol
+    -
+      value: de
+      label: német
+    -
+      value: fr
+      label: francia
+    -
+      value: es
+      label: spanyol
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 3
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

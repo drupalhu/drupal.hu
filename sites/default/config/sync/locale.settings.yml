@@ -9,7 +9,7 @@ translation:
   overwrite_customized: false
   overwrite_not_customized: true
   update_interval_days: 0
-  path: ../sites/default/translations
+  path: ''
   import_enabled: true
 _core:
   default_config_hash: cSdYeE-_AQETCNZnl8BMFS9-sVn5--VzAYILkpPBUbM

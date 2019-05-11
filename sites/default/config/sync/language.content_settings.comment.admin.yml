@@ -1,0 +1,11 @@
+uuid: 186209d0-811c-4947-b592-b286c760dd3c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - comment.type.admin
+id: comment.admin
+target_entity_type_id: comment
+target_bundle: admin
+default_langcode: site_default
+language_alterable: false

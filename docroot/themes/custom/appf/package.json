@@ -1,0 +1,14 @@
+{
+  "name": "appf",
+  "version": "1.0.0",
+  "description": "Drupalhu - front-end theme",
+  "main": "index.js",
+  "license": "proprietary",
+  "private": true,
+  "dependencies": {
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.0.1",
+    "gulp-frontend-tasks": "github:bluesparklabs/gulp-frontend-tasks"
+  },
+  "sasslintConfig": "./sass-lint.yml"
+}

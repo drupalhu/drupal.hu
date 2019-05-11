@@ -1,0 +1,17 @@
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+favicon:
+  mimetype: image/svg+xml
+  path: themes/custom/appf/favicon.svg
+  url: /themes/custom/appf/favicon.svg
+  use_default: false
+logo:
+  path: ''
+  url: ''
+  use_default: true
+langcode: hu
+custom_css: 0
+disable_google_fonts: 0

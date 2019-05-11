@@ -1,6 +1,6 @@
-uuid: ef1a6582-4250-4739-b2e5-1316d872fc0b
-name: Drupal.hu
-mail: admin@drupal.hu
+uuid: ac6dae37-ab30-4ab1-bb3d-8d0422f96f89
+name: Drupalhu
+mail: info@example.com
 slogan: ''
 page:
   403: ''
@@ -11,4 +11,5 @@ weight_select_max: 100
 langcode: hu
 default_langcode: hu
 _core:
-  default_config_hash: PppYSnx5JUXJWVIv3MNQ7AfjIYtiQex6zcOvPJgX7IQ
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
+mail_notification: ''

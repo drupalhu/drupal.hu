@@ -1,0 +1,18 @@
+uuid: a4a82a88-05d8-4553-a526-df224fe27cf6
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.title
+field_name: title
+entity_type: node
+bundle: page
+label: Cím
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

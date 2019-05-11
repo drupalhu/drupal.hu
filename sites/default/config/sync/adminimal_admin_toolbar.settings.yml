@@ -1,4 +1,4 @@
-avoid_custom_font: false
+avoid_custom_font: true
 _core:
   default_config_hash: luxxj-hgklPQf8rbK0BYlCjXcha_tqKQcSvFXrEPS8M
 langcode: hu

@@ -1,0 +1,28 @@
+uuid: 7843a937-3ca8-4609-aa1b-b2e328b453c4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_advantage
+    - node.type.job
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.job.app_job_advantage
+field_name: app_job_advantage
+entity_type: node
+bundle: job
+label: 'Előnyt jelent'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

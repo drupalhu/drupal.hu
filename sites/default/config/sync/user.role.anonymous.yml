@@ -1,4 +1,4 @@
-uuid: f9431039-ad01-4c11-8eea-7e2832c26da3
+uuid: 36135aba-1d83-403e-9818-807bc43a1fa4
 langcode: hu
 status: true
 dependencies: {  }
@@ -10,5 +10,6 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
-  - 'display eu cookie compliance popup'
+  - 'legal view data_protection'
+  - 'legal view terms_of_use'
   - 'view media'

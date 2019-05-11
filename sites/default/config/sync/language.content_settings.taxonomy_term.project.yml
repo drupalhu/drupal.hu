@@ -1,0 +1,11 @@
+uuid: e38b19fe-a195-4071-93d8-ea774fb357e3
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.project
+id: taxonomy_term.project
+target_entity_type_id: taxonomy_term
+target_bundle: project
+default_langcode: zxx
+language_alterable: false

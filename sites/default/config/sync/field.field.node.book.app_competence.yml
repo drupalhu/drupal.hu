@@ -1,0 +1,29 @@
+uuid: 3e2029e1-d9de-4756-a925-9ea27ab5a6dc
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_competence
+    - node.type.book
+    - taxonomy.vocabulary.competence
+id: node.book.app_competence
+field_name: app_competence
+entity_type: node
+bundle: book
+label: Szint
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      competence: competence
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

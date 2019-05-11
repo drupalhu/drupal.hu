@@ -1,10 +1,13 @@
-uuid: 69f0fb1f-4617-4560-9b2e-b144419856ea
+uuid: d63611a7-8352-45b6-912a-62a81aa22612
 langcode: hu
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.forum.body
+    - field.field.node.forum.app_body
+    - field.field.node.forum.app_drupal_version
+    - field.field.node.forum.app_project
+    - field.field.node.forum.app_tags
     - field.field.node.forum.comment_forum
     - field.field.node.forum.taxonomy_forums
     - node.type.forum
@@ -18,25 +21,37 @@ targetEntityType: node
 bundle: forum
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 100
+  app_body:
+    type: text_trimmed
+    weight: 2
     region: content
+    label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
-  links:
-    weight: 101
+  app_drupal_version:
+    type: entity_reference_label
+    weight: 1
     region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  links:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   taxonomy_forums:
     type: entity_reference_label
-    weight: 10
+    weight: 0
     region: content
-    label: above
+    label: inline
     settings:
       link: true
     third_party_settings: {  }
 hidden:
+  app_project: true
+  app_tags: true
   comment_forum: true
   langcode: true

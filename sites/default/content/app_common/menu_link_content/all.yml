@@ -1,0 +1,32 @@
+
+main.forum:
+  menu_name: 'main'
+  title: 'Fórum'
+  link: 'internal:/forum'
+  description: ''
+  weight: 1
+  enabled: 1
+
+footer:impressum:
+  menu_name: 'footer'
+  title: 'Impresszum'
+  link: 'entity.uuid:node/d859bb03-4344-4715-910a-8dcbe92cec97'
+  description: ''
+  weight: 1
+  enabled: 1
+
+footer:data_protection:
+  menu_name: 'footer'
+  title: 'Adatvédelmi és Adatkezelési tájékoztató'
+  link: 'internal:/legal/document/data_protection'
+  description: ''
+  weight: 2
+  enabled: 1
+
+footer:terms_of_use:
+  menu_name: 'footer'
+  title: 'Felhasználási feltételek'
+  link: 'internal:/legal/document/terms_of_use'
+  description: ''
+  weight: 3
+  enabled: 1

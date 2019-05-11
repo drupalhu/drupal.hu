@@ -1,0 +1,18 @@
+uuid: 9d278973-b37b-4773-9f3b-91020932e448
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appf
+id: appf_page_title
+theme: appf
+region: content
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Oldal címe'
+  provider: core
+  label_display: '0'
+visibility: {  }

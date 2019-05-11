@@ -1,0 +1,72 @@
+uuid: f386e88b-0a0b-4caf-af27-c7a6a2602413
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.field.aggregator_feed.aggregator_feed.app_author
+    - field.field.aggregator_feed.aggregator_feed.app_category
+  module:
+    - aggregator
+    - options
+_core:
+  default_config_hash: ORtH44CMbYMb3_0zumUPwVhPmaLBiImWpZa_hO3qmhU
+id: aggregator_feed.aggregator_feed.default
+targetEntityType: aggregator_feed
+bundle: aggregator_feed
+mode: default
+content:
+  app_author:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  app_category:
+    weight: 6
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  checked:
+    type: timestamp_ago
+    weight: 1
+    region: content
+    settings:
+      future_format: '@interval hence'
+      past_format: '@interval ago'
+      granularity: 2
+    third_party_settings: {  }
+    label: inline
+  description:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  feed_icon:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  image:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  items:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  link:
+    type: uri_link
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+    label: inline
+hidden:
+  langcode: true
+  more_link: true

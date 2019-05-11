@@ -1,0 +1,19 @@
+uuid: 7bcfb0b3-7ecd-4d19-84b8-792616678ea3
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_location_name
+    - node.type.job
+id: node.job.app_job_location_name
+field_name: app_job_location_name
+entity_type: node
+bundle: job
+label: 'Munka végzés helyének megnevezése'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

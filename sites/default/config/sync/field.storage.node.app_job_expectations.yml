@@ -1,0 +1,19 @@
+uuid: bb4806d7-2ebd-442c-8554-d2c407b0e898
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.app_job_expectations
+field_name: app_job_expectations
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

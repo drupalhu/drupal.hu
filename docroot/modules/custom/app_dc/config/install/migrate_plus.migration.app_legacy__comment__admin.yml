@@ -1,0 +1,70 @@
+langcode: en
+status: true
+id: app_legacy__comment__admin
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+label: 'App - Legacy - comment:admin'
+
+source:
+  plugin: app_comment
+  node_types:
+    - note
+  constants:
+    entity_type: node
+    field_name: app_comment_admin
+    body_text_format: html_body
+
+process:
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  entity_id:
+    source: nid
+    plugin: migration_lookup
+    no_stub: true
+    migration:
+      - app_legacy__node__note
+  langcode:
+    source: language
+    plugin: default_value
+    default_value: hu
+  cid: cid
+  pid:
+    -
+      source: pid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__comment__admin
+  uid:
+    -
+      source: uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created: created
+  changed: changed
+  thread: thread
+  status: status
+  subject: subject
+  comment_body/0/value: comment_body/0/value
+  comment_body/0/format: constants/body_text_format
+
+destination:
+  plugin: 'entity:comment'
+  default_bundle: 'admin'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__node__note

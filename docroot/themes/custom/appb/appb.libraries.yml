@@ -1,0 +1,4 @@
+views_ui.admin.styling:
+  css:
+    theme:
+      css/appb.views-ui.admin.theme.css: {}

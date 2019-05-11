@@ -1,0 +1,18 @@
+uuid: 5a306a14-1234-47b5-a30c-66169dd66fc4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.job
+id: node.job.title
+field_name: title
+entity_type: node
+bundle: job
+label: 'Ajánlat megnevezése'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

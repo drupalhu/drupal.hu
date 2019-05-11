@@ -1,0 +1,8 @@
+uuid: 781d281a-fb4d-425f-a7ef-7f8fda989fdd
+langcode: hu
+status: true
+dependencies: {  }
+name: 'Drupal verzió'
+vid: drupal_version
+description: ''
+weight: 0

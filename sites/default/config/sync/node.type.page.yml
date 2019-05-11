@@ -1,19 +1,11 @@
-uuid: 952836e3-d580-4447-83ce-59eb7de9605b
+uuid: 2a36fc59-1cd3-4818-b49d-d2214171e0f3
 langcode: hu
 status: true
-dependencies:
-  module:
-    - menu_ui
-third_party_settings:
-  menu_ui:
-    available_menus:
-      - main
-      - footer
-    parent: 'main:'
+dependencies: {  }
 name: Oldal
 type: page
-description: 'Általános statikus oldal'
+description: 'Statikus tartalmú oldalak.'
 help: ''
-new_revision: true
+new_revision: false
 preview_mode: 1
 display_submitted: false

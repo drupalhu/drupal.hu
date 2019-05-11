@@ -1,0 +1,78 @@
+langcode: en
+status: true
+id: app_default__taxonomy_term
+
+migration_tags:
+  - app
+  - default_content
+
+migration_group: app_default
+label: 'App - Default - taxonomy_term'
+
+source:
+  fileName: taxonomy_term/all.yml
+  identifier: name
+
+  fields:
+    uuid: UUID
+    vid: Vocabulary identifier
+    langcode: Language code
+    status: Status
+    parent: Parent
+    weight: Weight
+    changed: Changed
+    name: Name
+    description: Description
+
+process:
+  uuid: uuid
+  vid: vid
+  langcode:
+    source: langcode
+    plugin: default_value
+    default_value: hu
+  status:
+    source: status
+    plugin: default_value
+    default_value: true
+  parent:
+    -
+      source: parent
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_default__taxonomy_term__forums
+  weight:
+    source: weight
+    plugin: default_value
+    default_value: 0
+  changed:
+    -
+      source: changed
+      plugin: default_value
+      default_value: now
+    -
+      plugin: migrate_dc_str_to_time
+      output_format: U
+  name: name
+  description:
+    source: description
+    plugin: sub_process
+    process:
+      value: value
+      format:
+        source: format
+        plugin: default_value
+        default_value: html_teaser
+
+destination:
+  plugin: 'entity:taxonomy_term'
+  overwrite_properties:
+    - langcode
+    - status
+    - parent
+    - weight
+    - changed
+    - name
+    - description

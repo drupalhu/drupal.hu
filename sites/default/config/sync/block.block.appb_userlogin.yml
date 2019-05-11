@@ -1,0 +1,20 @@
+uuid: 7615ac64-db48-4419-83db-39e2fb11a8ef
+langcode: hu
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - appb
+id: appb_userlogin
+theme: appb
+region: content
+weight: -2
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: Bejelentkezés
+  provider: user
+  label_display: visible
+visibility: {  }

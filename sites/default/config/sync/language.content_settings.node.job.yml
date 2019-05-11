@@ -1,0 +1,11 @@
+uuid: 04d50338-cb8b-483f-b8ea-4a370cb1d7d7
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.job
+id: node.job
+target_entity_type_id: node
+target_bundle: job
+default_langcode: current_interface
+language_alterable: true

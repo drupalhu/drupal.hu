@@ -1,56 +1,51 @@
-uuid: 69dd0dd3-0516-4c47-8b7f-cfb8a0c72b4f
-langcode: hu
+uuid: a67a07c5-eff0-4ac8-86e3-4c1ed7e6b55f
+langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.dhu_body
+    - field.field.node.page.app_attachments
+    - field.field.node.page.app_body
+    - field.field.node.page.app_image
+    - image.style.media_library
     - node.type.page
   module:
-    - entity_reference_revisions
-    - layout_builder
-    - layout_discovery
+    - file
+    - media
+    - text
     - user
-third_party_settings:
-  layout_builder:
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings: {  }
-        components:
-          f383a0ff-0960-469a-bfe0-d45b4025a7cf:
-            uuid: f383a0ff-0960-469a-bfe0-d45b4025a7cf
-            region: content
-            configuration:
-              id: 'field_block:node:page:dhu_body'
-              label: Törzs
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_reference_revisions_entity_view
-                settings:
-                  view_mode: default
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 0
 id: node.page.default
 targetEntityType: node
 bundle: page
 mode: default
 content:
-  dhu_body:
-    type: entity_reference_revisions_entity_view
-    weight: 101
+  app_attachments:
+    weight: 3
     label: above
     settings:
-      view_mode: default
-      link: ''
+      use_description_as_link_text: true
     third_party_settings: {  }
+    type: file_default
+    region: content
+  app_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: ''
+    third_party_settings: {  }
+    type: media_thumbnail
     region: content
   links:
-    weight: 100
+    weight: 2
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   langcode: true

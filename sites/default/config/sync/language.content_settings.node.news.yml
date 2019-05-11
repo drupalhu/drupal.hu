@@ -1,0 +1,11 @@
+uuid: 9f3cbf03-10d8-4c09-8565-26e439952e38
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.news
+id: node.news
+target_entity_type_id: node
+target_bundle: news
+default_langcode: current_interface
+language_alterable: false

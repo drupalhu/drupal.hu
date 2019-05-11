@@ -1,0 +1,122 @@
+langcode: en
+status: true
+id: app_legacy__node__job__rev
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+label: 'App - Legacy - node:job:revision'
+
+deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
+
+source:
+  plugin: d7_node_revision
+  node_type: job
+  constants:
+    body_text_format: html_body
+    langcode: hu
+    default_langcode: true
+
+process:
+  langcode: constants/langcode
+  default_langcode: constants/default_langcode
+  nid: nid
+  uid:
+    -
+      source: node_uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid:
+    -
+      source: revision_uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+  revision_log: log
+  revision_timestamp: timestamp
+
+  title: title
+
+  app_body/0/value: body/0/value
+  app_body/0/format: constants/body_text_format
+
+  app_job_expectations/0/value: field_job_expectations/0/value
+  app_job_expectations/0/format: constants/body_text_format
+
+  app_job_advantage/0/value: field_job_advantage/0/value
+  app_job_advantage/0/format: constants/body_text_format
+
+  app_job_announcer_gives/0/value: field_job_announcer_gives/0/value
+  app_job_announcer_gives/0/format: constants/body_text_format
+
+  app_job_location_type:
+    -
+      source: field_job_remotely/0/value
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: static_map
+      map:
+        remotely_work: remote_yes
+        remote_work_not_allowed: remote_no
+        remove_maybe: remote_partial
+
+  app_job_employment:
+    -
+      source: field_job_timing/0/value
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: static_map
+      map:
+        occasional_work: casual
+        full-time_work: full_time
+        part-time_work: part_time
+        fire-fighter: casual
+
+  app_job_language:
+    -
+      source: field_job_other_language/0/value
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: static_map
+      map:
+        hungarian: hu
+        english: en
+        deuch: de
+
+  app_job_due_date:
+    source: field_job_due_date/0/value
+    plugin: format_date
+    from_format: 'Y-m-d H:i:s'
+    from_timezone: 'Europe/Budapest'
+    to_format: 'Y-m-d\TH:i:s'
+    to_timezone: 'Europe/Budapest'
+
+  app_job_level: field_job_experience
+  app_job_location_name: field_place_of_work
+  app_job_contact_org: field_job_organization
+  app_job_contact_name: field_job_contact_person
+  app_job_contact_phone: field_job_contact_phone
+  app_job_contact_email: field_job_contact_email
+
+destination:
+  plugin: 'entity_revision:node'
+  default_bundle: 'job'
+
+migration_dependencies:
+  required:
+    - app_legacy__node__job

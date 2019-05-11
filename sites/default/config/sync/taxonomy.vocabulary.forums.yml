@@ -1,4 +1,4 @@
-uuid: ac26bc3b-4d6e-42c6-a207-f955ab61bd31
+uuid: 545e94fc-035d-4176-b0a0-abcdd4a3ccb3
 langcode: hu
 status: true
 dependencies:
@@ -6,9 +6,8 @@ dependencies:
     module:
       - forum
 _core:
-  default_config_hash: mflVSHt4N6ABP4asGcCrKD0Qvf7y9WO_Cs_v5vCjOrw
+  default_config_hash: ESGfHGDVWjnc2BiSFq58LOhBU6-f_2AGcwGjbqegYfo
 name: Fórumok
 vid: forums
 description: 'Fórum navigációs szótára'
-hierarchy: 1
-weight: -10
+weight: -9

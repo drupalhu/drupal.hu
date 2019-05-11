@@ -1,0 +1,20 @@
+uuid: 0e7a1692-fef0-48f2-8ca5-0a4adc6bb2b9
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.app_project
+field_name: app_project
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 5
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

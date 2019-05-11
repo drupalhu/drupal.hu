@@ -1,0 +1,11 @@
+uuid: 60944438-74f8-4e4b-8aa3-d1d4d341e6af
+langcode: hu
+status: true
+dependencies:
+  config:
+    - block_content.type.simple
+id: block_content.simple
+target_entity_type_id: block_content
+target_bundle: simple
+default_langcode: current_interface
+language_alterable: true

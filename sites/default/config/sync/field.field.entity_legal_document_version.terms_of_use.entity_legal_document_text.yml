@@ -1,0 +1,22 @@
+uuid: 86a5b39a-c9d6-4e25-abdf-19ee094cbd48
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.terms_of_use
+    - field.storage.entity_legal_document_version.entity_legal_document_text
+  module:
+    - text
+id: entity_legal_document_version.terms_of_use.entity_legal_document_text
+field_name: entity_legal_document_text
+entity_type: entity_legal_document_version
+bundle: terms_of_use
+label: 'Document text'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

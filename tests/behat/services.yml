@@ -1,0 +1,4 @@
+
+services:
+  cheppers.behat.theme_detector:
+    class: \Cheppers\DrupalExtension\ThemeDetector

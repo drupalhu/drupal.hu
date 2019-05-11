@@ -1,0 +1,23 @@
+uuid: af31e70d-36a1-4e28-9a4e-9d06196b7009
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.user.app_homepage
+  module:
+    - link
+    - user
+id: user.user.app_homepage
+field_name: app_homepage
+entity_type: user
+bundle: user
+label: 'Honlap címe'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link

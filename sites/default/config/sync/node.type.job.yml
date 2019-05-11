@@ -1,0 +1,11 @@
+uuid: 67438339-2e38-47a7-ad65-f73fe82d1819
+langcode: hu
+status: true
+dependencies: {  }
+name: Munkaajánlat
+type: job
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

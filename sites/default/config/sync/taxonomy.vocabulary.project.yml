@@ -1,0 +1,8 @@
+uuid: 2154f264-e680-447e-8a59-2c4fa48c5623
+langcode: hu
+status: true
+dependencies: {  }
+name: Projekt
+vid: project
+description: ''
+weight: 0

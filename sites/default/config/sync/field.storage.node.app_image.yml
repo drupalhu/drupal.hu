@@ -1,0 +1,20 @@
+uuid: 454fd987-6872-4c5a-868c-c8864e19d36e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - media
+    - node
+id: node.app_image
+field_name: app_image
+entity_type: node
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

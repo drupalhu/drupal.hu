@@ -1,0 +1,60 @@
+uuid: b59a0d38-d8f7-4187-8395-ed1c9d9b9bf5
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.casestudy.app_body
+    - field.field.node.casestudy.app_drupal_version
+    - field.field.node.casestudy.app_image
+    - field.field.node.casestudy.app_teaser
+    - image.style.media_library
+    - node.type.casestudy
+  module:
+    - media
+    - text
+    - user
+id: node.casestudy.full
+targetEntityType: node
+bundle: casestudy
+mode: full
+content:
+  app_body:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_drupal_version:
+    weight: 1
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: ''
+    third_party_settings: {  }
+  app_teaser:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_attachments: true
+  langcode: true

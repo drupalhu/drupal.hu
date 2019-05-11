@@ -1,0 +1,24 @@
+uuid: 21fb9cf3-6af5-4fcc-bf5c-cf1ba329d1d9
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.book
+_core:
+  default_config_hash: rYbAZX1eKDo7CVRnBnpYgdmk8HQo5IcKhzePCx9LCZY
+id: node.book.promote
+field_name: promote
+entity_type: node
+bundle: book
+label: 'Címlapra helyezve'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

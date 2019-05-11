@@ -1,47 +1,45 @@
-uuid: 36e93402-563d-45dd-9442-27c65e84564d
-langcode: hu
+uuid: ce5b8dcf-3b5e-444b-a5b3-c2b5da09a35c
+langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.page.dhu_body
+    - field.field.node.page.app_attachments
+    - field.field.node.page.app_body
+    - field.field.node.page.app_image
+    - image.style.media_library
     - node.type.page
   module:
-    - layout_builder
-    - layout_discovery
+    - media
+    - text
     - user
-third_party_settings:
-  layout_builder:
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings: {  }
-        components:
-          7595b6c7-d15b-4382-8890-4b8e50c3b7f6:
-            uuid: 7595b6c7-d15b-4382-8890-4b8e50c3b7f6
-            region: content
-            configuration:
-              id: 'field_block:node:page:dhu_body'
-              label: Törzs
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: paragraph_summary
-                settings: {  }
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 0
 id: node.page.teaser
 targetEntityType: node
 bundle: page
 mode: teaser
 content:
-  links:
-    weight: 100
+  app_body:
+    type: text_trimmed
+    weight: 1
     region: content
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: content
+    third_party_settings: {  }
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  dhu_body: true
+  app_attachments: true
   langcode: true

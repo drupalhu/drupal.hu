@@ -1,0 +1,20 @@
+uuid: c21494c5-6ae1-47f8-8c80-1ddc6b43725a
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appb
+id: appb_primary_local_tasks
+theme: appb
+region: header
+weight: -4
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Elsődleges fülek'
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: false
+visibility: {  }

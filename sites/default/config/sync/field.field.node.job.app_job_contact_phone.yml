@@ -1,0 +1,21 @@
+uuid: f7696cbd-eb29-4b95-9a87-bb051a727355
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_contact_phone
+    - node.type.job
+  module:
+    - telephone
+id: node.job.app_job_contact_phone
+field_name: app_job_contact_phone
+entity_type: node
+bundle: job
+label: Telefonszám
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

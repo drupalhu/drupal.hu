@@ -1,0 +1,27 @@
+uuid: 078cbf52-f54a-4200-a992-aded9782126f
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_attachments
+    - node.type.event
+  module:
+    - file
+id: node.event.app_attachments
+field_name: app_attachments
+entity_type: node
+bundle: event
+label: Csatolmányok
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: 'attachments/[date:custom:Y]'
+  file_extensions: 'txt md rtf pdf odt docx ott dotx odm ods xlsx ots xltx odg otg odp ppsx pptx otp potx odf odb po pot xml csv sql mysql pgsql sqlite json yaml yml toml ini zip gz webp png jpeg jpg gif svg svgz xcf psd ico eps'
+  max_filesize: ''
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

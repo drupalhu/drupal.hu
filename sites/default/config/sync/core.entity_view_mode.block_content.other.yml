@@ -1,0 +1,10 @@
+uuid: 9fb9459b-3495-4e15-99a3-839ff3d41ef2
+langcode: hu
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.other
+label: Egyéb
+targetEntityType: block_content
+cache: true

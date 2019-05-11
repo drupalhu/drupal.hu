@@ -1,0 +1,22 @@
+uuid: 0dec2525-c2db-481c-95e1-d29c351b4a37
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.job
+id: node.job.promote
+field_name: promote
+entity_type: node
+bundle: job
+label: 'Címlapra helyezve'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

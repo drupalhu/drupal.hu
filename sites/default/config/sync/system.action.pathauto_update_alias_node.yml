@@ -1,13 +1,16 @@
-uuid: 7b11b647-80c0-44c8-9601-33ebc3e9f016
+uuid: 307bec58-7c08-4f1e-b94b-fa6d13a511ed
 langcode: hu
 status: true
 dependencies:
+  enforced:
+    module:
+      - node
   module:
     - pathauto
 _core:
-  default_config_hash: '-SdRoSbsl_FULjbX8mgESZdeoEOjgi7rDhHNdLOJ8n8'
+  default_config_hash: lno8QThS348UX-kaUsagJtCnuPHKLXYnTQiF_9HSDWA
 id: pathauto_update_alias_node
-label: 'Webcímálnév frissítése'
+label: 'Update URL alias'
 type: node
 plugin: pathauto_update_alias
 configuration: {  }

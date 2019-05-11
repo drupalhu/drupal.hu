@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: app_common
+label: 'App - Common'
+description: 'Imports common contents on top of the "app_legacy" or "app_default" migration.'
+source_type: 'YAML'
+module: app_dc
+shared_configuration:
+  source:
+    plugin: migrate_dc_yaml
+    fileDir: ../sites/default/content/app_common

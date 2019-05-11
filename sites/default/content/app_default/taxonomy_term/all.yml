@@ -1,0 +1,149 @@
+
+Kezdő:
+  vid: competence
+  weight: 0
+Haladó:
+  vid: competence
+  weight: 1
+Tapasztalt:
+  vid: competence
+  weight: 2
+
+
+9.x:
+  vid: drupal_version
+  weight: 0
+8.x:
+  vid: drupal_version
+  weight: 1
+7.x:
+  vid: drupal_version
+  weight: 2
+6.x:
+  vid: drupal_version
+  weight: 3
+5.x:
+  vid: drupal_version
+  weight: 4
+4.7.x:
+  vid: drupal_version
+  weight: 5
+4.6.x:
+  vid: drupal_version
+  weight: 6
+
+
+Telepítés előtt:
+  vid: forums
+  weight: 0
+Telepítés, migráció, beállítások:
+  vid: forums
+  weight: 1
+Hoszting kérdések:
+  vid: forums
+  weight: 2
+Modulok használata:
+  vid: forums
+  weight: 3
+Modulok fejlesztése:
+  vid: forums
+  weight: 4
+Sminkek:
+  vid: forums
+  weight: 5
+Honosítás:
+  vid: forums
+  weight: 6
+Többnyelvűsítés:
+  vid: forums
+  weight: 7
+Közösségi média integráció, tartalommegosztás:
+  vid: forums
+  weight: 8
+Drupal dojo magyarul:
+  vid: forums
+  weight: 9
+Munkaközvetítő:
+  vid: forums
+  weight: 10
+Drupal.hu:
+  vid: forums
+  weight: 11
+MDE:
+  vid: forums
+  weight: 12
+Egyéb:
+  vid: forums
+  weight: 13
+
+
+admin_toolbar:
+  vid: project
+devel:
+  vid: project
+masquerade:
+  vid: project
+pathauto:
+  vid: project
+token:
+  vid: project
+
+
+Dizájner:
+  vid: target_audience
+  weight: 0
+  description:
+    -
+      value: |
+        <p>UX kutatással és UI tervezéssel foglalozó személyek.</p>
+Backend fejlesztő:
+  vid: target_audience
+  weight: 1
+  description:
+    -
+      value: |
+        <p>Szerver oldali programozással foglalkozó személyek.</p>
+Frontend fejlesztő:
+  vid: target_audience
+  weight: 2
+  description:
+    -
+      value: |
+        <p>Kliens oldali fejlesztéssel foglalkozó személyek.</p>
+Webhely építő:
+  vid: target_audience
+  weight: 3
+  description:
+    -
+      value: |
+        <p>Modulok és sminkek telepítésével és konfigurálásával foglalkozó személyek.</p>
+Webhely tulajdonos:
+  vid: target_audience
+  weight: 3
+  description:
+    -
+      value: |
+        <p>Azok szemelyek aki webhellyel rendelkeznek, de a webhely elkészítében egyáltalán nem
+        vagy csak részben vesznek részt, illetve azok a döntés hozók akik a webhely fejlesztésével kapcsolatos
+        prioritásokat meghatározzák.</p>
+Üzemeltető:
+  vid: target_audience
+  weight: 4
+  description:
+    -
+      value: |
+        <p>Azok akik a webhely fejlesztéséhez és üzemeltetéséhez szükséges infrastuktúrát biztosítják.</p>
+Fordító:
+  vid: target_audience
+  weight: 5
+  description:
+    -
+      value: |
+        <p>Drupal felhasználói felületének fordításával foglalkozó személyek.</p>
+Rendezvény szervező:
+  vid: target_audience
+  weight: 6
+  description:
+    -
+      value: |
+        <p>Drupallal kapcsolatos rendezvények szervezésével foglalkozó személyek.</p>

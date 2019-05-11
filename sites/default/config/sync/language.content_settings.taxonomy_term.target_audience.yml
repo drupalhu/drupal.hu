@@ -1,0 +1,11 @@
+uuid: dbf5bfbc-6079-4399-a325-0f54e96ee0db
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.target_audience
+id: taxonomy_term.target_audience
+target_entity_type_id: taxonomy_term
+target_bundle: target_audience
+default_langcode: hu
+language_alterable: false

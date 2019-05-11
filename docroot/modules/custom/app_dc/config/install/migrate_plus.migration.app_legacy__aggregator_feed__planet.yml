@@ -1,0 +1,46 @@
+langcode: en
+status: true
+id: app_legacy__aggregator_feed__planet
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+label: 'App - Legacy - aggregator_feed:planet'
+
+audit: true
+
+source:
+  plugin: app_feeds
+
+  constants:
+    refresh: 10800
+
+process:
+  title: title
+  url: source
+  refresh: constants/refresh
+  checked: imported
+#  queued: ~
+#  link: ~
+  description: body/0/value
+#  image: ~
+#  etag: ~
+  modified: changed
+  app_category: id
+  app_author:
+    -
+      source: uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+
+destination:
+  plugin: entity:aggregator_feed
+
+migration_dependencies:
+  optional:
+    - app_legacy__user__user

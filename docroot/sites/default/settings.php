@@ -307,7 +307,7 @@ $config_directories = [
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = file_get_contents("../$site_path/hash_salt.txt");
+$settings['hash_salt'] = getenv('APP_HASH_SALT') ?: file_get_contents("../$site_path/hash_salt.txt");
 
 /**
  * Deployment identifier.
@@ -565,6 +565,9 @@ if (getenv('X_SENDFILE_IS_SUPPORTED') === 'true') {
   BinaryFileResponse::trustXSendfileTypeHeader();
 }
 
+$settings['php_storage']['twig']['directory'] = "../$site_path/php_storage";
+$settings['php_storage']['twig']['secret'] = $settings['hash_salt'];
+
 $config['system.file']['path']['temporary'] = "../$site_path/temporary";
 
 /**
@@ -793,6 +796,27 @@ $settings['file_scan_ignore_directories'] = [
  * larger number of entities to be processed in a single batch run.
  */
 $settings['entity_update_batch_size'] = 50;
+
+// @todo Move to settings.local.php.
+$ahSiteGroup = getenv('AH_SITE_GROUP');
+if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}-settings.inc")) {
+  require "/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}-settings.inc";
+
+  $ahSiteName = getenv('AH_SITE_NAME');
+  $ahSiteEnvironment = getenv('AH_SITE_ENVIRONMENT');
+  if ($ahSiteEnvironment !== 'prod') {
+    $settings['trusted_host_patterns'][] = '^' . preg_quote("$ahSiteName.devcloud.acquia-sites.com") . '$';
+    $settings['trusted_host_patterns'][] = '^' . preg_quote("$ahSiteEnvironment.drupal.hu") . '$';
+  }
+
+  $settings['file_private_path'] = '../acquia-files/files-private';
+  $settings['php_storage']['twig']['directory'] = '../acquia-files/tmp/php_storage';
+  $config['system.file']['path']['temporary'] = '../acquia-files/tmp';
+
+  $config_directories = [
+    'sync' => "../$site_path/config/sync",
+  ];
+}
 
 /**
  * Load local development override configuration, if available.

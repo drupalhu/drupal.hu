@@ -6,15 +6,28 @@
 
 ## Requirements
 
-1. `php --version` >= 7.1
-1. `node --version` >= 9
+* `nvm --version` >= 0.34
+* `yarn --version` >= 1.12 
+  * `npm --global update yarn`
 
 
-## Getting started
+## Contribute
 
-1. Run `git clone`
+1. Run `git clone git@example.com/app.git`
+1. Run `cd app`
+1. Run `nvm install`
+1. Run `nvm use`
 1. Run `composer install`
+1. Run `alias d='bin/drush --config=drush @app.local'`
+1. Run `d marvin:onboarding`
 1. Run `$EDITOR docroot/sites/default/settings.local.php`
-1. Run `bin/robo site:install`
-1. Run `cd docroot && php -S 127.0.0.1:8888 .ht.router.php`
-1. Open `http://localhost:8888`
+   * Database connection
+1. Run `$EDITOR drush/drush.local.yml` 
+   * `commands.options.uri`
+1. Run `$EDITOR tests/behat/behat.local.yml` 
+   * `default.extensions.Behat\MinkExtension.base_url`
+1. Run `d marvin:build`
+1. Run `d site:install appp --existing-config`
+1. Run `d marvin:lint`
+1. Run `d marvin:test:unit`
+1. Run `d marvin:test:behat`

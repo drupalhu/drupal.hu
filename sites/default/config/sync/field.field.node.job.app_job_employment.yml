@@ -1,0 +1,21 @@
+uuid: 1a311982-5ad8-46f3-8950-c5c52cdee579
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_employment
+    - node.type.job
+  module:
+    - options
+id: node.job.app_job_employment
+field_name: app_job_employment
+entity_type: node
+bundle: job
+label: Együttműködés
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

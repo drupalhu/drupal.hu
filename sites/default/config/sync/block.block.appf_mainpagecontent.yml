@@ -1,0 +1,20 @@
+uuid: 6f35fe82-bd60-450a-ac7d-bddc1eb8eb19
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appf
+id: appf_mainpagecontent
+theme: appf
+region: content
+weight: -1
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Címlapos tartalom'
+  provider: system
+  label_display: '0'
+visibility: {  }

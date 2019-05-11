@@ -1,0 +1,31 @@
+langcode: en
+status: true
+id: app_legacy__taxonomy_term__forums
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+label: 'App - Legacy - taxonomy_term:forums'
+
+source:
+  plugin: d7_taxonomy_term
+  bundle:
+    - vocabulary_1
+  constants:
+    status: true
+    format: html_teaser
+
+process:
+  tid: tid
+  status: constants/status
+  parent: parent
+  weight: weight
+  name: name
+  description/value: description
+  description/format: constants/format
+
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: forums

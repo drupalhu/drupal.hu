@@ -1,0 +1,19 @@
+uuid: ab6e1e00-85db-4e91-a65b-35404b516145
+langcode: hu
+status: true
+dependencies:
+  module:
+    - text
+    - user
+id: user.app_introduction
+field_name: app_introduction
+entity_type: user
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

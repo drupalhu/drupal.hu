@@ -1,0 +1,23 @@
+uuid: 898123f5-79ef-499f-a3c2-2ca5285e0854
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_links
+    - node.type.event
+  module:
+    - link
+id: node.event.app_links
+field_name: app_links
+entity_type: node
+bundle: event
+label: Linkek
+description: 'Az eseménnyel kapcsolatos linkek, például a prezentáció diáinak, a felvett videó anyag vagy az élő közvetítés elérhetősége.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

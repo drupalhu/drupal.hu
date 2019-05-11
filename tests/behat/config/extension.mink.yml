@@ -1,0 +1,16 @@
+
+default:
+  extensions:
+    Behat\MinkExtension:
+      files_path: '%paths.base%/media'
+      base_url: 'http://drupalhu.localhost'
+      browser_name: 'chrome'
+      default_session: 'goutte'
+      javascript_session: 'browserChrome'
+      goutte: ~
+      sessions:
+        default:
+          goutte: ~
+        browserChrome:
+          chrome:
+            api_url: 'http://127.0.0.1:9222'

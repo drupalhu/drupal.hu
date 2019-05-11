@@ -1,0 +1,11 @@
+uuid: 0b1e7575-66f0-4d18-bf0e-f8890009f154
+langcode: hu
+status: true
+dependencies: {  }
+name: Esettanulmány
+type: casestudy
+description: ''
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

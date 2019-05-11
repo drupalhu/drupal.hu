@@ -1,0 +1,11 @@
+uuid: 2e86faa5-0456-4e42-a0f5-7e2deb754fc0
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.competence
+id: taxonomy_term.competence
+target_entity_type_id: taxonomy_term
+target_bundle: competence
+default_langcode: hu
+language_alterable: false

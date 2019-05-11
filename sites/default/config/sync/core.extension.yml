@@ -1,63 +1,63 @@
 module:
   admin_toolbar: 0
+  admin_toolbar_tools: 0
   adminimal_admin_toolbar: 0
+  aggregator: 0
   allowed_formats: 0
+  app_core: 0
   big_pipe: 0
   block: 0
+  block_content: 0
+  book: 0
   breakpoint: 0
   ckeditor: 0
   comment: 0
   config: 0
+  config_translation: 0
   contextual: 0
   ctools: 0
-  dhu_core: 0
+  datetime: 0
+  datetime_range: 0
+  dynamic_page_cache: 0
   editor: 0
-  entity_browser: 0
-  entity_browser_entity_form: 0
-  entity_reference_revisions: 0
-  eu_cookie_compliance: 0
+  entity_legal: 0
   field: 0
-  field_ui: 0
   file: 0
   filter: 0
   history: 0
   image: 0
-  inline_entity_form: 0
-  inline_form_errors: 0
   language: 0
-  layout_builder: 0
-  layout_discovery: 0
   link: 0
   locale: 0
   media: 0
-  media_entity_browser: 0
-  menu_link_content: 0
+  media_library: 0
   menu_ui: 0
   node: 0
   options: 0
-  paragraphs_viewmode: 0
+  page_cache: 0
   path: 0
   responsive_image: 0
   system: 0
   taxonomy: 0
+  telephone: 0
   text: 0
   token: 0
   toolbar: 0
   user: 0
   forum: 1
+  menu_link_content: 1
   pathauto: 1
   views: 10
-  paragraphs: 11
-  dhup: 1000
+  appp: 1000
 theme:
   stable: 0
   classy: 0
-  bartik: 0
-  dhuf: 0
   seven: 0
   adminimal_theme: 0
-  dhub: 0
-profile: dhup
+  appb: 0
+  bootstrap: 0
+  appf: 0
+profile: appp
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 langcode: hu

@@ -1,0 +1,82 @@
+uuid: 5a8cfdaf-cfbc-4395-a9e9-5720d4cc8f0d
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.field.node.news.app_attachments
+    - field.field.node.news.app_body
+    - field.field.node.news.app_date
+    - field.field.node.news.app_drupal_version
+    - field.field.node.news.app_image
+    - field.field.node.news.app_teaser
+    - field.field.node.news.comment_forum
+    - image.style.media_library
+    - node.type.news
+  module:
+    - datetime_range
+    - file
+    - media
+    - text
+    - user
+id: node.news.default
+targetEntityType: node
+bundle: news
+mode: default
+content:
+  app_attachments:
+    weight: 5
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  app_body:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_date:
+    weight: 1
+    label: inline
+    settings:
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
+  app_drupal_version:
+    weight: 4
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  app_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: content
+    third_party_settings: {  }
+    type: media_thumbnail
+    region: content
+  app_teaser:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  comment_forum: true
+  langcode: true

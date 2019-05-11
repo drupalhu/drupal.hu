@@ -1,0 +1,28 @@
+uuid: 254e6f54-c869-4d93-8740-356b438fad95
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.user.app_introduction
+  module:
+    - allowed_formats
+    - text
+    - user
+third_party_settings:
+  allowed_formats:
+    html_teaser: html_teaser
+    html_body: '0'
+    html_full: '0'
+    plain_text: '0'
+id: user.user.app_introduction
+field_name: app_introduction
+entity_type: user
+bundle: user
+label: Bemutatkozás
+description: 'Röviden leírhatod amit úgy gondolsz érdemes megtudni rólad és céljaidról. Ezáltal fórumtársaid jobban megismerhetnek és így sokkal közvetlenebb és emberibb lehet a beszélgetés.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

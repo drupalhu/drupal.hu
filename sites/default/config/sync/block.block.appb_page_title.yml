@@ -1,0 +1,18 @@
+uuid: 1f5fc39f-5648-4c12-bbab-6ef75dede2d7
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appb
+id: appb_page_title
+theme: appb
+region: header
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Oldal címe'
+  provider: core
+  label_display: '0'
+visibility: {  }

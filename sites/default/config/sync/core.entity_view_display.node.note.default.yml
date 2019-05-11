@@ -1,0 +1,59 @@
+uuid: 9146255a-5d40-438d-a636-e7b4b829e2f7
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.admin.default
+    - field.field.node.note.app_attachments
+    - field.field.node.note.app_body
+    - field.field.node.note.app_comment_admin
+    - field.field.node.note.app_teaser
+    - node.type.note
+  module:
+    - comment
+    - file
+    - text
+    - user
+id: node.note.default
+targetEntityType: node
+bundle: note
+mode: default
+content:
+  app_attachments:
+    weight: 3
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  app_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_comment_admin:
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  app_teaser:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

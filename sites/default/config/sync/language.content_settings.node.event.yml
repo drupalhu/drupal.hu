@@ -1,0 +1,11 @@
+uuid: 84f67ecb-fe32-4ed5-8304-0c1ef73744ca
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.event
+id: node.event
+target_entity_type_id: node
+target_bundle: event
+default_langcode: current_interface
+language_alterable: false

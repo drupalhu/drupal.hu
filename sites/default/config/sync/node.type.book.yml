@@ -1,0 +1,22 @@
+uuid: 37c82952-37c1-478f-8ceb-89bce95450e0
+langcode: hu
+status: true
+dependencies:
+  enforced:
+    module:
+      - book
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+_core:
+  default_config_hash: 2gWGA-X4ERc4McStS7cMEG3ZBpDEqfNRDPTjB1v674Y
+name: Könyvoldal
+type: book
+description: 'A <em>könyvek</em> egy beépített hierarchikus navigációval rendelkeznek. Kézikönyvekhez vagy tananyagokhoz használható.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

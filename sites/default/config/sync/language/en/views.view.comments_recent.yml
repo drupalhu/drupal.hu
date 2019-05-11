@@ -1,0 +1,15 @@
+label: 'Recent comments'
+description: 'Recent comments.'
+display:
+  default:
+    display_title: Master
+    display_options:
+      title: 'Recent comments'
+      empty:
+        area_text_custom:
+          content: 'No comments available.'
+  block_1:
+    display_title: Block
+    display_options:
+      block_description: 'Recent comments'
+      block_category: 'Lists (Views)'

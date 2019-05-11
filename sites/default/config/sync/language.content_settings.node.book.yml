@@ -1,0 +1,11 @@
+uuid: 92dfbebc-07a4-407a-b79e-2895b9ef61a9
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.book
+id: node.book
+target_entity_type_id: node
+target_bundle: book
+default_langcode: current_interface
+language_alterable: false

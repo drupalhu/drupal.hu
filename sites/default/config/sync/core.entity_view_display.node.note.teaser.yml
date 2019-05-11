@@ -1,0 +1,36 @@
+uuid: 4323d7b6-808f-4ba0-9849-3b8190df4ae1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.note.app_attachments
+    - field.field.node.note.app_body
+    - field.field.node.note.app_comment_admin
+    - field.field.node.note.app_teaser
+    - node.type.note
+  module:
+    - text
+    - user
+id: node.note.teaser
+targetEntityType: node
+bundle: note
+mode: teaser
+content:
+  app_teaser:
+    type: text_default
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_attachments: true
+  app_body: true
+  app_comment_admin: true
+  langcode: true

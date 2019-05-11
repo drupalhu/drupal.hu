@@ -1,0 +1,84 @@
+uuid: 0f29d3df-8fe3-4106-a96e-bd77f839932b
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.job.app_body
+    - field.field.node.job.app_image
+    - field.field.node.job.app_job_advantage
+    - field.field.node.job.app_job_announcer_gives
+    - field.field.node.job.app_job_contact_email
+    - field.field.node.job.app_job_contact_name
+    - field.field.node.job.app_job_contact_org
+    - field.field.node.job.app_job_contact_phone
+    - field.field.node.job.app_job_due_date
+    - field.field.node.job.app_job_employment
+    - field.field.node.job.app_job_expectations
+    - field.field.node.job.app_job_language
+    - field.field.node.job.app_job_level
+    - field.field.node.job.app_job_location_name
+    - field.field.node.job.app_job_location_type
+    - image.style.media_library
+    - node.type.job
+  module:
+    - datetime
+    - media
+    - options
+    - user
+id: node.job.teaser
+targetEntityType: node
+bundle: job
+mode: teaser
+content:
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: content
+    third_party_settings: {  }
+  app_job_due_date:
+    type: datetime_default
+    weight: 3
+    region: content
+    label: inline
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+  app_job_location_name:
+    type: string
+    weight: 2
+    region: content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  app_job_location_type:
+    type: list_default
+    weight: 1
+    region: content
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_body: true
+  app_job_advantage: true
+  app_job_announcer_gives: true
+  app_job_contact_email: true
+  app_job_contact_name: true
+  app_job_contact_org: true
+  app_job_contact_phone: true
+  app_job_employment: true
+  app_job_expectations: true
+  app_job_language: true
+  app_job_level: true
+  langcode: true

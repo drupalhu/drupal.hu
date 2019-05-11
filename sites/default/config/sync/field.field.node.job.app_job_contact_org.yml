@@ -1,0 +1,19 @@
+uuid: 4e559c7f-580c-4df4-bd3f-6a8d24a5fb21
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_contact_org
+    - node.type.job
+id: node.job.app_job_contact_org
+field_name: app_job_contact_org
+entity_type: node
+bundle: job
+label: 'Szervezet megnevezése'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

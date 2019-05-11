@@ -1,0 +1,24 @@
+uuid: 35743acd-b087-4361-b8a3-48b29d7291b1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.terms_of_use
+    - field.field.entity_legal_document_version.terms_of_use.entity_legal_document_text
+  module:
+    - text
+id: entity_legal_document_version.terms_of_use.default
+targetEntityType: entity_legal_document_version
+bundle: terms_of_use
+mode: default
+content:
+  entity_legal_document_text:
+    type: text_textarea_with_summary
+    weight: 0
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+hidden: {  }

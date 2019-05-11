@@ -1,0 +1,142 @@
+uuid: 4a0512a3-c7bf-4a78-8334-dedde441f623
+langcode: hu
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.job.app_body
+    - field.field.node.job.app_job_advantage
+    - field.field.node.job.app_job_announcer_gives
+    - field.field.node.job.app_job_contact_email
+    - field.field.node.job.app_job_contact_name
+    - field.field.node.job.app_job_contact_org
+    - field.field.node.job.app_job_contact_phone
+    - field.field.node.job.app_job_due_date
+    - field.field.node.job.app_job_employment
+    - field.field.node.job.app_job_expectations
+    - field.field.node.job.app_job_language
+    - field.field.node.job.app_job_level
+    - field.field.node.job.app_job_location_name
+    - field.field.node.job.app_job_location_type
+    - node.type.job
+  module:
+    - datetime
+    - options
+    - text
+    - user
+id: node.job.full
+targetEntityType: node
+bundle: job
+mode: full
+content:
+  app_body:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_job_advantage:
+    weight: 104
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_job_announcer_gives:
+    weight: 108
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_job_contact_email:
+    weight: 115
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  app_job_contact_name:
+    weight: 113
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  app_job_contact_org:
+    weight: 112
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  app_job_contact_phone:
+    weight: 114
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  app_job_due_date:
+    weight: 109
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  app_job_employment:
+    weight: 107
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  app_job_expectations:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_job_language:
+    weight: 111
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  app_job_level:
+    weight: 110
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  app_job_location_name:
+    weight: 106
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  app_job_location_type:
+    weight: 105
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  app_image: true
+  langcode: true

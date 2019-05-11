@@ -1,0 +1,21 @@
+uuid: 0d783dc7-15b3-408b-9dc3-97cd7b1a204e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: node.app_job_contact_name
+field_name: app_job_contact_name
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

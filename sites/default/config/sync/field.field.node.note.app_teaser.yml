@@ -1,0 +1,28 @@
+uuid: aa6521da-ebd8-4157-9462-7f72de80da1c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_teaser
+    - node.type.note
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_teaser: html_teaser
+    html_body: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.note.app_teaser
+field_name: app_teaser
+entity_type: node
+bundle: note
+label: Bevezető
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,20 @@
+uuid: b085e197-2234-427e-be15-95f325c51511
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appb
+id: appb_mainpagecontent
+theme: appb
+region: content
+weight: -3
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Az oldal fő tartalma'
+  provider: system
+  label_display: '0'
+visibility: {  }

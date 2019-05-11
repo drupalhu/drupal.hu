@@ -1,0 +1,115 @@
+///
+// Form styles.
+///
+
+// Checkboxes / radio buttons.
+.checkbox,
+.radio {
+  // Remove top/bottom margins when in table context, because this is most
+  // likely a tableselect checkbox element.
+  table &.form-no-label {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// Browsers do not recognize pseudo :after selectors, we must create a wrapper
+// around the select element to style it properly.
+// $see http://stackoverflow.com/q/21103542
+.select-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
+  .form-inline & {
+    width: auto;
+  }
+
+  .input-group & {
+    display: table-cell;
+
+    // Reset rounded corners
+    &:first-child .form-control:first-child {
+      @include border-left-radius($border-radius-base);
+    }
+
+    &:last-child .form-control:first-child {
+      @include border-right-radius($border-radius-base);
+    }
+  }
+
+  select {
+    padding-right: 2em;
+    line-height: 1;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &::-ms-expand {
+      opacity: 0;
+    }
+  }
+
+  &:after {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -0.5em;
+    padding-right: 0.5em;
+    color: $brand-primary;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    content: "▼";
+    z-index: 10;
+    pointer-events: none;
+
+    // Use a more stylish icon if the theme uses glyphicons.
+    .has-glyphicons & {
+      display: inline-block;
+      font-family: "Glyphicons Halflings";
+      content: "\e114"; // .glyphicon-chevron-down
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .has-error & {
+      color: $state-danger-text;
+    }
+
+    .has-success & {
+      color: $state-success-text;
+    }
+
+    .has-warning & {
+      color: $state-warning-text;
+    }
+  }
+}
+
+// Use CSS/SVG image for required mark.
+// @see https://www.drupal.org/node/2152217
+// @see https://www.drupal.org/node/2274631
+.form-required:after {
+  display: inline-block;
+  width: 10px;
+  height: 7px;
+  background-image: url("../images/required.svg");
+  background-size: 10px 7px;
+  line-height: 1em;
+  content: "";
+}
+
+// Form action buttons.
+.form-actions {
+  .btn,
+  .btn-group {
+    margin-right: 10px;
+  }
+
+  .btn-group {
+    .btn {
+      margin-right: 0;
+    }
+  }
+}

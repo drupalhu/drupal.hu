@@ -1,0 +1,51 @@
+uuid: be4cecd6-b6fd-4c6f-86d1-4ba6e31b3956
+langcode: hu
+status: true
+dependencies:
+  config:
+    - filter.format.html_full
+  module:
+    - ckeditor
+format: html_full
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Formázás
+          items:
+            - Bold
+            - Italic
+        -
+          name: Hivatkozások
+          items:
+            - DrupalLink
+            - DrupalUnlink
+        -
+          name: Listák
+          items:
+            - BulletedList
+            - NumberedList
+        -
+          name: Média
+          items:
+            - Blockquote
+            - DrupalImage
+        -
+          name: Eszközök
+          items:
+            - Source
+  plugins:
+    language:
+      language_list: un
+    stylescombo:
+      styles: ''
+image_upload:
+  status: false
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null

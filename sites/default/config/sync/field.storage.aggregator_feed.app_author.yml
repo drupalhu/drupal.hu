@@ -1,0 +1,20 @@
+uuid: 4bbbe1d7-d5e8-4875-9026-833ce064b9fc
+langcode: hu
+status: true
+dependencies:
+  module:
+    - aggregator
+    - user
+id: aggregator_feed.app_author
+field_name: app_author
+entity_type: aggregator_feed
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

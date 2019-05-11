@@ -1,0 +1,28 @@
+uuid: c1e69ad7-fae8-4846-8845-ab46b55c893f
+langcode: hu
+status: true
+dependencies:
+  config:
+    - block_content.type.simple
+    - field.storage.block_content.app_body
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_full: html_full
+    html_body: '0'
+    html_teaser: '0'
+    plain_text: '0'
+id: block_content.simple.app_body
+field_name: app_body
+entity_type: block_content
+bundle: simple
+label: Törzs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

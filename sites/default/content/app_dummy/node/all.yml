@@ -1,0 +1,51 @@
+
+Hír 01:
+  type: news
+  uid: Gizi
+  title: Hír 01
+  app_image: images/comb.jpg
+  app_teaser:
+    -
+      value: |
+        <p>Ut id nisl quis enim dignissim sagittis. Suspendisse potenti. Donec venenatis vulputate lorem. Vestibulum
+        rutrum, mi nec elementum vehicula, eros quam gravida nisl, id fringilla neque ante vel mi.</p>
+        <p>Sed aliquam ultrices mauris. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Curabitur at
+        lacus ac velit ornare lobortis. Ut tincidunt tincidunt erat.</p>
+  app_body:
+    -
+      value: |
+        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
+        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
+        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
+        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
+        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
+        augue. Duis vel nibh at velit scelerisque suscipit.</p>
+        <p>Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Etiam rhoncus.. Cras id dui. Nullam
+        dictum felis eu pede mollis pretium. Nullam accumsan lorem in dui. Morbi mollis tellus ac sapien.
+        Vivamus elementum semper nisi.</p>
+
+Felhasználói útmútató:
+  type: book
+  uid: Gizi
+  title: Felhasználói útmútató
+  app_body:
+    -
+      value:
+        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
+        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
+        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
+        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
+        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
+
+Fejlesztői útmútató:
+  type: book
+  uid: Gizi
+  title: Fejlesztői útmútató
+  app_body:
+    -
+      value:
+        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
+        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
+        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
+        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
+        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel

@@ -1,0 +1,8 @@
+uuid: 26a37abf-709e-4bb2-9091-d80824e36fc6
+langcode: hu
+status: true
+dependencies: {  }
+name: Szint
+vid: competence
+description: ''
+weight: -8

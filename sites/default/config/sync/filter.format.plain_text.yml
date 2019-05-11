@@ -1,4 +1,4 @@
-uuid: fd5376b4-922a-4180-bf12-efe03b155daf
+uuid: 090d63fe-1bf0-4310-943a-319380012b58
 langcode: hu
 status: true
 dependencies: {  }
@@ -6,7 +6,7 @@ _core:
   default_config_hash: NIKBt6kw_uPhNI0qtR2DnRf7mSOgAQdx7Q94SKMjXbQ
 name: 'Egyszerű szöveg'
 format: plain_text
-weight: 10
+weight: -6
 filters:
   filter_html_escape:
     id: filter_html_escape

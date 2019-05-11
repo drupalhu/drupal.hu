@@ -1,4 +1,4 @@
-uuid: e22cb731-4940-4149-bb27-aef408588e71
+uuid: 2aa33769-97f8-452c-98ae-438fe8e5e657
 langcode: hu
 status: true
 dependencies:
@@ -6,7 +6,6 @@ dependencies:
     - field.field.taxonomy_term.forums.forum_container
     - taxonomy.vocabulary.forums
   module:
-    - path
     - text
 _core:
   default_config_hash: cUA2G1-U3jnekhLYnfiqYaZj-n4U8dgIZi61zrNCi3U

@@ -1,0 +1,30 @@
+
+default:
+  extensions:
+    NuvoleWeb\Drupal\DrupalExtension:
+      drush:
+        alias: 'self'
+      drupal:
+        drupal_root: '%paths.base%/../../docroot/'
+      blackbox: ~
+      api_driver: 'drupal'
+      services: 'services.yml'
+      text:
+        username_field: name
+         password_field: pass
+        log_in: Bejelentkezés
+      selectors:
+        message_selector: '.messages'
+        success_message_selector: '.messages__wrapper > .alert-success > p, .messages__wrapper > .alert-success > .item-list.item-list--messages .item.item--message'
+        warning_message_selector: '.messages__wrapper > .alert-warning > p, .messages__wrapper > .alert-warning > .item-list.item-list--messages .item.item--message'
+        error_message_selector:   '.messages__wrapper > .alert-danger  > p, .messages__wrapper > .alert-danger  > .item-list.item-list--messages .item.item--message'
+        drupal.core.message.multiple.status: '.messages__wrapper > .alert-success > .item-list.item-list--messages .item.item--message'
+        drupal.core.message.single.status: '.messages__wrapper > .alert-success > p'
+        drupal.core.message.multiple.warning: '.messages__wrapper > .alert-warning > .item-list.item-list--messages .item.item--message'
+        drupal.core.message.single.warning: '.messages__wrapper > .alert-warning > p'
+        drupal.core.message.multiple.error:   '.messages__wrapper > .alert-danger > .item-list.item-list--messages .item.item--message'
+        drupal.core.message.single.error:   '.messages__wrapper > .alert-danger > p'
+        drupal.core.message.multiple:   '.messages__wrapper > .alert-{{ messageType }} > .item-list.item-list--messages .item.item--message'
+        drupal.core.message.single:   '.messages__wrapper > .alert-{{ messageType }} > p'
+        drupal.core.vertical_tabs.tab_label__seven: 'xpath: //ul[@class="vertical-tabs__menu"]/li/a/strong[text() = "{{ tabLabel }}"]'
+        drupal.core.menu.links__reklektikt: 'xpath: //nav[@role="navigation"]/*[text() = "{{ menuLabel }}"]/parent::*/ul[contains(@class, " menu-links ")]//a/span[@class="link-text"]'

@@ -1,0 +1,28 @@
+uuid: 7fa42939-9717-4f9a-9241-e7a24bfccb30
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_body
+    - node.type.note
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.note.app_body
+field_name: app_body
+entity_type: node
+bundle: note
+label: Törzs
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

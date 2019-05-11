@@ -1,0 +1,28 @@
+uuid: f4facccc-b329-47ef-9be1-79df73a55650
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_body
+    - node.type.book
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.book.app_body
+field_name: app_body
+entity_type: node
+bundle: book
+label: Törzs
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

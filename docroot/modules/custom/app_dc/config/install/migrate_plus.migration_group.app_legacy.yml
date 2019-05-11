@@ -1,0 +1,7 @@
+langcode: en
+status: true
+id: app_legacy
+label: 'App - Legacy'
+description: 'Import contents from the legacy site.'
+source_type: 'SQL'
+module: app_dc

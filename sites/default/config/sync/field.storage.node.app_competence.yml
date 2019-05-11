@@ -1,0 +1,20 @@
+uuid: cf874f0d-f435-44ca-b98a-a2f9e2f28371
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.app_competence
+field_name: app_competence
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

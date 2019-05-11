@@ -1,0 +1,20 @@
+uuid: 8edc0481-415c-4238-9352-53af707243c3
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - appf
+id: appf_tabs
+theme: appf
+region: content
+weight: -4
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Fülek
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

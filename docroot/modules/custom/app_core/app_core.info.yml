@@ -1,0 +1,5 @@
+type: module
+name: 'App - Core'
+description: 'Fundamental components'
+package: 'App'
+core: '8.x'

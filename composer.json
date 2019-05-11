@@ -12,6 +12,22 @@
         "sort-packages": true
     },
     "repositories": {
+        "cheppers/drupal-behat-contexts": {
+            "type": "git",
+            "url": "https://github.com/Cheppers/drupal-behat-contexts.git"
+        },
+        "drupal/marvin": {
+            "type": "git",
+            "url": "https://github.com/Sweetchuck/drupal-marvin.git"
+        },
+        "drupal/marvin_product": {
+            "type": "git",
+            "url": "https://github.com/Sweetchuck/drupal-marvin_product.git"
+        },
+        "drupal/marvin_acquia": {
+            "type": "path",
+            "url": "../../drupal/marvin_acquia"
+        },
         "drupal-8": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
@@ -22,107 +38,148 @@
         }
     },
     "require": {
-        "php": ">=7.1",
-        "composer/installers": "^1.5",
+        "php": ">=7.3",
+        "composer/installers": "^1.6",
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.5",
-        "drupal/adminimal_admin_toolbar": "^1.7",
+        "drupal/admin_toolbar": "^1.24",
+        "drupal/adminimal_admin_toolbar": "^1.8",
         "drupal/adminimal_theme": "^1.3",
         "drupal/allowed_formats": "^1.1",
-        "drupal/core": "^8.5",
-        "drupal/entity_legal": "^2.0@beta",
-        "drupal/eu_cookie_compliance": "^1.0",
-        "drupal/media_entity_browser": "dev-2.x",
-        "drupal/paragraphs": "^1.3",
-        "drupal/paragraphs_viewmode": "^1.0@alpha",
-        "drupal/pathauto": "^1.2",
-        "drush/drush": "^9.3"
+        "drupal/bootstrap": "^3.13",
+        "drupal/core": "^8.7",
+        "drupal/entity_legal": "dev-2.x#9a8520a",
+        "drupal/eu_cookie_compliance": "^1.5",
+        "drupal/marvin": "dev-8.x-1.x",
+        "drupal/marvin_product": "dev-8.x-1.x",
+        "drupal/metatag": "^1.8",
+        "drupal/pathauto": "^1.4",
+        "drupal/schema_metatag": "^1.3",
+        "drupal/search_api_solr": "^1.2",
+        "drush/drush": "^9.5",
+        "npm-asset/bootstrap-sass": "^3.3",
+        "oomphinc/composer-installers-extender": "^1.1",
+        "zaporylie/composer-drupal-optimizations": "^1.0"
+    },
+    "require-dev": {
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/mink-selenium2-driver": "^1.3",
+        "bex/behat-screenshot": "^1.2",
+        "cheppers/drupal-behat-contexts": "dev-master",
+        "danielstjules/stringy": "^3.1",
+        "dmore/behat-chrome-extension": "^1.2",
+        "drupal/devel": "^2.1",
+        "drupal/marvin_acquia": "dev-8.x-1.x",
+        "drupal/migrate_dc": "1.x-dev",
+        "drupal/migrate_plus": "^4.1",
+        "drupal/migrate_tools": "^4.1",
+        "drupal/module_filter": "^3.1",
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^6.5",
+        "symfony/css-selector": "^4.1",
+        "symfony/filesystem": "^4.1",
+        "symfony/phpunit-bridge": "^4.1"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
     },
     "autoload-dev": {
         "psr-4": {
-            "Dhu\\Composer\\": "src-dev/Composer"
+            "DrupalHu\\DrupalHu\\Tests\\Unit\\": "tests/src/Unit/",
+            "Drush\\Commands\\app\\": "drush/Commands/custom/app/"
         }
     },
+    "scripts": {
+        "post-install-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postInstallCmd",
+        "post-update-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postUpdateCmd",
+        "clean": [
+            "rm -rf bin/ reports/ vendor/",
+            "rm -rf docroot/themes/custom/*/bootstrap/",
+            "rm -rf docroot/core/ docroot/modules/contrib/ docroot/profiles/contrib/ docroot/themes/contrib/ docroot/libraries/",
+            "rm -rf drush/Commands/contrib/"
+        ],
+        "reset": [
+            "@reset:files",
+            "@reset:db"
+        ],
+        "reset:files": [
+            "rm -rf docroot/sites/*/files/*",
+            "rm -rf sites/*/php_storage/twig/*",
+            "rm -rf sites/*/private/*",
+            "rm -rf sites/*/temporary/*"
+        ],
+        "reset:db": [
+            "drush --config=drush --yes @app.local sql:drop"
+        ],
+        "site:install:dev": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local site:install appp --existing-config --marvin-migrate=dummy --yes",
+            "bin/drush --config=drush @app.local marvin:toggle-modules --define=marvin.environment=dev"
+        ]
+    },
+    "scripts-descriptions": {
+        "clean": "Deletes all the third-party codes downloaded by Composer.",
+        "reset": "Drops the Drupal database (default) and deletes the uploaded files."
+    },
     "extra": {
-        "enable-patching": true,
-        "composer-exit-on-patch-failure": true,
-        "drupal-scaffold": {
-            "source": "https://cgit.drupalcode.org/drupal/plain/{path}?h={version}",
-            "excludes": [
-                "sites/development.services.yml",
-                "sites/default/example.settings.my.php",
-                "sites/example.settings.local.php",
-                "google123.html",
-                "robots.txt",
-                ".csslintrc",
-                ".editorconfig",
-                ".eslintignore",
-                ".eslintrc.json",
-                ".gitattributes"
-            ],
-            "includes": [
-                "sites/default/example.settings.my.php"
-            ],
-            "initial": {
-                "sites/default/default.services.yml": "sites/default/services.yml",
-                "sites/default/default.settings.php": "sites/default/settings.php"
-            },
-            "omit-defaults": false
-        },
         "installer-types": [
             "bower-asset",
             "npm-asset"
         ],
         "installer-paths": {
-            "docroot/core": [
-                "type:drupal-core"
-            ],
-            "docroot/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "docroot/modules/custom/{$name}": [
-                "type:drupal-custom-module"
-            ],
-            "docroot/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "docroot/profiles/custom/{$name}": [
-                "type:drupal-custom-profile"
-            ],
-            "docroot/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "docroot/themes/custom/{$name}": [
-                "type:drupal-custom-theme"
-            ],
             "docroot/libraries/slick": [
                 "npm-asset/slick-carousel"
+            ],
+            "docroot/themes/custom/appf/bootstrap": [
+                "npm-asset/bootstrap-sass"
+            ],
+            "docroot/core": [
+                "type:drupal-core"
             ],
             "docroot/libraries/{$name}": [
                 "type:drupal-library",
                 "type:bower-asset",
                 "type:npm-asset"
             ],
-            "drush/contrib/{$name}": [
+            "docroot/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "docroot/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "docroot/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
                 "type:drupal-drush"
             ]
+        },
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+            "drupal/core": {
+                "https://www.drupal.org/project/drupal/issues/2986452 - Database reserved keywords need to be quoted as per the ANSI standard": "https://www.drupal.org/files/issues/2019-02-04/2986452-69.patch"
+            },
+            "drupal/entity_legal": {
+                "https://www.drupal.org/project/entity_legal/issues/2544248 - Increase length of the 'acceptance_label' field to 1024": "https://www.drupal.org/files/issues/entity_legal-acceptance_label_too_short-2544248-3.patch",
+                "https://www.drupal.org/project/entity_legal/issues/2957951 - Migrate source_module property": "https://www.drupal.org/files/issues/2018-10-04/2957951-migrate-issue.patch"
+            }
+        },
+        "drupal-scaffold": {
+            "excludes": [
+                "sites/example.settings.local.php",
+                ".csslintrc",
+                ".editorconfig",
+                ".eslintignore",
+                ".eslintrc.json",
+                ".gitattributes",
+                ".ht.router.php",
+                "web.config"
+            ],
+            "initial": {
+                "sites/default/default.services.yml": "sites/default/services.yml",
+                "sites/default/default.settings.php": "sites/default/settings.php"
+            }
         }
-    },
-    "scripts": {
-        "pre-install-cmd": [
-            "Dhu\\Composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "Dhu\\Composer\\ScriptHandler::createRequiredFiles",
-            "robo --ansi composer:post-install-cmd"
-        ],
-        "pre-update-cmd": [
-            "Dhu\\Composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-update-cmd": [
-            "Dhu\\Composer\\ScriptHandler::createRequiredFiles",
-            "robo --ansi composer:post-update-cmd"
-        ],
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
     }
 }

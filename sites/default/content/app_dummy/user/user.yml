@@ -1,0 +1,9 @@
+Gizi:
+  app_picture:
+    -
+      target_id: 'pictures/gizi.png'
+
+Béla:
+  app_picture:
+    -
+      target_id: 'pictures/bela.png'

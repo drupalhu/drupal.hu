@@ -1,0 +1,27 @@
+
+default:
+  suites:
+    default:
+      contexts:
+        - '\Drupal\DrupalExtension\Context\MinkContext'
+        - '\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\NuvoleWeb\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\NuvoleWeb\Drupal\DrupalExtension\Context\VisibilityContext'
+        - '\Cheppers\DrupalExtension\Context\Drupal\AppContentEntitySetupTearDown'
+        - '\Cheppers\DrupalExtension\Context\Drupal\Core'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreAjax'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreCache'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreCkeditor'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreFormCheckboxes'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreFormSelect'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreMenu'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreMessage'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreSystem'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreTabs'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreUser'
+        - '\Cheppers\DrupalExtension\Context\Drupal\CoreVerticalTabs'
+        - '\Cheppers\DrupalExtension\Context\Table'
+      paths:
+        features: '%paths.base%/features'
+      filters:
+        tags: '~@knownBug'

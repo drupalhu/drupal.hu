@@ -1,0 +1,30 @@
+uuid: f1eea314-113b-40a1-ba32-d050747c1e70
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.app_job_employment
+field_name: app_job_employment
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: full_time
+      label: 'Teljes munkaidős'
+    -
+      value: part_time
+      label: 'Rész munkaidős'
+    -
+      value: casual
+      label: Eseti
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

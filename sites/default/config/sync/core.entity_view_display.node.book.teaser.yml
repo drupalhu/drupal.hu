@@ -1,0 +1,57 @@
+uuid: 128c05e2-b73f-4177-9b5d-7a6f4838a7a5
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.book.app_attachments
+    - field.field.node.book.app_body
+    - field.field.node.book.app_competence
+    - field.field.node.book.app_drupal_version
+    - field.field.node.book.app_tags
+    - field.field.node.book.app_target_audience
+    - node.type.book
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: krIbNOdqw4vMF3Ty8qAW6AxgxmdBig5XuQRBW8-HYCU
+id: node.book.teaser
+targetEntityType: node
+bundle: book
+mode: teaser
+content:
+  app_body:
+    type: text_trimmed
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  app_drupal_version:
+    type: entity_reference_label
+    weight: 0
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  app_tags:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  links:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_attachments: true
+  app_competence: true
+  app_target_audience: true
+  langcode: true

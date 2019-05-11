@@ -1,0 +1,8 @@
+uuid: 694eb30e-bea1-4d4f-bc49-cc1ee18d4112
+langcode: hu
+status: true
+dependencies: {  }
+name: Célközönség
+vid: target_audience
+description: ''
+weight: 0

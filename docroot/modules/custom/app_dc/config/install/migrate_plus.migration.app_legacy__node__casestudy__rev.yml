@@ -1,0 +1,65 @@
+langcode: en
+status: true
+id: app_legacy__node__casestudy__rev
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+label: 'App - Legacy - node:casestudy:revision'
+
+deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
+
+source:
+  plugin: d7_node_revision
+  node_type: link
+  constants:
+    teaaser_text_format: html_teaser
+    body_text_format: html_body
+    langcode: hu
+    default_langcode: true
+
+process:
+  langcode: constants/langcode
+  default_langcode: constants/default_langcode
+  nid: nid
+  uid:
+    -
+      source: node_uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid:
+    -
+      source: revision_uid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_legacy__user__user
+  revision_log: log
+  revision_timestamp: timestamp
+
+  title: title
+
+  app_teaser/0/value: body/0/summary
+  app_teaser/0/format: constants/teaser_text_format
+
+  app_body/0/value: body/0/value
+  app_body/0/format: constants/body_text_format
+
+destination:
+  plugin: 'entity_revision:node'
+  default_bundle: 'casestudy'
+
+migration_dependencies:
+  required:
+    - app_legacy__node__casestudy

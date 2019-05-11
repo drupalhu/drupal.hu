@@ -1,0 +1,21 @@
+uuid: 79a39c73-690f-49da-99ca-58e27df01f5d
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_language
+    - node.type.job
+  module:
+    - options
+id: node.job.app_job_language
+field_name: app_job_language
+entity_type: node
+bundle: job
+label: Nyelvtudás
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

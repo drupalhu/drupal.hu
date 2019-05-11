@@ -1,0 +1,28 @@
+uuid: 39b604fe-c00b-4280-8f33-f2b513a99c90
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_body
+    - node.type.forum
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
+id: node.forum.app_body
+field_name: app_body
+entity_type: node
+bundle: forum
+label: Törzs
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

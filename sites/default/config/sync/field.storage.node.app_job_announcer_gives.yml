@@ -1,0 +1,19 @@
+uuid: 37a6c20b-2f90-44b0-9b36-7a700bd26612
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.app_job_announcer_gives
+field_name: app_job_announcer_gives
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

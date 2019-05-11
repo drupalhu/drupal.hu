@@ -1,0 +1,21 @@
+data_protection_1559764237:
+  document_name: data_protection
+  label: 'Adatvédelmi és Adatkezelési tájékoztató'
+  entity_legal_document_text:
+    -
+      value: |
+        <p>Data protection - Aenean viverra rhoncus pede. Etiam sollicitudin, ipsum eu pulvinar rutrum, id, imperdiet feugiat, pede.</p>
+        <p>Ut non enim eleifend felis pretium feugiat. Phasellus blandit leo ut odio. Ullamcorper mauris at ligula.</p>
+        <p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Cras in, viverra quis, feugiat a, tellus.</p>
+  acceptance_label: 'Elfogadom az <a href="[entity_legal_document:published-version:url]">Adatvédelmi és Adatkezelési tájékoztató</a> dokumentumban leírtakat.'
+
+terms_of_use_1559764237:
+  document_name: terms_of_use
+  label: 'Felhasználási feltételek'
+  entity_legal_document_text:
+    -
+      value: |
+        <p>Terms of use - Aenean viverra rhoncus pede. Etiam sollicitudin, ipsum eu pulvinar rutrum, id, imperdiet feugiat, pede.</p>
+        <p>Ut non enim eleifend felis pretium feugiat. Phasellus blandit leo ut odio. Ullamcorper mauris at ligula.</p>
+        <p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Cras in, viverra quis, feugiat a, tellus.</p>
+  acceptance_label: 'Elfogadom a <a href="[entity_legal_document:published-version:url]">Felhasználási feltételek</a> dokumentumban leírtakat.'

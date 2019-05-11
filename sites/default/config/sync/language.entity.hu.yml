@@ -1,11 +1,9 @@
-uuid: f457b83e-3c3d-4f0e-91a1-e8aa1c76abab
+uuid: 63ec498f-1ca2-4801-ad34-1f464e7f3f05
 langcode: hu
 status: true
 dependencies: {  }
-_core:
-  default_config_hash: bjC4jIKCsdKzDLncH6K92MGYCzXrRpnev0JsDZYdaVs
 id: hu
 label: Hungarian
 direction: ltr
-weight: 1
+weight: -10
 locked: false

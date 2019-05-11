@@ -1,0 +1,29 @@
+uuid: 7e452112-0330-4b50-a2bc-b3cc5726c297
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_tags
+    - node.type.forum
+    - taxonomy.vocabulary.tag
+id: node.forum.app_tags
+field_name: app_tags
+entity_type: node
+bundle: forum
+label: Címkék
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tag: tag
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

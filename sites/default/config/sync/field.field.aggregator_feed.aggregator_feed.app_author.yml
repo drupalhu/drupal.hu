@@ -1,0 +1,29 @@
+uuid: 686b1edb-8861-4b8c-9272-ee1b14d25e89
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.aggregator_feed.app_author
+  module:
+    - aggregator
+id: aggregator_feed.aggregator_feed.app_author
+field_name: app_author
+entity_type: aggregator_feed
+bundle: aggregator_feed
+label: Szerző
+description: 'Hírcsatorna tulajdonos összepárosítása egy Drupal.hu felhasználóval.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: true
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

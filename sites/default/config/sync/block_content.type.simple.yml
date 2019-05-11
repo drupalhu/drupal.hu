@@ -1,0 +1,8 @@
+uuid: 2eb93f28-42fd-4eac-8f2f-95b0e36c6488
+langcode: hu
+status: true
+dependencies: {  }
+id: simple
+label: Egyszerű
+revision: 0
+description: ''

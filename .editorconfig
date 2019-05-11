@@ -12,8 +12,18 @@ insert_final_newline = true
 [*.md]
 trim_trailing_whitespace = false
 
-[composer.{json,lock}]
+[composer*.{json,lock}]
 indent_size = 4
+
+[*.{js,css}.map]
+indent_size = 4
+
+[*.{sh,bash,zsh}]
+indent_style = tab
+indent_size = 4
+
+[Makefile]
+indent_style = tab
 
 [hash_salt.txt]
 insert_final_newline = false

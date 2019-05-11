@@ -1,0 +1,25 @@
+uuid: 291c4f0e-6feb-4303-86f2-87027f997339
+langcode: hu
+status: true
+dependencies:
+  content:
+    - 'block_content:simple:6a290725-ba59-4318-891c-52834d6a4bbb'
+  module:
+    - block_content
+  theme:
+    - appf
+id: hosting_thanksgiving
+theme: appf
+region: footer
+weight: -3
+provider: null
+plugin: 'block_content:6a290725-ba59-4318-891c-52834d6a4bbb'
+settings:
+  id: 'block_content:6a290725-ba59-4318-891c-52834d6a4bbb'
+  label: 'Hosting köszönet nyilvánítás'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

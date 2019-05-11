@@ -1,0 +1,11 @@
+
+book.handbook:
+  uuid: 5c0dd66f-f4c5-44dd-99ff-198541fcaa87
+  type: book
+  title: Kézikönyv
+  app_body:
+    -
+      value: |
+        <p>Fusce neque. Praesent adipiscing. Donec posuere vulputate arcu. Etiam imperdiet imperdiet orci. In turpis.
+        Pellentesque egestas, neque sit amet convallis pulvinar, justo nulla eleifend augue, ac auctor orci leo non
+        est.</p>

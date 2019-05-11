@@ -1,0 +1,11 @@
+uuid: 52f14ef9-c990-4df2-a6e4-d02763e9e485
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.data_protection
+id: entity_legal_document_version.data_protection
+target_entity_type_id: entity_legal_document_version
+target_bundle: data_protection
+default_langcode: site_default
+language_alterable: false

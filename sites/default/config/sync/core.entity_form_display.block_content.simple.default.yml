@@ -1,0 +1,38 @@
+uuid: 73e1acf8-1f10-4cae-ab61-81721a4aa3f1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - block_content.type.simple
+    - field.field.block_content.simple.app_body
+  module:
+    - text
+id: block_content.simple.default
+targetEntityType: block_content
+bundle: simple
+mode: default
+content:
+  app_body:
+    weight: 2
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  info:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

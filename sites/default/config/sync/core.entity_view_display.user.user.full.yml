@@ -1,0 +1,54 @@
+uuid: f660d5bd-a244-4fd4-abfe-9d4dc576e638
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.full
+    - field.field.user.user.app_homepage
+    - field.field.user.user.app_introduction
+    - field.field.user.user.app_picture
+  module:
+    - image
+    - link
+    - text
+    - user
+id: user.user.full
+targetEntityType: user
+bundle: user
+mode: full
+content:
+  app_homepage:
+    weight: 3
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  app_introduction:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  app_picture:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  member_for:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

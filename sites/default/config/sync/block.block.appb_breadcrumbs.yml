@@ -1,0 +1,20 @@
+uuid: 8fba0c03-dcd4-411d-975f-21fd0b6005cc
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appb
+id: appb_breadcrumbs
+theme: appb
+region: breadcrumb
+weight: -4
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Morzsák
+  provider: system
+  label_display: '0'
+visibility: {  }

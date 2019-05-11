@@ -1,0 +1,4 @@
+marvin:
+  acquia:
+    projectId: 'druphungary'
+    remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'

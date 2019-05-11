@@ -1,0 +1,56 @@
+uuid: 12173ce1-2a86-409e-ae24-9efc5634ba32
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.event.app_attachments
+    - field.field.node.event.app_body
+    - field.field.node.event.app_date
+    - field.field.node.event.app_image
+    - field.field.node.event.app_links
+    - field.field.node.event.app_teaser
+    - image.style.media_library
+    - node.type.event
+  module:
+    - datetime_range
+    - media
+    - text
+    - user
+id: node.event.teaser
+targetEntityType: node
+bundle: event
+mode: teaser
+content:
+  app_date:
+    type: daterange_default
+    weight: 1
+    region: content
+    label: inline
+    settings:
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+  app_image:
+    type: media_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: media_library
+      image_link: content
+    third_party_settings: {  }
+  app_teaser:
+    type: text_default
+    weight: 2
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  app_attachments: true
+  app_body: true
+  app_links: true
+  langcode: true
+  links: true

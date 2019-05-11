@@ -1,4 +1,4 @@
-uuid: c569e04a-4d35-4413-8b10-d16c76570748
+uuid: 0d2b60ef-bb4a-4dd4-a5b1-2868d46f191f
 langcode: hu
 status: true
 dependencies:
@@ -11,7 +11,7 @@ id: taxonomy_term.forums.forum_container
 field_name: forum_container
 entity_type: taxonomy_term
 bundle: forums
-label: Tároló
+label: Container
 description: ''
 required: true
 translatable: true

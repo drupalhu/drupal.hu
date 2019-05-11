@@ -1,0 +1,8 @@
+uuid: d193008b-13a5-4b6e-94c0-f3e5a8bda03a
+langcode: hu
+status: true
+dependencies: {  }
+name: Planet
+vid: planet
+description: ''
+weight: 0

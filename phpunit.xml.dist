@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+  bootstrap="docroot/core/tests/bootstrap.php"
+  colors="true"
+  beStrictAboutOutputDuringTests="true"
+  beStrictAboutChangesToGlobalState="true">
+
+  <php>
+    <ini name="memory_limit" value="-1"/>
+    <ini name="error_reporting" value="32767"/>
+    <env name="SIMPLETEST_BASE_URL" value="http://drupalhu.localhost:1080"/>
+    <env name="SIMPLETEST_DB" value="mysql://root:mysql@127.0.0.1:3306/drupalhu__default"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendor"/>
+    <env name="MINK_DRIVER_CLASS" value="Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver"/>
+    <env name="MINK_DRIVER_ARGS" value='["chrome", null, "http://127.0.0.1:4444/wd/hub"]'/>
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["chrome", null, "http://127.0.0.1:4444/wd/hub"]'/>
+    <!--<env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["chrome",{"browserName":"chrome","chromeOptions":{"args":["&#45;&#45;disable-gpu","&#45;&#45;headless"]}},"http://127.0.0.1:9222"]'/>-->
+    <!--<env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["firefox", null, "http://127.0.0.1:4444/wd/hub"]'/>-->
+  </php>
+
+  <testsuites>
+    <testsuite name="unit">
+      <directory>./docroot/profiles/custom/*/tests/src/Unit/</directory>
+      <directory>./docroot/modules/custom/*/tests/src/Unit/</directory>
+      <directory>./docroot/themes/custom/*/tests/src/Unit/</directory>
+      <directory>./tests/src/Unit/</directory>
+    </testsuite>
+  </testsuites>
+
+  <listeners>
+    <listener class="\Drupal\Tests\Listeners\DrupalListener"/>
+    <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+  </listeners>
+
+  <logging>
+    <log type="coverage-text"   target="php://stdout"/>
+    <log type="coverage-html"   target="reports/human/coverage/html"/>
+    <log type="testdox-html"    target="reports/human/junit/phpunit.html"/>
+    <log type="coverage-clover" target="reports/machine/coverage/phpunit.xml"/>
+    <log type="junit"           target="reports/machine/junit/phpunit.xml"/>
+  </logging>
+
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory>./docroot/profiles/custom/</directory>
+      <exclude>
+        <directory>./docroot/profiles/custom/*/tests/</directory>
+        <directory>./docroot/profiles/custom/*/node_modules/</directory>
+      </exclude>
+
+      <directory>./docroot/modules/custom/</directory>
+      <exclude>
+        <directory>./docroot/modules/custom/*/tests/</directory>
+        <directory>./docroot/modules/custom/*/node_modules/</directory>
+      </exclude>
+
+      <directory>./docroot/themes/custom/</directory>
+      <exclude>
+        <directory>./docroot/themes/custom/*/tests/</directory>
+        <directory>./docroot/themes/custom/*/node_modules/</directory>
+      </exclude>
+
+      <directory>./drush/Commands/custom/</directory>
+    </whitelist>
+  </filter>
+</phpunit>

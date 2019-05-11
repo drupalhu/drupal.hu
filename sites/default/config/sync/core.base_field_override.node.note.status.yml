@@ -1,0 +1,22 @@
+uuid: fb5b981b-2c2b-4774-9c01-fce8284366b9
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.note
+id: node.note.status
+field_name: status
+entity_type: node
+bundle: note
+label: Közzétéve
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

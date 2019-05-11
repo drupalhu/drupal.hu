@@ -1,0 +1,19 @@
+uuid: 8edaac59-9c02-41ed-9402-a18c0c573977
+langcode: hu
+status: true
+dependencies:
+  module:
+    - link
+    - user
+id: user.app_homepage
+field_name: app_homepage
+entity_type: user
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

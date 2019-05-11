@@ -1,0 +1,24 @@
+uuid: f060d65b-cb4d-4eb6-98da-e108f9c16332
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.data_protection
+    - field.field.entity_legal_document_version.data_protection.entity_legal_document_text
+  module:
+    - text
+id: entity_legal_document_version.data_protection.default
+targetEntityType: entity_legal_document_version
+bundle: data_protection
+mode: default
+content:
+  entity_legal_document_text:
+    type: text_textarea_with_summary
+    weight: 0
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+hidden: {  }

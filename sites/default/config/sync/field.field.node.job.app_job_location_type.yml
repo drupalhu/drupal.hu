@@ -1,0 +1,21 @@
+uuid: 8b086cb1-b5d5-401c-9352-5f6c0c2ba6d7
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_job_location_type
+    - node.type.job
+  module:
+    - options
+id: node.job.app_job_location_type
+field_name: app_job_location_type
+entity_type: node
+bundle: job
+label: 'Munka jellege'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

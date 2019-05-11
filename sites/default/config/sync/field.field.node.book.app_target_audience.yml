@@ -1,0 +1,29 @@
+uuid: 265e7ebf-d358-4849-bdec-f3369f7503f6
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_target_audience
+    - node.type.book
+    - taxonomy.vocabulary.target_audience
+id: node.book.app_target_audience
+field_name: app_target_audience
+entity_type: node
+bundle: book
+label: Célközönség
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      target_audience: target_audience
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

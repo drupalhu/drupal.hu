@@ -1,0 +1,11 @@
+uuid: 332b2ed0-d8e3-4064-8c5e-4b29ee46ff5c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.planet
+id: taxonomy_term.planet
+target_entity_type_id: taxonomy_term
+target_bundle: planet
+default_langcode: hu
+language_alterable: false

@@ -1,0 +1,105 @@
+label: Comments
+description: 'Find and manage comments.'
+display:
+  default:
+    display_title: Master
+    display_options:
+      exposed_form:
+        options:
+          submit_button: Apply
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        options:
+          tags:
+            previous: '‹ previous'
+            next: 'next ›'
+            first: '« first'
+            last: 'last »'
+          expose:
+            items_per_page_label: 'Items per page'
+            items_per_page_options_all_label: '- All -'
+            offset_label: Offset
+      fields:
+        comment_bulk_form:
+          action_title: Action
+        subject:
+          label: Subject
+          separator: ', '
+        uid:
+          separator: ', '
+        name:
+          label: Author
+          separator: ', '
+        entity_id:
+          label: 'Posted in'
+          separator: ', '
+        changed:
+          label: Updated
+          separator: ', '
+        operations:
+          label: Operations
+        name_1:
+          separator: ', '
+      filters:
+        subject:
+          expose:
+            label: Subject
+        combine:
+          expose:
+            label: 'Author name'
+        langcode:
+          expose:
+            label: Language
+      title: Comments
+      empty:
+        area_text_custom:
+          content: 'No comments available.'
+      use_more_text: more
+  page_published:
+    display_title: 'Published comments'
+    display_options:
+      menu:
+        title: Comments
+        description: 'Comments published'
+      display_description: 'The approved comments listing.'
+  page_unapproved:
+    display_title: 'Unapproved comments'
+    display_options:
+      menu:
+        title: 'Unapproved comments'
+        description: 'Comments unapproved'
+      display_description: 'The unapproved comments listing.'
+      filters:
+        subject:
+          expose:
+            label: Subject
+        combine:
+          expose:
+            label: 'Author Name'
+        langcode:
+          expose:
+            label: Language
+      fields:
+        comment_bulk_form:
+          action_title: Action
+        subject:
+          label: Subject
+          separator: ', '
+        uid:
+          separator: ', '
+        name:
+          label: Author
+          separator: ', '
+        entity_id:
+          label: 'Posted in'
+          separator: ', '
+        changed:
+          label: Updated
+          separator: ', '
+        operations:
+          label: Operations
+        name_1:
+          separator: ', '

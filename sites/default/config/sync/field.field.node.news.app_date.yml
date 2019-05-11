@@ -1,0 +1,21 @@
+uuid: a2ba6e9f-f60d-47e6-80c3-107df297c3a8
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_date
+    - node.type.news
+  module:
+    - datetime_range
+id: node.news.app_date
+field_name: app_date
+entity_type: node
+bundle: news
+label: Dátum
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

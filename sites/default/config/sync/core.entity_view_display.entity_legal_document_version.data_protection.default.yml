@@ -1,0 +1,22 @@
+uuid: ef740fbc-99aa-4330-ba6c-c1eb97b9bca4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - entity_legal.document.data_protection
+    - field.field.entity_legal_document_version.data_protection.entity_legal_document_text
+  module:
+    - text
+id: entity_legal_document_version.data_protection.default
+targetEntityType: entity_legal_document_version
+bundle: data_protection
+mode: default
+content:
+  entity_legal_document_text:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

@@ -1,0 +1,12 @@
+uuid: ceaecca8-fa20-47bd-a867-ac1f81b2d88e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - aggregator
+_core:
+  default_config_hash: QBUcStGTLulHMyYgLwZWdHfUqj-YCQFT-TW0ojsw8pw
+id: aggregator_feed.summary
+label: Összegzés
+targetEntityType: aggregator_feed
+cache: true

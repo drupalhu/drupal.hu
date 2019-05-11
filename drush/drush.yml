@@ -4,10 +4,13 @@ drush:
     config:
       - '${drush.vendor-dir}/../drush/Commands/contrib/marvin/Commands/drush.yml'
       - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product/Commands/drush.yml'
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_acquia/Commands/drush.yml'
+      - '${drush.vendor-dir}/../drush/drush.marvin_acquia.yml'
       - '${drush.vendor-dir}/../drush/drush.local.yml'
     include:
       - '${drush.vendor-dir}/../drush/Commands/contrib/marvin'
       - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product'
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_acquia'
 
 options:
   root: '${drush.vendor-dir}/../docroot'
@@ -36,6 +39,7 @@ command:
         account-name: 'admin'
         account-pass: 'admin'
         account-mail: 'admin@localhost'
+        marvin-migrate: 'default'
 
 sql:
   skip-tables:
@@ -53,24 +57,48 @@ marvin:
   environments:
     dev:
       modules:
+        app_dc: true
         dblog: true
         devel: true
+        field_ui: true
         kint: true
+        menu_ui: true
+        module_filter: true
+        views_ui: true
 
     prod:
       modules:
+        app_dc: false
+        app_legacy: false
         dblog: false
         devel: false
+        field_ui: false
         kint: false
+        migrate: false
+        migrate_drupal: false
+        migrate_plus: false
+        migrate_tools: false
+        module_filter: false
+        simpletest: false
+        views_ui: false
 
   migrate:
-    default:
-      module:
-        app_dc: true
-      tag:
-        default_content: true
     legacy:
       module:
+        app_dc: true
+      group:
         app_legacy: true
-      tag:
-        legacy_content: true
+        app_common: true
+    install:
+      module:
+        app_dc: true
+      group:
+        app_default: true
+        app_common: true
+    dummy:
+      module:
+        app_dc: true
+      group:
+        app_default: true
+        app_common: true
+        app_dummy: true

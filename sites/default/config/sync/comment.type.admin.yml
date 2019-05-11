@@ -1,0 +1,8 @@
+uuid: 3d5b1cc8-9986-462b-aaec-4b09bf2c1c0d
+langcode: hu
+status: true
+dependencies: {  }
+id: admin
+label: Feljegyzés
+target_entity_type_id: node
+description: ''
