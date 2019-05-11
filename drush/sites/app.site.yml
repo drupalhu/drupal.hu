@@ -1,0 +1,21 @@
+
+local:
+  root: '${drush.vendor-dir}/../docroot'
+
+dev:
+  uri: 'http://dev.drupal.hu'
+  user: 'druphungary.dev'
+  host: 'staging-5196.prod.hosting.acquia.com'
+  root: '/var/www/html/druphungarydev/docroot'
+
+stage:
+  uri: 'http://stage.drupal.hu'
+  user: 'druphungary.test'
+  host: 'staging-5197.prod.hosting.acquia.com'
+  root: '/var/www/html/druphungarystg/docroot'
+
+prod:
+  uri: 'https://www.drupal.hu'
+  user: 'druphungary.prod'
+  host: 'ded-5779.prod.hosting.acquia.com'
+  root: '/var/www/html/druphungary/docroot'

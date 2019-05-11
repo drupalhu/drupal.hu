@@ -2,12 +2,75 @@
 drush:
   paths:
     config:
-      - 'drush/drush.local.yml'
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin/Commands/drush.yml'
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product/Commands/drush.yml'
+      - '${drush.vendor-dir}/../drush/drush.local.yml'
+    include:
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin'
+      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product'
+
+options:
+  root: '${drush.vendor-dir}/../docroot'
 
 command:
+  core:
+    status:
+      options:
+        format: 'yaml'
+#    rsync:
+#      options:
+#        # @app.prod%files /path/to/files
+#        exclude-paths: '/css/*:/js/*:/languages/*:/styles/*:/private/*'
+
+  sql:
+    dump:
+      options:
+        skip-tables-key: 'common'
+        structure-tables-key: 'common'
+
   site:
     install:
       options:
         sites-subdir: 'default'
-        locale: 'hu'
+        site-name: 'Drupal.hu'
+        account-name: 'admin'
         account-pass: 'admin'
+        account-mail: 'admin@localhost'
+
+sql:
+  skip-tables:
+    common: []
+  structure-tables:
+    common:
+      - 'cache'
+      - 'cache_*'
+      - 'history'
+      - 'search_*'
+      - 'sessions'
+      - 'watchdog'
+
+marvin:
+  environments:
+    dev:
+      modules:
+        dblog: true
+        devel: true
+        kint: true
+
+    prod:
+      modules:
+        dblog: false
+        devel: false
+        kint: false
+
+  migrate:
+    default:
+      module:
+        app_dc: true
+      tag:
+        default_content: true
+    legacy:
+      module:
+        app_legacy: true
+      tag:
+        legacy_content: true
