@@ -13,8 +13,8 @@
 
 ## Contribute
 
-1. Run `git clone git@example.com/app.git`
-1. Run `cd app`
+1. Run `git clone --branch=8.x1.x https://github.com/drupalhu/drupal.hu.git drupal.hu`
+1. Run `cd drupal.hu`
 1. Run `nvm install`
 1. Run `nvm use`
 1. Run `composer install`

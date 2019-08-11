@@ -1,0 +1,83 @@
+version: 2.1
+
+executors:
+  php703:
+    environment:
+      COMPOSER_NO_INTERACTION: '1'
+      phpName: '70308-nts'
+    docker:
+      -
+        image: 'sweetchuck/php-env-dev:703-12.x.x'
+        entrypoint: []
+
+_custom:
+  step__restore_cache: &step__restore_cache
+    name: 'Cache restore - "./vendor"'
+    keys:
+      - 'v1-dependencies-{{ checksum "composer.lock" }}'
+      - 'v1-dependencies-'
+
+  step__run__composer_install: &step__run__composer_install
+    name: 'Composer install'
+    command: >
+      . ~/.bashrc
+      && phpbrew use "${phpName}"
+      && composer install --no-progress
+
+  step__save_cache: &step__save_cache
+    name: 'Cache save - "./vendor"'
+    paths:
+      - './vendor'
+    key: 'v1-dependencies-{{ checksum "composer.lock" }}'
+
+  step__run__linters: &step__run__linters
+    name: 'Run linters'
+    command: >
+      . ~/.bashrc
+      && phpbrew use "${phpName}"
+      && bin/drush --config=drush @app.local marvin:lint:phpcs
+
+#  step__store_test_results: &step__store_test_results
+#    path: 'tests/_output/machine/junit'
+#
+#  step__run__codecov: &step__run__codecov
+#    name: 'Publish the code coverage report on Codecov.io'
+#    when: 'always'
+#    command: >
+#      [ ! -s tests/_output/machine/coverage/*/coverage.xml ]
+#      || bash <(curl -s https://codecov.io/bash)
+#      || true
+
+  job__lint_and_test: &job__lint_and_test
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      -
+        restore_cache:
+          <<: *step__restore_cache
+      -
+        run:
+          <<: *step__run__composer_install
+      -
+        save_cache:
+          <<: *step__save_cache
+      -
+        run:
+          <<: *step__run__linters
+#      -
+#        store_test_results:
+#          <<: *step__store_test_results
+#      -
+#        run:
+#          <<: *step__run__codecov
+
+jobs:
+  php703__lint_and_test:
+    <<: *job__lint_and_test
+    executor: php703
+
+workflows:
+  version: 2
+  php703__lint_and_test:
+    jobs:
+      - 'php703__lint_and_test'

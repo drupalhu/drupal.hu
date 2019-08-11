@@ -25,8 +25,8 @@
             "url": "https://github.com/Sweetchuck/drupal-marvin_product.git"
         },
         "drupal/marvin_acquia": {
-            "type": "path",
-            "url": "../../drupal/marvin_acquia"
+            "type": "git",
+            "url": "https://github.com/Sweetchuck/drupal-marvin_acquia.git"
         },
         "drupal-8": {
             "type": "composer",
