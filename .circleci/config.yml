@@ -4,11 +4,12 @@ executors:
   php703:
     environment:
       COMPOSER_NO_INTERACTION: '1'
+      BASH_ENV: '/root/.bashrc'
       phpName: '70308-nts'
     docker:
       -
         image: 'sweetchuck/php-env-dev:703-12.x.x'
-        entrypoint: []
+        entrypoint: ['/bin/bash']
 
 _custom:
   step__restore_cache: &step__restore_cache
@@ -20,9 +21,7 @@ _custom:
   step__run__composer_install: &step__run__composer_install
     name: 'Composer install'
     command: >
-      . ~/.bashrc
-      && phpbrew use "${phpName}"
-      && composer install --no-progress
+      composer install --no-progress
 
   step__save_cache: &step__save_cache
     name: 'Cache save - "./vendor"'
@@ -33,9 +32,7 @@ _custom:
   step__run__linters: &step__run__linters
     name: 'Run linters'
     command: >
-      . ~/.bashrc
-      && phpbrew use "${phpName}"
-      && bin/drush --config=drush @app.local marvin:lint:phpcs
+      bin/drush --config=drush @app.local marvin:lint:phpcs
 
 #  step__store_test_results: &step__store_test_results
 #    path: 'tests/_output/machine/junit'
@@ -52,6 +49,7 @@ _custom:
     working_directory: '~/repo'
     steps:
       - 'checkout'
+
       -
         restore_cache:
           <<: *step__restore_cache
