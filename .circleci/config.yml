@@ -11,71 +11,76 @@ executors:
         image: 'sweetchuck/php-env-dev:703-12.x.x'
         entrypoint: ['/bin/bash']
 
-_custom:
-  step__restore_cache: &step__restore_cache
-    name: 'Cache restore - "./vendor"'
-    keys:
-      - 'v1-dependencies-{{ checksum "composer.lock" }}'
-      - 'v1-dependencies-'
-
-  step__run__composer_install: &step__run__composer_install
-    name: 'Composer install'
-    command: >
-      composer install --no-progress
-
-  step__save_cache: &step__save_cache
-    name: 'Cache save - "./vendor"'
-    paths:
-      - './vendor'
-    key: 'v1-dependencies-{{ checksum "composer.lock" }}'
-
-  step__run__linters: &step__run__linters
-    name: 'Run linters'
-    command: >
-      bin/drush --config=drush @app.local marvin:lint:phpcs
-
-#  step__store_test_results: &step__store_test_results
-#    path: 'tests/_output/machine/junit'
-#
-#  step__run__codecov: &step__run__codecov
-#    name: 'Publish the code coverage report on Codecov.io'
-#    when: 'always'
-#    command: >
-#      [ ! -s tests/_output/machine/coverage/*/coverage.xml ]
-#      || bash <(curl -s https://codecov.io/bash)
-#      || true
-
-  job__lint_and_test: &job__lint_and_test
-    working_directory: '~/repo'
+commands:
+  composer_install:
+    description: 'Install Composer dependencies with cache restore and save'
     steps:
-      - 'checkout'
-
       -
         restore_cache:
-          <<: *step__restore_cache
+          name: 'Composer - cache restore'
+          keys:
+            - 'v1-dependencies-{{ checksum "composer.lock" }}'
+            - 'v1-dependencies-'
+
       -
         run:
-          <<: *step__run__composer_install
+          name: 'Composer - install'
+          command: >
+            composer install --no-progress
+
       -
         save_cache:
-          <<: *step__save_cache
+          name: 'Composer - cache save'
+          key: 'v1-dependencies-{{ checksum "composer.lock" }}'
+          paths:
+            - './bin/'
+            - './docroot/core/'
+            - './docroot/modules/contrib/'
+            - './docroot/themes/contrib/'
+            - './docroot/profiles/contrib/'
+            - './docroot/libraries/contrib/'
+            - './vendor/'
+
+  lint:
+    description: 'Run linters'
+    steps:
       -
         run:
-          <<: *step__run__linters
-#      -
-#        store_test_results:
-#          <<: *step__store_test_results
-#      -
-#        run:
-#          <<: *step__run__codecov
+          name: 'Run linters'
+          command: >
+            bin/drush --config=drush @app.local marvin:lint:phpcs
+
+  test_unit:
+    description: 'Run unit tests'
+    steps:
+      -
+        run:
+          name: 'Run unit tests'
+          command: >
+            bin/drush --config=drush @app.local marvin:test:unit
+      -
+        store_test_results:
+          name: 'Store unit test results'
+          path: 'reports/machine/junit'
+      -
+        run:
+          name: 'Publish the code coverage report on Codecov.io'
+          when: 'always'
+          command: >
+            [ ! -s reports/machine/coverage/*/coverage.xml ]
+            || bash <(curl -s https://codecov.io/bash)
+            || true
 
 jobs:
   php703__lint_and_test:
-    <<: *job__lint_and_test
-    executor: php703
+    executor: 'php703'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'composer_install'
+      - 'lint'
 
 workflows:
-  version: 2
   php703__lint_and_test:
     jobs:
       - 'php703__lint_and_test'
