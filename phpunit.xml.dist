@@ -12,7 +12,7 @@
     <ini name="error_reporting" value="32767"/>
     <env name="SIMPLETEST_BASE_URL" value="http://drupalhu.localhost:1080"/>
     <env name="SIMPLETEST_DB" value="mysql://root:mysql@127.0.0.1:3306/drupalhu__default"/>
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendor"/>
+    <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendor"/>-->
     <env name="MINK_DRIVER_CLASS" value="Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver"/>
     <env name="MINK_DRIVER_ARGS" value='["chrome", null, "http://127.0.0.1:4444/wd/hub"]'/>
     <env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["chrome", null, "http://127.0.0.1:4444/wd/hub"]'/>

@@ -4,14 +4,56 @@ executors:
   php703:
     environment:
       COMPOSER_NO_INTERACTION: '1'
+      COMPOSER_MEMORY_LIMIT: '-1'
       BASH_ENV: '/root/.bashrc'
-      phpName: '70308-nts'
     docker:
       -
         image: 'sweetchuck/php-env-dev:703-12.x.x'
         entrypoint: ['/bin/bash']
 
 commands:
+  php_cli_enable_xdebug:
+    description: 'PHP CLI - enable xdebug'
+    steps:
+      -
+        run:
+          name: 'PHP CLI - enable xdebug'
+          command: |
+            iniFileName=$( \
+              php -i \
+              |
+              grep \
+                --color=never \
+                --only-matching \
+                --perl-regexp '(?<=Loaded Configuration File => ).+'\
+            )
+            sed \
+              --in-place \
+              --regexp-extended \
+              --expression 's/^zend_extension(.+)\/xdebug(\.so){0,1}$/;\0/g' \
+              "${iniFileName}"
+
+  php_cli_disable_xdebug:
+    description: 'PHP CLI - disable xdebug'
+    steps:
+      -
+        run:
+          name: 'PHP CLI - disable xdebug'
+          command: |
+            iniFileName=$( \
+              php -i \
+              |
+              grep \
+                --color=never \
+                --only-matching \
+                --perl-regexp '(?<=Loaded Configuration File => ).+'\
+            )
+            sed \
+              --in-place \
+              --regexp-extended \
+              --expression 's/^(;|#)( |\t){0,}(zend_extension(.+)\/xdebug(\.so){0,1})$/\3/g' \
+              "${iniFileName}"
+
   composer_install:
     description: 'Install Composer dependencies with cache restore and save'
     steps:
@@ -77,8 +119,11 @@ jobs:
     working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_cli_disable_xdebug'
       - 'composer_install'
       - 'lint'
+      - 'php_cli_enable_xdebug'
+      - 'test_unit'
 
 workflows:
   php703__lint_and_test:
