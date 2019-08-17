@@ -61,27 +61,61 @@ commands:
         restore_cache:
           name: 'Composer - cache restore'
           keys:
-            - 'v1-dependencies-{{ checksum "composer.lock" }}'
-            - 'v1-dependencies-'
+            - 'composer-{{ checksum "composer.lock" }}'
 
       -
         run:
           name: 'Composer - install'
           command: >
-            composer install --no-progress
+            [[ -d 'vendor' ]] || composer install --no-progress
 
       -
         save_cache:
           name: 'Composer - cache save'
-          key: 'v1-dependencies-{{ checksum "composer.lock" }}'
+          key: 'composer-{{ checksum "composer.lock" }}'
           paths:
             - './bin/'
             - './docroot/core/'
             - './docroot/modules/contrib/'
             - './docroot/themes/contrib/'
+            - './docroot/themes/custom/appf/bootstrap/'
             - './docroot/profiles/contrib/'
             - './docroot/libraries/contrib/'
             - './vendor/'
+
+  collect_asset_sources_to_checksum:
+    description: ''
+    steps:
+      -
+        run:
+          name: ''
+          command: |
+            fileName=checksum-of-frontend-asset-sources.sha256
+            touch "${fileName}"
+            find ./docroot/themes/custom/appf/scss/ -type f -name '*.scss' -exec sha256sum {} \; >> "${fileName}"
+            sha256sum ./docroot/themes/custom/appf/yarn.lock >> "${fileName}"
+
+  build:
+    description: 'Build'
+    steps:
+      -
+        restore_cache:
+          name: 'NPM - cache restore'
+          keys:
+            - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}'
+      -
+        run:
+          name: 'drush marvin:build'
+          command: >
+            bin/drush --config=drush @app.local marvin:build
+
+      -
+        save_cache:
+          name: 'NPM - cache save'
+          key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}'
+          paths:
+            - './docroot/themes/custom/appf/node_modules/'
+
 
   lint:
     description: 'Run linters'
@@ -90,7 +124,7 @@ commands:
         run:
           name: 'Run linters'
           command: >
-            bin/drush --config=drush @app.local marvin:lint:phpcs
+            bin/drush --config=drush @app.local marvin:lint
 
   test_unit:
     description: 'Run unit tests'
@@ -121,11 +155,14 @@ jobs:
       - 'checkout'
       - 'php_cli_disable_xdebug'
       - 'composer_install'
+      - 'build'
       - 'lint'
       - 'php_cli_enable_xdebug'
       - 'test_unit'
+      - 'php_cli_disable_xdebug'
 
 workflows:
   php703__lint_and_test:
     jobs:
-      - 'php703__lint_and_test'
+      -
+        php703__lint_and_test: {}
