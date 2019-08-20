@@ -1,0 +1,14 @@
+@import "../lib";
+
+td,
+th {
+    &.checkbox {
+        text-align: center;
+    }
+}
+
+tr.selected {
+    td {
+        background: #ffc;
+    }
+}

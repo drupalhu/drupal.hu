@@ -1,0 +1,7 @@
+{
+  "browserSync":{
+    "options": {
+      "proxy": "http://drupalhu.localhost"
+    }
+  }
+}

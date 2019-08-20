@@ -1,0 +1,39 @@
+@import "../lib";
+
+.book-navigation {
+    .menu {
+        padding-block-start: 1em;
+        padding-block-end: 0;
+        border-block-start: 1px solid $border-color;
+    }
+
+    .book-pager {
+        border-block-start: 1px solid $border-color;
+        border-block-end: 1px solid $border-color;
+        margin: 0;
+        overflow: auto;
+        padding: 0.5em 0;
+    }
+}
+
+.book-pager__item {
+    display: inline-block;
+    list-style-type: none;
+    vertical-align: top;
+
+    &--previous {
+        text-align: start;
+        width: 45%;
+    }
+
+    &--center {
+        text-align: center;
+        width: 8%;
+    }
+
+    &--next {
+        float: end;
+        text-align: end;
+        width: 45%;
+    }
+}

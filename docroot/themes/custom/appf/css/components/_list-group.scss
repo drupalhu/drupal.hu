@@ -1,0 +1,18 @@
+@import "../lib";
+
+.list-group {
+    &__link {
+        border-block-start: $border-width solid $border-color;
+        padding-block-start: $list-group-item-padding-y;
+        padding-block-end: 0;
+        padding-inline-start: 0;
+        padding-inline-end: 0;
+    }
+
+    &__description {
+        margin-block-start: 0;
+        margin-block-end: $list-group-item-padding-y;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+    }
+}

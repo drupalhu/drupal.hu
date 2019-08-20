@@ -8,7 +8,7 @@ dependencies:
     - appf
 id: appf_userlogin
 theme: appf
-region: navigation
+region: top_header
 weight: -6
 provider: null
 plugin: user_login_block

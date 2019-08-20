@@ -1,0 +1,10 @@
+@import "../lib";
+
+.form-textarea-wrapper {
+    textarea {
+        display: block;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

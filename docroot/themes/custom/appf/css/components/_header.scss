@@ -1,0 +1,51 @@
+@import "../lib";
+
+#navbar-top {
+    padding: 0 1rem;
+
+    &.navbar-light {
+        .nav-link {
+            color: rgba(0, 0, 0, 0.5);
+
+            &:hover,
+            &:focus {
+                color: rgba(0, 0, 0, 0.7);
+            }
+        }
+    }
+
+    &.navbar-dark {
+        .nav-link {
+            color: rgba(255, 255, 255, 0.5);
+
+            &:hover,
+            &:focus {
+                color: rgba(255, 255, 255, 0.75);
+            }
+        }
+    }
+}
+
+.navbar-brand {
+    .site-logo {
+        margin-right: 1rem;
+    }
+}
+
+@media (max-width: 33.9em) {
+    .navbar-toggleable-xs {
+        .navbar-nav .nav-item + .nav-item,
+        &.collapse.in .navbar-nav .nav-item {
+            margin-inline-start: 0;
+            float: none;
+        }
+    }
+}
+
+@media (max-width: 47.9em) {
+    .navbar-toggleable-sm .navbar-nav .nav-item + .nav-item,
+    .navbar-toggleable-xs.collapse.in .navbar-nav .nav-item {
+        margin-inline-start: 0;
+        float: none;
+    }
+}

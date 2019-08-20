@@ -1,0 +1,27 @@
+@import "../lib";
+
+.shortcut {
+    &-wrapper {
+        margin-block-start: 2.2em;
+        margin-block-end: 1.1em;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+
+        .page-title {
+            float: start;
+            margin: 0;
+        }
+    }
+
+    &-action {
+        border-block-end: none;
+        margin-inline-start: 0.5em;
+        padding-block-start: 0.35em;
+
+        &:hover,
+        &:active,
+        &:focus {
+            border-block-end: none;
+        }
+    }
+}

@@ -1,14 +1,36 @@
 {
-  "name": "appf",
-  "version": "1.0.0",
-  "description": "Drupalhu - front-end theme",
+  "name": "drupalhu-appf",
+  "version": "8.4.1",
+  "description": "Theme for Drupal.hu",
   "main": "index.js",
-  "license": "proprietary",
+  "license": "MIT",
   "private": true,
   "dependencies": {
-    "gulp": "^4.0.0",
-    "gulp-cli": "^2.0.1",
-    "gulp-frontend-tasks": "github:bluesparklabs/gulp-frontend-tasks"
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.15",
+    "popper.js": "^1.14.3",
+    "stylelint": "^10.1.0",
+    "stylelint-config-recommended-scss": "^3.3.0",
+    "stylelint-scss": "^3.9.3"
   },
-  "sasslintConfig": "./sass-lint.yml"
+  "devDependencies": {
+    "browser-sync": "^2.24.7",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^4.1.0",
+    "gulp-clean-css": "3.9.4",
+    "gulp-concat": "^2.6.1",
+    "gulp-html-replace": "^1.6.2",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^4.0.1",
+    "gulp-scss-lint": "^1.0.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0",
+    "merge-stream": "^1.0.1"
+  },
+  "scripts": {
+    "lint": "stylelint './css/**/*.scss'"
+  }
 }

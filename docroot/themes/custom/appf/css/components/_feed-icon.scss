@@ -1,0 +1,10 @@
+@import "../lib";
+
+.feed-icon {
+    border-block-end: none;
+    display: inline-block;
+    padding-block-start: $spacer;
+    padding-block-end: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+}

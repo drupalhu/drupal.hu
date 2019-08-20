@@ -1,0 +1,58 @@
+@import "../lib";
+
+.node {
+    &__meta {
+        font-size: $font-size-sm;
+        margin-block-end: -5px;
+    }
+
+    &__content {
+        font-size: $font-size-base;
+        margin-block-start: $spacer;
+    }
+
+    &__links {
+        text-align: end;
+        font-size: $font-size-base;
+    }
+
+    &--view-mode-teaser {
+        padding-block-end: $spacer;
+        border-block-end: $border-width solid $border-color;
+
+        &.node--sticky {
+            background-color: #f9f9f9;
+            background-color: rgba(0, 0, 0, 0.024);
+            border: $border-width solid $border-color;
+            padding-block-start: 0;
+            padding-block-end: $spacer;
+            padding-inline-start: $spacer;
+            padding-inline-end: $spacer;
+        }
+
+        h2 {
+            margin-block-start: 0;
+            padding-block-start: 0.5em;
+        }
+
+        .node__content {
+            clear: none;
+            font-size: $font-size-base;
+            line-height: $line-height-base;
+        }
+    }
+
+    &--unpublished {
+        padding-block-start: $spacer;
+        padding-block-end: 0;
+        padding-inline-start: 0;
+        padding-inline-end: $spacer;
+
+        // @todo Detach comment theming from node entity.
+        .comment-text {
+            .comment-arrow {
+                border-inline: $border-width solid #fff4f4;
+            }
+        }
+    }
+}

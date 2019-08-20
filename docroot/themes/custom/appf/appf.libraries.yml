@@ -1,17 +1,12 @@
-framework:
-  css:
-    theme:
-      css/style.css: {}
+global-styling:
+  version: '1.0.0'
   js:
-    bootstrap/assets/javascripts/bootstrap/affix.js: {}
-    bootstrap/assets/javascripts/bootstrap/alert.js: {}
-    bootstrap/assets/javascripts/bootstrap/button.js: {}
-    bootstrap/assets/javascripts/bootstrap/carousel.js: {}
-    bootstrap/assets/javascripts/bootstrap/collapse.js: {}
-    bootstrap/assets/javascripts/bootstrap/dropdown.js: {}
-    bootstrap/assets/javascripts/bootstrap/modal.js: {}
-    bootstrap/assets/javascripts/bootstrap/tooltip.js: {}
-    bootstrap/assets/javascripts/bootstrap/popover.js: {}
-    bootstrap/assets/javascripts/bootstrap/scrollspy.js: {}
-    bootstrap/assets/javascripts/bootstrap/tab.js: {}
-    bootstrap/assets/javascripts/bootstrap/transition.js: {}
+    js/popper.min.js: {}
+    js/bootstrap.min.js: {}
+    js/global.js: {}
+  css:
+    component:
+      css/style.css: {}
+  dependencies:
+    - 'core/jquery'
+    - 'core/drupal'

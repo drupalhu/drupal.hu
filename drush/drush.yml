@@ -55,7 +55,7 @@ sql:
 
 marvin:
   environments:
-    dev:
+    local:
       modules:
         app_dc: true
         dblog: true
@@ -64,6 +64,7 @@ marvin:
         kint: true
         menu_ui: true
         module_filter: true
+        styleguide: true
         views_ui: true
 
     prod:
@@ -80,6 +81,7 @@ marvin:
         migrate_tools: false
         module_filter: false
         simpletest: false
+        styleguide: false
         views_ui: false
 
   migrate:

@@ -1,0 +1,12 @@
+@import "../lib";
+
+.image-button {
+    &.is-disabled,
+    &.is-disabled:hover,
+    &.is-disabled:active,
+    &.is-disabled:focus {
+        background-color: transparent;
+        opacity: 0.5;
+        cursor: default;
+    }
+}

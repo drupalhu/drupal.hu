@@ -1,0 +1,63 @@
+@import "../lib";
+
+.field--label-inline {
+    .field__label,
+    .field__item {
+        display: inline-block
+    }
+}
+
+.field--type-entity-reference {
+    margin-block-start: 0;
+    margin-block-end: ($spacer * 1.2);
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+
+    .field__label {
+        font-weight: normal;
+        margin: 0;
+        padding-inline-end: ($spacer * 0.3);
+    }
+
+    ul.links {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+            float: start;
+            padding-block-start: 0;
+            padding-block-end: 0;
+            padding-inline-start: 0;
+            padding-inline-end: $spacer;
+            white-space: nowrap;
+        }
+    }
+}
+
+.field--type-image {
+    img {
+        margin-block-start: 0;
+        margin-block-end: $spacer;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+    }
+
+    a {
+        border-block-end: none;
+    }
+}
+
+@media all and (min-width: 560px) {
+    .field--type-image {
+        float: start;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-inline-start: $spacer;
+        margin-inline-end: 0;
+
+        + .field--type-image {
+            clear: both;
+        }
+    }
+}

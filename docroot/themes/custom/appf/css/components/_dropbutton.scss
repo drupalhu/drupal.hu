@@ -1,0 +1,56 @@
+@import "../lib";
+
+.js {
+    .dropbutton-widget {
+        background-color: white;
+        border: 1px solid #cccccc;
+        display: block;
+        position: relative;
+
+        &:hover {
+            border-color: #b8b8b8;
+        }
+    }
+
+    .dropbutton-wrapper {
+        display: block;
+        position: relative;
+    }
+
+    td {
+        .dropbutton-widget {
+            position: absolute;
+        }
+
+        .dropbutton-wrapper {
+            min-height: 2em;
+        }
+
+        .dropbutton-multiple {
+            padding-block-end: 10em;
+            margin-inline-end: 2em;
+            max-width: 100%;
+        }
+    }
+}
+
+.dropbutton {
+    .dropbutton-action {
+        > * {
+            padding: 0.1em 0.5em;
+            white-space: nowrap;
+        }
+    }
+
+    .secondary-action {
+        border-block-start: 1px solid #e8e8e8;
+    }
+
+    .dropbutton-multiple & {
+        border-inline-end: 1px solid #e8e8e8;
+
+        .dropbutton-action > * {
+            margin-inline-end: 0.25em;
+        }
+    }
+}

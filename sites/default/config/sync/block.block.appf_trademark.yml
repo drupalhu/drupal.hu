@@ -10,8 +10,8 @@ dependencies:
     - appf
 id: appf_trademark
 theme: appf
-region: footer
-weight: -4
+region: featured_bottom_second
+weight: -5
 provider: null
 plugin: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
 settings:

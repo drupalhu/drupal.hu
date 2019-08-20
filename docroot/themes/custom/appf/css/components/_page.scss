@@ -1,0 +1,14 @@
+@import "../lib";
+
+.page-user-login,
+.page-user-password {
+    main {
+        .region-content {
+            max-width: 400px;
+            background: white;
+            padding: $spacer $spacer;
+            margin: 0 auto;
+            border-radius: $border-radius-lg;
+        }
+    }
+}

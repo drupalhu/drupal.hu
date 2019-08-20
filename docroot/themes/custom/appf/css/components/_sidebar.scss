@@ -1,0 +1,49 @@
+@import "../lib";
+
+.sidebar {
+    .block {
+        padding: $spacer;
+        margin-block-start: 0;
+        margin-block-end: $spacer;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        border-style: solid;
+        border-width: $border-width;
+
+        .content {
+            font-size: $font-size-base;
+            line-height: $line-height-sm;
+        }
+    }
+
+    h2 {
+        border-block-end: $border-width solid $border-color;
+        padding-block-end: 5px;
+
+        margin-block-start: 0;
+        margin-block-end: ($spacer * 0.5);
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+
+        text-shadow: 0 $border-width 0 $white;
+        font-size: $font-size-lg;
+        line-height: $headings-line-height;
+    }
+
+    // @todo Remove.
+    tbody {
+        border: none;
+    }
+
+    // @todo Remove.
+    tr.even,
+    tr.odd {
+        background: none;
+        border-block-end: $border-width solid $border-color;
+    }
+
+    // @todo Remove.
+    nav ul.nav {
+        margin: 0 -($spacer);
+    }
+}

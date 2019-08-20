@@ -12,6 +12,7 @@
 /docroot/themes/custom/*/bootstrap/
 /docroot/themes/custom/*/css/**.css
 /docroot/themes/custom/*/css/**.css.map
+/docroot/themes/custom/*/gulp.config.local.json
 
 /docroot/sites/simpletest/
 

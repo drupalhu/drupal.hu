@@ -10,7 +10,7 @@ dependencies:
     - appf
 id: appf_mainnavigation
 theme: appf
-region: navigation
+region: primary_menu
 weight: -5
 provider: null
 plugin: 'system_menu_block:main'

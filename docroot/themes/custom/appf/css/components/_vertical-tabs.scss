@@ -1,0 +1,77 @@
+@import "../lib";
+
+.vertical-tabs {
+    margin: 0;
+    border: $border-width solid $border-color;
+    display: flex;
+    flex-direction: row;
+    font-size: $font-size-sm;
+
+    [dir="rtl"] & {
+        flex-direction: row-reverse;
+    }
+
+    &__menu {
+        margin: -1px 0;
+        padding: 0;
+
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        width: 15em;
+        border-block-start: $border-width solid $border-color;
+        list-style: none;
+
+        [dir="rtl"] & {
+            margin-inline-end: -15em;
+        }
+    }
+
+    &__menu-item {
+        border: $border-width solid $border-color;
+        border-block-start-width: 0;
+        background: #eeeeee;
+
+        &.is-selected {
+            border-inline-end-width: 0;
+            background-color: $white;
+
+            .vertical-tabs__menu-item-title {
+                color: $black;
+            }
+        }
+
+        a {
+            display: block;
+            padding: 0.5em 0.6em;
+            text-decoration: none;
+
+            &:hover {
+                outline: $border-width dotted;
+            }
+
+            &:focus,
+            &:active,
+            &:hover {
+                .vertical-tabs__menu-item-title {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &__menu-item-summary {
+        display: block;
+        margin-block-end: 0;
+        line-height: normal;
+    }
+
+    &__pane {
+        margin: 0;
+        border: 0;
+
+        > summary {
+            display: none;
+        }
+    }
+}

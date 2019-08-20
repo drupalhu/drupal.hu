@@ -1,0 +1,47 @@
+@import "../lib";
+
+.views-displays {
+    .tabs {
+        .open {
+            > a {
+                border-radius: $border-radius-lg $border-radius-lg 0 0;
+
+                &:hover,
+                &:focus {
+                    color: $link-color;
+                }
+            }
+        }
+
+        .action-list {
+            padding: 0;
+        }
+    }
+
+    .secondary {
+        .form-submit {
+            font-size: $font-size-sm;
+        }
+    }
+}
+
+.views-filterable-options {
+    .filterable-option:nth-of-type(even) {
+        .form-type-checkbox {
+            background-color: #f9f9f9;
+        }
+    }
+}
+
+.views-ui-display-tab-actions {
+    .dropbutton {
+        .form-submit {
+            color: $link-hover-color;
+
+            &:hover,
+            &:focus {
+                color: $link-color;
+            }
+        }
+    }
+}

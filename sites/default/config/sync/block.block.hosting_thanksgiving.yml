@@ -10,8 +10,8 @@ dependencies:
     - appf
 id: hosting_thanksgiving
 theme: appf
-region: footer
-weight: -3
+region: featured_bottom_third
+weight: -5
 provider: null
 plugin: 'block_content:6a290725-ba59-4318-891c-52834d6a4bbb'
 settings:

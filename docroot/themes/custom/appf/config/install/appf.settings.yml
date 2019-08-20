@@ -1,30 +1,35 @@
-# Default settings should not be located here. This file is only used to
-# override existing settings. If your theme is the one that introduces a new
-# theme setting, it should use the Drupal Bootstrap base theme's
-# @BootstrapSetting annotation discovery process. This ensures that sub-theme
-# settings are inherited from base themes themes properly and to determine when
-# a setting should be saved to config as "overridden".
-#
-# @see \Drupal\bootstrap\Plugin\SettingBase
-# @see \Drupal\bootstrap\Plugin\SettingInterface
-# @see \Drupal\bootstrap\Plugin\SettingManager
-# @see \Drupal\bootstrap\Plugin\Form\SystemThemeSettings
-# @see \Drupal\bootstrap\ThemeSettings
+# Library
+# --------------
+bootstrap_barrio_library: 'production'
+# Layout
+# --------------
+bootstrap_barrio_sidebar_position: 'both'
+bootstrap_barrio_content_offset: 0
+bootstrap_barrio_sidebar_first_width: 4
+bootstrap_barrio_sidebar_first_offset: 0
+bootstrap_barrio_sidebar_second_width: 3
+bootstrap_barrio_sidebar_second_offset: 0
 
-# Disable the CDN provider so compiled source files can be used.
-cdn_provider: ''
+# Container
+# --------------
+bootstrap_barrio_fluid_container: 0
 
-features:
-  comment_user_picture: true
-  comment_user_verification: true
-  favicon: true
-  node_user_picture: true
-favicon:
-  mimetype: image/svg+xml
-  path: themes/custom/appf/favicon.svg
-  url: /themes/custom/appf/favicon.svg
-  use_default: false
-logo:
-  path: ''
-  url: ''
-  use_default: true
+# Buttons
+# --------------
+bootstrap_barrio_button: 1
+bootstrap_barrio_button_size: ''
+bootstrap_barrio_button_outline: 0
+
+# Navbar
+# --------------
+bootstrap_barrio_navbar_toggle: 1
+bootstrap_barrio_navbar_container: 'navbar-toggleable-md'
+bootstrap_barrio_navbar_top_position: ''
+bootstrap_barrio_navbar_top_color: 'navbar-dark'
+bootstrap_barrio_navbar_top_background: 'bg-secondary'
+bootstrap_barrio_navbar_position: ''
+bootstrap_barrio_navbar_color: 'navbar-dark'
+bootstrap_barrio_navbar_background: 'bg-primary'
+# Colors
+# --------------
+bootstrap_barrio_table_hover: 1

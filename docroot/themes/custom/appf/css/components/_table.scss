@@ -1,0 +1,16 @@
+@import "../lib";
+
+.sticky-header {
+    th {
+        padding: $table-cell-padding;
+        vertical-align: top;
+        border-block-start: $table-border-width solid $table-border-color;
+    }
+
+    thead {
+        th {
+            vertical-align: bottom;
+            border-block-end: (2 * $table-border-width) solid $table-border-color;
+        }
+    }
+}
