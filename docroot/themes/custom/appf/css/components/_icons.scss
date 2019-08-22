@@ -1,18 +1,15 @@
 @import "../lib";
 
 .icon-help {
-    background: url("#{$app-base-dir}/images/help.png") 0 50% no-repeat; /* LTR */
-    padding-block-start: 1px;
-    padding-block-end: 1px;
-    padding-inline-start: 0;
-    padding-inline-end: ($spacer * 1.5);
+  padding: 1px ($spacer * 1.5) 1px 0;
+  background: url("#{$app-base-dir}/images/help.png") 0 50% no-repeat;
 }
 
 .feed-icon {
-    background: url("#{$app-base-dir}/images/feed.svg") no-repeat;
-    overflow: hidden;
-    text-indent: -9999px;
-    display: block;
-    width: $font-size-base;
-    height: $font-size-base;
+  display: block;
+  width: $font-size-base;
+  height: $font-size-base;
+  overflow: hidden;
+  background: url("#{$app-base-dir}/images/feed.svg") no-repeat;
+  text-indent: -9999px;
 }

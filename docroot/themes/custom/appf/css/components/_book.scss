@@ -1,39 +1,39 @@
 @import "../lib";
 
 .book-navigation {
-    .menu {
-        padding-block-start: 1em;
-        padding-block-end: 0;
-        border-block-start: 1px solid $border-color;
-    }
+  .menu {
+    padding-top: 1em;
+    padding-bottom: 0;
+    border-top: 1px solid $border-color;
+  }
 
-    .book-pager {
-        border-block-start: 1px solid $border-color;
-        border-block-end: 1px solid $border-color;
-        margin: 0;
-        overflow: auto;
-        padding: 0.5em 0;
-    }
+  .book-pager {
+    margin: 0;
+    padding: 0.5em 0;
+    overflow: auto;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+  }
 }
 
 .book-pager__item {
-    display: inline-block;
-    list-style-type: none;
-    vertical-align: top;
+  display: inline-block;
+  list-style-type: none;
+  vertical-align: top;
 
-    &--previous {
-        text-align: start;
-        width: 45%;
-    }
+  &--previous {
+    width: 45%;
+    text-align: start;
+  }
 
-    &--center {
-        text-align: center;
-        width: 8%;
-    }
+  &--center {
+    width: 8%;
+    text-align: center;
+  }
 
-    &--next {
-        float: end;
-        text-align: end;
-        width: 45%;
-    }
+  &--next {
+    width: 45%;
+    float: end;
+    text-align: end;
+  }
 }

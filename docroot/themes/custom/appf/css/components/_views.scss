@@ -1,47 +1,50 @@
 @import "../lib";
 
 .views-displays {
-    .tabs {
-        .open {
-            > a {
-                border-radius: $border-radius-lg $border-radius-lg 0 0;
+  .tabs {
+    .open {
+      > a {
+        border-radius: $border-radius-lg $border-radius-lg 0 0;
 
-                &:hover,
-                &:focus {
-                    color: $link-color;
-                }
-            }
+        &:hover,
+        &:focus {
+          color: $link-color;
         }
-
-        .action-list {
-            padding: 0;
-        }
+      }
     }
 
-    .secondary {
-        .form-submit {
-            font-size: $font-size-sm;
-        }
+    .action-list {
+      padding: 0;
+      font-size: 0.3em;
     }
+  }
+
+  .secondary {
+    .form-submit {
+      font-size: $font-size-sm;
+    }
+  }
 }
 
 .views-filterable-options {
-    .filterable-option:nth-of-type(even) {
-        .form-type-checkbox {
-            background-color: #f9f9f9;
-        }
+  .filterable-option {
+    &:nth-of-type(even) {
+      .form-type-checkbox {
+        background-color: $gray-100;
+      }
     }
+  }
 }
 
 .views-ui-display-tab-actions {
-    .dropbutton {
-        .form-submit {
-            color: $link-hover-color;
+  .dropbutton {
+    .form-submit {
+      color: $link-hover-color;
 
-            &:hover,
-            &:focus {
-                color: $link-color;
-            }
-        }
+      &:hover,
+      &:focus {
+        color: $link-color;
+      }
     }
+  }
 }

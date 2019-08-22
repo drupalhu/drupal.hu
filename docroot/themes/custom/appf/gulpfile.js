@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
+const sassLint = require('gulp-sass-lint');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const autoPrefixer = require('autoprefixer');
@@ -9,8 +10,13 @@ const fs = require('fs');
 const merge = require('lodash/merge');
 
 const defaultConfig = {
-  sass:        {
+  sassBuild: {
     options: {},
+  },
+  sassLint: {
+    options: {
+      configFile: '.sass-lint.yml',
+    },
   },
   browserSync: {
     options: {
@@ -46,28 +52,41 @@ const paths = {
   }
 };
 
-function build() {
+gulp.task(
+  'lint:sass',
+  function () {
+    return gulp
+      .src([
+        'css/**/*.scss',
+      ])
+      .pipe(sassLint(config.sassLint.options))
+      .pipe(sassLint.format())
+      .pipe(sassLint.failOnError());
+  }
+);
+
+function buildSass() {
   return gulp
     .src([
       paths.scss.src,
     ])
     .pipe(sourcemaps.init())
     .pipe(
-      sass(config.sass.options)
+      sass(config.sassBuild.options)
         .on('error', sass.logError)
     )
     .pipe(postcss([
       autoPrefixer({
         browsers: [
-          'Chrome >= 35',
-          'Firefox >= 38',
+          'Chrome >= 70',
+          'Firefox >= 60',
           'Edge >= 12',
           'Explorer >= 10',
           'iOS >= 8',
           'Safari >= 8',
           'Android 2.3',
           'Android >= 4',
-          'Opera >= 12'
+          'Opera >= 12',
         ]
       })
     ]))
@@ -75,32 +94,34 @@ function build() {
     .pipe(gulp.dest(paths.scss.dest))
 }
 
-function js() {
-  return gulp
-    .src([
-      paths.js.bootstrap,
-      paths.js.jquery,
-      paths.js.popper
-    ])
-    .pipe(gulp.dest(paths.js.dest))
-    .pipe(browserSync.stream())
-}
+gulp.task('build:sass', buildSass);
 
-function serve() {
-  browserSync.init(config.browserSync.options);
+gulp.task(
+  'build:js',
+  function () {
+    return gulp
+      .src([
+        paths.js.bootstrap,
+        paths.js.jquery,
+        paths.js.popper
+      ])
+      .pipe(gulp.dest(paths.js.dest))
+      .pipe(browserSync.stream())
+  }
+);
 
-  gulp
-    .watch(
-      [
-        paths.scss.watch,
-      ],
-      build
-    )
-    .on('change', browserSync.reload)
-}
+gulp.task(
+  'serve',
+  function () {
+    browserSync.init(config.browserSync.options);
 
-exports.build = build;
-exports.js = js;
-exports.serve = serve;
-
-exports.default = build;
+    gulp
+      .watch(
+        [
+          paths.scss.watch,
+        ],
+        buildSass
+      )
+      .on('change', browserSync.reload)
+  }
+);

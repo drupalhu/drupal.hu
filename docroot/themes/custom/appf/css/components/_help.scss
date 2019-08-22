@@ -1,7 +1,7 @@
 @import "../lib";
 
 .block-help {
-    border: $border-width solid $border-color;
-    padding: 0 ($spacer * 1.5);
-    margin-block-end: ($spacer * 2);
+  margin-bottom: ($spacer * 2);
+  padding: 0 ($spacer * 1.5);
+  border: $border-width solid $border-color;
 }

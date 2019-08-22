@@ -7,12 +7,10 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "gulp-sass-lint": "^1.4.0",
     "jquery": "^3.3.1",
     "lodash": "^4.17.15",
-    "popper.js": "^1.14.3",
-    "stylelint": "^10.1.0",
-    "stylelint-config-recommended-scss": "^3.3.0",
-    "stylelint-scss": "^3.9.3"
+    "popper.js": "^1.14.3"
   },
   "devDependencies": {
     "browser-sync": "^2.24.7",
@@ -30,7 +28,5 @@
     "gulp-uglify": "^3.0.0",
     "merge-stream": "^1.0.1"
   },
-  "scripts": {
-    "lint": "stylelint './css/**/*.scss'"
-  }
+  "scripts": {}
 }

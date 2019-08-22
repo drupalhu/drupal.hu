@@ -1,27 +1,22 @@
 @import "../lib";
 
 .skip-link {
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
-    z-index: 50;
-    background: $gray-700;
-    font-size: $font-size-base;
-    line-height: $line-height-lg;
+  z-index: 50;
+  left: 50%;
+  padding: 1px $spacer 2px;
+  transform: translateX(-50%);
+  border-bottom-width: 0;
+  border-radius: 0 0 $border-radius-lg $border-radius-lg;
+  outline: 0;
+  background: $gray-700;
+  font-size: $font-size-base;
+  line-height: $line-height-lg;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
 
-    padding-block-start: 1px;
-    padding-block-end: 2px;
-    padding-inline-start: $spacer;
-    padding-inline-end: $spacer;
-
-    border-radius: 0 0 $border-radius-lg $border-radius-lg;
-    border-block-end-width: 0;
-    outline: 0;
-
-    &.visually-hidden.focusable:focus {
-        position: absolute !important;
-        color: $white;
-    }
+  &.visually-hidden.focusable:focus {
+    position: absolute !important;
+    color: $white;
+  }
 }
 

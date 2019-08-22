@@ -1,12 +1,11 @@
-
 // Google Fonts.
 //@import url("https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic,900,900italic");
 //@import url("https://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,800,900");
 
 // Font families.
-$font-lato: 'Lato', Arial, Verdana, sans-serif;
+$font-lato: "Lato", Arial, Verdana, sans-serif;
 
-$font-raleway: 'Raleway', Arial, Verdana, sans-serif;
+$font-raleway: "Raleway", Arial, Verdana, sans-serif;
 
 // Fonts
 //
@@ -18,8 +17,8 @@ $font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New
 $font-family-base: $font-family-sans-serif;
 $font-size-base: 1rem;
 $font-size-lg: 1.25rem;
-$font-size-sm: .875rem;
-$font-size-xs: .75rem;
+$font-size-sm: 0.875rem;
+$font-size-xs: 0.75rem;
 $font-weight-normal: normal;
 $font-weight-bold: bold;
 $font-weight-base: $font-weight-normal;

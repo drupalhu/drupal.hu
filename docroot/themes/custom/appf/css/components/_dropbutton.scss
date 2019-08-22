@@ -1,56 +1,120 @@
 @import "../lib";
 
 .js {
-    .dropbutton-widget {
-        background-color: white;
-        border: 1px solid #cccccc;
-        display: block;
-        position: relative;
+  .dropbutton-wrapper,
+  .dropbutton-widget {
+    display: block;
+    position: relative;
+  }
 
-        &:hover {
-            border-color: #b8b8b8;
-        }
+  .dropbutton-widget {
+    margin: 0.125em 0;
+    overflow: hidden;
+    border: 1px solid $gray-400;
+    border-radius: 1em;
+    background-color: $white;
+    background-image: linear-gradient(to bottom, $gray-200, $gray-400);
+    color: $gray-800;
+    text-align: center;
+    cursor: pointer;
+
+    .button {
+      margin: 0;
+      padding: 0.32em 1em;
+      border: 0;
+      background: transparent none;
     }
+  }
 
-    .dropbutton-wrapper {
-        display: block;
-        position: relative;
-    }
+  td .dropbutton-widget {
+    position: absolute;
+  }
 
-    td {
-        .dropbutton-widget {
-            position: absolute;
-        }
-
-        .dropbutton-wrapper {
-            min-height: 2em;
-        }
-
-        .dropbutton-multiple {
-            padding-block-end: 10em;
-            margin-inline-end: 2em;
-            max-width: 100%;
-        }
-    }
+  .dropbutton-widget:hover {
+    border-color: $gray-500;
+  }
 }
 
 .dropbutton {
-    .dropbutton-action {
-        > * {
-            padding: 0.1em 0.5em;
-            white-space: nowrap;
-        }
-    }
+  .secondary-action {
+    border-top: 1px solid $gray-300;
 
-    .secondary-action {
-        border-block-start: 1px solid #e8e8e8;
+    > * {
+      padding: 0.1em 0.5em;
+      white-space: nowrap;
     }
+  }
+}
 
-    .dropbutton-multiple & {
-        border-inline-end: 1px solid #e8e8e8;
+.js .dropbutton {
+  .secondary-action {
+    border-top-color: $gray-400;
+  }
 
-        .dropbutton-action > * {
-            margin-inline-end: 0.25em;
-        }
+  a {
+    border-bottom: 0 none;
+    color: $gray-800;
+  }
+
+  .dropbutton-action:hover,
+  a:hover {
+    border-bottom: 0 none;
+    background: $gray-400;
+  }
+}
+
+.dropbutton-multiple {
+  .dropbutton {
+    border-right: 1px solid $gray-300;
+
+    @if $is-dir-rtl-supported {
+      [dir="rtl"] & {
+        border-right: 0 none;
+        border-left: 1px solid $gray-300;
+      }
     }
+  }
+
+  .dropbutton-action > * {
+    margin-right: 0.25em;
+
+    @if $is-dir-rtl-supported {
+      [dir="rtl"] & {
+        margin-right: 0;
+        margin-left: 0.25em;
+      }
+    }
+  }
+}
+
+.js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
+  margin-right: 0;
+}
+
+.js td {
+  .dropbutton-multiple {
+    max-width: 100%;
+    margin-right: 2em;
+    padding-right: 10em;
+  }
+
+  .dropbutton-wrapper {
+    min-height: 2em;
+  }
+}
+
+.js .dropbutton-wrapper .dropbutton-widget {
+  // This is required to win over specifity of .js td .dropbutton-widget.
+  position: relative;
+}
+
+.js .dropbutton-toggle {
+  button {
+    background-color: $gray-200;
+    background-image: linear-gradient(to bottom, $gray-200, $gray-300);
+  }
+
+  .dropbutton-arrow:hover {
+    background: $gray-400;
+  }
 }

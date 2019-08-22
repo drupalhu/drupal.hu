@@ -2,13 +2,13 @@
 
 td,
 th {
-    &.checkbox {
-        text-align: center;
-    }
+  &.checkbox {
+    text-align: center;
+  }
 }
 
 tr.selected {
-    td {
-        background: #ffc;
-    }
+  td {
+    background: $white;
+  }
 }

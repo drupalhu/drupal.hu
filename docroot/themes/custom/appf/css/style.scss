@@ -1,8 +1,8 @@
-$app-base-dir: '..';
+$app-base-dir: "..";
 
 @import "lib";
 
-@import "./bootstrap/reboot"; // "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/reboot";
 @import "../node_modules/bootstrap/scss/type";
 @import "../node_modules/bootstrap/scss/images";
 @import "../node_modules/bootstrap/scss/code";
@@ -43,7 +43,6 @@ $app-base-dir: '..';
 @import "./components/comments";
 @import "./components/contextual";
 @import "./components/details";
-@import "./components/dropbutton.component";
 @import "./components/dropbutton";
 @import "./components/feed-icon";
 @import "./components/field";

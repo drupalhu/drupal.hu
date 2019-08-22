@@ -1,14 +1,14 @@
 @import "../lib";
 
 tr.drag {
-    background-color: #fffff0;
+  background-color: $gray-100;
 }
 
 tr.drag-previous {
-    background-color: #ffffdd;
+  background-color: $gray-200;
 }
 
 // @todo Body???
 body div.tabledrag-changed-warning {
-    margin-block-end: ($spacer / 2);
+  margin-bottom: ($spacer / 2);
 }

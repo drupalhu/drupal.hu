@@ -1,46 +1,46 @@
 @import "../lib";
 
 #sidebar_first {
-    height: 100%;
-    padding-block-start: 20px;
-    padding-inline-end: 0;
+  height: 100%;
+  padding-top: 20px;
+  padding-right: 0;
 }
 
 @media (max-width: 47.9em) {
-    #sidebar_first {
-        padding-block-start: 0;
+  #sidebar_first {
+    padding-top: 0;
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 41.6%;
+  }
+
+  .row-offcanvas {
+    position: relative;
+    transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    &.active {
+      right: 41.6%;
     }
 
     .sidebar-offcanvas {
-        position: absolute;
-        top: 0;
-        width: 41.6%;
+      right: -41.6%;
     }
+  }
 
-    .row-offcanvas {
-        position: relative;
-        -webkit-transition: all 0.25s ease-out;
-        -moz-transition: all 0.25s ease-out;
-        transition: all 0.25s ease-out;
+  .row-offcanvas-left {
+    .sidebar-offcanvas {
+      &.active {
+        left: 41.6%;
+      }
+
+      left: -41.6%;
     }
-
-    .row-offcanvas-right {
-        &.active {
-            right: 41.6%;
-        }
-
-        .sidebar-offcanvas {
-            right: -41.6%;
-        }
-    }
-
-    .row-offcanvas-left {
-        .sidebar-offcanvas {
-            &.active {
-                left: 41.6%;
-            }
-
-            left: -41.6%;
-        }
-    }
+  }
 }

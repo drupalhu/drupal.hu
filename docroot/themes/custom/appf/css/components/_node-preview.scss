@@ -1,60 +1,18 @@
 @import "../lib";
 
 .node-preview {
-    &-container {
-        background: #d1e8f5;
-        background-image: -webkit-linear-gradient(top, #d1e8f5, #d3e8f4);
-        background-image: linear-gradient(to bottom, #d1e8f5, #d3e8f4);
-        font-family: Arial, sans-serif;
-        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3333);
-        position: fixed;
-        z-index: 499;
-        width: 100%;
-        padding: 10px;
-    }
+  &-container {
+    @include app-sticky-separator-bottom($black);
+    position: fixed;
+    z-index: 499;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to bottom, lighten(theme-color("primary"), 25%), lighten(theme-color("primary"), 20%));
+    font-family: $font-family-base;
+  }
 
-    &-backlink {
-        background: #419ff1 url("/core/misc/icons/000000/chevron-left.svg") linear-gradient(to bottom, #419ff1, #1076d5) no-repeat left;
-        border: 1px solid #0048c8;
-        border-radius: .4em;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
-        color: #ffffff;
-        font-size: 0.9em;
-        line-height: normal;
-        margin: 0;
-        padding-block-start: 4px;
-        padding-block-end: 4px;
-        padding-inline-start: 0.6em;
-        padding-inline-end: 1em;
-
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-
-        &:hover,
-        &:focus {
-            background: url("/core/misc/icons/000000/chevron-left.svg") left no-repeat, linear-gradient(to bottom, #59abf3, #2a90ef);
-            border: 1px solid #0048c8;
-            text-decoration: none;
-            color: #ffffff;
-
-            [dir="rtl"] & {
-                background: url("/core/misc/icons/000000/chevron-right.svg") right no-repeat, linear-gradient(to bottom, #59abf3, #2a90ef);
-            }
-        }
-
-        &:active {
-            background: #0e69be url("/core/misc/icons/000000/chevron-left.svg") linear-gradient(to bottom, #0e69be, #2a93ef) no-repeat left;
-            border: 1px solid #0048c8;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, .25);
-
-            [dir="rtl"] & {
-                background: url("/core/misc/icons/000000/chevron-right.svg") right no-repeat, linear-gradient(to bottom, #0e69be, #2a93ef);
-            }
-        }
-
-        &::before {
-            content: '';
-            width: 10px;
-            display: inline-block;
-        }
-    }
+  &-backlink {
+    @include app-action-link($white, theme-color("primary"));
+    margin: 0;
+  }
 }

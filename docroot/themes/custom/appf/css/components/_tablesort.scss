@@ -1,31 +1,28 @@
 @import "../lib";
 
 th.is-active {
-    img {
-        display: inline;
-    }
+  img {
+    display: inline;
+  }
 }
 
 td.is-active {
-    background-color: $gray-300;
+  background-color: $gray-300;
 }
 
 .tablesort {
-    width: 14px;
-    height: 14px;
-    vertical-align: top;
-    margin-block-start: 1px;
-    margin-block-end: 0;
-    margin-inline-start: 5px;
-    margin-inline-end: 0;
+  width: 14px;
+  height: 14px;
+  margin: 1px 0 0 5px;
+  vertical-align: top;
 
-    &--asc {
-        // @todo UTF-8 char?
-        background-image: url(/core/misc/icons/ffffff/twistie-down.svg);
-    }
+  &--asc {
+    // @todo UTF-8 char?
+    background-image: url("/core/misc/icons/ffffff/twistie-down.svg");
+  }
 
-    &--desc {
-        // @todo UTF-8 char?
-        background-image: url(/core/misc/icons/ffffff/twistie-up.svg);
-    }
+  &--desc {
+    // @todo UTF-8 char?
+    background-image: url("/core/misc/icons/ffffff/twistie-up.svg");
+  }
 }

@@ -2,15 +2,15 @@
 
 .alert-wrapper {
   position: fixed;
+  z-index: 9999;
   bottom: 0;
   left: 0;
   max-width: 100%;
-  z-index: 9999;
 }
 
 .toast-wrapper {
   position: fixed;
+  z-index: 9999;
   top: 0;
   right: 0;
-  z-index: 9999;
 }

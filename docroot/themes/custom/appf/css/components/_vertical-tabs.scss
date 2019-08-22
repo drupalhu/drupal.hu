@@ -1,77 +1,78 @@
 @import "../lib";
 
 .vertical-tabs {
-    margin: 0;
-    border: $border-width solid $border-color;
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  border: $border-width solid $border-color;
+  font-size: $font-size-sm;
+
+  @if $is-dir-rtl-supported {
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__menu {
     display: flex;
-    flex-direction: row;
-    font-size: $font-size-sm;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 15em;
+    margin: -1px 0;
+    padding: 0;
+    list-style: none;
+    border-top: $border-width solid $border-color;
 
     [dir="rtl"] & {
-        flex-direction: row-reverse;
+      margin-right: -15em;
+    }
+  }
+
+  &__menu-item {
+    border: $border-width solid $border-color;
+    background: $gray-200;
+    border-block-start-width: 0;
+
+    &.is-selected {
+      background-color: $white;
+      border-inline-end-width: 0;
+
+      .vertical-tabs__menu-item-title {
+        color: $black;
+      }
     }
 
-    &__menu {
-        margin: -1px 0;
-        padding: 0;
+    a {
+      display: block;
+      padding: 0.5em 0.6em;
+      text-decoration: none;
 
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        width: 15em;
-        border-block-start: $border-width solid $border-color;
-        list-style: none;
+      &:hover {
+        outline: $border-width dotted;
+      }
 
-        [dir="rtl"] & {
-            margin-inline-end: -15em;
+      &:focus,
+      &:active,
+      &:hover {
+        .vertical-tabs__menu-item-title {
+          text-decoration: underline;
         }
+      }
     }
+  }
 
-    &__menu-item {
-        border: $border-width solid $border-color;
-        border-block-start-width: 0;
-        background: #eeeeee;
+  &__menu-item-summary {
+    display: block;
+    margin-bottom: 0;
+    line-height: normal;
+  }
 
-        &.is-selected {
-            border-inline-end-width: 0;
-            background-color: $white;
+  &__pane {
+    margin: 0;
+    border: 0;
 
-            .vertical-tabs__menu-item-title {
-                color: $black;
-            }
-        }
-
-        a {
-            display: block;
-            padding: 0.5em 0.6em;
-            text-decoration: none;
-
-            &:hover {
-                outline: $border-width dotted;
-            }
-
-            &:focus,
-            &:active,
-            &:hover {
-                .vertical-tabs__menu-item-title {
-                    text-decoration: underline;
-                }
-            }
-        }
+    > summary {
+      display: none;
     }
-
-    &__menu-item-summary {
-        display: block;
-        margin-block-end: 0;
-        line-height: normal;
-    }
-
-    &__pane {
-        margin: 0;
-        border: 0;
-
-        > summary {
-            display: none;
-        }
-    }
+  }
 }

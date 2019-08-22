@@ -1,28 +1,19 @@
 @import "../lib";
 
 .item-list {
-    ul {
-        list-style: none;
-        padding: 0;
-        margin-block-start: 0;
-        margin-block-end: $list-group-item-padding-y;
-        margin-inline-start: 0;
-        margin-inline-end: 0;
+  ul {
+    margin: 0 0 $list-group-item-padding-y;
+    padding: 0;
+    list-style: none;
 
-        li {
-            padding-block-start: $list-group-item-padding-y;
-            padding-block-end: 0;
-            padding-inline-start: $list-group-item-padding-x;
-            padding-inline-end: 0;
-            margin: 0;
-        }
+    li {
+      margin: 0;
+      padding: $list-group-item-padding-y 0 0 $list-group-item-padding-x;
     }
-}
+  }
 
-.item-list,
-[dir="rtl"] .item-list {
-    .item-list__comma-list,
-    .item-list__comma-list li {
-        padding: 0;
-    }
+  .item-list__comma-list,
+  .item-list__comma-list li {
+    padding: 0;
+  }
 }

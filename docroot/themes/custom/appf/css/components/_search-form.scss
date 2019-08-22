@@ -1,14 +1,14 @@
 @import "../lib";
 
 input[type="search"] {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #search-block-form {
-    display: flex;
+  display: flex;
 
-    header & {
-        padding: 5px 15px;
-        flex-flow: row wrap;
-    }
+  header & {
+    flex-flow: row wrap;
+    padding: 5px 15px;
+  }
 }

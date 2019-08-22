@@ -1,14 +1,10 @@
 @import "../lib";
 
 .breadcrumb {
-    font-size: $font-size-sm;
+  font-size: $font-size-sm;
 }
 
 .region-breadcrumb {
-    padding-block-start: 0;
-    padding-block-end: 0.25em;
-    padding-inline-start: 15px;
-    padding-inline-end: 15px;
-
-    width: 100%;
+  width: 100%;
+  padding: 0 15px 0.25em;
 }

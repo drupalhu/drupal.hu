@@ -1,13 +1,13 @@
 @import "../lib";
 
 details {
-    border: 1px solid $border-color;
-    margin-block-start: $spacer;
-    margin-block-end: $spacer;
+  margin-top: $spacer;
+  margin-bottom: $spacer;
+  border: 1px solid $border-color;
 
-    > .details-wrapper {
-        padding: 0.5em 1.5em;
-    }
+  > .details-wrapper {
+    padding: 0.5em 1.5em;
+  }
 }
 
 
@@ -15,6 +15,6 @@ details {
 //  vertically aligned with the .details-wrapper in browsers without native
 //  details support.
 summary {
-    cursor: pointer;
-    padding: 0.2em 0.5em;
+  padding: 0.2em 0.5em;
+  cursor: pointer;
 }

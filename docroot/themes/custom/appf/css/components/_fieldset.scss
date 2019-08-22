@@ -1,11 +1,11 @@
 @import "../lib";
 
 fieldset {
-    border: 1px solid $border-color;
-    margin-block-start: $spacer;
-    margin-block-end: $spacer;
+  margin-top: $spacer;
+  margin-bottom: $spacer;
+  border: 1px solid $border-color;
 
-    > .details-wrapper {
-        padding: 0.5em 1.5em;
-    }
+  > .details-wrapper {
+    padding: 0.5em 1.5em;
+  }
 }

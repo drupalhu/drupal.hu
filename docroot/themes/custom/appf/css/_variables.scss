@@ -1,5 +1,7 @@
 @import "./variables.typography";
 
+$app-base-dir: ".." !default;
+
 $primary-shade: #a8cf45 !default;
 $primary-light: lighten($primary-shade, 37%) !default;
 $primary-dark: darken($primary-shade, 12%) !default;
@@ -7,7 +9,7 @@ $accent-shade: #0079c0 !default;
 $accent-light: lighten($accent-shade, 37%) !default;
 $accent-dark: darken($accent-shade, 12%) !default;
 
-$white:    #fff !default;
+$white: #ffffff !default;
 $gray-100: #f8f9fa !default;
 $gray-200: #e9ecef !default;
 $gray-300: #dee2e6 !default;
@@ -17,7 +19,7 @@ $gray-600: #6c757d !default;
 $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
-$black:    #000 !default;
+$black: #000000 !default;
 
 $red: #dc3545 !default;
 $yellow: #ffc107 !default;
@@ -25,17 +27,24 @@ $green: #28a745 !default;
 $cyan: #17a2b8 !default;
 
 $theme-colors: (
-    primary: $accent-shade,
-    secondary: $primary-shade,
-    success: $green,
-    info: $cyan,
-    warning: $yellow,
-    danger: $red,
-    light: $gray-100,
-    dark: $gray-800
+  primary: $accent-shade,
+  secondary: $primary-shade,
+  success: $green,
+  info: $cyan,
+  warning: $yellow,
+  danger: $red,
+  light: $gray-100,
+  dark: $gray-800
 );
 
 $brand-primary: $accent-shade !default;
+$brand-primary-l1: lighten($brand-primary, 8%);
+$brand-primary-l2: lighten($brand-primary, 16%);
+$brand-primary-l3: lighten($brand-primary, 24%);
+$brand-primary-d1: darken($brand-primary, 8%);
+$brand-primary-d2: darken($brand-primary, 16%);
+$brand-primary-d3: darken($brand-primary, 24%);
+
 //$brand-success: $green !default;
 //$brand-info: $teal !default;
 //$brand-warning: $orange !default;
@@ -62,5 +71,7 @@ $comment-spacer-y: 1.25em !default;
 
 // Responsive font sizes.
 $enable-responsive-font-sizes: true !default;
+
+$is-dir-rtl-supported: false !default;
 
 @import "../node_modules/bootstrap/scss/variables";
