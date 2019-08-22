@@ -52,20 +52,17 @@ const paths = {
   }
 };
 
-gulp.task(
-  'lint:sass',
-  function () {
-    return gulp
-      .src([
-        'css/**/*.scss',
-      ])
-      .pipe(sassLint(config.sassLint.options))
-      .pipe(sassLint.format())
-      .pipe(sassLint.failOnError());
-  }
-);
+function taskLintSass() {
+  return gulp
+    .src([
+      'css/**/*.scss',
+    ])
+    .pipe(sassLint(config.sassLint.options))
+    .pipe(sassLint.format())
+    .pipe(sassLint.failOnError());
+}
 
-function buildSass() {
+function taskBuildSass() {
   return gulp
     .src([
       paths.scss.src,
@@ -94,34 +91,36 @@ function buildSass() {
     .pipe(gulp.dest(paths.scss.dest))
 }
 
-gulp.task('build:sass', buildSass);
+function taskBuildJs() {
+  return gulp
+    .src([
+      paths.js.bootstrap,
+      paths.js.jquery,
+      paths.js.popper
+    ])
+    .pipe(gulp.dest(paths.js.dest))
+    .pipe(browserSync.stream())
+}
 
-gulp.task(
-  'build:js',
-  function () {
-    return gulp
-      .src([
-        paths.js.bootstrap,
-        paths.js.jquery,
-        paths.js.popper
-      ])
-      .pipe(gulp.dest(paths.js.dest))
-      .pipe(browserSync.stream())
-  }
-);
+function taskServe() {
+  browserSync.init(config.browserSync.options);
 
-gulp.task(
-  'serve',
-  function () {
-    browserSync.init(config.browserSync.options);
+  gulp
+    .watch(
+      [
+        paths.scss.watch,
+      ],
+      taskBuildSass()
+    )
+    .on('change', browserSync.reload)
+}
 
-    gulp
-      .watch(
-        [
-          paths.scss.watch,
-        ],
-        buildSass
-      )
-      .on('change', browserSync.reload)
-  }
-);
+gulp.task('lint:sass', taskLintSass);
+
+gulp.task('build', gulp.parallel(taskBuildSass, taskBuildJs));
+
+gulp.task('build:sass', taskBuildSass);
+
+gulp.task('build:js', taskBuildJs);
+
+gulp.task('serve', taskServe);
