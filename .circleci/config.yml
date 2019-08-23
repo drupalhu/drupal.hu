@@ -43,6 +43,7 @@ executors:
 
     docker:
       -
+        name: 'main'
         image: 'sweetchuck/php-env-dev:703-12.x.x'
         entrypoint: ['/bin/bash']
       -
