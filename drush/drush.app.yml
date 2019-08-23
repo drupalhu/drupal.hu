@@ -1,0 +1,100 @@
+
+options:
+  root: '${drush.vendor-dir}/../docroot'
+
+command:
+  core:
+    status:
+      options:
+        format: 'yaml'
+  #    rsync:
+  #      options:
+  #        # @app.prod%files /path/to/files
+  #        exclude-paths: '/css/*:/js/*:/languages/*:/styles/*:/private/*'
+
+  sql:
+    dump:
+      options:
+        skip-tables-key: 'common'
+        structure-tables-key: 'common'
+
+  site:
+    install:
+      options:
+        sites-subdir: 'default'
+        site-name: 'Drupal.hu'
+        account-name: 'admin'
+        account-pass: 'admin'
+        account-mail: 'admin@localhost'
+        marvin-migrate: 'default'
+
+sql:
+  skip-tables:
+    common: []
+  structure-tables:
+    common:
+      - 'cache'
+      - 'cache_*'
+      - 'history'
+      - 'search_*'
+      - 'sessions'
+      - 'watchdog'
+
+marvin:
+  environments:
+    local:
+      modules:
+        app_dc: true
+        dblog: true
+        devel: true
+        field_ui: true
+        kint: true
+        menu_ui: true
+        module_filter: true
+        styleguide: true
+        views_ui: true
+
+    prod:
+      modules:
+        app_dc: false
+        app_legacy: false
+        dblog: false
+        devel: false
+        field_ui: false
+        kint: false
+        migrate: false
+        migrate_drupal: false
+        migrate_plus: false
+        migrate_tools: false
+        module_filter: false
+        simpletest: false
+        styleguide: false
+        views_ui: false
+
+  migrate:
+    legacy:
+      module:
+        app_dc: true
+      group:
+        app_legacy: true
+        app_common: true
+    install:
+      module:
+        app_dc: true
+      group:
+        app_default: true
+        app_common: true
+    dummy:
+      module:
+        app_dc: true
+      group:
+        app_default: true
+        app_common: true
+        app_dummy: true
+
+  acquia:
+    projectId: 'druphungary'
+    artifact:
+      gitCloneAndClean:
+        remoteName: 'acquia'
+        remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'

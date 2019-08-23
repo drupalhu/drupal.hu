@@ -40,7 +40,7 @@ if (fs.existsSync('./gulp.config.local.json')) {
 
 const paths = {
   scss: {
-    src:   './css/style.scss',
+    src:   './css/**/*.scss',
     dest:  './css',
     watch: './css/**/*.scss',
   },
@@ -114,6 +114,8 @@ function taskServe() {
     )
     .on('change', browserSync.reload)
 }
+
+gulp.task('lint', gulp.parallel(taskLintSass));
 
 gulp.task('lint:sass', taskLintSass);
 

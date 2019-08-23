@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce2147ebad1221c410c3b7c06809f3bc",
+    "content-hash": "e874313eee511bbcc920d4b0d57b6315",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -141,16 +141,16 @@
         },
         {
             "name": "composer/installers",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b"
+                "reference": "141b272484481432cda342727a427dc1e206bfa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/cfcca6b1b60bc4974324efb5783c13dca6932b5b",
-                "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b",
+                "url": "https://api.github.com/repos/composer/installers/zipball/141b272484481432cda342727a427dc1e206bfa0",
+                "reference": "141b272484481432cda342727a427dc1e206bfa0",
                 "shasum": ""
             },
             "require": {
@@ -206,6 +206,7 @@
                 "RadPHP",
                 "SMF",
                 "Thelia",
+                "Whmcs",
                 "WolfCMS",
                 "agl",
                 "aimeos",
@@ -228,6 +229,7 @@
                 "installer",
                 "itop",
                 "joomla",
+                "known",
                 "kohana",
                 "laravel",
                 "lavalite",
@@ -257,7 +259,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2018-08-27T06:10:37+00:00"
+            "time": "2019-08-12T15:00:31+00:00"
         },
         {
             "name": "composer/semver",
@@ -988,16 +990,16 @@
         },
         {
             "name": "consolidation/site-process",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/site-process.git",
-                "reference": "e25265f4a48c13284ebb6f9e0906ecd415d451df"
+                "reference": "e159f849abce696c2f5081c149a1f8ec8717dd97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consolidation/site-process/zipball/e25265f4a48c13284ebb6f9e0906ecd415d451df",
-                "reference": "e25265f4a48c13284ebb6f9e0906ecd415d451df",
+                "url": "https://api.github.com/repos/consolidation/site-process/zipball/e159f849abce696c2f5081c149a1f8ec8717dd97",
+                "reference": "e159f849abce696c2f5081c149a1f8ec8717dd97",
                 "shasum": ""
             },
             "require": {
@@ -1047,16 +1049,16 @@
             ],
             "authors": [
                 {
-                    "name": "Moshe Weitzman",
-                    "email": "weitzman@tejasa.com"
-                },
-                {
                     "name": "Greg Anderson",
                     "email": "greg.1.anderson@greenknowe.org"
+                },
+                {
+                    "name": "Moshe Weitzman",
+                    "email": "weitzman@tejasa.com"
                 }
             ],
             "description": "A thin wrapper around the Symfony Process Component that allows applications to use the Site Alias library to specify the target for a remote call.",
-            "time": "2019-06-04T22:23:52+00:00"
+            "time": "2019-08-12T23:10:26+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -2864,7 +2866,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/drupal-marvin.git",
-                "reference": "d3802fb4a47d5250a5107683e16ffa22f1ec25d0"
+                "reference": "20856251f97fef89eec263c51b2cad79518d48b5"
             },
             "require": {
                 "danielstjules/stringy": "^3.1",
@@ -3007,7 +3009,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Set of developer helper Drush commands",
-            "time": "2019-08-11T13:55:33+00:00"
+            "time": "2019-08-24T17:43:08+00:00"
         },
         {
             "name": "drupal/marvin_product",
@@ -3015,7 +3017,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/drupal-marvin_product.git",
-                "reference": "9a66ec75b5275292ad974139a7a723e7d271ee65"
+                "reference": "7e680a81470da597111218a3489847b62d9eef41"
             },
             "require": {
                 "drupal/marvin": "dev-8.x-1.x",
@@ -3140,7 +3142,7 @@
                 "GPL-3.0-or-later"
             ],
             "description": "Drush commands to manage contrib development",
-            "time": "2019-08-11T13:56:17+00:00"
+            "time": "2019-08-24T19:32:08+00:00"
         },
         {
             "name": "drupal/metatag",
@@ -3764,16 +3766,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.10",
+            "version": "2.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "a6c8d7101b19a451c1707b1b79bbbc56e4bdb7ec"
+                "reference": "92dd169c32f6f55ba570c309d83f5209cefb5e23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/a6c8d7101b19a451c1707b1b79bbbc56e4bdb7ec",
-                "reference": "a6c8d7101b19a451c1707b1b79bbbc56e4bdb7ec",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/92dd169c32f6f55ba570c309d83f5209cefb5e23",
+                "reference": "92dd169c32f6f55ba570c309d83f5209cefb5e23",
                 "shasum": ""
             },
             "require": {
@@ -3792,7 +3794,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -3818,7 +3820,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-07-19T20:52:08+00:00"
+            "time": "2019-08-13T17:33:27+00:00"
         },
         {
             "name": "grasmash/expander",
@@ -4522,16 +4524,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420"
+                "reference": "e612609022e935f3d0337c1295176505b41188c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e612609022e935f3d0337c1295176505b41188c8",
+                "reference": "e612609022e935f3d0337c1295176505b41188c8",
                 "shasum": ""
             },
             "require": {
@@ -4539,7 +4541,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 || ^7.0"
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -4569,7 +4571,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-05-25T20:07:01+00:00"
+            "time": "2019-08-12T20:17:41+00:00"
         },
         {
             "name": "oomphinc/composer-installers-extender",
@@ -5456,12 +5458,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/robo-git.git",
-                "reference": "2c856c5b0fe7bd6c2e20b598a710c3fad60a2fd2"
+                "reference": "7d0fbaf32ca0c1b6f9df89521e7f988d8ffcc58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/robo-git/zipball/2c856c5b0fe7bd6c2e20b598a710c3fad60a2fd2",
-                "reference": "2c856c5b0fe7bd6c2e20b598a710c3fad60a2fd2",
+                "url": "https://api.github.com/repos/Sweetchuck/robo-git/zipball/7d0fbaf32ca0c1b6f9df89521e7f988d8ffcc58a",
+                "reference": "7d0fbaf32ca0c1b6f9df89521e7f988d8ffcc58a",
                 "shasum": ""
             },
             "require": {
@@ -5488,7 +5490,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Robo task to read the content of the staged files",
-            "time": "2019-08-11T10:59:08+00:00"
+            "time": "2019-08-20T12:55:08+00:00"
         },
         {
             "name": "sweetchuck/robo-nvm",
@@ -8328,7 +8330,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cheppers/drupal-behat-contexts.git",
-                "reference": "957d2dd0e57b29ce0a831f625e55582e6f4519c7"
+                "reference": "155f373f1b946562bc41fe5c20182c957a82b956"
             },
             "require": {
                 "cweagans/composer-patches": "^1.6",
@@ -8462,7 +8464,7 @@
                 "MIT"
             ],
             "description": "Drupal\\Extension related contexts",
-            "time": "2019-05-07T18:04:19+00:00"
+            "time": "2019-08-24T21:26:07+00:00"
         },
         {
             "name": "dmore/behat-chrome-extension",
@@ -8839,7 +8841,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/drupal-marvin_acquia.git",
-                "reference": "f0cffc444eb3cbf8d67ddbf4921a3a3736ff0fdc"
+                "reference": "ff62e44189cc4fa657a37596dc22d3a3f3db7199"
             },
             "require": {
                 "drupal/marvin": "dev-8.x-1.x",
@@ -8967,7 +8969,7 @@
                 "GPL-3.0-or-later"
             ],
             "description": "Acquia hosting related Drush commands",
-            "time": "2019-08-11T15:04:56+00:00"
+            "time": "2019-08-24T18:31:11+00:00"
         },
         {
             "name": "drupal/migrate_dc",
@@ -9292,7 +9294,8 @@
             "homepage": "https://www.drupal.org/project/styleguide",
             "support": {
                 "source": "https://git.drupalcode.org/project/styleguide"
-            }
+            },
+            "time": "2019-02-04T15:41:57+00:00"
         },
         {
             "name": "fabpot/goutte",

@@ -19,10 +19,6 @@ indent_size = 4
 indent_size = 4
 
 [*.{sh,bash,zsh}]
-indent_style = tab
-indent_size = 4
-
-[*.scss]
 indent_size = 4
 
 [Makefile]

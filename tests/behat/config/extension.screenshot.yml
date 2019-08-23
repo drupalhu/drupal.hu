@@ -5,4 +5,4 @@ default:
       screenshot_taking_mode: 'failed_steps'
       image_drivers:
         local:
-          screenshot_directory: '../reports/human/behat/screenshots'
+          screenshot_directory: '%paths.base%/../../reports/human/behat/screenshots'

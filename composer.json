@@ -96,7 +96,6 @@
         "post-update-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postUpdateCmd",
         "clean": [
             "rm -rf bin/ reports/ vendor/",
-            "rm -rf docroot/themes/custom/*/bootstrap/",
             "rm -rf docroot/core/ docroot/modules/contrib/ docroot/profiles/contrib/ docroot/themes/contrib/ docroot/libraries/",
             "rm -rf drush/Commands/contrib/"
         ],
@@ -131,9 +130,6 @@
         "installer-paths": {
             "docroot/libraries/slick": [
                 "npm-asset/slick-carousel"
-            ],
-            "docroot/themes/custom/appf/bootstrap": [
-                "npm-asset/bootstrap-sass"
             ],
             "docroot/core": [
                 "type:drupal-core"

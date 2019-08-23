@@ -1,7 +1,7 @@
 @import "../lib";
 
 .icon-help {
-  padding: 1px ($spacer * 1.5) 1px 0;
+  padding: 1px ($spacer * 1.2);
   background: url("#{$app-base-dir}/images/help.png") 0 50% no-repeat;
 }
 
