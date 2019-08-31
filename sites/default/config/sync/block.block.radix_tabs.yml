@@ -1,0 +1,20 @@
+uuid: b86295d4-25a0-4887-8a53-3c907690424e
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - radix
+id: radix_tabs
+theme: radix
+region: content
+weight: -4
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Fülek
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

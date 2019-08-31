@@ -1,4 +1,4 @@
-uuid: 9d278973-b37b-4773-9f3b-91020932e448
+uuid: 3cb81a17-2009-48ef-8aed-f8481f0552af
 langcode: hu
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
 id: appf_page_title
 theme: appf
 region: content
-weight: -5
+weight: -4
 provider: null
 plugin: page_title_block
 settings:

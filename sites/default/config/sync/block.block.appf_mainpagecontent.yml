@@ -1,4 +1,4 @@
-uuid: 6f35fe82-bd60-450a-ac7d-bddc1eb8eb19
+uuid: 0db0d683-74d9-4f9b-9246-0eca3fd5a550
 langcode: hu
 status: true
 dependencies:
@@ -9,12 +9,12 @@ dependencies:
 id: appf_mainpagecontent
 theme: appf
 region: content
-weight: -1
+weight: 0
 provider: null
 plugin: system_main_block
 settings:
   id: system_main_block
-  label: 'Címlapos tartalom'
+  label: 'Az oldal fő tartalma'
   provider: system
   label_display: '0'
 visibility: {  }

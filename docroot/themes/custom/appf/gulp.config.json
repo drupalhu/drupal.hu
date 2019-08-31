@@ -1,7 +1,18 @@
 {
-  "browserSync":{
-    "options": {
-      "proxy": "http://drupalhu.localhost"
+    "nodeEnv": "development",
+    "browserSync": {
+        "options": {
+            "proxy": "http://drupalhu.localhost",
+            "stream": true,
+            "files": [
+                "assets/js/**/*.js",
+                "assets/css/**/*.css"
+            ]
+        }
+    },
+    "sassLint": {
+        "options": {
+            "configFile": "./.sass-lint.yml"
+        }
     }
-  }
 }

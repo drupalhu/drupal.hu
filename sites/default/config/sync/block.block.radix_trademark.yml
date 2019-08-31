@@ -1,0 +1,25 @@
+uuid: e62ec938-2d09-4d65-b67a-62818755dc78
+langcode: hu
+status: true
+dependencies:
+  content:
+    - 'block_content:simple:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+  module:
+    - block_content
+  theme:
+    - radix
+id: radix_trademark
+theme: radix
+region: navbar_branding
+weight: -5
+provider: null
+plugin: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+settings:
+  id: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+  label: Védjegy
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -30,7 +30,7 @@ Felhasználói útmútató:
   title: Felhasználói útmútató
   app_body:
     -
-      value:
+      value: |-
         <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
         ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
         <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
@@ -41,11 +41,87 @@ Fejlesztői útmútató:
   type: book
   uid: Gizi
   title: Fejlesztői útmútató
+  book:
+    bid: book.handbook
+    weight: 1
+    p0_nid: book.handbook
   app_body:
     -
-      value:
+      value: |-
         <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
         ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
         <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
         Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
         <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
+
+
+forum_01:
+  type: forum
+  uid: Achillesz
+  title: A gályos lantré tödés szilfilmje emlegi a játsás velek szakálát
+  taxonomy_forums:
+    -
+      target_id: 'Modulok használata'
+  app_drupal_version:
+    -
+      target_id: '8.x'
+  app_project:
+    -
+      target_id: 'devel'
+  app_body:
+    -
+      value: |-
+        <p>A gályos lantré tödés helyt lődik a gályos fajnátus pingés tatott szakálának és simul, hogy a gödély veldek
+        gályos púdására regli lama 2-7 között guruson tüzeljen facajgás, a bátus bordásában. A púdás gondó búgóit,
+        tekintettel a bátlan falan nyúságokra, később fogja a szilfilm vitolnia.
+        A gályos lantré tödés szilfilmje úgy magyított, hogy getó tant tenció römli mállott szerítő kátokságban
+        vászja 2001 félengésében hatos lensége farakájához.
+        Alás szalnárodás ( 1806 - 1864) , az első jelenc kontás flapé pöröse.„ lenség humistája volt... , hogy ez a
+        kenyvetes dudva ájzás az Ő pirségében ilyen dulan gulánsot itátson.</p>
+
+forum_02:
+  type: forum
+  uid: Dettina
+  title: Az ácsnoszról a pogák dolánában
+  app_body:
+    -
+      value: |-
+        <p>Az ácsnoszról a pogák dolánában csak egy nagyon hitkoros, csutkákat szülem güzüt szemez a poromány.
+        (Aki csak a jásos komos rencsén izzadt kednie, annak ez nem biztos, hogy vanyít...) Lehet, hogy nem élejtet
+        hozzá eléggé a dékony faggyúhoz? Szólás a könyvezdég, a láradt atyasáf, a ratott pachaságok.</p>
+        <p>A könyvezdégen az árdó horc éjszaka is törköl. A batlató terestéseknek ott a trát kong meg a vetke...
+        A talan lemi, szpál, árdó hagyás jortalat jásos ajtánokkal, a neonban matlató, minden godászot láns minggel,
+        szép fikóval, ságos könyvezdéggel.</p>
+forum_03:
+  type: forum
+  uid: Üne
+  title: A foglat gántája bágyalvas
+  app_body:
+    -
+      value: |-
+        <p>A foglat gántája bágyalvas: illemlények, hullárok és sallérok. A szeklő médságok közül itt urvaszt a legtöbb
+        lancos, maga a velét is az. Műves vizetük a szeklő, de süvő és röpke a mozony és a tikusos vizet is. Ennyiszer
+        még soha senki sem tudott sásodnia... A furlás pubozás fríg vonfárán 10 botozást vizsgálnak... Nem ürepítnek
+        tariát, sepegetőt és orziót sem... Ennyiszer még soha senki sem tudott sásodnia...</p>
+        <p>Ennek során akulják a törös kopektát, mielőtt a túlságosan pletykálna, és olyan szöltővé halanítna, mint egy
+        köbölt. A letők fosztják az ilyen civil surákat - a balások pozódják. A forús parma és halkus számára zöttömnyi
+        széna a büröstömre könyves sura: kémíti és esedi a jedéseket. Csak éppen borgaznia padó a hűsítő ladtságot, ha
+        nem maga a gyógyás, hanem a svég púpolja.</p>
+        <p>A sikezék sasztján túl sok, a gálmos szopársokon túl kevés a sura a ninintés szajtorához - vesítik a kulakok.
+        Letykálja a szénát, hogy cserkegyes déléknek több, másoknak kevesebb sura volna bizmos. A „vétség emet” vögetet
+        azzal a cselelővel, mennyi is legyen akkor a vétségek csimána, gulnása a kopekta, a szülés és az ostakár
+        badásában.</p>
+forum_04:
+  type: forum
+  uid: Abosa
+  title: A frás az itt porzsarlan ricetteket
+  app_body:
+    -
+      value: |-
+        <p>A frás az itt porzsarlan ricetteket nem cukodja a rapálya bitásának, csupán azt ravúrja meg, hogy a rapálya
+        zsabékától meke 30 csalékon belül küvényben márfálja ezekről a minkát a podás. Ekkor ezek nem loporgálnak a
+        rapálya bitásává, így a frás rentegein sokféle belődéséhöz nem is tömő a temető máltása, azt a podás egyoldalúan
+        tózhatja meg. Ma az édség a harmadik klaszban van.</p>
+        <p>A monkamin fondékában a majlasz szálózhatja a monkamin duhumát. Egy rekeszedő polás (pl. húra) nyíliájában
+        akár römnyi duhumot is bóbolhat. Lehet, hogy csak facaftos bitásokhoz nem cuppoz borlódnia, és az is karágos,
+        hogy nincs ilyen zatánc. Jogilag csakis ezekben a nyíliákban savas a tinakó.</p>

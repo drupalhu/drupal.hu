@@ -29,13 +29,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Szűrő
+          submit_button: Filter
           reset_button: true
-          reset_button_label: Alaphelyzet
-          exposed_sorts_label: Rendezés
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
           expose_sort_order: true
-          sort_asc_label: Növekvő
-          sort_desc_label: Csökkenő
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       pager:
         type: full
         options:
@@ -312,7 +312,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Műveletek
+          label: Operations
           exclude: false
           alter:
             alter_text: false
@@ -559,7 +559,7 @@ display:
           1: AND
       display_extenders: {  }
     display_plugin: default
-    display_title: Mester
+    display_title: Master
     id: default
     position: 0
     cache_metadata:
@@ -591,7 +591,7 @@ display:
         weight: -10
       display_extenders: {  }
     display_plugin: page
-    display_title: Oldal
+    display_title: Page
     id: page_1
     position: 1
     cache_metadata:

@@ -1,4 +1,4 @@
-uuid: 02989a40-f783-43aa-b1c1-be47f80573a2
+uuid: db3bf769-62d8-4996-8235-31718348bf6b
 langcode: hu
 status: true
 dependencies:
@@ -10,8 +10,8 @@ dependencies:
     - appf
 id: appf_mainnavigation
 theme: appf
-region: primary_menu
-weight: -5
+region: navbar_left
+weight: -6
 provider: null
 plugin: 'system_menu_block:main'
 settings:

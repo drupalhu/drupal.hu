@@ -1,4 +1,4 @@
-uuid: a0417d24-8503-41bd-8fec-620b38843ee4
+uuid: 95e8ddff-ae88-4644-af4b-54fe999c0541
 langcode: hu
 status: true
 dependencies:
@@ -10,7 +10,7 @@ dependencies:
     - appf
 id: appf_footer_menu
 theme: appf
-region: featured_bottom_first
+region: footer
 weight: -5
 provider: null
 plugin: 'system_menu_block:footer'

@@ -1,4 +1,4 @@
-uuid: 87216c29-35d8-4f79-8cb0-88cae8617b7d
+uuid: 0301323b-8f29-4a94-aa53-26428e8d5bf8
 langcode: hu
 status: true
 dependencies:
@@ -8,7 +8,7 @@ dependencies:
     - appf
 id: appf_breadcrumbs
 theme: appf
-region: breadcrumb
+region: content
 weight: -5
 provider: null
 plugin: system_breadcrumb_block

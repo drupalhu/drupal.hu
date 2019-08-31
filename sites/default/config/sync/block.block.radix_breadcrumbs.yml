@@ -1,0 +1,20 @@
+uuid: 9a296814-f804-4367-b89d-02ad03d9df0d
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - radix
+id: radix_breadcrumbs
+theme: radix
+region: navbar_branding
+weight: -5
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Morzsák
+  provider: system
+  label_display: '0'
+visibility: {  }

@@ -113,6 +113,45 @@ process:
         plugin: default_value
         default_value: html_body
 
+  taxonomy_forums:
+    -
+      source: taxonomy_forums
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration: app_default__taxonomy_term
+
+  app_drupal_version:
+    -
+      source: app_drupal_version
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration: app_default__taxonomy_term
+
+  app_project:
+    -
+      source: app_project
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration: app_default__taxonomy_term
+
 destination:
   plugin: 'entity:node'
   overwrite_properties:
@@ -152,6 +191,8 @@ destination:
 
 migration_dependencies:
   required:
+    - app_default__taxonomy_term
+    - app_default__node
     - app_dummy__file__public
     - app_dummy__media__image
     - app_dummy__user

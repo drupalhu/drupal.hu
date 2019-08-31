@@ -12,6 +12,7 @@ module:
   breakpoint: 0
   ckeditor: 0
   comment: 0
+  components: 0
   config: 0
   config_translation: 0
   contextual: 0
@@ -55,7 +56,7 @@ theme:
   seven: 0
   adminimal_theme: 0
   appb: 0
-  bootstrap_barrio: 0
+  radix: 0
   appf: 0
 profile: appp
 _core:

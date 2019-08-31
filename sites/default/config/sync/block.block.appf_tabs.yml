@@ -1,4 +1,4 @@
-uuid: 8edc0481-415c-4238-9352-53af707243c3
+uuid: d573bdfe-d7b0-4fed-8d0a-5471275b100b
 langcode: hu
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
 id: appf_tabs
 theme: appf
 region: content
-weight: -4
+weight: -3
 provider: null
 plugin: local_tasks_block
 settings:

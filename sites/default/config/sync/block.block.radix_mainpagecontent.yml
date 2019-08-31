@@ -1,0 +1,20 @@
+uuid: 9acb6905-d5bc-4199-900e-4f6c804508fe
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - radix
+id: radix_mainpagecontent
+theme: radix
+region: content
+weight: -1
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Címlapos tartalom'
+  provider: system
+  label_display: '0'
+visibility: {  }

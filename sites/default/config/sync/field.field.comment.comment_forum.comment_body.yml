@@ -6,7 +6,14 @@ dependencies:
     - comment.type.comment_forum
     - field.storage.comment.comment_body
   module:
+    - allowed_formats
     - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
 _core:
   default_config_hash: WuaSPL5QS8oJbnd1mPGSSJ-Pt7arUBnbMHXGNm1BjS8
 id: comment.comment_forum.comment_body

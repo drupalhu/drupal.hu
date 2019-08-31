@@ -1,9 +1,134 @@
+Gertrúd: {}
+Tiara: {}
 Gizi:
   app_picture:
     -
-      target_id: 'pictures/gizi.png'
-
+      target_id: 'pictures/Gizi.png'
 Béla:
   app_picture:
     -
-      target_id: 'pictures/bela.png'
+      target_id: 'pictures/Béla.png'
+Barakony:
+  app_picture:
+    -
+      target_id: 'pictures/Barakony.png'
+Elmira:
+  app_picture:
+    -
+      target_id: 'pictures/Elmira.png'
+Dettina:
+  app_picture:
+    -
+      target_id: 'pictures/Dettina.png'
+Üne:
+  app_picture:
+    -
+      target_id: 'pictures/Üne.png'
+Abosa:
+  app_picture:
+    -
+      target_id: 'pictures/Abosa.png'
+Andos:
+  app_picture:
+    -
+      target_id: 'pictures/Andos.png'
+Amin:
+  app_picture:
+    -
+      target_id: 'pictures/Amin.png'
+Amáta:
+  app_picture:
+    -
+      target_id: 'pictures/Amáta.png'
+Nolen:
+  app_picture:
+    -
+      target_id: 'pictures/Nolen.png'
+Benedetta:
+  app_picture:
+    -
+      target_id: 'pictures/Benedetta.png'
+Peggi:
+  app_picture:
+    -
+      target_id: 'pictures/Peggi.png'
+Izsó:
+  app_picture:
+    -
+      target_id: 'pictures/Izsó.png'
+Armilla:
+  app_picture:
+    -
+      target_id: 'pictures/Armilla.png'
+Bíbor:
+  app_picture:
+    -
+      target_id: 'pictures/Bíbor.png'
+Ivor:
+  app_picture:
+    -
+      target_id: 'pictures/Ivor.png'
+Delinke:
+  app_picture:
+    -
+      target_id: 'pictures/Delinke.png'
+Adalberta:
+  app_picture:
+    -
+      target_id: 'pictures/Adalberta.png'
+Enciána:
+  app_picture:
+    -
+      target_id: 'pictures/Enciána.png'
+Achillesz:
+  app_picture:
+    -
+      target_id: 'pictures/Achillesz.png'
+Euszták:
+  app_picture:
+    -
+      target_id: 'pictures/Euszták.png'
+Darinka:
+  app_picture:
+    -
+      target_id: 'pictures/Darinka.png'
+Adóra:
+  app_picture:
+    -
+      target_id: 'pictures/Adóra.png'
+Zejna:
+  app_picture:
+    -
+      target_id: 'pictures/Zejna.png'
+Gyeke:
+  app_picture:
+    -
+      target_id: 'pictures/Gyeke.png'
+Aloé:
+  app_picture:
+    -
+      target_id: 'pictures/Aloé.png'
+Bandó:
+  app_picture:
+    -
+      target_id: 'pictures/Bandó.png'
+Jelek:
+  app_picture:
+    -
+      target_id: 'pictures/Jelek.png'
+Benedek:
+  app_picture:
+    -
+      target_id: 'pictures/Benedek.png'
+Álea:
+  app_picture:
+    -
+      target_id: 'pictures/Álea.png'
+Nandita:
+  app_picture:
+    -
+      target_id: 'pictures/Nandita.png'
+Zseráldin:
+  app_picture:
+    -
+      target_id: 'pictures/Zseráldin.png'

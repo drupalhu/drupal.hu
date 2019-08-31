@@ -1,21 +1,9 @@
-cdn_provider: ''
-favicon:
-  mimetype: image/svg+xml
-  path: themes/custom/appf/favicon.svg
-  url: /themes/custom/appf/favicon.svg
-  use_default: false
 features:
+  node_user_picture: true
   comment_user_picture: true
   comment_user_verification: true
   favicon: true
-  node_user_picture: true
 logo:
-  path: ''
-  url: ''
   use_default: true
-schemas:
-  bootstrap_barrio: 8000
-  appf: 8000
-langcode: hu
-reset_http_request_cache: ''
-table: ''
+favicon:
+  use_default: true

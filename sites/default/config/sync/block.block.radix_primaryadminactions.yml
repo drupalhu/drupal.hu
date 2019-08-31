@@ -1,0 +1,18 @@
+uuid: 5a9efa37-8bd3-471c-ae7c-5a76b8a51dd6
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - radix
+id: radix_primaryadminactions
+theme: radix
+region: content
+weight: -3
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Elsődleges adminisztrátori műveletek'
+  provider: core
+  label_display: '0'
+visibility: {  }

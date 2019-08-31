@@ -1,4 +1,4 @@
-uuid: 3fc39d2a-f7c5-4c5d-bd9d-2706d66f1384
+uuid: d2496241-571b-4c6c-a617-3e3c4de7e7dc
 langcode: hu
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
 id: appf_primaryadminactions
 theme: appf
 region: content
-weight: -3
+weight: -2
 provider: null
 plugin: local_actions_block
 settings:

@@ -1,0 +1,18 @@
+uuid: 878310eb-e0a4-46d6-9a83-9343c2a5a7b7
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - radix
+id: radix_page_title
+theme: radix
+region: content
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Oldal címe'
+  provider: core
+  label_display: '0'
+visibility: {  }

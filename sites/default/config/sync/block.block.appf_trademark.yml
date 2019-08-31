@@ -1,4 +1,4 @@
-uuid: 46999230-5b8d-46a5-ad4c-9f663cb1659b
+uuid: bf5a9a74-6bf3-472a-a2de-8498d7e1c07f
 langcode: hu
 status: true
 dependencies:
@@ -10,8 +10,8 @@ dependencies:
     - appf
 id: appf_trademark
 theme: appf
-region: featured_bottom_second
-weight: -5
+region: footer
+weight: -4
 provider: null
 plugin: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
 settings:

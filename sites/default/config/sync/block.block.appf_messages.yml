@@ -1,4 +1,4 @@
-uuid: 6a7527cb-e27f-4296-8ffe-5b3ffa3d4e20
+uuid: 670597be-9c9e-44d1-b4da-e08954660dc2
 langcode: hu
 status: true
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
 id: appf_messages
 theme: appf
 region: content
-weight: -2
+weight: -1
 provider: null
 plugin: system_messages_block
 settings:

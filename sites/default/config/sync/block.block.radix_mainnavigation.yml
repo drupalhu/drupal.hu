@@ -1,0 +1,25 @@
+uuid: b3d3d970-2bf6-4d77-8686-7e8689c37292
+langcode: hu
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - radix
+id: radix_mainnavigation
+theme: radix
+region: navbar_branding
+weight: -5
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Elsődleges navigáció'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

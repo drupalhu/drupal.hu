@@ -1,9 +1,102 @@
 
-pictures/bela.png:
+pictures/Béla.png:
   uid: Béla
 
-pictures/gizi.png:
+pictures/Gizi.png:
   uid: Gizi
+
+pictures/Barakony.png:
+  uid: Barakony
+
+pictures/Elmira.png:
+  uid: Elmira
+
+pictures/Dettina.png:
+  uid: Dettina
+
+pictures/Üne.png:
+  uid: Üne
+
+pictures/Abosa.png:
+  uid: Abosa
+
+pictures/Andos.png:
+  uid: Andos
+
+pictures/Amin.png:
+  uid: Amin
+
+pictures/Amáta.png:
+  uid: Amáta
+
+pictures/Nolen.png:
+  uid: Nolen
+
+pictures/Benedetta.png:
+  uid: Benedetta
+
+pictures/Peggi.png:
+  uid: Peggi
+
+pictures/Izsó.png:
+  uid: Izsó
+
+pictures/Armilla.png:
+  uid: Armilla
+
+pictures/Bíbor.png:
+  uid: Bíbor
+
+pictures/Ivor.png:
+  uid: Ivor
+
+pictures/Delinke.png:
+  uid: Delinke
+
+pictures/Adalberta.png:
+  uid: Adalberta
+
+pictures/Enciána.png:
+  uid: Enciána
+
+pictures/Achillesz.png:
+  uid: Achillesz
+
+pictures/Euszták.png:
+  uid: Euszták
+
+pictures/Darinka.png:
+  uid: Darinka
+
+pictures/Adóra.png:
+  uid: Adóra
+
+pictures/Zejna.png:
+  uid: Zejna
+
+pictures/Gyeke.png:
+  uid: Gyeke
+
+pictures/Aloé.png:
+  uid: Aloé
+
+pictures/Bandó.png:
+  uid: Bandó
+
+pictures/Jelek.png:
+  uid: Jelek
+
+pictures/Benedek.png:
+  uid: Benedek
+
+pictures/Álea.png:
+  uid: Álea
+
+pictures/Nandita.png:
+  uid: Nandita
+
+pictures/Zseráldin.png:
+  uid: Zseráldin
 
 images/comb.jpg:
   uid: Gizi

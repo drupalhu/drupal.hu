@@ -1,7 +1,7 @@
 # https://github.com/sasstools/sass-lint
 
 files:
-  include: 'css/**/*.s+(a|c)ss'
+  include: 'src/**/*.s+(a|c)ss'
 
 options:
   formatter: stylish

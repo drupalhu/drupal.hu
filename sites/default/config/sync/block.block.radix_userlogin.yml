@@ -1,0 +1,20 @@
+uuid: b12108e9-81a0-4455-8514-215f2d51c10c
+langcode: hu
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - radix
+id: radix_userlogin
+theme: radix
+region: header
+weight: -6
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: Bejelentkezés
+  provider: user
+  label_display: visible
+visibility: {  }

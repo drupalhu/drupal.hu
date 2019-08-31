@@ -1,0 +1,20 @@
+uuid: 920d7767-2a11-443b-a363-3d542b09f035
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - radix
+id: radix_messages
+theme: radix
+region: content
+weight: -2
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Állapot üzenetek'
+  provider: system
+  label_display: '0'
+visibility: {  }

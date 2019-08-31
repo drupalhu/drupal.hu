@@ -682,6 +682,8 @@ $config['field_ui.settings']['field_prefix'] = 'app_';
 
 $config['views.settings']['ui']['exposed_filter_any_label'] = 'new_any';
 
+$config['acquia_connector.settings']['hide_signup_messages'] = 1;
+
 /**
  * Fast 404 pages:
  *
