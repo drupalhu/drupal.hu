@@ -167,7 +167,7 @@ display:
       display_description: Bevezetők
       menu:
         type: normal
-        title: Dockumentáció
+        title: Dokumentáció
         description: ''
         expanded: false
         parent: ''

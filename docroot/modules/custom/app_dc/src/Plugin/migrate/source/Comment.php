@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\app_dc\Plugin\migrate\source;
 
 use Drupal\comment\Plugin\migrate\source\d7\Comment as D7Comment;
+use Drupal\migrate\Row;
 
 /**
  * Drupal 7 comment source from database.
@@ -28,6 +29,14 @@ class Comment extends D7Comment {
     }
 
     return $query;
+  }
+
+  public function prepareRow(Row $row) {
+    if ($row->getSource()['nid'] == 35) {
+      $b = 1;
+    }
+
+    return parent::prepareRow($row);
   }
 
   protected function normalizeConfiguration() {

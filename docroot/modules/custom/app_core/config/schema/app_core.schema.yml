@@ -1,0 +1,7 @@
+field.formatter.settings.app_drupal_project_link:
+  type: mapping
+  label: 'Settings'
+  mapping:
+    link_to:
+      type: string
+      label: 'Link to'

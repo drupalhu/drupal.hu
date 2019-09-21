@@ -11,7 +11,7 @@
 
   <arg name="ignore" value="*.css,*.md,*.txt"/>
   <arg name="colors"/>
-  <arg name="extensions" value="php/php,module/php,profile/php,theme/php,install/php,engine/php"/>
+  <arg name="extensions" value="php/php,inc/php,module/php,profile/php,theme/php,install/php,engine/php"/>
 
   <rule ref="Drupal">
     <exclude name="Drupal.Commenting.ClassComment.Missing"/>

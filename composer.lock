@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "184b9c22988e37f93716ae2a55553f9c",
+    "content-hash": "5df8f93577b8879b0c6dd0a835af2062",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2297,6 +2297,56 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/allowed_formats"
             }
+        },
+        {
+            "name": "drupal/bootstrap_layouts",
+            "version": "dev-5.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/bootstrap_layouts.git",
+                "reference": "0db7dadaec4fbf37661e6160fe66d96584985044"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-5.x": "5.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-5.1+1-dev",
+                    "datestamp": "1546987680",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "darol100",
+                    "homepage": "https://www.drupal.org/user/2667123"
+                },
+                {
+                    "name": "hctom",
+                    "homepage": "https://www.drupal.org/user/112790"
+                },
+                {
+                    "name": "markcarver",
+                    "homepage": "https://www.drupal.org/user/501638"
+                }
+            ],
+            "description": "This module is going to generate layouts with Bootstrap grid system.",
+            "homepage": "https://www.drupal.org/project/bootstrap_layouts",
+            "support": {
+                "source": "https://git.drupalcode.org/project/bootstrap_layouts"
+            },
+            "time": "2019-01-08T22:43:49+00:00"
         },
         {
             "name": "drupal/coder",
@@ -11393,6 +11443,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/bootstrap_layouts": 20,
         "drupal/entity_legal": 20,
         "drupal/marvin": 20,
         "drupal/marvin_product": 20,

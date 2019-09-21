@@ -1,0 +1,15 @@
+uuid: ab95de04-87b2-43ba-b5bf-33c67b4d0a48
+langcode: hu
+status: true
+dependencies: {  }
+name: mini
+label: Mini
+effects:
+  bfd61b9d-8617-4d87-9667-f3a4c70d95f8:
+    uuid: bfd61b9d-8617-4d87-9667-f3a4c70d95f8
+    id: image_scale
+    weight: 1
+    data:
+      width: 32
+      height: null
+      upscale: false

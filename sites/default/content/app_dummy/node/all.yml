@@ -83,6 +83,17 @@ forum_02:
   type: forum
   uid: Dettina
   title: Az ácsnoszról a pogák dolánában
+  taxonomy_forums:
+    -
+      target_id: 'Modulok használata'
+  app_drupal_version:
+    -
+      target_id: '8.x'
+  app_project:
+    -
+      target_id: 'devel'
+    -
+      target_id: 'masquerade'
   app_body:
     -
       value: |-
@@ -96,6 +107,19 @@ forum_03:
   type: forum
   uid: Üne
   title: A foglat gántája bágyalvas
+  taxonomy_forums:
+    -
+      target_id: 'Modulok használata'
+  app_drupal_version:
+    -
+      target_id: '8.x'
+  app_project:
+    -
+      target_id: 'devel'
+    -
+      target_id: 'masquerade'
+    -
+      target_id: 'token'
   app_body:
     -
       value: |-
@@ -115,6 +139,12 @@ forum_04:
   type: forum
   uid: Abosa
   title: A frás az itt porzsarlan ricetteket
+  taxonomy_forums:
+    -
+      target_id: 'Modulok használata'
+  app_drupal_version:
+    -
+      target_id: '8.x'
   app_body:
     -
       value: |-
