@@ -19,49 +19,69 @@ default:
           .messages
 
         success_message_selector: >-
+          .alert-success .alert-content,
           .alert-wrapper > .alert-success > .alert-content,
           .messages.messages--status .messages__list > messages__item
         info_message_selector: >-
+          .alert-info .alert-content,
           .alert-wrapper > .alert-info > .alert-content,
           .messages.messages--info .messages__list > messages__item
         warning_message_selector: >-
+          .alert-warning .alert-content,
           .alert-wrapper > .alert-warning > .alert-content,
           .messages.messages--warning .messages__list > messages__item
         error_message_selector: >-
-          .alert-wrapper > .alert-danger > .alert-content,
+          .alert-danger .alert-content,
           .messages.messages--error .messages__list > messages__item
 
         drupal.core.message.multiple.status: >-
+          .alert-success .alert-content,
           .alert-wrapper > .alert-success > .alert-content,
           .messages.messages--status .messages__list > messages__item
         drupal.core.message.single.status: >-
+          .alert-success .alert-content,
           .alert-wrapper > .alert-success > .alert-content,
           .messages.messages--status
         drupal.core.message.multiple.info: >-
+          .alert-info .alert-content,
           .alert-wrapper > .alert-info > .alert-content,
           .messages.messages--info .messages__list > messages__item
         drupal.core.message.single.info: >-
+          .alert-info .alert-content,
           .alert-wrapper > .alert-info > .alert-content,
           .messages.messages--info
         drupal.core.message.multiple.warning: >-
+          .alert-warning .alert-content,
           .alert-wrapper > .alert-warning > .alert-content,
           .messages.messages--warning .messages__list > messages__item
         drupal.core.message.single.warning: >-
+          .alert-warning .alert-content,
           .alert-wrapper > .alert-warning > .alert-content,
           .messages.messages--warning
         drupal.core.message.multiple.error: >-
+          .alert-danger .alert-content,
           .alert-wrapper > .alert-danger > .alert-content,
           .messages.messages--error .messages__list > messages__item
         drupal.core.message.single.error: >-
+          .alert-danger .alert-content,
           .alert-wrapper > .alert-danger > .alert-content,
           .messages.messages--error
 
         drupal.core.message.multiple: >-
+          .alert .alert-content,
           .alert-wrapper > .alert > .alert-content,
           .messages.messages--error .messages__list > messages__item
         drupal.core.message.single: >-
+          .alert .alert-content,
           .alert-wrapper > .alert > .alert-content,
           .messages .messages__list > messages__item
 
-        drupal.core.vertical_tabs.tab_label__appb: 'xpath: //ul[@class="vertical-tabs__menu"]/li/a/strong[text() = "{{ tabLabel }}"]'
-        drupal.core.menu.links__appf: 'xpath: //nav[@role="navigation"]/*[text() = "{{ menuLabel }}"]/parent::*/ul[contains(@class, " menu-links ")]//a/span[@class="link-text"]'
+        drupal.core.vertical_tabs.tab_label__appb: >-
+          xpath: //ul[@class="vertical-tabs__menu"]/li/a/strong[text() = "{{ tabLabel }}"]
+
+        drupal.core.menu.wrapper: >-
+          .block--appf-{{ menuName }}navigation
+        drupal.core.menu.links: >-
+          xpath: //nav[@role="navigation"]/*[text() = "{{ menuLabel }}"]/parent::*/ul[contains(@class, " menu-links ")]//a/span[@class="link-text"]
+        drupal.core.menu.links__appf: >-
+          .block--appf-{{ menuName }}navigation .nav.navbar-nav .nav-item a

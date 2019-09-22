@@ -1,11 +1,12 @@
 
 # Drupal.hu
 
-@todo
+[![CircleCI](https://circleci.com/gh/drupalhu/drupal.hu/tree/8.x-1.x.svg?style=svg)](https://circleci.com/gh/drupalhu/drupal.hu/tree/8.x-1.x)
 
 
 ## Requirements
 
+* `php --version` >= 7.3
 * `nvm --version` >= 0.34
 * `yarn --version` >= 1.12 
   * `npm --global update yarn`
@@ -19,7 +20,7 @@
 1. Run `nvm use`
 1. Run `composer install`
 1. Run `alias d='bin/drush --config=drush @app.local'`
-1. Run `d marvin:onboarding`
+1. Run `d marvin:onboarding --url='http://YOUR_HOST'`
 1. Run `$EDITOR docroot/sites/default/settings.local.php`
    * Database connection
 1. Run `$EDITOR drush/drush.local.yml` 
