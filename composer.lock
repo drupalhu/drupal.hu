@@ -8532,7 +8532,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cheppers/drupal-behat-contexts.git",
-                "reference": "155f373f1b946562bc41fe5c20182c957a82b956"
+                "reference": "161e7ec514874a5b1dd6eb0f2db081ffa9ff607e"
             },
             "require": {
                 "cweagans/composer-patches": "^1.6",
@@ -8666,7 +8666,7 @@
                 "MIT"
             ],
             "description": "Drupal\\Extension related contexts",
-            "time": "2019-08-24T21:26:07+00:00"
+            "time": "2019-09-22T10:41:05+00:00"
         },
         {
             "name": "dmore/behat-chrome-extension",

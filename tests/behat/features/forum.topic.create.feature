@@ -8,7 +8,7 @@ Feature: Forum topic create
 
   @api
   Scenario: Forum topic create - navigate
-    When I click "Fórum" in the "Elsődleges navigáció" menu
+    When I click "Fórum" in the "Fő navigáció" menu
     And I click "Új Fórumtéma hozzáadása"
     Then I should see an "form[data-drupal-selector='node-forum-form']" element
 
