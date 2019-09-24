@@ -19,6 +19,7 @@ module:
   ctools: 0
   datetime: 0
   datetime_range: 0
+  drupalhu_home_page: 0
   dynamic_page_cache: 0
   editor: 0
   entity_legal: 0

@@ -1,0 +1,7 @@
+drupalhu_home_page.content:
+  path: '/home'
+  defaults:
+    _controller: '\Drupal\drupalhu_home_page\Controller\HomePageController::home'
+    _title: Home
+  requirements:
+    _permission: 'access content'
