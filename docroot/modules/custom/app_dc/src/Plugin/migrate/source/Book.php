@@ -37,8 +37,8 @@ class Book extends D7Book {
     $query->addField('p0', 'link_path', "p0_link_path");
 
     for ($i = 1; $i < $this->maxDepth; $i++) {
-      $query->leftJoin('menu_links', "p$i", "ml.p$i = p$i.mlid");
-      $query->addField("p$i", 'link_path', "p{$i}_link_path");
+      $query->leftJoin('menu_links', "p{$i}", "ml.p{$i} = p{$i}.mlid");
+      $query->addField("p{$i}", 'link_path', "p{$i}_link_path");
     }
 
     return $query;

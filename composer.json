@@ -114,10 +114,10 @@
         "reset:db": [
             "drush --config=drush --yes @app.local sql:drop"
         ],
-        "site:install:dev": [
+        "site:install:local": [
             "@reset:files",
             "bin/drush --config=drush @app.local site:install appp --existing-config --marvin-migrate=dummy --yes",
-            "bin/drush --config=drush @app.local marvin:toggle-modules --define=marvin.environment=dev"
+            "bin/drush --config=drush @app.local marvin:toggle-modules --define=marvin.environment=local -vvv"
         ]
     },
     "scripts-descriptions": {

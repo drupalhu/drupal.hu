@@ -87,5 +87,5 @@ destination:
 
 migration_dependencies:
   required:
-    -  app_legacy__file__public
+    - app_legacy__file__public
     - app_legacy__user__user

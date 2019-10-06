@@ -21,6 +21,7 @@ process:
   uuid:
     source: nid
     plugin: static_map
+    bypass: true
     map:
       # book:Handbook
       26: 5c0dd66f-f4c5-44dd-99ff-198541fcaa87
@@ -100,7 +101,7 @@ destination:
 
 migration_dependencies:
   required:
-    -  app_legacy__file__public
+    - app_legacy__file__public
     - app_legacy__user__user
     - app_legacy__taxonomy_term__competence
     - app_legacy__taxonomy_term__drupal_version

@@ -58,4 +58,4 @@ destination:
 
 migration_dependencies:
   optional:
-    -  app_legacy__file__public
+    - app_legacy__file__public
