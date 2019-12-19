@@ -1,0 +1,237 @@
+uuid: c9fa10fe-6ad1-4438-8d9d-a38067131e29
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_competence
+    - field.storage.node.app_date
+    - field.storage.node.app_drupal_version
+    - field.storage.node.app_project
+    - field.storage.node.app_tags
+    - field.storage.node.app_target_audience
+    - field.storage.node.taxonomy_forums
+    - search_api.server.general
+  module:
+    - search_api_solr
+    - comment
+    - node
+    - search_api
+_core:
+  default_config_hash: '-ggwZpvT2-Ey1fqPkREitA6TGI_m5dTHD9vZm9FrlSQ'
+id: content
+name: 'Publikus tartalmak'
+description: ''
+read_only: false
+field_settings:
+  app_competence:
+    label: Szint
+    datasource_id: 'entity:node'
+    property_path: app_competence
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_competence
+  app_date:
+    label: Dátum
+    datasource_id: 'entity:node'
+    property_path: app_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.app_date
+  app_drupal_version:
+    label: 'Drupal verzió'
+    datasource_id: 'entity:node'
+    property_path: app_drupal_version
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_drupal_version
+  app_project:
+    label: Projekt
+    datasource_id: 'entity:node'
+    property_path: app_project
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_project
+  app_tags:
+    label: Címkék
+    datasource_id: 'entity:node'
+    property_path: app_tags
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_tags
+  app_target_audience:
+    label: Célközönség
+    datasource_id: 'entity:node'
+    property_path: app_target_audience
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_target_audience
+  author:
+    label: Szerző
+    property_path: aggregated_field
+    type: integer
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/uid'
+        - 'entity:node/uid'
+  body:
+    label: Törzs
+    property_path: aggregated_field
+    type: solr_text_ngram
+    boost: !!float 8
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/comment_body'
+        - 'entity:node/app_body'
+        - 'entity:node/app_teaser'
+  created:
+    label: 'Beküldés ideje'
+    property_path: aggregated_field
+    type: date
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/created'
+        - 'entity:node/created'
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  status:
+    label: Közzétéve
+    property_path: aggregated_field
+    type: boolean
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/status'
+        - 'entity:node/status'
+  status_1:
+    label: status_1
+    datasource_id: 'entity:comment'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - comment
+  status_2:
+    label: status_2
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  taxonomy_forums:
+    label: Fórumok
+    datasource_id: 'entity:node'
+    property_path: taxonomy_forums
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.taxonomy_forums
+  title:
+    label: Cím
+    property_path: aggregated_field
+    type: solr_text_ngram
+    boost: !!float 21
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/subject'
+        - 'entity:node/title'
+  type:
+    label: Típus
+    property_path: aggregated_field
+    type: string
+    configuration:
+      type: union
+      fields:
+        - 'entity:comment/comment_type'
+        - 'entity:node/type'
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:comment':
+    bundles:
+      default: false
+      selected:
+        - comment_forum
+    languages:
+      default: false
+      selected:
+        - hu
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - book
+        - casestudy
+        - event
+        - forum
+        - news
+    languages:
+      default: false
+      selected:
+        - hu
+processor_settings:
+  add_url:
+    plugin_id: add_url
+    settings: {  }
+  aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
+  html_filter:
+    all_fields: false
+    fields:
+      - body
+      - title
+    title: true
+    alt: true
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 250
+  processors:
+    language:
+      status: '1'
+      weight: -50
+      settings: {  }
+      processorPluginId: language
+server: general

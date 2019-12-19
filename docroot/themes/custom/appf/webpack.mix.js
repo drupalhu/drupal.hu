@@ -31,5 +31,7 @@ mix
 mix.browserSync(config.browserSync.options);
 
 mix.sass('src/sass/appf.style.scss', 'css');
+mix.sass('src/sass/component/facet/widget/appf.facets.widget.checkbox.layout.scss', 'css');
+mix.sass('src/sass/component/facet/widget/appf.facets.widget.checkbox.theme.scss', 'css');
 
 mix.js('src/js/appf.script.js', 'js');

@@ -3,14 +3,18 @@ langcode: hu
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment_forum.default
     - field.field.node.casestudy.app_attachments
     - field.field.node.casestudy.app_body
+    - field.field.node.casestudy.app_comment_admin
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
     - field.field.node.casestudy.app_teaser
+    - field.field.node.casestudy.comment_forum
     - image.style.media_library
     - node.type.casestudy
   module:
+    - comment
     - file
     - media
     - text
@@ -34,6 +38,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  app_comment_admin:
+    weight: 6
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
     region: content
   app_drupal_version:
     weight: 1
@@ -59,6 +72,15 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
+  comment_forum:
+    weight: 7
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
   links:
     weight: 4
     region: content
@@ -66,3 +88,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

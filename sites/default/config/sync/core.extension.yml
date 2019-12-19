@@ -1,10 +1,13 @@
 module:
+  acquia_connector: 0
+  acquia_search: 0
   admin_toolbar: 0
   admin_toolbar_tools: 0
   adminimal_admin_toolbar: 0
   aggregator: 0
   allowed_formats: 0
   app_core: 0
+  app_search: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -23,6 +26,7 @@ module:
   dynamic_page_cache: 0
   editor: 0
   entity_legal: 0
+  facets: 0
   field: 0
   file: 0
   filter: 0
@@ -40,6 +44,8 @@ module:
   path: 0
   path_alias: 0
   responsive_image: 0
+  search_api: 0
+  search_api_solr: 0
   system: 0
   taxonomy: 0
   telephone: 0

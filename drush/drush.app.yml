@@ -27,7 +27,7 @@ command:
         account-name: 'admin'
         account-pass: 'admin'
         account-mail: 'admin@localhost'
-        marvin-migrate: 'install'
+        marvin-migrate: 'default'
 
 sql:
   skip-tables:
@@ -79,7 +79,7 @@ marvin:
       group:
         app_legacy: true
         app_common: true
-    install:
+    default:
       module:
         app_dc: true
       group:

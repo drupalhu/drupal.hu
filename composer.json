@@ -40,6 +40,7 @@
     },
     "require": {
         "php": ">=7.3",
+        "bower-asset/jquery-ui-slider-pips": "^1.11",
         "composer/installers": "^1.6",
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.5",
@@ -60,6 +61,8 @@
         "drupal/pathauto": "^1.4",
         "drupal/radix": "dev-4.x",
         "drupal/schema_metatag": "^1.3",
+        "drupal/search_api_solr": "^1.2",
+        "drupal/taxonomy_facets": "^1.0@RC",
         "drush/drush": "^10.1",
         "oomphinc/composer-installers-extender": "^1.1",
         "zaporylie/composer-drupal-optimizations": "^1.0"
@@ -96,11 +99,22 @@
         "post-install-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postInstallCmd",
         "post-update-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postUpdateCmd",
         "clean": [
-            "rm -rf bin/ reports/ vendor/",
+            "@clean:backend",
+            "@clean:frontend"
+        ],
+        "clean:backend": [
+            "rm -rf bin/ vendor/",
             "rm -rf docroot/core/ docroot/modules/contrib/ docroot/profiles/contrib/ docroot/themes/contrib/ docroot/libraries/",
             "rm -rf drush/Commands/contrib/"
         ],
+        "clean:frontend": [
+            "rm -rf docroot/themes/custom/*/node_modules/",
+            "rm -rf docroot/themes/custom/*/assets/",
+            "rm -rf docroot/themes/custom/*/css/*.css",
+            "rm -rf docroot/themes/custom/*/css/*.css.map"
+        ],
         "reset": [
+            "@reset:search",
             "@reset:files",
             "@reset:db"
         ],
@@ -111,17 +125,55 @@
             "rm -rf sites/*/temporary/*"
         ],
         "reset:db": [
-            "drush --config=drush --yes @app.local sql:drop"
+            "drush --ansi --config=drush --yes @app.local sql:drop"
         ],
-        "site:install:local": [
-            "@reset:files",
-            "bin/drush --config=drush @app.local site:install appp --existing-config --marvin-migrate=dummy --yes",
-            "bin/drush --config=drush @app.local marvin:toggle-modules --define=marvin.environment=local -vvv"
+        "reset:search": [
+            "drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
+        ],
+        "site:install:local:legacy": [
+            "@reset",
+            "bin/drush --ansi --config=drush @app.local site:install appp --existing-config --marvin-migrate='' --yes",
+            "bin/drush --ansi --config=drush @app.local marvin:toggle-modules --define=marvin.environment=local -vvv",
+            "bin/drush --ansi --config=drush @app.local migrate:import app_legacy__user__user",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_legacy",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_common"
+        ],
+        "site:install:local:default": [
+            "@reset",
+            "bin/drush --ansi --config=drush @app.local site:install appp --existing-config --marvin-migrate='' --yes",
+            "bin/drush --ansi --config=drush @app.local marvin:toggle-modules --define=marvin.environment=local -vvv",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_default",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_common"
+        ],
+        "site:install:local:dummy": [
+            "@reset",
+            "bin/drush --ansi --config=drush @app.local site:install appp --existing-config --marvin-migrate='' --yes",
+            "bin/drush --ansi --config=drush @app.local marvin:toggle-modules --define=marvin.environment=local -vvv",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_default",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_common",
+            "bin/drush --ansi --config=drush @app.local migrate:import --group=app_dummy"
+        ],
+        "site:install:prod:default": [
+            "@reset",
+            "bin/drush --ansi --config=drush @app.local site:install appp --existing-config --marvin-migrate='default' --yes"
+        ],
+        "site:install:prod:dummy": [
+            "@reset",
+            "bin/drush --ansi --config=drush @app.local site:install appp --existing-config --marvin-migrate='dummy' --yes"
         ]
     },
     "scripts-descriptions": {
-        "clean": "Deletes all the third-party codes downloaded by Composer.",
-        "reset": "Drops the Drupal database (default) and deletes the uploaded files."
+        "clean": "Combines <comment>@clean:backend</comment> and <comment>@clean:frontend</comment>",
+        "clean:backend": "Deletes all backend related third-party and generated codes",
+        "clean:frontend": "Deletes all frontend related third-party and generated codes",
+        "reset": "Combines <fg=red>@reset:files</> and <fg=red>@reset:db</>",
+        "reset:files": "<fg=red>Deletes</> all the files in the <info>public</info> and the <info>private</info> directories.",
+        "reset:db": "<fg=red>Drops</> all the table in the <info>default database</info>.",
+        "site:install:local:legacy": "Runs <info>`drush site:install`</info>; Toggle modules for <info>local</info> environment; Migrates <info>legacy</info> contents",
+        "site:install:local:default": "Runs <info>`drush site:install`</info>; Toggle modules for <info>local</info> environment; Migrates <info>default</info> contents",
+        "site:install:local:dummy": "Runs <info>`drush site:install`</info>; Toggle modules for <info>local</info> environment; Migrates <info>dummy</info> contents",
+        "site:install:prod:default": "Runs <info>`drush site:install`</info>; Toggle modules for <info>prod</info> environment; Migrates <info>default</info> contents",
+        "site:install:prod:dummy": "Runs <info>`drush site:install`</info>; Toggle modules for <info>prod</info> environment; Migrates <info>dummy</info> contents"
     },
     "extra": {
         "installer-types": [

@@ -57,27 +57,42 @@ process:
     plugin: sub_process
     process:
       target_id:
-        source: tid
-        plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__forums
+        -
+          source: tid
+          plugin: migration_lookup
+          migration: app_legacy__taxonomy_term__forums
+          no_stub: true
+        -
+          plugin: skip_on_empty
+          method: process
 
   app_drupal_version:
     source: taxonomy_vocabulary_10
     plugin: sub_process
     process:
       target_id:
-        source: tid
-        plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__drupal_version
+        -
+          source: tid
+          plugin: migration_lookup
+          migration: app_legacy__taxonomy_term__drupal_version
+          no_stub: true
+        -
+          plugin: skip_on_empty
+          method: process
 
   app_project:
     source: taxonomy_vocabulary_11
     plugin: sub_process
     process:
       target_id:
-        source: tid
-        plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__project
+        -
+          source: tid
+          plugin: migration_lookup
+          migration: app_legacy__taxonomy_term__project
+          no_stub: true
+        -
+          plugin: skip_on_empty
+          method: process
 
 destination:
   plugin: 'entity_revision:node'
@@ -85,4 +100,8 @@ destination:
 
 migration_dependencies:
   required:
+    - app_legacy__user__user
     - app_legacy__node__forum
+    - app_legacy__taxonomy_term__drupal_version
+    - app_legacy__taxonomy_term__forums
+    - app_legacy__taxonomy_term__project

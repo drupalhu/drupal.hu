@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Template for the main page.
+ */
+#}
+<div class="page">
+  {% embed '@radix/navbar/navbar.twig'
+      with {
+        placement: 'sticky-top',
+        container: 'fixed',
+        color: 'light',
+        utility_classes: ['bg-light'],
+      }
+  %}
+    {% block branding %}
+      {% if page.navbar_branding %}
+        {{ page.navbar_branding }}
+      {% endif %}
+    {% endblock %}
+
+    {% block left %}
+      {% if page.navbar_left %}
+        <div class="mr-auto">
+          {{ page.navbar_left }}
+        </div>
+      {% endif %}
+    {% endblock %}
+
+    {% block right %}
+      {% if page.navbar_right %}
+        {{ page.navbar_right }}
+      {% endif %}
+    {% endblock %}
+  {% endembed %}
+
+  <main class="pt-5 pb-5">
+    {% if page.header %}
+      <header class="page__header mb-3">
+        <div class="container">
+          {{ page.header }}
+        </div>
+      </header>
+    {% endif %}
+
+    {% if page.content_top %}
+      <div class="page__content_top mb-3">
+        <div class="container">
+          {{ page.content_top }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if page.content or page.sidebar_first %}
+      <div class="page__wrapper container">
+        <div class="row">
+          {% if page.sidebar_first %}
+            <div class="page__sidebar_first col-sm-3 container">
+              {{ page.sidebar_first }}
+            </div>
+          {% endif %}
+
+          <div class="page__content container col-sm-{{ page.sidebar_first ? '9' : '12' }}">
+            {{ page.content }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </main>
+
+  {% if page.footer %}
+    <footer class="page__footer">
+      <div class="container">
+        <div class="d-flex justify-content-md-between align-items-md-center">
+          {{ page.footer }}
+        </div>
+      </div>
+    </footer>
+  {% endif %}
+</div>

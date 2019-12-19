@@ -8,8 +8,8 @@ dependencies:
     - appf
 id: appf_breadcrumbs
 theme: appf
-region: content
-weight: -5
+region: content_top
+weight: -6
 provider: null
 plugin: system_breadcrumb_block
 settings:

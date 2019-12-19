@@ -1,0 +1,33 @@
+uuid: 6f96df1d-f1e1-4020-8021-4d209a9b18df
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_comment_admin
+    - node.type.casestudy
+  module:
+    - comment
+id: node.casestudy.app_comment_admin
+field_name: app_comment_admin
+entity_type: node
+bundle: casestudy
+label: Hozzászólások
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    status: 2
+    cid: 0
+    last_comment_timestamp: 0
+    last_comment_name: null
+    last_comment_uid: 0
+    comment_count: 0
+default_value_callback: ''
+settings:
+  default_mode: 1
+  per_page: 50
+  anonymous: 0
+  form_location: true
+  preview: 1
+field_type: comment

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.book.app_drupal_version
     - field.field.node.book.app_tags
     - field.field.node.book.app_target_audience
+    - field.field.node.book.comment_forum
     - node.type.book
   module:
     - text
@@ -54,4 +55,6 @@ hidden:
   app_attachments: true
   app_competence: true
   app_target_audience: true
+  comment_forum: true
   langcode: true
+  search_api_excerpt: true

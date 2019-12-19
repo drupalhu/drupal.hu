@@ -10,6 +10,10 @@ libraries:
   - 'radix/style'
   - 'appf/style'
 
+libraries-extend:
+  facets/drupal.facets.checkbox-widget:
+    - 'appf/facets.widget.checkbox'
+
 libraries-override:
   radix/bootstrap: false
 
@@ -27,5 +31,7 @@ regions:
   navbar_right: Navbar right
   header: Header
   content: Content
+  content_top: Content - Top
+  sidebar_first: Sidebar - First
   page_bottom: Page bottom
   footer: Footer

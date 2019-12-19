@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.event.app_image
     - field.field.node.event.app_links
     - field.field.node.event.app_teaser
+    - field.field.node.event.comment_forum
     - image.style.media_library
     - node.type.event
   module:
@@ -52,5 +53,7 @@ hidden:
   app_attachments: true
   app_body: true
   app_links: true
+  comment_forum: true
   langcode: true
   links: true
+  search_api_excerpt: true

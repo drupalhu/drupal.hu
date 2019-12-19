@@ -80,3 +80,4 @@ content:
 hidden:
   comment_forum: true
   langcode: true
+  search_api_excerpt: true

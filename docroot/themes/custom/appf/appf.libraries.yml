@@ -8,3 +8,10 @@ style:
   dependencies:
     - core/jquery
     - core/drupal
+
+facets.widget.checkbox:
+  css:
+    layout:
+      assets/css/appf.facets.widget.checkbox.layout.css: {}
+    theme:
+      assets/css/appf.facets.widget.checkbox.theme.css: {}
