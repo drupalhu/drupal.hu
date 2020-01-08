@@ -23,10 +23,11 @@ command:
       options:
         sites-subdir: 'default'
         site-name: 'Drupal.hu'
+        locale: 'hu'
         account-name: 'admin'
         account-pass: 'admin'
         account-mail: 'admin@localhost'
-        marvin-migrate: 'default'
+        marvin-migrate: 'install'
 
 sql:
   skip-tables:

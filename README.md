@@ -32,3 +32,8 @@
 1. Run `d marvin:lint`
 1. Run `d marvin:test:unit`
 1. Run `d marvin:test:behat`
+
+
+# Known issues
+
+* [Database reserved keywords need to be quoted as per the ANSI standard](https://www.drupal.org/project/drupal/issues/2986452)

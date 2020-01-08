@@ -20,9 +20,14 @@ source:
 process:
   # Cut off the leading "files/".
   source_filepath:
-    source: filepath
-    plugin: substr
-    start: 6
+    -
+      source: filepath
+      plugin: skip_on_empty
+      method: process
+    -
+      source: filepath
+      plugin: substr
+      start: 6
   source:
     plugin: concat
     delimiter: '/'
@@ -60,5 +65,5 @@ destination:
   plugin: 'entity:file'
 
 migration_dependencies:
-  optional:
+  required:
     - app_legacy__user__user
