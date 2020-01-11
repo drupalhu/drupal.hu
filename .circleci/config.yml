@@ -95,8 +95,12 @@ commands:
       -
         run:
           name: 'Composer - install'
-          command: >
-            [[ -d "$(composer config vendor-dir)" ]] || composer install --no-progress
+          command: |
+            if [[ -d "$(composer config vendor-dir)" ]]; then
+              composer run post-install-cmd
+            else
+              composer install --no-progress
+            fi
 
       -
         save_cache:
@@ -263,9 +267,7 @@ commands:
               site:install \
               --yes \
               "${appInstallProfileName}" \
-              --locale='hu' \
-              --existing-config \
-              --marvin-migrate='install'
+              --existing-config
       -
         run:
           name: 'Sync files'

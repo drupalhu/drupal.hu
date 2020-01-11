@@ -50,7 +50,7 @@
         "drupal/allowed_formats": "^1.1",
         "drupal/bootstrap_layouts": "dev-5.x",
         "drupal/components": "^1.1",
-        "drupal/core": "^8.7",
+        "drupal/core-recommended": "^8.8",
         "drupal/entity_legal": "dev-2.x#9a8520a",
         "drupal/eu_cookie_compliance": "^1.5",
         "drupal/facets": "^1.4",
@@ -60,7 +60,7 @@
         "drupal/pathauto": "^1.4",
         "drupal/radix": "dev-4.x",
         "drupal/schema_metatag": "^1.3",
-        "drush/drush": "^9.5",
+        "drush/drush": "^10.1",
         "oomphinc/composer-installers-extender": "^1.1",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
@@ -79,10 +79,9 @@
         "drupal/module_filter": "^3.1",
         "drupal/styleguide": "dev-1.x",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^7.5",
         "symfony/css-selector": "^4.1",
-        "symfony/filesystem": "^4.1",
-        "symfony/phpunit-bridge": "^4.1"
+        "symfony/phpunit-bridge": "^5.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -157,9 +156,6 @@
         "enable-patching": true,
         "composer-exit-on-patch-failure": true,
         "patches": {
-            "drupal/core": {
-                "https://www.drupal.org/project/drupal/issues/2986452 - Database reserved keywords need to be quoted as per the ANSI standard": "https://www.drupal.org/files/issues/2019-02-04/2986452-69.patch"
-            },
             "drupal/entity_legal": {
                 "https://www.drupal.org/project/entity_legal/issues/2544248 - Increase length of the 'acceptance_label' field to 1024": "https://www.drupal.org/files/issues/entity_legal-acceptance_label_too_short-2544248-3.patch",
                 "https://www.drupal.org/project/entity_legal/issues/2957951 - Migrate source_module property": "https://www.drupal.org/files/issues/2018-10-04/2957951-migrate-issue.patch"

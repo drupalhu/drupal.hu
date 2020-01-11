@@ -11,13 +11,12 @@ dependencies:
 _core:
   default_config_hash: Gy5PaLdfFhtFSRqJxV-DBTF5AocKgNA2CsCNNEbvx4c
 id: taxonomy_term
-label: 'Taxonómia kifejezés'
+label: Taxonómiakifejezés
 module: taxonomy
 description: 'Egy bizonyos taxonómiakifejezéshez tartozó tartalom.'
 tag: default
 base_table: node_field_data
 base_field: nid
-core: '8'
 display:
   default:
     id: default
@@ -162,6 +161,8 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -200,6 +201,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
