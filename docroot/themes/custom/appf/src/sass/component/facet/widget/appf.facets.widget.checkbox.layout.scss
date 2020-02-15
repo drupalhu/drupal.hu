@@ -1,0 +1,17 @@
+.facets-widget-checkbox {
+
+  .facet-item {
+    display: flex;
+    flex: 0 1 auto;
+  }
+
+  .item-list__checkbox {
+    padding-left: 0;
+    list-style-type: none;
+  }
+
+  .facets-checkbox {
+    margin-top: 0.4em;
+    margin-right: 0.75em;
+  }
+}

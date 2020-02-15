@@ -1,0 +1,29 @@
+uuid: 4a74cff3-370d-4cea-85a8-6c1d7d50febb
+langcode: hu
+status: true
+dependencies:
+  config:
+    - facets.facet.cimkek
+  module:
+    - facets
+    - system
+  theme:
+    - appf
+id: cimkek
+theme: appf
+region: sidebar_first
+weight: -4
+provider: null
+plugin: 'facet_block:cimkek'
+settings:
+  id: 'facet_block:cimkek'
+  label: Címkék
+  provider: facets
+  label_display: visible
+  block_id: cimkek
+visibility:
+  request_path:
+    id: request_path
+    pages: "/kereso\r\n/kereso/*"
+    negate: false
+    context_mapping: {  }

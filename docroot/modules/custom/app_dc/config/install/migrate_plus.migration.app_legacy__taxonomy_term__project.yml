@@ -19,7 +19,6 @@ source:
 
 process:
   tid: tid
-  vid: constants/vid
   status: constants/status
   parent: parent
   weight: weight
@@ -30,3 +29,10 @@ process:
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: project
+  overwrite_properties:
+    - status
+    - parent
+    - weight
+    - name
+    - description/value
+    - description/format

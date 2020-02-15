@@ -20,9 +20,12 @@ content:
     weight: 1
     region: content
 hidden:
+  app_author: true
+  app_category: true
   checked: true
   description: true
   feed_icon: true
   image: true
   langcode: true
   link: true
+  search_api_excerpt: true

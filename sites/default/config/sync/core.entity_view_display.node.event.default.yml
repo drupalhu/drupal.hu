@@ -3,15 +3,18 @@ langcode: hu
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment_forum.default
     - field.field.node.event.app_attachments
     - field.field.node.event.app_body
     - field.field.node.event.app_date
     - field.field.node.event.app_image
     - field.field.node.event.app_links
     - field.field.node.event.app_teaser
+    - field.field.node.event.comment_forum
     - image.style.media_library
     - node.type.event
   module:
+    - comment
     - datetime_range
     - file
     - link
@@ -76,6 +79,15 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
+  comment_forum:
+    weight: 7
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
   links:
     weight: 6
     region: content
@@ -83,3 +95,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

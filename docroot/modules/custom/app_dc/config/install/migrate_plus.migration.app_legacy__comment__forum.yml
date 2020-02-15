@@ -71,8 +71,13 @@ process:
   thread: thread
   status: status
   subject: subject
-  comment_body/0/value: comment_body/0/value
   comment_body/0/format: constants/body_text_format
+  comment_body/0/value:
+    source: comment_body/0/value
+    plugin: callback
+    callable:
+      - '\Drupal\app_dc\Utils'
+      - 'removeNullBytes'
 
 destination:
   plugin: 'entity:comment'
@@ -83,5 +88,6 @@ migration_dependencies:
     - app_legacy__user__user
     - app_legacy__node__book
     - app_legacy__node__casestudy
+    - app_legacy__node__event
     - app_legacy__node__forum
     - app_legacy__node__news

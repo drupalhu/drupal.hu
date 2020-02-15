@@ -55,7 +55,3 @@ process:
 
 destination:
   plugin: 'entity:user'
-
-migration_dependencies:
-  optional:
-    - app_legacy__file__public

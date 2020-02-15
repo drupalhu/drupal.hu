@@ -1,7 +1,7 @@
 // Bootstrap
 // -----------------------------------------------------------------------------
 @import "~bootstrap/scss/functions";
-@import "base/variables";
+@import "./base/variables";
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/print";
 @import "~bootstrap/scss/reboot";
@@ -46,6 +46,7 @@
 // Layout
 // -----------------------------------------------------------------------------
 @import "./layout/page.header";
+@import "./layout/page.sidebar_first";
 @import "./layout/page.content";
 @import "./layout/page.footer";
 

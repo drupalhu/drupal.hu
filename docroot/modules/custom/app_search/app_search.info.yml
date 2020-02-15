@@ -1,0 +1,5 @@
+type: module
+name: 'App - Search'
+description: 'Search related components'
+package: 'App'
+core: '8.x'

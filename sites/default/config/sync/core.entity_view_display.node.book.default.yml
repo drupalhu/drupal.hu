@@ -3,14 +3,17 @@ langcode: hu
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment_forum.default
     - field.field.node.book.app_attachments
     - field.field.node.book.app_body
     - field.field.node.book.app_competence
     - field.field.node.book.app_drupal_version
     - field.field.node.book.app_tags
     - field.field.node.book.app_target_audience
+    - field.field.node.book.comment_forum
     - node.type.book
   module:
+    - comment
     - file
     - text
     - user
@@ -68,6 +71,15 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  comment_forum:
+    weight: 7
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
   links:
     weight: 0
     region: content
@@ -75,3 +87,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

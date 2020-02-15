@@ -1,0 +1,140 @@
+langcode: en
+status: true
+id: app_dummy__comment
+
+migration_tags:
+  - app
+  - dummy_content
+
+migration_group: app_dummy
+label: 'App - dummy - comment:forum'
+
+source:
+  fileName: comment/all.yml
+  identifier: id
+
+  fields:
+    id: Identifier
+    entity_type: Entity type
+    field_name: Field name
+    entity_id: Entity ID
+    langcode: Language code
+    pid: Parent ID
+    uid: Author ID
+    name: Name
+    mail: Mail
+    homepage: Homepage
+    hostname: Host name
+    created: Created
+    changed: Changed
+    thread: thread
+    status: status
+    subject: Subject
+    comment_body: Body
+
+process:
+  entity_type:
+    source: entity_type
+    plugin: default_value
+    default_value: node
+  field_name:
+      source: field_name
+      plugin: default_value
+      default_value: comment_forum
+  entity_id:
+    source: entity_id
+    plugin: migration_lookup
+    no_stub: true
+    migration:
+      - app_dummy__node
+  langcode:
+    source: language
+    plugin: default_value
+    default_value: hu
+  pid:
+    -
+      source: pid
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration: app_dummy__comment
+  uid:
+    -
+      source: uid
+      plugin: migration_lookup
+      migration: app_dummy__user
+      no_stub: true
+    -
+      plugin: default_value
+      default_value: 0
+
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created:
+    -
+      source: created
+      plugin: default_value
+      default_value: 'now'
+    -
+      plugin: migrate_dc_str_to_time
+  changed:
+    -
+      source: changed
+      plugin: default_value
+      default_value: 'now'
+    -
+      plugin: migrate_dc_str_to_time
+  thread:
+    -
+      source: thread
+      plugin: default_value
+      default_value: '01/'
+  status:
+    source: status
+    plugin: default_value
+    default_value: true
+  subject: subject
+  comment_body:
+    -
+      source: comment_body
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        format:
+          source: format
+          plugin: default_value
+          default_value: html_body
+        value:
+          source: value
+          plugin: get
+
+destination:
+  plugin: 'entity:comment'
+  default_bundle: 'comment_forum'
+  overwrite_properties:
+    - entity_type
+    - field_name
+    - entity_id
+    - langcode
+    - pid
+    - uid
+    - name
+    - mail
+    - homepage
+    - hostname
+    - created
+    - changed
+    - thread
+    - status
+    - subject
+    - comment_body
+
+migration_dependencies:
+  required:
+    - app_dummy__user
+    - app_dummy__node

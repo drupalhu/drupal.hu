@@ -4,10 +4,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.full
+    - field.field.node.casestudy.app_attachments
     - field.field.node.casestudy.app_body
+    - field.field.node.casestudy.app_comment_admin
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
     - field.field.node.casestudy.app_teaser
+    - field.field.node.casestudy.comment_forum
     - image.style.media_library
     - node.type.casestudy
   module:
@@ -57,4 +60,7 @@ content:
     third_party_settings: {  }
 hidden:
   app_attachments: true
+  app_comment_admin: true
+  comment_forum: true
   langcode: true
+  search_api_excerpt: true

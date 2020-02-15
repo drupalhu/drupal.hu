@@ -135,3 +135,19 @@ $settings['rebuild_access'] = TRUE;
  * directory.
  */
 $settings['skip_permissions_hardening'] = TRUE;
+
+
+// Search API - solr server.
+$config['search_api.server.general']['backend'] = 'search_api_solr';
+$config['search_api.server.general']['backend_config']['connector'] = 'standard';
+$config['search_api.server.general']['backend_config']['connector_config']['scheme'] = 'http';
+$config['search_api.server.general']['backend_config']['connector_config']['host'] = '127.0.0.1';
+$config['search_api.server.general']['backend_config']['connector_config']['port'] = 8983;
+$config['search_api.server.general']['backend_config']['connector_config']['path'] = '/solr';
+$config['search_api.server.general']['backend_config']['connector_config']['core'] = 'drupalhu8__default';
+$config['search_api.server.general']['backend_config']['connector_config']['timeout'] = 5;
+$config['search_api.server.general']['backend_config']['connector_config']['index_timeout'] = 10;
+$config['search_api.server.general']['backend_config']['connector_config']['optimize_timeout'] = 15;
+$config['search_api.server.general']['backend_config']['connector_config']['commit_within'] = 1000;
+$config['search_api.server.general']['backend_config']['connector_config']['solr_version'] = '';
+$config['search_api.server.general']['backend_config']['connector_config']['http_method'] = 'AUTO';

@@ -43,3 +43,4 @@ content:
 hidden:
   app_attachments: true
   langcode: true
+  search_api_excerpt: true

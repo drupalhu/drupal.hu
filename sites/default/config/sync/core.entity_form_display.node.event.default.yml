@@ -9,8 +9,10 @@ dependencies:
     - field.field.node.event.app_image
     - field.field.node.event.app_links
     - field.field.node.event.app_teaser
+    - field.field.node.event.comment_forum
     - node.type.event
   module:
+    - comment
     - datetime_range
     - file
     - link
@@ -65,6 +67,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  comment_forum:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
     region: content
   created:
     type: datetime_timestamp

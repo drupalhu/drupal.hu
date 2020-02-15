@@ -9,7 +9,7 @@ dependencies:
 id: appf_messages
 theme: appf
 region: content
-weight: -1
+weight: -7
 provider: null
 plugin: system_messages_block
 settings:

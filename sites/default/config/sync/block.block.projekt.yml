@@ -1,0 +1,29 @@
+uuid: 2a4182ef-a610-4894-b035-8cc9c6231e50
+langcode: hu
+status: true
+dependencies:
+  config:
+    - facets.facet.projekt
+  module:
+    - facets
+    - system
+  theme:
+    - appf
+id: projekt
+theme: appf
+region: sidebar_first
+weight: -5
+provider: null
+plugin: 'facet_block:projekt'
+settings:
+  id: 'facet_block:projekt'
+  label: Projekt
+  provider: facets
+  label_display: visible
+  block_id: projekt
+visibility:
+  request_path:
+    id: request_path
+    pages: "/kereso\r\n/kereso/*"
+    negate: false
+    context_mapping: {  }

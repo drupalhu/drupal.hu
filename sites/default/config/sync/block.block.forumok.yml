@@ -1,0 +1,29 @@
+uuid: d3af7940-61da-470e-8e1e-031848cbcda3
+langcode: hu
+status: true
+dependencies:
+  config:
+    - facets.facet.forumok
+  module:
+    - facets
+    - system
+  theme:
+    - appf
+id: forumok
+theme: appf
+region: sidebar_first
+weight: -7
+provider: null
+plugin: 'facet_block:forumok'
+settings:
+  id: 'facet_block:forumok'
+  label: Fórumok
+  provider: facets
+  label_display: visible
+  block_id: forumok
+visibility:
+  request_path:
+    id: request_path
+    pages: "/kereso\r\n/kereso/*"
+    negate: false
+    context_mapping: {  }

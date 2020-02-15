@@ -25,6 +25,12 @@
 /drush/Commands/contrib/
 /drush/drush.local.yml
 
+/sites/all/translations/*.po
+!/sites/all/translations/appp-*.po
+!/sites/all/translations/appf-*.po
+!/sites/all/translations/appb-*.po
+!/sites/all/translations/app_*.po
+
 /sites/*/backup/
 /sites/*/php_storage/
 /sites/*/private/

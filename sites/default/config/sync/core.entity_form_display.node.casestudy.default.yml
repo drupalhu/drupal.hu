@@ -5,11 +5,14 @@ dependencies:
   config:
     - field.field.node.casestudy.app_attachments
     - field.field.node.casestudy.app_body
+    - field.field.node.casestudy.app_comment_admin
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
     - field.field.node.casestudy.app_teaser
+    - field.field.node.casestudy.comment_forum
     - node.type.casestudy
   module:
+    - comment
     - file
     - media_library
     - path
@@ -34,6 +37,12 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  app_comment_admin:
+    weight: 27
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
+    region: content
   app_drupal_version:
     weight: 3
     settings: {  }
@@ -54,6 +63,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  comment_forum:
+    weight: 28
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
     region: content
   created:
     type: datetime_timestamp
