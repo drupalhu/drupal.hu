@@ -1,9 +1,0 @@
-uuid: 2919009a-552d-40be-a6ec-7fb75485fed4
-langcode: hu
-status: true
-dependencies: {  }
-id: en
-label: angol
-direction: ltr
-weight: -9
-locked: false

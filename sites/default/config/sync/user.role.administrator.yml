@@ -1,9 +1,9 @@
 uuid: a3e95453-e1ef-40fc-bd89-8333c619ab0d
-langcode: en
+langcode: hu
 status: true
 dependencies: {  }
 id: administrator
-label: Administrator
+label: Adminisztrátor
 weight: 2
 is_admin: true
 permissions: {  }

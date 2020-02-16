@@ -1,10 +1,10 @@
 uuid: 6ec82a2e-9140-4858-8bc9-c0afe5e5beef
-langcode: en
+langcode: hu
 status: true
 dependencies:
   module:
     - comment
 id: comment.token
-label: Token
+label: Vezérjel
 targetEntityType: comment
 cache: true

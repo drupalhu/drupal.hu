@@ -2,8 +2,28 @@ uuid: af6fd0f6-a741-46b6-8714-374e9b35eaab
 langcode: hu
 status: true
 dependencies:
+  config:
+    - search_api_solr.solr_cache.cache_document_default_7_0_0
+    - search_api_solr.solr_cache.cache_fieldvalue_default_7_0_0
+    - search_api_solr.solr_cache.cache_filter_default_7_0_0
+    - search_api_solr.solr_cache.cache_persegfilter_default_7_0_0
+    - search_api_solr.solr_cache.cache_queryresult_default_7_0_0
+    - search_api_solr.solr_field_type.text_edge_und_7_0_0
+    - search_api_solr.solr_field_type.text_edgestring_und_6_0_0
+    - search_api_solr.solr_field_type.text_ngram_und_7_0_0
+    - search_api_solr.solr_field_type.text_ngramstring_und_6_0_0
+    - search_api_solr.solr_field_type.text_phonetic_und_7_0_0
+    - search_api_solr.solr_field_type.text_und_7_0_0
+    - search_api_solr.solr_request_dispatcher.request_dispatcher_httpcachingnever_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_autocomplete_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_extract_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_mlt_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_select_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_spell_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_suggest_default_7_0_0
+    - search_api_solr.solr_request_handler.request_handler_tvrh_default_7_0_0
   module:
-    - acquia_search
+    - acquia_search_solr
     - search_api_solr
 _core:
   default_config_hash: tv2n9Pdm-aIIVzg6puM4sqDShEWXgfbQnAf7p-zls2Q
@@ -12,21 +32,33 @@ name: Általános
 description: ''
 backend: search_api_solr
 backend_config:
-  site_hash: true
-  excerpt: false
-  retrieve_data: true
-  highlight_data: true
-  skip_schema_check: false
-  connector: solr_acquia_connector
+  connector: solr_acquia_search_solr
   connector_config:
     scheme: http
     timeout: 5
     index_timeout: 10
     optimize_timeout: 15
-    solr_version: ''
+    finalize_timeout: 30
+    commit_within: 1000
+    solr_version: '7'
     http_method: AUTO
-  suggest_suffix: true
-  suggest_corrections: true
-  suggest_words: false
-  acquia_search_possible_cores: {  }
-  overridden_by_acquia_search: 2
+    jmx: false
+    solr_install_dir: ''
+    port: 0
+  disabled_field_types: {  }
+  disabled_caches: {  }
+  disabled_request_handlers:
+    - request_handler_elevate_default_7_0_0
+    - request_handler_replicationmaster_default_7_0_0
+    - request_handler_replicationslave_default_7_0_0
+  disabled_request_dispatchers:
+    - request_dispatcher_httpcaching_default_7_0_0
+  rows: 10
+  retrieve_data: true
+  highlight_data: true
+  skip_schema_check: false
+  server_prefix: ''
+  domain: generic
+  environment: default
+  optimize: false
+  site_hash: true
