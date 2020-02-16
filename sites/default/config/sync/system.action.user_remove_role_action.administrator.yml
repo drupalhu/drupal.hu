@@ -1,5 +1,5 @@
 uuid: 11442817-5360-4b97-b7cd-8fb662373dca
-langcode: en
+langcode: hu
 status: true
 dependencies:
   config:
@@ -7,7 +7,7 @@ dependencies:
   module:
     - user
 id: user_remove_role_action.administrator
-label: 'Remove the Administrator role from the selected user(s)'
+label: 'Adminisztrátor szerepkör megvonása a kiválasztott felhasználóktól.'
 type: user
 plugin: user_remove_role_action
 configuration:

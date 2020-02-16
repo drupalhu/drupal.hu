@@ -1,5 +1,5 @@
 uuid: 370d0d25-109f-4fc3-94d5-a5f8c37addd0
-langcode: en
+langcode: hu
 status: true
 dependencies: {  }
 id: search_api__views_page__search__page

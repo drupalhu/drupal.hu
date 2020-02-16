@@ -1,10 +1,10 @@
 uuid: 093007a6-4393-42ea-81e7-4e0522272068
-langcode: en
+langcode: hu
 status: true
 dependencies:
   module:
     - file
 id: file.token
-label: Token
+label: Vezérjel
 targetEntityType: file
 cache: true

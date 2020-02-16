@@ -1,6 +1,5 @@
 module:
-  acquia_connector: 0
-  acquia_search: 0
+  acquia_search_solr: 0
   admin_toolbar: 0
   admin_toolbar_tools: 0
   adminimal_admin_toolbar: 0
