@@ -19,11 +19,15 @@ version: 2.1
 .env_mysql: &env_mysql
   MYSQL_USER: 'drupalhu'
   MYSQL_PASSWORD: 'drupalhu'
-  MYSQL_HOST: 'database'
+  MYSQL_HOST: 'mysql'
   MYSQL_PORT: '3306'
   MYSQL_DATABASE: 'drupalhu__default'
   MYSQL_ROOT_PASSWORD: 'root'
 
+.env_solr: &env_solr
+  SOLR_HOST: 'solr'
+  SOLR_PORT: '8983'
+  SOLR_CORE: 'drupalhu__default'
 
 executors:
   php703:
@@ -36,10 +40,11 @@ executors:
         image: 'sweetchuck/php-env-dev:703-12.x.x'
         entrypoint: ['/bin/bash']
 
-  php703-mysql506:
+  php703-mysql506-solr707:
     environment:
       <<: *env_common
       <<: *env_mysql
+      <<: *env_solr
 
     docker:
       -
@@ -47,12 +52,24 @@ executors:
         image: 'sweetchuck/php-env-dev:703-12.x.x'
         entrypoint: ['/bin/bash']
       -
-        name: 'database'
+        name: 'mysql'
         image: 'mysql:5.6.45'
         environment:
           <<: *env_mysql
+      -
+        name: 'solr'
+        image: 'solr:7.7.2'
 
 commands:
+  init_bash:
+    description: 'Initialize BASH environment'
+    steps:
+      -
+        run:
+          name: 'Initialize BASH environment'
+          command: |-
+            echo '. ~/repo/.circleci/scripts/include.bash' >> ~/.bashrc
+
   init_git_identity:
     description: 'Set global Git config user.{email,name}'
     steps:
@@ -70,7 +87,6 @@ commands:
         run:
           name: 'PHP CLI - enable xdebug'
           command: |-
-            . ./.circleci/scripts/include.bash
             appPhpCliExtensionEnable 'xdebug'
 
   php_cli_disable_xdebug:
@@ -80,7 +96,6 @@ commands:
         run:
           name: 'PHP CLI - disable xdebug'
           command: |-
-            . ./.circleci/scripts/include.bash
             appPhpCliExtensionDisable 'xdebug'
 
   composer_install:
@@ -90,31 +105,19 @@ commands:
         restore_cache:
           name: 'Composer - cache restore'
           keys:
-            - 'composer-{{ checksum "./composer.lock" }}-2'
+            - 'composer-{{ checksum "./composer.lock" }}-3'
 
       -
         run:
           name: 'Composer - install'
           command: |
-            if [[ -d "$(composer config vendor-dir)" ]]; then
-              composer run post-install-cmd
-            else
-              composer install --no-progress
-            fi
+            composer install --no-progress
 
       -
         save_cache:
           name: 'Composer - cache save'
-          key: 'composer-{{ checksum "./composer.lock" }}-2'
+          key: 'composer-{{ checksum "./composer.lock" }}-3'
           paths:
-            - './bin/'
-            - './docroot/core/'
-            - './docroot/modules/contrib/'
-            - './docroot/themes/contrib/'
-            - './docroot/profiles/contrib/'
-            - './docroot/libraries/'
-            - './drush/Commands/contrib/'
-            - './vendor/'
             - '~/.composer/cache/'
 
   marvin_build:
@@ -122,7 +125,7 @@ commands:
     steps:
       -
         run:
-          name: 'Calculate checksum of NPM tools'
+          name: 'Calculate checksum of the used NPM packages'
           command: |-
             # Collect all the checksum of yarn.lock files in to one file.
             echo -n '' > 'checksum-of-frontend-asset-sources.sha256'
@@ -143,7 +146,8 @@ commands:
           name: 'NPM - cache save'
           key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-1'
           paths:
-            - './docroot/themes/custom/appf/node_modules/'
+            - '/usr/local/share/.cache/yarn/'
+            - '~/.cache/yarn/'
 
   marvin_lint:
     description: 'Run linters'
@@ -207,7 +211,6 @@ commands:
         run:
           name: 'Configure Nginx'
           command: |-
-            . ./.circleci/scripts/include.bash
             versionNumber="$(appLatestArtifactVersionNumber)"
             appNginxVirtualHost "${PWD}/artifacts/${versionNumber}/acquia"
 
@@ -223,20 +226,15 @@ commands:
         run:
           name: 'Wait for the headless Chromium'
           command: |-
-            . ./.circleci/scripts/include.bash
             appWaitForHeadlessChromium "${appChromiumHostPort}"
 
-  marvin_test_behat:
-    description: 'Run Behat tests'
+  prepare_artifact_site:
+    description: 'Prepare artifact site'
     steps:
-      -
-        attach_workspace:
-          at: './artifacts'
       -
         run:
           name: 'marvin:onboarding'
           command: |-
-            . ./.circleci/scripts/include.bash
 
             appMarvinOnboarding \
               "${PWD}" \
@@ -246,18 +244,6 @@ commands:
             appMarvinOnboarding \
               "${PWD}/artifacts/${versionNumber}/acquia" \
               "${appDrushSiteAlias}"
-      -
-        run:
-          name: 'Prepare Behat configuration'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            sed \
-              --in-place \
-              --expression "s@%paths.base%/../../@${PWD}/artifacts/${versionNumber}/acquia/@g" \
-              './tests/behat/config/extension.drupal.yml'
-
-            mkdir --parents ./tmp/behat_rerun_cache
       -
         run:
           name: 'Site install'
@@ -272,7 +258,6 @@ commands:
         run:
           name: 'Sync files'
           command: |-
-            . ./.circleci/scripts/include.bash
             versionNumber="$(appLatestArtifactVersionNumber)"
 
             dstRoot="artifacts/${versionNumber}/acquia"
@@ -304,7 +289,6 @@ commands:
         run:
           name: 'Update translations'
           command: |-
-            . ./.circleci/scripts/include.bash
             versionNumber="$(appLatestArtifactVersionNumber)"
             cd "./artifacts/${versionNumber}/acquia"
 
@@ -319,17 +303,35 @@ commands:
             ${appDrushExecutable} \
               "${appDrushSiteAlias}" \
               cache:rebuild
+
+  check_config_status:
+    description: 'Check config status'
+    steps:
       -
         run:
           name: 'Check config status'
           command: |-
-            . ./.circleci/scripts/include.bash
             versionNumber="$(appLatestArtifactVersionNumber)"
             cd "./artifacts/${versionNumber}/acquia"
 
             configStatus="$(${appDrushExecutable} "${appDrushSiteAlias}" config:status --format=yaml)"
             echo "${configStatus}"
             [[ "${configStatus}" == '' ]]
+
+  marvin_test_behat:
+    description: 'Run behat tests'
+    steps:
+      -
+        run:
+          name: 'Prepare Behat configuration'
+          command: |-
+            versionNumber="$(appLatestArtifactVersionNumber)"
+            sed \
+              --in-place \
+              --expression "s@%paths.base%/../../@${PWD}/artifacts/${versionNumber}/acquia/@g" \
+              './tests/behat/config/extension.drupal.yml'
+
+            mkdir --parents ./tmp/behat_rerun_cache
       -
         run:
           name: 'Run Behat tests'
@@ -346,12 +348,32 @@ commands:
           name: 'Store Behat test results'
           path: './reports/machine/junit'
 
+  solr_create_core:
+    description: 'Create Solr core'
+    steps:
+      -
+        run:
+          name: 'Create Solr core'
+          command: |-
+            curl \
+              --get \
+              "http://${SOLR_HOST}:${SOLR_PORT}/solr/admin/cores" \
+              --data-urlencode 'action=CREATE' \
+              --data-urlencode "name=${SOLR_CORE}" \
+              --data-urlencode "instanceDir=/opt/solr/server/solr/cores/${SOLR_CORE}" \
+              --data-urlencode 'config=solrconfig.xml' \
+              --data-urlencode 'schema=schema.xml' \
+              --data-urlencode 'dataDir=data' \
+              --data-urlencode 'indexInfo=false' \
+              --data-urlencode 'wt=json'
+
 jobs:
   qa_lint_unit:
     executor: 'php703'
     working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'init_bash'
       - 'php_cli_disable_xdebug'
       - 'composer_install'
       - 'marvin_build'
@@ -365,35 +387,50 @@ jobs:
     working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'init_bash'
       - 'php_cli_disable_xdebug'
       - 'composer_install'
       - 'marvin_build'
       - 'artifact_acquia_build'
 
   qa_behat:
-    executor: 'php703-mysql506'
+    executor: 'php703-mysql506-solr707'
     working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'init_bash'
+      - 'init_git_identity'
       - 'php_cli_disable_xdebug'
       - 'composer_install'
-      - 'init_git_identity'
+      - 'marvin_build'
       - 'artifact_acquia_restore'
+      - 'prepare_artifact_site'
       - 'nginx_virtual_host'
       - 'supervisor_start'
       - 'marvin_test_behat'
+
+  solr_tester:
+    executor: 'php703-mysql506-solr707'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'init_bash'
+      - 'init_git_identity'
+      - 'solr_create_core'
 
 workflows:
   lint_unit_behat:
     jobs:
       -
-        qa_lint_unit:
-          name: 'QA - Lint and Unit tests'
-      -
-        release_artifact_build:
-          name: 'Build - Acquia artifact'
-      -
-        qa_behat:
-          name: 'QA - Behat'
-          requires:
-            - 'Build - Acquia artifact'
+        solr_tester: {}
+#      -
+#        qa_lint_unit:
+#          name: 'QA - Lint and Unit tests'
+#      -
+#        release_artifact_build:
+#          name: 'Build - Acquia artifact'
+#      -
+#        qa_behat:
+#          name: 'QA - Behat'
+#          requires:
+#            - 'Build - Acquia artifact'

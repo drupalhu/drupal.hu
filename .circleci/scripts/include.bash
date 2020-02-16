@@ -81,9 +81,9 @@ function appLatestArtifactVersionNumber() {
         -mindepth 1 \
         -maxdepth 1 \
         -type d \
-        -printf '%f\n' \
-    | sort \
-        --version-sort
+        -printf '%f\n' |
+        sort \
+            --version-sort
 }
 
 function appWaitForHeadlessChromium() {
@@ -143,6 +143,25 @@ PHP
 \$databases['default']['default']['host'] = '${MYSQL_HOST}';
 \$databases['default']['default']['port'] = '${MYSQL_PORT}';
 \$databases['default']['default']['database'] = '${MYSQL_DATABASE}';
+
+\$config['search_api.server.general']['backend'] = 'search_api_solr';
+\$config['search_api.server.general']['backend_config']['connector'] = 'standard';
+\$config['search_api.server.general']['backend_config']['connector_config'] = [
+  'scheme' => 'http',
+  'host' => '${SOLR_HOST}',
+  'port' => ${SOLR_PORT},
+  'path' => '/',
+  'core' => '${SOLR_CORE}',
+  'timeout' => 5,
+  'index_timeout' => 10,
+  'optimize_timeout' => 15,
+  'finalize_timeout' => 30,
+  'commit_within' => 1000,
+  'solr_version' => '7',
+  'http_method' => 'AUTO',
+  'jmx' => FALSE,
+  'solr_install_dir' => '',
+];
 
 \$settings['trusted_host_patterns'] = ['^localhost\$'];
 PHP
