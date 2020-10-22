@@ -24,6 +24,9 @@
 /drush/Commands/contrib/
 /drush/drush.local.yml
 
+/sites/all/translations/*
+!/sites/all/translations/app*.po
+
 /sites/*/backup/
 /sites/*/php_storage/
 /sites/*/private/
