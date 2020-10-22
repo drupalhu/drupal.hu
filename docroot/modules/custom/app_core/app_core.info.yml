@@ -1,5 +1,6 @@
-type: module
+type: 'module'
+core_version_requirement: '^9'
+
+package: 'App'
 name: 'App - Core'
 description: 'Fundamental components'
-package: 'App'
-core: '8.x'

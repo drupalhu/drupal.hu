@@ -1,5 +1,6 @@
 type: profile
-name: 'Drupalhu'
+core_version_requirement: '^8 || ^9'
+
+package: 'App'
+name: 'App'
 description: 'Custom installation profile'
-package: 'Drupalhu'
-core: '8.x'

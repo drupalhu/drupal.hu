@@ -1,9 +1,9 @@
-core: '8.x'
 type: 'theme'
-base theme: 'adminimal_theme'
+core_version_requirement: ^9
 
 name: 'Drupalhu - Backend'
 description: '@todo'
+base theme: 'seven'
 
 regions:
   header: 'Header'
