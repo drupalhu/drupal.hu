@@ -29,7 +29,7 @@
             "type": "git",
             "url": "https://github.com/Sweetchuck/drupal-marvin_acquia.git"
         },
-        "drupal-8": {
+        "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
@@ -39,48 +39,35 @@
         }
     },
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "composer/installers": "^1.6",
         "cweagans/composer-patches": "^1.6",
-        "drupal-composer/drupal-scaffold": "^2.5",
-        "drupal/admin_toolbar": "^1.24",
-        "drupal/adminimal_admin_toolbar": "^1.8",
-        "drupal/adminimal_theme": "^1.3",
-        "drupal/allowed_formats": "^1.1",
-        "drupal/bootstrap_barrio": "^4.22",
-        "drupal/components": "^1.1",
-        "drupal/core": "^8.7",
-        "drupal/entity_legal": "dev-2.x#9a8520a",
-        "drupal/eu_cookie_compliance": "^1.5",
+        "drupal/admin_toolbar": "^2.4",
+        "drupal/allowed_formats": "^1.3",
+        "drupal/bootstrap_barrio": "^5.1",
+        "drupal/core-composer-scaffold": "^9.0",
+        "drupal/core-recommended": "^9.0",
+        "drupal/entity_legal": "dev-3.0.x",
+        "drupal/eu_cookie_compliance": "^1.11",
         "drupal/marvin": "dev-8.x-1.x",
         "drupal/marvin_product": "dev-8.x-1.x",
-        "drupal/metatag": "^1.8",
-        "drupal/pathauto": "^1.4",
-        "drupal/schema_metatag": "^1.3",
-        "drupal/search_api_solr": "^1.2",
-        "drush/drush": "^9.5",
+        "drupal/metatag": "^1.14",
+        "drupal/pathauto": "^1.8",
+        "drupal/schema_metatag": "^2.1",
+        "drupal/search_api_solr": "^4.1",
+        "drush/drush": "^10.0",
+        "kint-php/kint": "^3.3",
         "oomphinc/composer-installers-extender": "^1.1",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-selenium2-driver": "^1.3",
-        "bex/behat-screenshot": "^1.2",
-        "cheppers/drupal-behat-contexts": "dev-master",
-        "danielstjules/stringy": "^3.1",
-        "dmore/behat-chrome-extension": "^1.2",
-        "drupal/devel": "^2.1",
+        "drupal/devel": "^4.0",
         "drupal/marvin_acquia": "dev-8.x-1.x",
-        "drupal/migrate_dc": "1.x-dev",
-        "drupal/migrate_plus": "^4.1",
-        "drupal/migrate_tools": "^4.1",
+        "drupal/migrate_dc": "dev-1.x#19df788b8d83e6ea47f2b3e4854ff35a827edb8c",
+        "drupal/migrate_plus": "^5.1",
+        "drupal/migrate_tools": "^5.0",
         "drupal/module_filter": "^3.1",
-        "drupal/styleguide": "dev-1.x",
-        "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^6.5",
-        "symfony/css-selector": "^4.1",
-        "symfony/filesystem": "^4.1",
-        "symfony/phpunit-bridge": "^4.1"
+        "phpunit/phpunit": "^9.4"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -95,9 +82,22 @@
         "post-install-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postInstallCmd",
         "post-update-cmd": "\\Drupal\\marvin\\Composer\\Scripts::postUpdateCmd",
         "clean": [
+            "@clean:backend",
+            "@clean:frontend",
+            "@clean:translations"
+        ],
+        "clean:backend": [
             "rm -rf bin/ reports/ vendor/",
             "rm -rf docroot/core/ docroot/modules/contrib/ docroot/profiles/contrib/ docroot/themes/contrib/ docroot/libraries/",
             "rm -rf drush/Commands/contrib/"
+        ],
+        "clean:frontend": [
+            "rm -rf docroot/themes/custom/*/node_modules/",
+            "rm -rf docroot/themes/custom/*/**/*.css",
+            "rm -rf docroot/themes/custom/*/**/*.css.map"
+        ],
+        "clean:translations": [
+            "git clean -X -f -- sites/all/translations"
         ],
         "reset": [
             "@reset:files",
@@ -112,15 +112,46 @@
         "reset:db": [
             "drush --config=drush --yes @app.local sql:drop"
         ],
-        "site:install:dev": [
+        "site:install:prod:empty": [
             "@reset:files",
-            "bin/drush --config=drush @app.local site:install appp --existing-config --marvin-migrate=dummy --yes",
-            "bin/drush --config=drush @app.local marvin:toggle-modules --define=marvin.environment=dev"
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''"
+        ],
+        "site:install:prod:default": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
+            "bin/drush --config=drush @app.local --yes marvin:migrate default"
+        ],
+        "site:install:prod:dummy": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
+            "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
+        ],
+        "site:install:local:empty": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
+            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
+        ],
+        "site:install:local:default": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
+            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "bin/drush --config=drush @app.local --yes marvin:migrate default"
+        ],
+        "site:install:local:dummy": [
+            "@reset:files",
+            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
+            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
         ]
     },
     "scripts-descriptions": {
-        "clean": "Deletes all the third-party codes downloaded by Composer.",
-        "reset": "Drops the Drupal database (default) and deletes the uploaded files."
+        "clean": "<fg=yellow>Deletes</> all the third-party codes downloaded by the used <info>package managers</>.",
+        "clean:backend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <info>Composer</>.",
+        "clean:frontend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <info>Yarn</>.",
+        "clean:translations": "<fg=yellow>Deletes</> all the <info>*.po files</> which are belong to third-party codes.",
+        "reset": "<fg=red>Drops</> the <info>default database</> and <fg=red>deletes</> the uploaded <info>files</> (public and private).",
+        "reset:files": "<fg=red>Deletes</> the uploaded <info>files</> (public and private).",
+        "reset:db": "<fg=red>Drops</> the <info>default database</>."
     },
     "extra": {
         "installer-types": [
@@ -156,7 +187,7 @@
         "composer-exit-on-patch-failure": true,
         "patches": {
             "drupal/core": {
-                "https://www.drupal.org/project/drupal/issues/2986452 - Database reserved keywords need to be quoted as per the ANSI standard": "https://www.drupal.org/files/issues/2019-02-04/2986452-69.patch"
+                "https://www.drupal.org/project/drupal/issues/2960714 - [meta] Improve ::generateSampleValue() for common field types": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch"
             },
             "drupal/entity_legal": {
                 "https://www.drupal.org/project/entity_legal/issues/2544248 - Increase length of the 'acceptance_label' field to 1024": "https://www.drupal.org/files/issues/entity_legal-acceptance_label_too_short-2544248-3.patch",
@@ -164,16 +195,74 @@
             }
         },
         "drupal-scaffold": {
-            "excludes": [
-                "sites/example.settings.local.php",
-                ".csslintrc",
-                ".editorconfig",
-                ".eslintignore",
-                ".eslintrc.json",
-                ".gitattributes",
-                ".ht.router.php",
-                "web.config"
-            ],
+            "locations": {
+                "web-root": "./docroot"
+            },
+            "file-mapping": {
+                "[project-root]/.editorconfig": {
+                    "mode": "skip"
+                },
+                "[web-root]/sites/example.settings.local.php": {
+                    "mode": "skip"
+                },
+                "[web-root]/.csslintrc": {
+                    "mode": "skip"
+                },
+                "[web-root]/.editorconfig": {
+                    "mode": "skip"
+                },
+                "[web-root]/.eslintignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/.eslintrc.json": {
+                    "mode": "skip"
+                },
+                "[web-root]/.gitattributes": {
+                    "mode": "skip"
+                },
+                "[web-root]/.ht.router.php": {
+                    "mode": "skip"
+                },
+                "[web-root]/example.gitignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/INSTALL.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/README.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/modules/.gitignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/modules/README.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/profiles/.gitignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/profiles/README.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/themes/.gitignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/themes/README.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/sites/.gitignore": {
+                    "mode": "skip"
+                },
+                "[web-root]/sites/README.txt": {
+                    "mode": "skip"
+                },
+                "[web-root]/.htaccess": {
+                    "mode": "skip"
+                },
+                "[web-root]/web.config": {
+                    "mode": "skip"
+                }
+            },
             "initial": {
                 "sites/default/default.services.yml": "sites/default/services.yml",
                 "sites/default/default.settings.php": "sites/default/settings.php"
