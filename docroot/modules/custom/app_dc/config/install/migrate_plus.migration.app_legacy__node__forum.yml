@@ -28,7 +28,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   status: status
   created: created
   changed: changed
@@ -41,7 +42,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   revision_log: log
   revision_timestamp: timestamp
 
@@ -57,7 +59,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__forums
+        migration:
+          - app_legacy__taxonomy_term__forums
 
   app_drupal_version:
     source: taxonomy_vocabulary_10
@@ -66,7 +69,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__drupal_version
+        migration:
+          - app_legacy__taxonomy_term__drupal_version
 
   app_project:
     source: taxonomy_vocabulary_11
@@ -75,7 +79,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__project
+        migration:
+          - app_legacy__taxonomy_term__project
 
 destination:
   plugin: 'entity:node'

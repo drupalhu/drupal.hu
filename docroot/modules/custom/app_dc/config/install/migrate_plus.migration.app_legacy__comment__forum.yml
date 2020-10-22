@@ -51,13 +51,15 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__comment__forum
+      migration:
+        - app_legacy__comment__forum
   uid:
     -
       source: uid
       plugin: migration_lookup
-      migration: app_legacy__user__user
       no_stub: true
+      migration:
+        - app_legacy__user__user
     -
       plugin: default_value
       default_value: 0

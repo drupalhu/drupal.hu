@@ -45,8 +45,9 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration:  app_legacy__file__public
       no_stub: false
+      migration:
+        - app_legacy__file__public
 
   app_introduction/0/value: profile_bio/0
   app_introduction/0/format: constants/intro_text_format
@@ -57,5 +58,5 @@ destination:
   plugin: 'entity:user'
 
 migration_dependencies:
-  optional:
+  required:
     -  app_legacy__file__public

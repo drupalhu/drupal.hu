@@ -39,7 +39,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__comment__admin
+      migration:
+        - app_legacy__comment__admin
   uid:
     -
       source: uid
@@ -47,7 +48,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   name: name
   mail: mail
   homepage: homepage

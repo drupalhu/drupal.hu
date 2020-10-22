@@ -7,7 +7,7 @@ migration_tags:
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - file:file.public'
+label: 'App - Legacy - file:public'
 
 source:
   plugin: d7_file
@@ -44,8 +44,9 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
       no_stub: false
+      migration:
+        - app_legacy__user__user
   filename: filename
   uri:
     plugin: file_copy

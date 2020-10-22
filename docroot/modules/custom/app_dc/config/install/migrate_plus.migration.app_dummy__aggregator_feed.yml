@@ -79,7 +79,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_dummy__user
+      migration:
+        - app_dummy__user
 
 destination:
   plugin: entity:aggregator_feed

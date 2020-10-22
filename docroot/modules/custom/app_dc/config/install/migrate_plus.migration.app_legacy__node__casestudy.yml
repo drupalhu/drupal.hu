@@ -29,7 +29,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   status: status
   created: created
   changed: changed
@@ -42,7 +43,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   revision_log: log
   revision_timestamp: timestamp
 

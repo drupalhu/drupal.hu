@@ -71,8 +71,9 @@ process:
 
   parent:
     source: parent
-    plugin: migration
-    migration: app_common__menu_link_content
+    plugin: migration_lookup
+    migration:
+      - app_common__menu_link_content
 
 destination:
   plugin: 'entity:menu_link_content'

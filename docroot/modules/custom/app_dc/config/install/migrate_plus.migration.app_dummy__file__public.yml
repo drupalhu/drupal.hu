@@ -46,8 +46,9 @@ process:
     -
       source: uid
       plugin: migration_lookup
-      migration: app_dummy__user
       no_stub: false
+      migration:
+        - app_dummy__user
     -
       plugin: default_value
       default_value: 1

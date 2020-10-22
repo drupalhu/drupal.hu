@@ -21,9 +21,10 @@ process:
   uuid:
     source: nid
     plugin: static_map
+    bypass: true
     map:
       # book:Handbook
-      26: 5c0dd66f-f4c5-44dd-99ff-198541fcaa87
+      26: '5c0dd66f-f4c5-44dd-99ff-198541fcaa87'
   langcode: constants/langcode
   default_langcode: constants/default_langcode
   nid: nid
@@ -34,7 +35,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   status: status
   created: created
   changed: changed
@@ -47,7 +49,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_legacy__user__user
+      migration:
+        - app_legacy__user__user
   revision_log: log
   revision_timestamp: timestamp
 
@@ -63,7 +66,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__drupal_version
+        migration:
+          - app_legacy__taxonomy_term__drupal_version
 
   app_target_audience:
     source: field_voc_celkozonseg
@@ -72,7 +76,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__target_audience
+        migration:
+          - app_legacy__taxonomy_term__target_audience
 
   app_competence:
     source: field_voc_szint
@@ -81,7 +86,8 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
-        migration: app_legacy__taxonomy_term__competence
+        migration:
+          - app_legacy__taxonomy_term__competence
 
   app_attachments:
     source: upload
@@ -90,7 +96,8 @@ process:
       target_id:
         source: fid
         plugin: migration_lookup
-        migration:  app_legacy__file__public
+        migration:
+          - app_legacy__file__public
       display: display
       description: description
 

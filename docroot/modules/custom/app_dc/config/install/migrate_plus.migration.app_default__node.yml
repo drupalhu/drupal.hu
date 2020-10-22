@@ -59,7 +59,8 @@ process:
   uid:
     source: uid
     plugin: migration_lookup
-    migration: app_default__user
+    migration:
+      - app_default__user
 
   status:
     source: status
@@ -91,7 +92,8 @@ process:
       method: process
     -
       plugin: migration_lookup
-      migration: app_default__media__image
+      migration:
+        - app_default__media__image
 
   app_teaser:
     source: app_teaser
