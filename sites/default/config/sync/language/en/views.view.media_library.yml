@@ -1,5 +1,10 @@
-label: 'Media library'
 display:
+  page:
+    display_options:
+      menu:
+        title: Media
+        description: 'Allows users to browse and administer media items'
+    display_title: Page
   default:
     display_title: Master
     display_options:
@@ -55,12 +60,6 @@ display:
       empty:
         area_text_custom:
           content: 'No media available.'
-  page:
-    display_title: Page
-    display_options:
-      menu:
-        title: Media
-        description: 'Allows users to browse and administer media items'
   widget:
     display_title: Widget
     display_options:
@@ -102,3 +101,5 @@ display:
           label: Grid
         display_link_table:
           label: Table
+label: 'Media library'
+description: 'Find and manage media.'

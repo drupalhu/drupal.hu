@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: jxfClwZIRXIdcvMrE--WkcZxDGUVoOIE3Sm2NRZlFuE
 id: html_datetime
-label: 'HTML dátum-idő'
+label: 'HTML dátum idővel'
 locked: true
 pattern: 'Y-m-d\TH:i:sO'

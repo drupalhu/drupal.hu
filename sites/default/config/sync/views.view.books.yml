@@ -16,7 +16,6 @@ description: 'Minden könyvnek a legfelső szintű eleme'
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -118,6 +117,8 @@ display:
           id: status
           expose:
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
           group: 1
       sorts:
         weight:
