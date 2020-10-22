@@ -30,39 +30,36 @@
   </testsuites>
 
   <listeners>
-    <listener class="\Drupal\Tests\Listeners\DrupalListener"/>
-    <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+    <listener class="\Drupal\Tests\Listeners\DrupalListener" />
+    <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
   </listeners>
 
   <logging>
-    <log type="coverage-text"   target="php://stdout"/>
-    <log type="coverage-html"   target="reports/human/coverage/html"/>
-    <log type="testdox-html"    target="reports/human/junit/phpunit.html"/>
-    <log type="coverage-clover" target="reports/machine/coverage/phpunit.xml"/>
-    <log type="junit"           target="reports/machine/junit/phpunit.xml"/>
+    <testdoxHtml outputFile="reports/human/junit/phpunit.html" />
+    <junit outputFile="reports/machine/junit/phpunit.xml" />
   </logging>
 
-  <filter>
-    <whitelist processUncoveredFilesFromWhitelist="true">
+  <coverage processUncoveredFiles="true">
+    <include>
       <directory>./docroot/profiles/custom/</directory>
-      <exclude>
-        <directory>./docroot/profiles/custom/*/tests/</directory>
-        <directory>./docroot/profiles/custom/*/node_modules/</directory>
-      </exclude>
-
       <directory>./docroot/modules/custom/</directory>
-      <exclude>
-        <directory>./docroot/modules/custom/*/tests/</directory>
-        <directory>./docroot/modules/custom/*/node_modules/</directory>
-      </exclude>
-
       <directory>./docroot/themes/custom/</directory>
-      <exclude>
-        <directory>./docroot/themes/custom/*/tests/</directory>
-        <directory>./docroot/themes/custom/*/node_modules/</directory>
-      </exclude>
-
       <directory>./drush/Commands/custom/</directory>
-    </whitelist>
-  </filter>
+    </include>
+    <exclude>
+      <directory>./docroot/profiles/custom/*/tests/</directory>
+      <directory>./docroot/profiles/custom/*/node_modules/</directory>
+      <directory>./docroot/modules/custom/*/tests/</directory>
+      <directory>./docroot/modules/custom/*/node_modules/</directory>
+      <directory>./docroot/themes/custom/*/tests/</directory>
+      <directory>./docroot/themes/custom/*/node_modules/</directory>
+    </exclude>
+
+    <report>
+      <text outputFile="php://stdout" />
+      <clover outputFile="reports/machine/coverage/phpunit.xml" />
+      <html outputDirectory="reports/human/coverage/html" />
+      <xml outputDirectory="reports/machine/coverage/xml" />
+    </report>
+  </coverage>
 </phpunit>
