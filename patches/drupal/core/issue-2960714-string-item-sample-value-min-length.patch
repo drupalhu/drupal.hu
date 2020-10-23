@@ -1,0 +1,13 @@
+diff --git a/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/StringItem.php b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/StringItem.php
+index b51764c..3c352a6 100644
+--- a/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/StringItem.php
++++ b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/StringItem.php
+@@ -72,7 +72,7 @@ class StringItem extends StringItemBase {
+    */
+   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+     $random = new Random();
+-    $values['value'] = $random->word(mt_rand(1, $field_definition->getSetting('max_length')));
++    $values['value'] = $random->word(mt_rand(9, $field_definition->getSetting('max_length')));
+     return $values;
+   }
+
