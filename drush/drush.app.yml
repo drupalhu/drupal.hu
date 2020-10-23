@@ -25,7 +25,7 @@ command:
         site-name: 'Drupal.hu'
         account-name: 'admin'
         account-pass: 'admin'
-        account-mail: 'admin@localhost'
+        account-mail: 'admin@${marvin.acquia.projectId}.localhost'
         marvin-migrate: 'default'
 
 sql:
@@ -48,10 +48,10 @@ marvin:
         dblog: true
         devel: true
         field_ui: true
-        kint: true
+        kint: false
         menu_ui: true
+        migrate_tools: true
         module_filter: true
-        styleguide: true
         views_ui: true
 
     prod:
@@ -60,7 +60,7 @@ marvin:
         app_legacy: false
         dblog: false
         devel: false
-        field_ui: false
+        field_ui: true
         kint: false
         migrate: false
         migrate_drupal: false
@@ -68,7 +68,6 @@ marvin:
         migrate_tools: false
         module_filter: false
         simpletest: false
-        styleguide: false
         views_ui: false
 
   migrate:
@@ -78,7 +77,7 @@ marvin:
       group:
         app_legacy: true
         app_common: true
-    install:
+    default:
       module:
         app_dc: true
       group:
