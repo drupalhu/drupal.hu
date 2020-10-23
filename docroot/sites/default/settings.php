@@ -286,7 +286,7 @@ $databases = [
  * directory in the public files path. The setting below allows you to set
  * its location.
  */
-$settings['config_sync_directory'] = "../$site_path/config/sync";
+$settings['config_sync_directory'] = "../$site_path/config/prod";
 
 /**
  * Settings:
@@ -811,9 +811,6 @@ if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}
   $settings['file_private_path'] = '../acquia-files/files-private';
   $settings['php_storage']['twig']['directory'] = '../acquia-files/tmp/php_storage';
   $config['system.file']['path']['temporary'] = '../acquia-files/tmp';
-
-  // @todo Is this really needed?
-  $settings['config_sync_directory'] = "../$site_path/config/sync";
 }
 
 /**
