@@ -17,7 +17,7 @@ use Drupal\comment\Plugin\migrate\source\d7\Comment as D7Comment;
 class Comment extends D7Comment {
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function query() {
     $this->normalizeConfiguration();
@@ -30,6 +30,9 @@ class Comment extends D7Comment {
     return $query;
   }
 
+  /**
+   * @return $this
+   */
   protected function normalizeConfiguration() {
     $this->configuration += [
       'node_types' => [],

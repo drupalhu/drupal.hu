@@ -16,7 +16,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 class Feeds extends DrupalSqlBase {
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function fields() {
     return [
@@ -46,7 +46,7 @@ class Feeds extends DrupalSqlBase {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function getIds() {
     return [
@@ -57,7 +57,7 @@ class Feeds extends DrupalSqlBase {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function query() {
     $query = $this->select('feeds_source', 'fs');
@@ -81,7 +81,7 @@ class Feeds extends DrupalSqlBase {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function prepareRow(Row $row) {
     $result = parent::prepareRow($row);

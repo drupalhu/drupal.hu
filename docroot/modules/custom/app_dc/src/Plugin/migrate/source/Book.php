@@ -15,42 +15,14 @@ use Drupal\migrate\Row;
  */
 class Book extends D7Book {
 
-  /**
-   * @var int
-   */
-  protected $maxDepth = 9;
+  protected int $maxDepth = 9;
 
   /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    $query = $this->select('menu_links', 'ml');
-    $query->innerJoin('book', 'b', 'ml.mlid = %alias.mlid');
-
-    $query
-      ->fields('ml')
-      ->fields('b', ['bid'])
-      ->orderBy('ml.depth')
-      ->orderby('ml.mlid');
-
-    $query->leftJoin('menu_links', 'p0', 'ml.plid = p0.mlid');
-    $query->addField('p0', 'link_path', "p0_link_path");
-
-    for ($i = 1; $i < $this->maxDepth; $i++) {
-      $query->leftJoin('menu_links', "p$i", "ml.p$i = p$i.mlid");
-      $query->addField("p$i", 'link_path', "p{$i}_link_path");
-    }
-
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function fields() {
-    $fields = parent::fields() + [
-      'nid' => $this->t('Content identifier'),
-      'bid' => $this->t('Book identifier'),
+    $fields = parent::fields();
+    $fields += [
       'p0_link_path' => $this->t('Direct parent link path'),
       'p0_nid' => $this->t('Direct parent Content identifier'),
     ];
@@ -63,6 +35,33 @@ class Book extends D7Book {
     return $fields;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function query() {
+    $query = $this->select('menu_links', 'ml');
+    $query->innerJoin('book', 'b', 'ml.mlid = %alias.mlid');
+
+    $query
+      ->fields('ml')
+      ->fields('b', ['bid'])
+      ->orderBy('ml.depth')
+      ->orderby('ml.mlid');
+
+    $tableP0 = $query->leftJoin('menu_links', 'p0', 'ml.plid = %alias.mlid');
+    $query->addField($tableP0, 'link_path', "p0_link_path");
+
+    for ($i = 1; $i < $this->maxDepth; $i++) {
+      $tablePi = $query->leftJoin('menu_links', "p$i", "ml.p$i = %alias.mlid");
+      $query->addField($tablePi, 'link_path', "p{$i}_link_path");
+    }
+
+    return $query;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function prepareRow(Row $row) {
     $result = parent::prepareRow($row);
 
@@ -81,8 +80,8 @@ class Book extends D7Book {
     return $result;
   }
 
-  protected function getNodeIdFromLinkPath(string $linkPath): int {
-    return (int) mb_substr($linkPath, 5);
+  protected function getNodeIdFromLinkPath(string $linkPath): string {
+    return mb_substr($linkPath, 5);
   }
 
 }
