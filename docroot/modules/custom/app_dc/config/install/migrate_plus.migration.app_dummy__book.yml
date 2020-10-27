@@ -1,13 +1,17 @@
 langcode: en
 status: true
 id: app_dummy__book
+label: 'App - Dummy - book'
 
 migration_tags:
   - app
   - dummy_content
 
 migration_group: app_dummy
-label: 'App - Dummy - book'
+
+migration_dependencies:
+  required:
+    - app_dummy__node
 
 source:
   fileName: book/all.yml
@@ -47,7 +51,3 @@ process:
 
 destination:
   plugin: 'book'
-
-migration_dependencies:
-  required:
-    - app_dummy__node

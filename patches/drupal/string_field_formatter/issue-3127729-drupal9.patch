@@ -1,0 +1,12 @@
+diff --git a/string_field_formatter.info.yml b/string_field_formatter.info.yml
+index 8d041c5..4c6829e 100644
+--- a/string_field_formatter.info.yml
++++ b/string_field_formatter.info.yml
+@@ -7,6 +7,6 @@ dependencies:
+ 
+ # Information added by Drupal.org packaging script on 2019-01-26
+ version: '8.x-1.1'
+-core: '8.x'
++core_version_requirement: '^8.7.7 || ^9'
+ project: 'string_field_formatter'
+ datestamp: 1548517983

@@ -689,7 +689,8 @@ $config['views.settings']['ui']['exposed_filter_any_label'] = 'new_any';
 /**
  * Load services definition file.
  */
-$settings['container_yamls'][] = "$app_root/$site_path/services.yml";
+$settings['container_yamls']['general'] = "$app_root/$site_path/services.yml";
+$settings['container_yamls']['memcache'] = "$app_root/$site_path/services.memcache.yml";
 
 /**
  * Override the default service container class.

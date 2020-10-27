@@ -17,6 +17,13 @@ settings:
           items:
             - Bold
             - Italic
+            - Underline
+            - Strike
+            - '-'
+            - Superscript
+            - Subscript
+            - '-'
+            - RemoveFormat
         -
           name: Hivatkozások
           items:
@@ -27,15 +34,37 @@ settings:
           items:
             - BulletedList
             - NumberedList
+            - '-'
+            - Indent
+            - Outdent
         -
           name: Média
           items:
+            - SpecialChar
+            - HorizontalRule
             - Blockquote
-            - DrupalImage
+            - DrupalMediaLibrary
         -
           name: Eszközök
           items:
+            - '-'
             - Source
+            - ShowBlocks
+            - Maximize
+        -
+          name: Igazítás
+          items:
+            - JustifyLeft
+            - JustifyCenter
+            - JustifyRight
+            - '-'
+            - JustifyBlock
+        -
+          name: Formázás
+          items:
+            - Format
+            - '-'
+            - Styles
   plugins:
     language:
       language_list: un

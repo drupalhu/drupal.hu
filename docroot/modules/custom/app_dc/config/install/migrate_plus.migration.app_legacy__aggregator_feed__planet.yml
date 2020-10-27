@@ -1,13 +1,17 @@
 langcode: en
 status: true
 id: app_legacy__aggregator_feed__planet
+label: 'App - Legacy - aggregator_feed:planet'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - aggregator_feed:planet'
+
+migration_dependencies:
+  optional:
+    - app_legacy__user__user
 
 audit: true
 
@@ -41,7 +45,3 @@ process:
 
 destination:
   plugin: entity:aggregator_feed
-
-migration_dependencies:
-  optional:
-    - app_legacy__user__user

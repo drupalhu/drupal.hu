@@ -1,13 +1,21 @@
 langcode: en
 status: true
 id: app_legacy__book
+label: 'App - Legacy - book'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - book'
+
+migration_dependencies:
+  required:
+    - app_legacy__node__book
+    - app_legacy__node__forum
+    - app_legacy__node__casestudy
+    - app_legacy__node__news
+    - app_legacy__node__page
 
 source:
   plugin: app_book
@@ -52,11 +60,3 @@ process:
 
 destination:
   plugin: 'book'
-
-migration_dependencies:
-  required:
-    - app_legacy__node__book
-    - app_legacy__node__forum
-    - app_legacy__node__casestudy
-    - app_legacy__node__news
-    - app_legacy__node__page

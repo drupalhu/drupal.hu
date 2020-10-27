@@ -6,8 +6,8 @@ dependencies:
     - appf
 id: appf_page_title
 theme: appf
-region: content
-weight: -5
+region: content_above
+weight: -6
 provider: null
 plugin: page_title_block
 settings:

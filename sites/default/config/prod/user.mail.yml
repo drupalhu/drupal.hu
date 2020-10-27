@@ -8,7 +8,21 @@ register_admin_created:
   body: "Kedves [user:display-name]! \r\n\r\n[site:name] webhely adminisztrátora létrehozott egy [user:name] felhasználói fiókot. Így már be lehet jelentkezni erre a hivatkozásra kattintva vagy a webcímet kimásolva és a böngésző címsorába beillesztve:\r\n\r\n[user:one-time-login-url]\r\n\r\nAz így megnyitott oldalon rögtön beállítható a jelszó.\r\n\r\nEz a hivatkozás csak egyszer használható bejelentkezésre. Azt követően a jövőben már a rendes belépési oldalon ([site:login-url]) lehet majd bejelentkezni a webhelyre. Ehhez az alábbi információk fognak kelleni:\r\n\r\nFelhasználónév: [user:name]\r\nJelszó: az imént megadott jelszó\r\n\r\n -- [site:name] csapata"
   subject: '[site:name] adminisztrátora által létrehozott új felhasználói fiók elkészült'
 register_no_approval_required:
-  body: "Kedves [user:display-name]!\n\nKöszönjük a csatlakozási szándékot [site:name] webhelyhez. Az alábbi hivatkozásra kattintva vagy a böngésző címsorába illesztve lehet belépni:\n\n[user:one-time-login-url] \n\nA hivatkozás csak egyszer használható belépésre. Ezt követően a böngésző át lesz irányítva arra az oldalra, ahol többek közt a jelszó is megadható.\n\nA [site:login-url] oldalon a bejelentkezéshez az ott megadott a jelszót kell használni.\n\nfelhasználó név: [user:name] \njelszó: a megadott jelszó  \n\n-- [site:name] csapata"
+  body: |-
+    Kedves [user:display-name]!
+
+    Köszönjük a csatlakozási szándékot [site:name] webhelyhez. Az alábbi hivatkozásra kattintva vagy a böngésző címsorába illesztve lehet belépni:
+
+    [user:one-time-login-url] 
+
+    A hivatkozás csak egyszer használható belépésre. Ezt követően a böngésző át lesz irányítva arra az oldalra, ahol többek közt a jelszó is megadható.
+
+    A [site:login-url] oldalon a bejelentkezéshez az ott megadott a jelszót kell használni.
+
+    felhasználó név: [user:name] 
+    jelszó: a megadott jelszó  
+
+    -- [site:name] csapata
   subject: '[user:display-name] fiókadatai [site:name] webhelyen'
 register_pending_approval:
   body: "Kedves [user:display-name]!\r\n\r\nKöszönjük a csatlakozási szándékot [site:name] webhelyhez, a kérelem még elfogadásra vár. Jóváhagyás után küldünk egy e-mailt a bejelentkezési információkkal és jelszóbeállítási lehetőségekkel.\r\n\r\n--  [site:name] csapata"

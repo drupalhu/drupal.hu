@@ -1,8 +1,9 @@
 
 default:
   extensions:
-    Behat\MinkExtension:
-      files_path: '%paths.base%/media'
+    Drupal\MinkExtension:
+      ajax_timeout: 5
+      files_path: '%paths.base%/tests/behat/media'
       base_url: 'http://drupalhu.localhost'
       browser_name: 'chrome'
       default_session: 'goutte'

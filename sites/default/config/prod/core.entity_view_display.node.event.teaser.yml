@@ -13,10 +13,143 @@ dependencies:
     - image.style.media_library
     - node.type.event
   module:
+    - bootstrap_layouts
     - datetime_range
+    - layout_builder
+    - layout_discovery
     - media
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          199ac75e-53d8-40fb-9edc-5a9ba2c90b07:
+            uuid: 199ac75e-53d8-40fb-9edc-5a9ba2c90b07
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_image'
+              formatter:
+                type: media_thumbnail
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: content
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          1b320b54-7f9e-456f-9986-eb393bfeaf0d:
+            uuid: 1b320b54-7f9e-456f-9986-eb393bfeaf0d
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_date'
+              formatter:
+                type: daterange_default
+                label: inline
+                settings:
+                  separator: '-'
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+            additional: {  }
+            weight: 1
+          313a4d33-9b24-40c3-96a4-0501a1aad57b:
+            uuid: 313a4d33-9b24-40c3-96a4-0501a1aad57b
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_teaser'
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            additional: {  }
+            weight: 2
+        third_party_settings: {  }
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          c8ec5d36-2050-4af9-9eac-b0b9275886e1:
+            uuid: c8ec5d36-2050-4af9-9eac-b0b9275886e1
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_image'
+              formatter:
+                type: media_thumbnail
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: content
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          e9abf8e3-29b1-49dc-84a3-a0ca5609d1dd:
+            uuid: e9abf8e3-29b1-49dc-84a3-a0ca5609d1dd
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_date'
+              formatter:
+                type: daterange_default
+                label: inline
+                settings:
+                  separator: '-'
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+            additional: {  }
+            weight: 1
+          ea456173-ed75-4f01-928f-244cf2855086:
+            uuid: ea456173-ed75-4f01-928f-244cf2855086
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:event:app_teaser'
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            additional: {  }
+            weight: 2
+        third_party_settings: {  }
 id: node.event.teaser
 targetEntityType: node
 bundle: event
@@ -54,3 +187,4 @@ hidden:
   app_links: true
   langcode: true
   links: true
+  search_api_excerpt: true

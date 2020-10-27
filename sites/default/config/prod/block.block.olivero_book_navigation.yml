@@ -1,0 +1,23 @@
+uuid: 619d39b8-51b2-4bec-a894-72bcac4d3677
+langcode: hu
+status: true
+dependencies:
+  module:
+    - book
+  theme:
+    - olivero
+_core:
+  default_config_hash: xxqzeHDwRJfhYFvHhktKYfWRx4KsJwkTVBhSlltWcNE
+id: olivero_book_navigation
+theme: olivero
+region: sidebar
+weight: 0
+provider: null
+plugin: book_navigation
+settings:
+  id: book_navigation
+  label: 'Könyv navigáció'
+  provider: book
+  label_display: visible
+  block_mode: 'book pages'
+visibility: {  }

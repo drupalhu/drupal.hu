@@ -1,0 +1,23 @@
+uuid: b6868dcf-56f5-4af4-9fa0-75c20dc8f390
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - appf
+id: appf_branding
+theme: appf
+region: header
+weight: -6
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Webhely márkázása'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility: {  }

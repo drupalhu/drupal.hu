@@ -9,9 +9,11 @@
 /docroot/themes/contrib/
 /docroot/themes/custom/*/.bundle/
 /docroot/themes/custom/*/node_modules/
-/docroot/themes/custom/*/bootstrap/
-/docroot/themes/custom/*/css/**.css
-/docroot/themes/custom/*/css/**.css.map
+/docroot/themes/custom/*/assets/
+/docroot/themes/custom/*/**/*.css
+/docroot/themes/custom/*/**/*.css.map
+/docroot/themes/custom/*/**/*.css.min.map
+/docroot/themes/custom/*/**/*.min.js
 /docroot/themes/custom/*/gulp.config.local.json
 
 /docroot/sites/simpletest/
@@ -35,8 +37,9 @@
 
 /reports/
 
-/tests/behat/behat.local.yml
 /vendor/
+
+/behat.local.yml
 
 /composer.local.example.lock
 /composer.local.json
@@ -46,5 +49,3 @@
 
 /phpcs.xml
 /phpunit.xml
-
-/.phpbrewrc

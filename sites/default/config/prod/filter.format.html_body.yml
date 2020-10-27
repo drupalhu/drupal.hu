@@ -2,8 +2,11 @@ uuid: 01bcad7b-ad4a-4ca9-b703-377bfac23a9c
 langcode: hu
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.media.full
   module:
     - editor
+    - media
 name: 'HTML - Törzs'
 format: html_body
 weight: -9
@@ -38,7 +41,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<a href hreflang> <abbr> <acronym> <blockquote cite> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <ins> <kbd> <li> <mark> <meter value min max> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time datetime> <ul type> <ol start type> <wbr> <img src title alt data-entity-type data-entity-uuid>'
+      allowed_html: '<a href hreflang> <abbr> <acronym> <blockquote cite> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <ins> <kbd> <li> <mark> <meter value min max> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time datetime> <ul type> <ol start type> <wbr> <img src title alt data-entity-type data-entity-uuid> <u> <hr> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
       filter_html_help: true
       filter_html_nofollow: true
   filter_htmlcorrector:
@@ -66,3 +69,14 @@ filters:
     weight: -43
     settings:
       filter_url_length: 72
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: 100
+    settings:
+      default_view_mode: full
+      allowed_media_types:
+        image: image
+      allowed_view_modes:
+        full: full

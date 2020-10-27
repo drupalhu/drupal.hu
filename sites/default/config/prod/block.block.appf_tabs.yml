@@ -6,8 +6,8 @@ dependencies:
     - appf
 id: appf_tabs
 theme: appf
-region: content
-weight: -4
+region: content_above
+weight: -5
 provider: null
 plugin: local_tasks_block
 settings:

@@ -1,13 +1,19 @@
 langcode: en
 status: true
 id: app_legacy__node__event__rev
+label: 'App - Legacy - node:event:revision'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:event:revision'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__file__public
+    - app_legacy__node__event
 
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 
@@ -80,7 +86,3 @@ process:
 destination:
   plugin: 'entity_revision:node'
   default_bundle: 'event'
-
-migration_dependencies:
-  required:
-    - app_legacy__node__event

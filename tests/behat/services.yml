@@ -1,4 +1,5 @@
 
 services:
-  cheppers.behat.theme_detector:
-    class: \Cheppers\DrupalExtension\ThemeDetector
+  sweetchuck.behat.theme_detector:
+    class: 'Sweetchuck\DrupalTestTraits\Core\Behat\ThemeDetector'
+    public: true

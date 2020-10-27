@@ -1,11 +1,19 @@
 langcode: en
 status: true
 id: app_common__node
+label: 'App - Common - node'
+
 migration_tags:
   - app
   - common_content
+
 migration_group: app_common
-label: 'App - Common - node'
+
+migration_dependencies:
+  required:
+    - app_common__file__public
+    - app_common__media__image
+    - app_common__user
 
 source:
   fileName: node/all.yml
@@ -156,9 +164,3 @@ destination:
     - body
     - comment_forum
     - taxonomy_forums
-
-migration_dependencies:
-  required:
-    - app_common__file__public
-    - app_common__media__image
-    - app_common__user

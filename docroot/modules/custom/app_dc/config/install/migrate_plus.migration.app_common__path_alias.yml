@@ -1,0 +1,44 @@
+langcode: en
+status: true
+id: app_common__path_alias
+label: 'App - common - path_alias'
+
+migration_tags:
+  - app
+  - common_content
+
+migration_group: app_common
+
+migration_dependencies:
+  required:
+    - app_common__entity_legal_document_version
+
+source:
+  fileName: path_alias/path_alias.yml
+  identifier: ~
+  identifierDepth: 0
+  fields:
+    uuid: UUID
+    langcode: Code of language
+    path: The URL to be covered
+    alias: The URL to display instead
+    status: Status of the path alias
+
+process:
+  uuid: uuid
+  langcode: langcode
+  path: path
+  alias: alias
+  status:
+    -
+      source: status
+      plugin: default_value
+      default_value: true
+
+destination:
+  plugin: entity:path_alias
+  overwrite_properties:
+    - langcode
+    - path
+    - alias
+    - status

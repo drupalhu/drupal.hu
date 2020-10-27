@@ -1,5 +1,6 @@
 data_protection_1559764237:
   document_name: data_protection
+  published: true
   label: 'Adatvédelmi és Adatkezelési tájékoztató'
   entity_legal_document_text:
     -
@@ -11,6 +12,7 @@ data_protection_1559764237:
 
 terms_of_use_1559764237:
   document_name: terms_of_use
+  published: true
   label: 'Felhasználási feltételek'
   entity_legal_document_text:
     -

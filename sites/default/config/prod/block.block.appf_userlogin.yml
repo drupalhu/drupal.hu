@@ -1,6 +1,6 @@
 uuid: fea4092d-1c57-4170-8dc3-a49de61b9bb6
 langcode: hu
-status: true
+status: false
 dependencies:
   module:
     - user
@@ -8,8 +8,8 @@ dependencies:
     - appf
 id: appf_userlogin
 theme: appf
-region: top_header
-weight: -6
+region: header
+weight: -4
 provider: null
 plugin: user_login_block
 settings:

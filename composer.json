@@ -13,9 +13,13 @@
         "sort-packages": true
     },
     "repositories": {
-        "cheppers/drupal-behat-contexts": {
-            "type": "git",
-            "url": "https://github.com/Cheppers/drupal-behat-contexts.git"
+        "sweetchuck/dtt-core": {
+            "type": "path",
+            "url": "../../sweetchuck/dtt-core-9.x"
+        },
+        "sweetchuck/dtt-entity_legal": {
+            "type": "path",
+            "url": "../../sweetchuck/dtt-entity_legal-3.0.x"
         },
         "drupal/marvin": {
             "type": "git",
@@ -42,32 +46,50 @@
         "php": ">=7.4",
         "composer/installers": "^1.6",
         "cweagans/composer-patches": "^1.6",
-        "drupal/admin_toolbar": "^2.4",
+        "drupal/acquia_connector": "^3.0",
+        "drupal/acquia_search": "^3.0",
+        "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^1.3",
-        "drupal/bootstrap_barrio": "^5.1",
-        "drupal/core-composer-scaffold": "^9.0",
-        "drupal/core-recommended": "^9.0",
-        "drupal/entity_legal": "dev-3.0.x",
+        "drupal/bootstrap_layouts": "^5.2",
+        "drupal/core-composer-scaffold": "^9.2",
+        "drupal/core-recommended": "^9.2",
+        "drupal/entity_legal": "^3.0@beta",
         "drupal/eu_cookie_compliance": "^1.11",
-        "drupal/marvin": "dev-8.x-1.x",
-        "drupal/marvin_product": "dev-8.x-1.x",
+        "drupal/facets": "^1.8",
+        "drupal/facets_block": "^1.3",
+        "drupal/memcache": "^2.2",
         "drupal/metatag": "^1.14",
         "drupal/pathauto": "^1.8",
         "drupal/schema_metatag": "^2.1",
         "drupal/search_api_solr": "^4.1",
+        "drupal/string_field_formatter": "^2.0",
         "drush/drush": "^10.0",
-        "kint-php/kint": "^3.3",
-        "oomphinc/composer-installers-extender": "^1.1",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "oomphinc/composer-installers-extender": "^2.0"
     },
     "require-dev": {
+        "behat/mink": "^1.8",
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/mink-selenium2-driver": "^1.4",
+        "bex/behat-screenshot": "^2.1",
+        "dmore/behat-chrome-extension": "^1.3",
         "drupal/devel": "^4.0",
-        "drupal/marvin_acquia": "dev-8.x-1.x",
+        "drupal/marvin": "2.x-dev",
+        "drupal/marvin_acquia": "2.x-dev",
+        "drupal/marvin_product": "2.x-dev",
         "drupal/migrate_dc": "dev-1.x#19df788b8d83e6ea47f2b3e4854ff35a827edb8c",
         "drupal/migrate_plus": "^5.1",
         "drupal/migrate_tools": "^5.0",
         "drupal/module_filter": "^3.1",
-        "phpunit/phpunit": "^9.4"
+        "drupal/styleguide": "^2.0",
+        "kint-php/kint": "^3.3",
+        "mikey179/vfsstream": "^1.6",
+        "nuvoleweb/drupal-behat": "^1.2",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.4",
+        "sweetchuck/composer-suite": "^1.2",
+        "sweetchuck/dtt-core": "9.x-dev",
+        "sweetchuck/dtt-entity_legal": "3.0.x-dev",
+        "symfony/phpunit-bridge": "^5.1"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -97,11 +119,19 @@
             "rm -rf docroot/themes/custom/*/**/*.css.map"
         ],
         "clean:translations": [
-            "git clean -X -f -- sites/all/translations"
+            "git clean -X -f -- 'sites/all/translations/*.po'"
         ],
         "reset": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "@reset:db"
+        ],
+        "reset:search": [
+            "drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
+        ],
+        "reset:cache": [
+            "drush --config=drush --yes @app.local cache:rebuild"
         ],
         "reset:files": [
             "rm -rf docroot/sites/*/files/*",
@@ -113,31 +143,43 @@
             "drush --config=drush --yes @app.local sql:drop"
         ],
         "site:install:prod:empty": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''"
         ],
         "site:install:prod:default": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:prod:dummy": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
         ],
         "site:install:local:empty": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
         ],
         "site:install:local:default": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:local:dummy": [
+            "@reset:search",
+            "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
@@ -190,8 +232,10 @@
                 "https://www.drupal.org/project/drupal/issues/2960714 - [meta] Improve ::generateSampleValue() for common field types": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch"
             },
             "drupal/entity_legal": {
-                "https://www.drupal.org/project/entity_legal/issues/2544248 - Increase length of the 'acceptance_label' field to 1024": "https://www.drupal.org/files/issues/entity_legal-acceptance_label_too_short-2544248-3.patch",
-                "https://www.drupal.org/project/entity_legal/issues/2957951 - Migrate source_module property": "https://www.drupal.org/files/issues/2018-10-04/2957951-migrate-issue.patch"
+                "https://www.drupal.org/project/entity_legal/issues/3223107 - EntityLegalDocumentForm/path/#element_validate": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/1.patch"
+            },
+            "drupal/drupal-extension": {
+                "Behat config schema - extendable selectors and text": "https://patch-diff.githubusercontent.com/raw/jhedstrom/drupalextension/pull/494.patch"
             }
         },
         "drupal-scaffold": {
@@ -232,6 +276,9 @@
                 "[web-root]/README.txt": {
                     "mode": "skip"
                 },
+                "[web-root]/README.md": {
+                    "mode": "skip"
+                },
                 "[web-root]/modules/.gitignore": {
                     "mode": "skip"
                 },
@@ -267,6 +314,185 @@
                 "sites/default/default.services.yml": "sites/default/services.yml",
                 "sites/default/default.settings.php": "sites/default/settings.php"
             }
+        },
+        "composer-suite": {
+            "local": [
+                {
+                    "type": "prepend",
+                    "config": {
+                        "parents": ["repositories"],
+                        "items": {
+                            "sweetchuck/dtt-core": {
+                                "type": "path",
+                                "url": "../../sweetchuck/dtt-core-9.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/dtt-core.git",
+                                        "branch": "9.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/dtt-entity_legal": {
+                                "type": "path",
+                                "url": "../../sweetchuck/dtt-entity_legal-3.0.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/dtt-entity_legal.git",
+                                        "branch": "3.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/lint-report": {
+                                "type": "path",
+                                "url": "../../sweetchuck/lint-report-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/lint-report.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-composer": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-composer-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-composer.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-git": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-git-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-git.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-nvm": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-nvm-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-nvm.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-phpcs": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-phpcs-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-phpcs.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-phpmd": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-phpmd-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-phpmd.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-phpunit": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-phpunit-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-phpunit.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-stringy": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-stringy-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-stringy.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/robo-yarn": {
+                                "type": "path",
+                                "url": "../../sweetchuck/robo-yarn-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/robo-yarn.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/utils": {
+                                "type": "path",
+                                "url": "../../sweetchuck/utils-1.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/utils.git",
+                                        "branch": "1.x"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "replaceRecursive",
+                    "config": {
+                        "parents": ["repositories"],
+                        "items": {
+                            "drupal/marvin": {
+                                "type": "path",
+                                "url": "../../drupal/marvin-2.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/drupal-marvin.git",
+                                        "branch": "2.x"
+                                    }
+                                }
+                            },
+                            "drupal/marvin_product": {
+                                "type": "path",
+                                "url": "../../drupal/marvin_product-2.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/drupal-marvin_product.git",
+                                        "branch": "2.x"
+                                    }
+                                }
+                            },
+                            "drupal/marvin_acquia": {
+                                "type": "path",
+                                "url": "../../drupal/marvin_acquia-2.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/drupal-marvin_acquia.git",
+                                        "branch": "2.x"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "replaceRecursive",
+                    "config": {
+                        "parents": ["require"],
+                        "items": {
+                            "sweetchuck/lint-report": "1.x-dev"
+                        }
+                    }
+                }
+            ]
         }
     }
 }

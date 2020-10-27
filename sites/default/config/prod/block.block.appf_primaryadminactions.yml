@@ -6,8 +6,8 @@ dependencies:
     - appf
 id: appf_primaryadminactions
 theme: appf
-region: content
-weight: -3
+region: content_above
+weight: -4
 provider: null
 plugin: local_actions_block
 settings:

@@ -11,10 +11,221 @@ dependencies:
     - image.style.media_library
     - node.type.casestudy
   module:
+    - bootstrap_layouts
     - file
+    - layout_builder
+    - layout_discovery
     - media
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          b9db2455-4cda-4a26-bcbd-d37a1aa2ebc0:
+            uuid: b9db2455-4cda-4a26-bcbd-d37a1aa2ebc0
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_image'
+              formatter:
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: content
+                third_party_settings: {  }
+                type: media_thumbnail
+            additional: {  }
+            weight: 0
+          65da33e5-9725-4128-9af9-7914753dee06:
+            uuid: 65da33e5-9725-4128-9af9-7914753dee06
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_drupal_version'
+              formatter:
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          a8b67e84-c1d1-4d4e-b37e-8218ced16852:
+            uuid: a8b67e84-c1d1-4d4e-b37e-8218ced16852
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 2
+          02f6fc51-8ae1-43c3-800b-2c28a687525e:
+            uuid: 02f6fc51-8ae1-43c3-800b-2c28a687525e
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 3
+          9d1ed23f-dbe2-442b-908b-c3b0285ba2a7:
+            uuid: 9d1ed23f-dbe2-442b-908b-c3b0285ba2a7
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:casestudy:links'
+            additional: {  }
+            weight: 4
+          d6462755-0d3d-4487-94df-2bc46ddce806:
+            uuid: d6462755-0d3d-4487-94df-2bc46ddce806
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_attachments'
+              formatter:
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+                type: file_default
+            additional: {  }
+            weight: 5
+        third_party_settings: {  }
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          bde2104e-0143-4ec5-94d7-0c35ef96692b:
+            uuid: bde2104e-0143-4ec5-94d7-0c35ef96692b
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_image'
+              formatter:
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: content
+                third_party_settings: {  }
+                type: media_thumbnail
+            additional: {  }
+            weight: 0
+          ca35f0fc-a128-4df7-90f1-ea2bc45f4085:
+            uuid: ca35f0fc-a128-4df7-90f1-ea2bc45f4085
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_drupal_version'
+              formatter:
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          1c0deccb-73d4-4895-9328-f8a04960f516:
+            uuid: 1c0deccb-73d4-4895-9328-f8a04960f516
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 2
+          c972bc97-a480-4b07-ab55-bf505c086a28:
+            uuid: c972bc97-a480-4b07-ab55-bf505c086a28
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 3
+          758b44a4-7747-4135-b455-84c5b24f0e73:
+            uuid: 758b44a4-7747-4135-b455-84c5b24f0e73
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:casestudy:links'
+            additional: {  }
+            weight: 4
+          b31f56ad-7359-4e7c-a03f-d63cd0b7997a:
+            uuid: b31f56ad-7359-4e7c-a03f-d63cd0b7997a
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_attachments'
+              formatter:
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+                type: file_default
+            additional: {  }
+            weight: 5
+        third_party_settings: {  }
 id: node.casestudy.default
 targetEntityType: node
 bundle: casestudy
@@ -66,3 +277,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

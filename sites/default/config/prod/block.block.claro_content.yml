@@ -1,0 +1,22 @@
+uuid: ef0083ef-2db1-4b25-9693-72f94254fe2b
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - claro
+_core:
+  default_config_hash: QTwkfDaGeBUk6aerktJBDXso4fCsqLTQOuWKXE1xMPU
+id: claro_content
+theme: claro
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Az oldal fő tartalma'
+  provider: system
+  label_display: '0'
+visibility: {  }

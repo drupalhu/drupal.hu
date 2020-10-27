@@ -1,5 +1,0 @@
-
-default:
-  extensions:
-    Behat\MinkExtension:
-      base_url: 'http://drupalhu.localhost'

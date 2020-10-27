@@ -12,8 +12,150 @@ dependencies:
     - field.field.node.forum.taxonomy_forums
     - node.type.forum
   module:
+    - bootstrap_layouts
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          30f20723-1dc9-4158-bddd-483c2cc84574:
+            uuid: 30f20723-1dc9-4158-bddd-483c2cc84574
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:taxonomy_forums'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          39284b4d-d376-4a06-8604-46555d4567c0:
+            uuid: 39284b4d-d376-4a06-8604-46555d4567c0
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:app_drupal_version'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 1
+          c2100e6a-8a7b-4357-a949-0fe7af8a9630:
+            uuid: c2100e6a-8a7b-4357-a949-0fe7af8a9630
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:app_body'
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
+            additional: {  }
+            weight: 2
+          342ed78f-65f6-4f96-a48c-9de4acfef993:
+            uuid: 342ed78f-65f6-4f96-a48c-9de4acfef993
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:forum:links'
+            additional: {  }
+            weight: 3
+          3f772d19-6701-42d1-a4d2-86fd07affec4:
+            uuid: 3f772d19-6701-42d1-a4d2-86fd07affec4
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:taxonomy_forums'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          be9cc264-93f2-4254-b7c5-cc1fc9b46ebc:
+            uuid: be9cc264-93f2-4254-b7c5-cc1fc9b46ebc
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:app_drupal_version'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 1
+          b9712826-56fd-4a6a-a269-04c27c745da5:
+            uuid: b9712826-56fd-4a6a-a269-04c27c745da5
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:forum:app_body'
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
+            additional: {  }
+            weight: 2
+          1854ad97-b1d0-4e7b-8229-6f7be7df0a9e:
+            uuid: 1854ad97-b1d0-4e7b-8229-6f7be7df0a9e
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:forum:links'
+            additional: {  }
+            weight: 3
+        third_party_settings: {  }
 _core:
   default_config_hash: MK_j248n6esK84n87ulM_yPeqdkndKn94h4vTJC4wjw
 id: node.forum.teaser
@@ -55,3 +197,4 @@ hidden:
   app_tags: true
   comment_forum: true
   langcode: true
+  search_api_excerpt: true

@@ -1,13 +1,13 @@
 langcode: en
 status: true
 id: app_default__taxonomy_term
+label: 'App - Default - taxonomy_term'
 
 migration_tags:
   - app
   - default_content
 
 migration_group: app_default
-label: 'App - Default - taxonomy_term'
 
 source:
   fileName: taxonomy_term/all.yml
@@ -43,7 +43,7 @@ process:
     -
       plugin: migration_lookup
       migration:
-        - app_default__taxonomy_term__forums
+        - app_default__taxonomy_term
   weight:
     source: weight
     plugin: default_value

@@ -1,0 +1,204 @@
+uuid: bfa37d40-6843-4216-987a-8161f4438551
+langcode: hu
+status: true
+dependencies:
+  module:
+    - search_api_solr
+    - node
+    - search_api
+  config:
+    - field.storage.node.app_target_audience
+    - field.storage.node.app_tags
+    - field.storage.node.app_drupal_version
+    - field.storage.node.taxonomy_forums
+    - field.storage.node.app_project
+    - field.storage.node.app_competence
+    - field.storage.node.app_body
+    - search_api.server.general
+third_party_settings:
+  search_api_solr:
+    finalize: false
+    commit_before_finalize: false
+    commit_after_finalize: false
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
+    highlighter:
+      maxAnalyzedChars: 51200
+      fragmenter: gap
+      regex:
+        slop: 0.5
+        pattern: blank
+        maxAnalyzedChars: 10000
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
+      highlight:
+        mergeContiguous: false
+        requireFieldMatch: false
+        snippets: 3
+        fragsize: 0
+    mlt:
+      mintf: 1
+      mindf: 1
+      maxdf: 0
+      maxdfpct: 0
+      minwl: 0
+      maxwl: 0
+      maxqt: 100
+      maxntp: 2000
+      boost: false
+      interestingTerms: none
+    term_modifiers:
+      slop: 3
+      fuzzy: 1
+    advanced:
+      index_prefix: ''
+      collection: ''
+      timezone: ''
+id: content
+name: Tartalom
+description: ''
+read_only: false
+field_settings:
+  app_body:
+    label: Törzs
+    datasource_id: 'entity:node'
+    property_path: app_body
+    type: 'solr_text_custom:ngram'
+    boost: !!float 13
+    dependencies:
+      config:
+        - field.storage.node.app_body
+  app_competence:
+    label: Szint
+    datasource_id: 'entity:node'
+    property_path: app_competence
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_competence
+  app_drupal_version:
+    label: 'Drupal verzió'
+    datasource_id: 'entity:node'
+    property_path: app_drupal_version
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_drupal_version
+  app_project:
+    label: Projekt
+    datasource_id: 'entity:node'
+    property_path: app_project
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_project
+  app_tags:
+    label: Címkék
+    datasource_id: 'entity:node'
+    property_path: app_tags
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_tags
+  app_target_audience:
+    label: Célközönség
+    datasource_id: 'entity:node'
+    property_path: app_target_audience
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.app_target_audience
+  created:
+    label: 'Létrehozás dátuma'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  status:
+    label: Státusz
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  taxonomy_forums:
+    label: Fórumok
+    datasource_id: 'entity:node'
+    property_path: taxonomy_forums
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.taxonomy_forums
+  title:
+    label: Cím
+    datasource_id: 'entity:node'
+    property_path: title
+    type: 'solr_text_custom:ngram'
+    boost: !!float 21
+    dependencies:
+      module:
+        - node
+  type:
+    label: Tartalomtípus
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  uid:
+    label: Szerző
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - book
+        - casestudy
+        - event
+        - forum
+        - news
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
+  entity_status: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: general

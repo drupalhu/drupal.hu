@@ -11,10 +11,182 @@ dependencies:
     - field.field.node.note.app_teaser
     - node.type.note
   module:
+    - bootstrap_layouts
     - comment
     - file
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          9784a2d9-6182-4eab-b6e8-70db695cb28a:
+            uuid: 9784a2d9-6182-4eab-b6e8-70db695cb28a
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 0
+          b73837a3-27c9-44e5-b41e-4f1f69847a46:
+            uuid: b73837a3-27c9-44e5-b41e-4f1f69847a46
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 1
+          eb5d3203-e532-4c1c-bbb4-d07603c98029:
+            uuid: eb5d3203-e532-4c1c-bbb4-d07603c98029
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:note:links'
+            additional: {  }
+            weight: 2
+          7c45cd30-82d9-4100-b95b-71d4d1f3e534:
+            uuid: 7c45cd30-82d9-4100-b95b-71d4d1f3e534
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_attachments'
+              formatter:
+                type: file_default
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 3
+          b01014e4-be0c-426e-9f13-94021987c153:
+            uuid: b01014e4-be0c-426e-9f13-94021987c153
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_comment_admin'
+              formatter:
+                label: above
+                settings:
+                  view_mode: default
+                  pager_id: 0
+                third_party_settings: {  }
+                type: comment_default
+            additional: {  }
+            weight: 4
+          164220dd-7d51-4244-b7eb-9be6af7a0fce:
+            uuid: 164220dd-7d51-4244-b7eb-9be6af7a0fce
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 0
+          e09d023f-4b83-4bc0-9c9a-c516e2ce9a69:
+            uuid: e09d023f-4b83-4bc0-9c9a-c516e2ce9a69
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 1
+          0736508e-012c-46f7-856c-f378d0074bc9:
+            uuid: 0736508e-012c-46f7-856c-f378d0074bc9
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:note:links'
+            additional: {  }
+            weight: 2
+          86072fa5-f2f4-4d4f-a985-90ba3c0b16f8:
+            uuid: 86072fa5-f2f4-4d4f-a985-90ba3c0b16f8
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_attachments'
+              formatter:
+                type: file_default
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 3
+          e201a475-c3ba-4e38-aeac-6d7b8b7e3f41:
+            uuid: e201a475-c3ba-4e38-aeac-6d7b8b7e3f41
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:note:app_comment_admin'
+              formatter:
+                label: above
+                settings:
+                  view_mode: default
+                  pager_id: 0
+                third_party_settings: {  }
+                type: comment_default
+            additional: {  }
+            weight: 4
+        third_party_settings: {  }
 id: node.note.full
 targetEntityType: node
 bundle: note
@@ -58,3 +230,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

@@ -135,3 +135,35 @@ $settings['rebuild_access'] = TRUE;
  * directory.
  */
 $settings['skip_permissions_hardening'] = TRUE;
+
+/**
+ * @link /admin/config/system/acquia-connector
+ */
+$config['acquia_connector.settings']['admin_priv'] = 0;
+$config['acquia_connector.settings']['send_node_user'] = 0;
+$config['acquia_connector.settings']['send_watchdog'] = 0;
+$config['acquia_connector.settings']['use_cron'] = 0;
+$config['acquia_connector.settings']['dynamic_banner'] = 0;
+$config['acquia_connector.settings']['hide_signup_messages'] = TRUE;
+
+/**
+ * @link /admin/config/search/search-api/server/general
+ */
+$config['search_api.server.general']['backend'] = 'search_api_solr';
+$config['search_api.server.general']['backend_config']['connector'] = 'standard';
+$config['search_api.server.general']['backend_config']['connector_config'] = [
+  'scheme' => 'http',
+  'host' => '127.0.0.1',
+  'port' => 8983,
+  'path' => '/',
+  'core' => $databases['default']['default']['database'],
+  'timeout' => 5,
+  'index_timeout' => 10,
+  'optimize_timeout' => 15,
+  'finalize_timeout' => 30,
+  'commit_within' => 1000,
+  'solr_version' => '7',
+  'http_method' => 'AUTO',
+  'jmx' => FALSE,
+  'solr_install_dir' => '',
+];

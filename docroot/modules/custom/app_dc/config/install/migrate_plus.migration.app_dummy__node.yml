@@ -1,11 +1,19 @@
 langcode: en
 status: true
 id: app_dummy__node
+label: 'App - Dummy - node'
+
 migration_tags:
   - app
   - dummy_content
+
 migration_group: app_dummy
-label: 'App - Dummy - node'
+
+migration_dependencies:
+  required:
+    - app_dummy__file__public
+    - app_dummy__media__image
+    - app_dummy__user
 
 source:
   fileName: node/all.yml
@@ -151,9 +159,3 @@ destination:
     - body
     - comment_forum
     - taxonomy_forums
-
-migration_dependencies:
-  required:
-    - app_dummy__file__public
-    - app_dummy__media__image
-    - app_dummy__user

@@ -10,8 +10,8 @@ dependencies:
     - appf
 id: appf_footer_menu
 theme: appf
-region: featured_bottom_first
-weight: -5
+region: footer_top
+weight: -3
 provider: null
 plugin: 'system_menu_block:footer'
 settings:

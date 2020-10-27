@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.full
+    - field.field.node.casestudy.app_attachments
     - field.field.node.casestudy.app_body
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
@@ -11,9 +12,181 @@ dependencies:
     - image.style.media_library
     - node.type.casestudy
   module:
+    - bootstrap_layouts
+    - layout_builder
     - media
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          e32e09eb-886d-474e-b615-134c29b4ba50:
+            uuid: e32e09eb-886d-474e-b615-134c29b4ba50
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_image'
+              formatter:
+                type: media_thumbnail
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: ''
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          43610ae3-6d7a-4db6-a38a-543cb5cae72d:
+            uuid: 43610ae3-6d7a-4db6-a38a-543cb5cae72d
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_drupal_version'
+              formatter:
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          af405052-a563-437f-91dc-d519a29d9c56:
+            uuid: af405052-a563-437f-91dc-d519a29d9c56
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 2
+          c5666fac-5070-48c6-b59e-c5ee9f681177:
+            uuid: c5666fac-5070-48c6-b59e-c5ee9f681177
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 3
+          201a6bcb-8071-4252-a85d-4910763a0ac7:
+            uuid: 201a6bcb-8071-4252-a85d-4910763a0ac7
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:casestudy:links'
+            additional: {  }
+            weight: 4
+          b38a6a63-96bb-485a-9ccb-f23ea60e70a1:
+            uuid: b38a6a63-96bb-485a-9ccb-f23ea60e70a1
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_image'
+              formatter:
+                type: media_thumbnail
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: ''
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          80c321d2-dd0d-44d7-83ad-8a6f57a48e8f:
+            uuid: 80c321d2-dd0d-44d7-83ad-8a6f57a48e8f
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_drupal_version'
+              formatter:
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          da3cd451-f9cf-4e8e-9ee4-1ccf2b1c0bb8:
+            uuid: da3cd451-f9cf-4e8e-9ee4-1ccf2b1c0bb8
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_teaser'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 2
+          d445ed3a-7ad4-48be-835b-dc3b391e119f:
+            uuid: d445ed3a-7ad4-48be-835b-dc3b391e119f
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:casestudy:app_body'
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: 3
+          0ee8880a-efbd-4446-b1f8-6096f8ce0e1a:
+            uuid: 0ee8880a-efbd-4446-b1f8-6096f8ce0e1a
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:casestudy:links'
+            additional: {  }
+            weight: 4
+        third_party_settings: {  }
 id: node.casestudy.full
 targetEntityType: node
 bundle: casestudy
@@ -58,3 +231,4 @@ content:
 hidden:
   app_attachments: true
   langcode: true
+  search_api_excerpt: true

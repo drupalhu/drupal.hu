@@ -1,13 +1,13 @@
 langcode: en
 status: true
 id: app_legacy__taxonomy_term__tag
+label: 'App - Legacy - taxonomy_term:tag'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - taxonomy_term:tag'
 
 source:
   plugin: d7_taxonomy_term

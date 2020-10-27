@@ -1,13 +1,20 @@
 langcode: en
 status: true
 id: app_legacy__node__forum
+label: 'App - Legacy - node:forum'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:forum'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__taxonomy_term__drupal_version
+    - app_legacy__taxonomy_term__forums
+    - app_legacy__taxonomy_term__project
 
 source:
   plugin: d7_node
@@ -79,16 +86,10 @@ process:
       target_id:
         source: tid
         plugin: migration_lookup
+        no_stub: true
         migration:
           - app_legacy__taxonomy_term__project
 
 destination:
   plugin: 'entity:node'
   default_bundle: 'forum'
-
-migration_dependencies:
-  required:
-    - app_legacy__user__user
-    - app_legacy__taxonomy_term__drupal_version
-    - app_legacy__taxonomy_term__forums
-    - app_legacy__taxonomy_term__project

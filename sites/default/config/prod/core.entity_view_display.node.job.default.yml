@@ -21,12 +21,281 @@ dependencies:
     - image.style.media_library
     - node.type.job
   module:
+    - bootstrap_layouts
     - datetime
+    - layout_builder
     - media
     - options
     - telephone
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          4bdbfccb-67e1-443f-afff-25a39ecf6981:
+            uuid: 4bdbfccb-67e1-443f-afff-25a39ecf6981
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_image'
+              formatter:
+                label: hidden
+                settings:
+                  image_style: media_library
+                  image_link: content
+                third_party_settings: {  }
+                type: media_thumbnail
+            additional: {  }
+            weight: -10
+          000d897c-6561-47ff-892e-ad31d02f1aff:
+            uuid: 000d897c-6561-47ff-892e-ad31d02f1aff
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_due_date'
+              formatter:
+                label: inline
+                settings:
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+                type: datetime_default
+            additional: {  }
+            weight: -9
+          bac89d8c-10d4-4b65-b285-324ff48c17c6:
+            uuid: bac89d8c-10d4-4b65-b285-324ff48c17c6
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_employment'
+              formatter:
+                label: inline
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+            additional: {  }
+            weight: -8
+          76125ab4-d179-4b2f-9c4e-330d4b609810:
+            uuid: 76125ab4-d179-4b2f-9c4e-330d4b609810
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_location_name'
+              formatter:
+                label: inline
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: -7
+          010075de-b946-4c5f-b29c-e9f8f8fb3151:
+            uuid: 010075de-b946-4c5f-b29c-e9f8f8fb3151
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_location_type'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+            additional: {  }
+            weight: -6
+          11792076-60e7-42f0-a646-b900656fca92:
+            uuid: 11792076-60e7-42f0-a646-b900656fca92
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_body'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: -5
+          9c424e34-a690-4875-9445-c484591ed751:
+            uuid: 9c424e34-a690-4875-9445-c484591ed751
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_expectations'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: -4
+          6f44c085-1f6e-4d21-bffb-217db16cd28c:
+            uuid: 6f44c085-1f6e-4d21-bffb-217db16cd28c
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_advantage'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: -3
+          8e4525cb-e590-4416-9730-24ce8cf09be9:
+            uuid: 8e4525cb-e590-4416-9730-24ce8cf09be9
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_announcer_gives'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+            additional: {  }
+            weight: -2
+          7b6c0a8a-34aa-4271-85b9-49c010af8ec0:
+            uuid: 7b6c0a8a-34aa-4271-85b9-49c010af8ec0
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_level'
+              formatter:
+                label: inline
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+            additional: {  }
+            weight: -1
+          b1672f53-3af9-4ce9-b6fa-7e2baa43b770:
+            uuid: b1672f53-3af9-4ce9-b6fa-7e2baa43b770
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_language'
+              formatter:
+                label: inline
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+            additional: {  }
+            weight: 0
+          4fc03fa2-33f5-49e5-996b-135b8e976770:
+            uuid: 4fc03fa2-33f5-49e5-996b-135b8e976770
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_contact_org'
+              formatter:
+                label: inline
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 1
+          7dcd10ca-eb0f-4020-b88a-428f009b3a63:
+            uuid: 7dcd10ca-eb0f-4020-b88a-428f009b3a63
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_contact_name'
+              formatter:
+                label: inline
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 2
+          788718ba-9499-4df8-b6f5-0fb217003a78:
+            uuid: 788718ba-9499-4df8-b6f5-0fb217003a78
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_contact_phone'
+              formatter:
+                label: inline
+                settings:
+                  title: ''
+                third_party_settings: {  }
+                type: telephone_link
+            additional: {  }
+            weight: 3
+          afac8d1c-bdc1-478d-bb51-d3eb7bbd988b:
+            uuid: afac8d1c-bdc1-478d-bb51-d3eb7bbd988b
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:job:app_job_contact_email'
+              formatter:
+                label: inline
+                settings: {  }
+                third_party_settings: {  }
+                type: basic_string
+            additional: {  }
+            weight: 4
+          7fe3b5dd-2e57-484a-9478-d94e17a5b27e:
+            uuid: 7fe3b5dd-2e57-484a-9478-d94e17a5b27e
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:job:links'
+            additional: {  }
+            weight: 5
+        third_party_settings: {  }
 id: node.job.default
 targetEntityType: node
 bundle: job
@@ -152,3 +421,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

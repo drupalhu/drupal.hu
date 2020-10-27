@@ -1,13 +1,13 @@
 langcode: en
 status: true
 id: app_legacy__aggregator_feed__sa
+label: 'App - Legacy - aggregator_feed:security_announcement'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - aggregator_feed:security_announcement'
 
 audit: true
 

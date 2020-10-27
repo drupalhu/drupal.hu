@@ -1,13 +1,22 @@
 langcode: en
 status: true
 id: app_legacy__node__book__rev
+label: 'App - Legacy - node:book:revision'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:book:revision'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__file__public
+    - app_legacy__node__book
+    - app_legacy__taxonomy_term__drupal_version
+    - app_legacy__taxonomy_term__target_audience
+    - app_legacy__taxonomy_term__competence
 
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 
@@ -99,7 +108,3 @@ process:
 destination:
   plugin: 'entity_revision:node'
   default_bundle: 'book'
-
-migration_dependencies:
-  required:
-    - app_legacy__node__book

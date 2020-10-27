@@ -1,13 +1,18 @@
 langcode: en
 status: true
 id: app_legacy__node__job__rev
+label: 'App - Legacy - node:job:revision'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:job:revision'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__node__job
 
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 
@@ -118,7 +123,3 @@ process:
 destination:
   plugin: 'entity_revision:node'
   default_bundle: 'job'
-
-migration_dependencies:
-  required:
-    - app_legacy__node__job

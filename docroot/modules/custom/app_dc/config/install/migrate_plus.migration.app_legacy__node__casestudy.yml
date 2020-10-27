@@ -1,13 +1,18 @@
 langcode: en
 status: true
 id: app_legacy__node__casestudy
+label: 'App - Legacy - node:casestudy'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:casestudy'
+
+migration_dependencies:
+  required:
+    - app_legacy__file__public
+    - app_legacy__user__user
 
 source:
   plugin: d7_node
@@ -59,8 +64,3 @@ process:
 destination:
   plugin: 'entity:node'
   default_bundle: 'casestudy'
-
-migration_dependencies:
-  required:
-    -  app_legacy__file__public
-    - app_legacy__user__user

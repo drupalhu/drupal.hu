@@ -1,11 +1,18 @@
 langcode: en
 status: true
 id: app_dummy__media__image
+label: 'App - Dummy - media:image'
+
 migration_tags:
   - app
   - dummy_content
+
 migration_group: app_dummy
-label: 'App - Dummy - media:image'
+
+migration_dependencies:
+  required:
+    - app_dummy__user
+    - app_dummy__file__public
 
 source:
   fileName: file/public.yml
@@ -79,8 +86,3 @@ destination:
     - created
     - changed
     - field_media_image
-
-migration_dependencies:
-  required:
-    - app_dummy__user__user
-    - app_dummy__file__public

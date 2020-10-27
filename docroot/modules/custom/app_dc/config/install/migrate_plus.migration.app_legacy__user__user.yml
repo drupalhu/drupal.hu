@@ -1,13 +1,17 @@
 langcode: en
 status: true
 id: app_legacy__user__user
+label: 'App - Legacy - user:user'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - user:user'
+
+migration_dependencies:
+  required:
+    - app_legacy__file__public
 
 source:
   plugin: d7_user
@@ -56,7 +60,3 @@ process:
 
 destination:
   plugin: 'entity:user'
-
-migration_dependencies:
-  required:
-    -  app_legacy__file__public

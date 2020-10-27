@@ -1,0 +1,35 @@
+uuid: 7e8ba7ae-5f75-461f-994a-029ff5b2ab09
+langcode: hu
+status: true
+dependencies:
+  module:
+    - facets_block
+    - system
+  theme:
+    - appf
+id: appf_search_facets
+theme: appf
+region: content
+weight: -6
+provider: null
+plugin: facets_block
+settings:
+  id: facets_block
+  label: 'Kereső facets'
+  provider: facets_block
+  label_display: '0'
+  show_title: true
+  exclude_empty_facets: true
+  facets_to_include:
+    'facet_block:type': 'facet_block:type'
+    'facet_block:forums': 'facet_block:forums'
+    'facet_block:drupal_version': 'facet_block:drupal_version'
+    'facet_block:target_audience': 'facet_block:target_audience'
+    'facet_block:competence': 'facet_block:competence'
+    'facets_summary_block:summary': '0'
+    'facet_block:created': '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: /kereso
+    negate: false

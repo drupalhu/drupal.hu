@@ -1,4 +1,6 @@
 module:
+  acquia_connector: 0
+  acquia_search: 0
   admin_toolbar: 0
   admin_toolbar_tools: 0
   aggregator: 0
@@ -8,11 +10,11 @@ module:
   block: 0
   block_content: 0
   book: 0
+  bootstrap_layouts: 0
   breakpoint: 0
   ckeditor: 0
   comment: 0
   config: 0
-  config_translation: 0
   contextual: 0
   ctools: 0
   datetime: 0
@@ -20,6 +22,9 @@ module:
   dynamic_page_cache: 0
   editor: 0
   entity_legal: 0
+  facets: 0
+  facets_block: 0
+  facets_summary: 0
   field: 0
   field_ui: 0
   file: 0
@@ -27,10 +32,13 @@ module:
   history: 0
   image: 0
   language: 0
+  layout_builder: 0
+  layout_discovery: 0
   link: 0
   locale: 0
   media: 0
   media_library: 0
+  memcache: 0
   menu_ui: 0
   node: 0
   options: 0
@@ -38,6 +46,9 @@ module:
   path: 0
   path_alias: 0
   responsive_image: 0
+  search_api: 0
+  search_api_solr: 0
+  string_field_formatter: 0
   system: 0
   taxonomy: 0
   telephone: 0
@@ -51,12 +62,10 @@ module:
   views: 10
   appp: 1000
 theme:
-  stable: 0
-  classy: 0
-  seven: 0
-  appb: 0
-  bootstrap_barrio: 0
-  appf: 0
+  claro: 0
+  appb: 1
+  appf: 1
+  olivero: 0
 profile: appp
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

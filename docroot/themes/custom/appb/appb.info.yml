@@ -1,17 +1,18 @@
 type: 'theme'
-core_version_requirement: ^9
+core_version_requirement: '^9.0'
 
-name: 'Drupalhu - Backend'
-description: '@todo'
-base theme: 'seven'
+name: 'App - Backend'
+description: 'A theme based on Claro.'
+base theme: 'claro'
+screenshot: 'screenshot.png'
 
 regions:
   header: 'Header'
   pre_content: 'Pre-content'
-  breadcrumb: 'Breadcrumb'
-  highlighted: 'Highlighted'
-  help: 'Help'
-  content: 'Content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
   page_top: 'Page top'
   page_bottom: 'Page bottom'
   sidebar_first: 'First sidebar'
@@ -22,3 +23,5 @@ regions_hidden:
 libraries-extend:
   views_ui/admin.styling:
     - appb/views_ui.admin.styling
+  module_filter/modules.tabs:
+    - appb/module_filter.tabs

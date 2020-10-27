@@ -1,11 +1,17 @@
 langcode: hu
 status: true
 id: app_common__menu_link_content
+label: 'App - Common - menu_link_content'
+
 migration_tags:
   - app
   - common_content
+
 migration_group: app_common
-label: 'App - Common - menu_link_content'
+
+migration_dependencies:
+  required:
+    - app_common__node
 
 source:
   fileName: menu_link_content/all.yml
@@ -88,7 +94,3 @@ destination:
     - enabled
     - rediscover
     - parent
-
-migration_dependencies:
-  required:
-    - app_common__node

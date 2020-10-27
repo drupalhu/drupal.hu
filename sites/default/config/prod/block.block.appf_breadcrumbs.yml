@@ -9,7 +9,7 @@ dependencies:
 id: appf_breadcrumbs
 theme: appf
 region: breadcrumb
-weight: -5
+weight: -6
 provider: null
 plugin: system_breadcrumb_block
 settings:

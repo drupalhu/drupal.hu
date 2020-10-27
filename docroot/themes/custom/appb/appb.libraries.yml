@@ -1,3 +1,10 @@
+module_filter.tabs:
+  js:
+    js/appb.module-filter.tabs.js: {}
+  css:
+    theme:
+      css/appb.module-filter.tabs.theme.css: {}
+
 views_ui.admin.styling:
   css:
     theme:

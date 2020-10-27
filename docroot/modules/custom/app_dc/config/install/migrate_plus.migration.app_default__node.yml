@@ -1,11 +1,20 @@
 langcode: en
 status: true
 id: app_default__node
+label: 'App - Default - node'
+
 migration_tags:
   - app
   - default_content
+
 migration_group: app_default
-label: 'App - Default - node'
+
+migration_dependencies:
+  required:
+    - app_default__file__public
+    - app_default__media__image
+    - app_default__taxonomy_term
+    - app_default__user
 
 source:
   fileName: node/all.yml
@@ -151,10 +160,3 @@ destination:
     - body
     - comment_forum
     - taxonomy_forums
-
-migration_dependencies:
-  required:
-    - app_default__file__public
-    - app_default__media__image
-    - app_default__taxonomy_term
-    - app_default__user

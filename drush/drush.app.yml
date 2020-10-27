@@ -7,10 +7,11 @@ command:
     status:
       options:
         format: 'yaml'
-  #    rsync:
-  #      options:
-  #        # @app.prod%files /path/to/files
-  #        exclude-paths: '/css/*:/js/*:/languages/*:/styles/*:/private/*'
+    #rsync:
+    #  # Example: bin/drush --config=drush core:rsync --exclude-paths='/backup_migrate/*:/css/*:/js/*:/languages/*:/styles/*:/private/*' '@app.prod:%files' "${PWD}/sites/default/backup/legacy/files" -- --delete
+    #  options:
+    #    # @app.prod:%files /path/to/files
+    #    exclude-paths: '/css/*:/js/*:/languages/*:/styles/*:/private/*'
 
   sql:
     dump:
@@ -49,6 +50,7 @@ marvin:
         devel: true
         field_ui: true
         kint: false
+        memcache_admin: true
         menu_ui: true
         migrate_tools: true
         module_filter: true
@@ -62,6 +64,7 @@ marvin:
         devel: false
         field_ui: true
         kint: false
+        memcache_admin: false
         migrate: false
         migrate_drupal: false
         migrate_plus: false
@@ -97,3 +100,4 @@ marvin:
       gitCloneAndClean:
         remoteName: 'acquia'
         remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'
+        remoteBranch: '2.x'

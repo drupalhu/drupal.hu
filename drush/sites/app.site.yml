@@ -7,15 +7,21 @@ dev:
   user: 'druphungary.dev'
   host: 'staging-5196.prod.hosting.acquia.com'
   root: '/var/www/html/druphungarydev/docroot'
+  paths:
+    drush-script: '/var/www/html/druphungarydev/bin/drush'
 
 stage:
   uri: 'http://stage.drupal.hu'
   user: 'druphungary.test'
   host: 'staging-5197.prod.hosting.acquia.com'
   root: '/var/www/html/druphungarystg/docroot'
+  paths:
+    drush-script: '/var/www/html/druphungarystg/bin/drush'
 
 prod:
   uri: 'https://www.drupal.hu'
   user: 'druphungary.prod'
   host: 'ded-5779.prod.hosting.acquia.com'
   root: '/var/www/html/druphungary/docroot'
+  paths:
+    drush-script: '/var/www/html/druphungary/bin/drush'

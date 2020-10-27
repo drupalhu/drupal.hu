@@ -1,13 +1,13 @@
 langcode: en
 status: true
 id: app_common__entity_legal_document_version
+label: 'App - Common - entity_legal_document_version'
 
 migration_tags:
   - app
   - common_content
 
 migration_group: app_common
-label: 'App - Common - entity_legal_document_version'
 
 source:
   fileName: entity_legal_document/version.yml
@@ -23,6 +23,7 @@ source:
     acceptance_label: Acceptance label
     created: Created
     changed: Changed
+    published: Published
 
 process:
   uuid:
@@ -72,12 +73,17 @@ process:
     -
       plugin: migrate_dc_str_to_time
       output_format: U
+  published:
+    source: published
+    plugin: default_value
+    default_value: false
 
 destination:
   plugin: entity_legal_document_version
   overwrite_properties:
     - name
     - document_name
+    - published
     - label
     - entity_legal_document_text
     - acceptance_label

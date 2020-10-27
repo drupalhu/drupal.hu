@@ -1,11 +1,17 @@
 langcode: en
 status: true
 id: app_dummy__user
+label: 'App - Dummy - user'
+
 migration_tags:
   - app
   - dummy_content
+
 migration_group: app_dummy
-label: 'App - Dummy - user'
+
+migration_dependencies:
+  required:
+    - app_dummy__file__public
 
 source:
   fileName: user/user.yml
@@ -106,7 +112,3 @@ destination:
     - created
     - changed
     - app_picture
-
-migration_dependencies:
-  required:
-    - app_dummy__file__public

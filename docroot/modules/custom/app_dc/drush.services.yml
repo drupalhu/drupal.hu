@@ -1,0 +1,8 @@
+services:
+  app.dc.commands:
+    class: 'Drupal\app_dc\Commands\AppDcCommands'
+    arguments:
+      - '@plugin.manager.migration'
+    tags:
+      -
+        name: 'drush.command'

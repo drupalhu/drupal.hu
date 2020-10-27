@@ -1,3 +1,5 @@
+# Schema for the configuration files of the App - Frontend theme.
+
 appf.settings:
   type: theme_settings
-  label: 'Drupal.hu frontend settings'
+  label: 'App - Frontend settings'

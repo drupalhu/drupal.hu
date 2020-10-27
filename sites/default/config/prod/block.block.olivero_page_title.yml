@@ -1,0 +1,20 @@
+uuid: 0f288906-4ae7-4ea1-851a-878bd090e567
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - olivero
+_core:
+  default_config_hash: WImvmaBdDpwIqobqbDWebBnyxssRvrNEnZSQbOsvOe4
+id: olivero_page_title
+theme: olivero
+region: content_above
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Oldal címe'
+  provider: core
+  label_display: '0'
+visibility: {  }

@@ -1,13 +1,13 @@
 langcode: en
 status: true
 id: app_common__block_content
+label: 'App - Common - block_content'
 
 migration_tags:
   - app
   - common_content
 
 migration_group: app_common
-label: 'App - Common - block_content'
 
 source:
   fileName: block_content/all.yml

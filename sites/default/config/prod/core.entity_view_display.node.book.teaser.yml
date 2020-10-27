@@ -12,8 +12,92 @@ dependencies:
     - field.field.node.book.app_target_audience
     - node.type.book
   module:
+    - bootstrap_layouts
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          be738a6d-4fce-47b5-a5c7-34de45798915:
+            uuid: be738a6d-4fce-47b5-a5c7-34de45798915
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:book:app_drupal_version'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 3
+          85ea250b-ec49-4167-a106-61926ecec847:
+            uuid: 85ea250b-ec49-4167-a106-61926ecec847
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:book:app_tags'
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 4
+          57d6eca7-9f4b-4850-a2b7-250068092396:
+            uuid: 57d6eca7-9f4b-4850-a2b7-250068092396
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:book:app_body'
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
+            additional: {  }
+            weight: 5
+          0a913868-0734-4e88-8c2b-740780241503:
+            uuid: 0a913868-0734-4e88-8c2b-740780241503
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:book:links'
+            additional: {  }
+            weight: 6
+        third_party_settings: {  }
 _core:
   default_config_hash: krIbNOdqw4vMF3Ty8qAW6AxgxmdBig5XuQRBW8-HYCU
 id: node.book.teaser
@@ -55,3 +139,4 @@ hidden:
   app_competence: true
   app_target_audience: true
   langcode: true
+  search_api_excerpt: true

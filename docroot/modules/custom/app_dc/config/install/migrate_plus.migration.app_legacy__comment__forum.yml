@@ -1,13 +1,22 @@
 langcode: en
 status: true
 id: app_legacy__comment__forum
+label: 'App - Legacy - comment:forum'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - comment:forum'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__node__book
+    - app_legacy__node__casestudy
+    - app_legacy__node__event
+    - app_legacy__node__forum
+    - app_legacy__node__news
 
 source:
   plugin: app_comment
@@ -79,11 +88,3 @@ process:
 destination:
   plugin: 'entity:comment'
   default_bundle: 'comment_forum'
-
-migration_dependencies:
-  required:
-    - app_legacy__user__user
-    - app_legacy__node__book
-    - app_legacy__node__casestudy
-    - app_legacy__node__forum
-    - app_legacy__node__news

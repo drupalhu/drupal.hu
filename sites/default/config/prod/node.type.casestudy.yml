@@ -1,10 +1,16 @@
 uuid: 0b1e7575-66f0-4d18-bf0e-f8890009f154
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
 name: Esettanulmány
 type: casestudy
-description: ''
+description: 'Egy Drupal alapú webhely elkészítésének vagy átalakításának leírása és az elkészült eredmény bemutatása'
 help: ''
 new_revision: false
 preview_mode: 1

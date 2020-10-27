@@ -8,8 +8,8 @@ dependencies:
     - appf
 id: appf_messages
 theme: appf
-region: content
-weight: -2
+region: content_above
+weight: -3
 provider: null
 plugin: system_messages_block
 settings:

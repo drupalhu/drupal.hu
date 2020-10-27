@@ -1,13 +1,18 @@
 langcode: en
 status: true
 id: app_legacy__node__casestudy__rev
+label: 'App - Legacy - node:casestudy:revision'
 
 migration_tags:
   - app
   - legacy_content
 
 migration_group: app_legacy
-label: 'App - Legacy - node:casestudy:revision'
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__node__casestudy
 
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 
@@ -61,7 +66,3 @@ process:
 destination:
   plugin: 'entity_revision:node'
   default_bundle: 'casestudy'
-
-migration_dependencies:
-  required:
-    - app_legacy__node__casestudy

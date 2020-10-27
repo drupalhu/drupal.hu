@@ -1,13 +1,17 @@
 langcode: en
 status: true
 id: app_dummy__aggregator_feed
+label: 'App - Dummy - aggregator_feed'
 
 migration_tags:
   - app
   - dummy_content
 
 migration_group: app_dummy
-label: 'App - Dummy - aggregator_feed'
+
+migration_dependencies:
+  required:
+    - app_dummy__user
 
 audit: true
 
@@ -96,7 +100,3 @@ destination:
     - etag
     - modified
     - app_category
-
-migration_dependencies:
-  required:
-    - app_dummy__user
