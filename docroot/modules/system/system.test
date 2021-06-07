@@ -28,7 +28,7 @@ class ModuleTestCase extends DrupalWebTestCase {
    *   specified base table. Defaults to TRUE.
    */
   function assertTableCount($base_table, $count = TRUE) {
-    $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
+    $tables = db_find_tables_d8($base_table . '%');
 
     if ($count) {
       return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', array('@base_table' => $base_table)));
@@ -779,14 +779,14 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
     $submit_ip = $_SERVER['REMOTE_ADDR'] = '192.168.1.1';
     system_block_ip_action();
     system_block_ip_action();
-    $ip_count = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->rowCount();
+    $ip_count = db_query("SELECT COUNT(*) from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchColumn();
     $this->assertEqual('1', $ip_count);
     drupal_static_reset('ip_address');
     $submit_ip = $_SERVER['REMOTE_ADDR'] = ' ';
     system_block_ip_action();
     system_block_ip_action();
     system_block_ip_action();
-    $ip_count = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->rowCount();
+    $ip_count = db_query("SELECT COUNT(*) from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchColumn();
     $this->assertEqual('1', $ip_count);
   }
 }
@@ -1944,6 +1944,30 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($elements[0]['src'], file_create_url($uploaded_filename));
   }
 
+
+  /**
+   * Test the individual per-theme settings form.
+   */
+  function testPerThemeSettings() {
+    // Enable the test theme and the module that controls it. Clear caches in
+    // between so that the module's hook_system_theme_info() implementation is
+    // correctly registered.
+    module_enable(array('theme_test'));
+    drupal_flush_all_caches();
+    theme_enable(array('test_theme'));
+
+    // Test that the theme-specific settings form can be saved and that the
+    // theme-specific checkbox is checked and unchecked as appropriate.
+    $this->drupalGet('admin/appearance/settings/test_theme');
+    $this->assertNoFieldChecked('edit-test-theme-checkbox', 'The test_theme_checkbox setting is unchecked.');
+    $this->drupalPost(NULL, array('test_theme_checkbox' => TRUE), t('Save configuration'));
+    $this->assertText('The test theme setting was saved.');
+    $this->assertFieldChecked('edit-test-theme-checkbox', 'The test_theme_checkbox setting is checked.');
+    $this->drupalPost(NULL, array('test_theme_checkbox' => FALSE), t('Save configuration'));
+    $this->assertText('The test theme setting was saved.');
+    $this->assertNoFieldChecked('edit-test-theme-checkbox', 'The test_theme_checkbox setting is unchecked.');
+  }
+
   /**
    * Test the administration theme functionality.
    */
@@ -2971,7 +2995,16 @@ class SystemValidTokenTest extends DrupalUnitTestCase {
     // The following checks will throw PHP notices, so we disable error
     // assertions.
     $this->assertErrors = FALSE;
-    $this->assertFalse(drupal_valid_token(NULL, new stdClass()), 'Token NULL, value object returns FALSE.');
+
+    try {
+      $this->assertFalse(drupal_valid_token(NULL, new stdClass()), 'Token NULL, value object returns FALSE.');
+    }
+    // PHP 7.4 compatibility: the stdClass string conversion throws an exception
+    // which is also an acceptable outcome of this test.
+    catch (Error $e) {
+      $this->pass('Token NULL, value object throws error exception which is ok.');
+    }
+
     $this->assertFalse(drupal_valid_token(0, array()), 'Token 0, value array returns FALSE.');
     $this->assertFalse(drupal_valid_token('', array()), "Token '', value array returns FALSE.");
     $this->assertFalse('' === drupal_get_token(array()), 'Token generation does not return an empty string on invalid parameters.');
