@@ -1,3 +1,7 @@
+/**
+ * @file
+ */
+
 (function ($) {
 
 /**
@@ -5,7 +9,7 @@
  */
 
 Drupal.behaviors.webformAdmin = {};
-Drupal.behaviors.webformAdmin.attach = function(context) {
+Drupal.behaviors.webformAdmin.attach = function (context) {
   // Apply special behaviors to fields with default values.
   Drupal.webform.defaultValues(context);
   // On click or change, make a parent radio button selected.
@@ -20,21 +24,21 @@ Drupal.behaviors.webformAdmin.attach = function(context) {
 
 Drupal.webform = Drupal.webform || {};
 
-Drupal.webform.defaultValues = function(context) {
+Drupal.webform.defaultValues = function (context) {
   var $fields = $('.webform-default-value:not(.error)', context);
   var $forms = $fields.parents('form:first');
-  $fields.each(function() {
+  $fields.each(function () {
     this.defaultValue = $(this).attr('rel');
     if (this.value != this.defaultValue) {
       $(this).removeClass('webform-default-value');
     }
-    $(this).focus(function() {
+    $(this).focus(function () {
       if (this.value == this.defaultValue) {
         this.value = '';
         $(this).removeClass('webform-default-value');
       }
     });
-    $(this).blur(function() {
+    $(this).blur(function () {
       if (this.value == '') {
         $(this).addClass('webform-default-value');
         this.value = this.defaultValue;
@@ -43,25 +47,25 @@ Drupal.webform.defaultValues = function(context) {
   });
 
   // Clear all the form elements before submission.
-  $forms.submit(function() {
+  $forms.submit(function () {
     $fields.focus();
   });
 };
 
-Drupal.webform.setActive = function(context) {
-  var setActive = function(e) {
+Drupal.webform.setActive = function (context) {
+  var setActive = function (e) {
     $('.form-radio', $(this).parent().parent()).attr('checked', true);
     e.preventDefault();
   };
   $('.webform-set-active', context).click(setActive).change(setActive);
 };
 
-Drupal.webform.updateTemplate = function(context) {
+Drupal.webform.updateTemplate = function (context) {
   var defaultTemplate = $('#edit-templates-default').val();
   var $templateSelect = $('#webform-template-fieldset select#edit-template-option', context);
   var $templateTextarea = $('#webform-template-fieldset textarea:visible', context);
 
-  var updateTemplateSelect = function() {
+  var updateTemplateSelect = function () {
     if ($(this).val() == defaultTemplate) {
       $templateSelect.val('default');
     }
@@ -70,7 +74,7 @@ Drupal.webform.updateTemplate = function(context) {
     }
   }
 
-  var updateTemplateText = function() {
+  var updateTemplateText = function () {
     if ($(this).val() == 'default' && $templateTextarea.val() != defaultTemplate) {
       if (confirm(Drupal.settings.webform.revertConfirm)) {
         $templateTextarea.val(defaultTemplate);
@@ -85,12 +89,12 @@ Drupal.webform.updateTemplate = function(context) {
   $templateSelect.change(updateTemplateText);
 }
 
-Drupal.webform.selectCheckboxesLink = function(context) {
+Drupal.webform.selectCheckboxesLink = function (context) {
   function selectCheckboxes() {
     var group = this.className.replace(/.*?webform-select-link-([^ ]*).*/, '$1');
     var $checkboxes = $('.webform-select-group-' + group + ' input[type=checkbox]');
     var reverseCheck = !$checkboxes[0].checked;
-    $checkboxes.each(function() {
+    $checkboxes.each(function () {
       this.checked = reverseCheck;
     });
     $checkboxes.trigger('change');
@@ -99,9 +103,9 @@ Drupal.webform.selectCheckboxesLink = function(context) {
   $('a.webform-select-link', context).click(selectCheckboxes);
 }
 
-Drupal.webform.tableSelectIndentation = function(context) {
+Drupal.webform.tableSelectIndentation = function (context) {
   var $tables = $('th.select-all', context).parents('table');
-  $tables.find('input.form-checkbox').change(function() {
+  $tables.find('input.form-checkbox').change(function () {
     var $rows = $(this).parents('table:first').find('tr');
     var row = $(this).parents('tr:first').get(0);
     var rowNumber = $rows.index(row);

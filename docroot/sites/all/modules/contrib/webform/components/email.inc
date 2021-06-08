@@ -188,6 +188,7 @@ function theme_webform_email($variables) {
  *   The e-mail form element.
  * @param $form_state
  *   The full form state for the webform.
+ *
  * @return
  *   None. Calls a form_set_error if the e-mail is not valid.
  */
@@ -254,7 +255,7 @@ function _webform_analysis_email($component, $sids = array()) {
 
   $rows[0] = array(t('Left Blank'), ($submissions - $nonblanks));
   $rows[1] = array(t('User entered value'), $nonblanks);
-  $rows[2] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount/$nonblanks, 2) : '0'));
+  $rows[2] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0'));
   return $rows;
 }
 
@@ -264,7 +265,6 @@ function _webform_analysis_email($component, $sids = array()) {
 function _webform_table_email($component, $value) {
   return check_plain(empty($value[0]) ? '' : $value[0]);
 }
-
 
 /**
  * Implements _webform_csv_headers_component().

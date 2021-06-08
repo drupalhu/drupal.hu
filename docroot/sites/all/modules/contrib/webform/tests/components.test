@@ -5,11 +5,14 @@
  * Webform module component tests.
  */
 
-include_once(dirname(__FILE__) . '/webform.test');
-
+include_once dirname(__FILE__) . '/webform.test';
+/**
+ *
+ */
 class WebformComponentsTestCase extends WebformTestCase {
+
   /**
-   * Implements getInfo().
+   * Implements hook.
    */
   public static function getInfo() {
     return array(
@@ -20,9 +23,9 @@ class WebformComponentsTestCase extends WebformTestCase {
   }
 
   /**
-   * Implements setUp().
+   * Implements hook.
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
   }
 
@@ -31,7 +34,8 @@ class WebformComponentsTestCase extends WebformTestCase {
    * then the test runs fine, but when combined with other tests
    * the whole block fails, since there would be no output.
    */
-  function testWebformDummy() {
+  public function testWebformDummy() {
     $this->pass = t('WebformComponentsTest pass.');
   }
+
 }

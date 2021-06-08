@@ -114,6 +114,9 @@ function _webform_display_hidden($component, $value, $format = 'html') {
   return $element;
 }
 
+/**
+ *
+ */
 function theme_webform_display_hidden($variables) {
   $element = $variables['element'];
 
@@ -146,10 +149,11 @@ function _webform_analysis_hidden($component, $sids = array()) {
     $submissions++;
   }
 
-  $rows[0] = array( t('Empty'), ($submissions - $nonblanks));
-  $rows[1] = array( t('Non-empty'), $nonblanks);
-  $rows[2] = array( t('Average submission length in words (ex blanks)'),
-                    ($nonblanks !=0 ? number_format($wordcount/$nonblanks, 2) : '0'));
+  $rows[0] = array(t('Empty'), ($submissions - $nonblanks));
+  $rows[1] = array(t('Non-empty'), $nonblanks);
+  $rows[2] = array(t('Average submission length in words (ex blanks)'),
+    ($nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0'),
+  );
   return $rows;
 }
 

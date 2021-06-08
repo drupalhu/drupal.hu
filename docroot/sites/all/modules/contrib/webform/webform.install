@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Webform module install/schema hooks.
+ * Webform module install/schema hooks.
  */
 
 /**
@@ -45,11 +45,11 @@ function webform_schema() {
         'default' => 1,
       ),
       'block' => array(
-         'description' => 'Boolean value for whether this form be available as a block.',
-         'type' => 'int',
-         'size' => 'tiny',
-         'not null' => TRUE,
-         'default' => 0,
+        'description' => 'Boolean value for whether this form be available as a block.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'teaser' => array(
         'description' => 'Boolean value for whether the entire form should be displayed on the teaser.',
@@ -59,18 +59,18 @@ function webform_schema() {
         'default' => 0,
       ),
       'allow_draft' => array(
-         'description' => 'Boolean value for whether submissions to this form be saved as a draft.',
-         'type' => 'int',
-         'size' => 'tiny',
-         'not null' => TRUE,
-         'default' => 0,
+        'description' => 'Boolean value for whether submissions to this form be saved as a draft.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'auto_save' => array(
-         'description' => 'Boolean value for whether submissions to this form should be auto-saved between pages.',
-         'type' => 'int',
-         'size' => 'tiny',
-         'not null' => TRUE,
-         'default' => 0,
+        'description' => 'Boolean value for whether submissions to this form should be auto-saved between pages.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'submit_notice' => array(
         'description' => 'Boolean value for whether to show or hide the previous submissions notification.',
@@ -298,11 +298,11 @@ function webform_schema() {
         'default' => 0,
       ),
       'is_draft' => array(
-         'description' => 'Is this a draft of the submission?',
-         'type' => 'int',
-         'size' => 'tiny',
-         'not null' => TRUE,
-         'default' => 0,
+        'description' => 'Is this a draft of the submission?',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'submitted' => array(
         'description' => 'Timestamp of when the form was submitted.',
@@ -374,7 +374,7 @@ function webform_schema() {
   );
 
   $schema['webform_last_download'] = array(
-   'description' => 'Stores last submission number per user download.',
+    'description' => 'Stores last submission number per user download.',
     'fields' => array(
       'nid' => array(
         'description' => 'The node identifier of a webform.',
@@ -384,20 +384,20 @@ function webform_schema() {
         'default' => 0,
       ),
       'uid' => array(
-       'description' => 'The user identifier.',
+        'description' => 'The user identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
-     'sid' => array(
+      'sid' => array(
         'description' => 'The last downloaded submission number.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
-     'requested' => array(
+      'requested' => array(
         'description' => 'Timestamp of last download request.',
         'type' => 'int',
         'unsigned' => TRUE,
@@ -714,7 +714,7 @@ function webform_update_7314() {
  */
 function webform_update_7315() {
   if (!db_field_exists('webform_last_download', 'requested')) {
-    db_add_field('webform_last_download', 'requested', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,));
+    db_add_field('webform_last_download', 'requested', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   }
 }
 

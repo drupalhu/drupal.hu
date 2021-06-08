@@ -9,9 +9,12 @@
  * Field handler to present a link to the user.
  */
 class webform_handler_field_submission_link extends views_handler_field {
-  var $link_type;
+  public $link_type;
 
-  function construct() {
+  /**
+   *
+   */
+  public function construct() {
     // We need to set this property before calling the construct() chain
     // as we use it in the option_definintion() call.
     $this->link_type = $this->definition['link_type'];
@@ -27,18 +30,27 @@ class webform_handler_field_submission_link extends views_handler_field {
     );
   }
 
-  function allow_advanced_render() {
+  /**
+   *
+   */
+  public function allow_advanced_render() {
     return FALSE;
   }
 
-  function option_definition() {
+  /**
+   *
+   */
+  public function option_definition() {
     $options = parent::option_definition();
     $options['label'] = array('default' => '', 'translatable' => TRUE);
     $options['text'] = array('default' => $this->link_type, 'translatable' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  /**
+   *
+   */
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['text'] = array(
       '#type' => 'textfield',
@@ -47,7 +59,10 @@ class webform_handler_field_submission_link extends views_handler_field {
     );
   }
 
-  function query() {
+  /**
+   *
+   */
+  public function query() {
     $this->ensure_my_table();
 
     // Join to the node table to retrieve the node UID.
@@ -58,7 +73,10 @@ class webform_handler_field_submission_link extends views_handler_field {
     $this->add_additional_fields();
   }
 
-  function render($values) {
+  /**
+   *
+   */
+  public function render($values) {
     $submission = new stdClass();
     $submission->sid = $values->{$this->aliases['sid']};
     $submission->nid = $values->{$this->aliases['nid']};
@@ -74,17 +92,20 @@ class webform_handler_field_submission_link extends views_handler_field {
         $link = l($text, "node/$submission->nid/submission/$submission->sid");
         $access = webform_submission_access($node, $submission, 'view');
         break;
+
       case 'edit':
         $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
         $link = l($text, "node/$submission->nid/submission/$submission->sid/edit");
         $access = webform_submission_access($node, $submission, 'edit');
         break;
+
       case 'delete':
         $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
         $path = drupal_get_path_alias($_GET['q']);
         $link = l($text, "node/$submission->nid/submission/$submission->sid/delete", array('query' => array('destination' => $path)));
         $access = webform_submission_access($node, $submission, 'delete');
         break;
+
       default:
         $text = '';
         $link = NULL;
@@ -97,4 +118,5 @@ class webform_handler_field_submission_link extends views_handler_field {
 
     return $link;
   }
+
 }

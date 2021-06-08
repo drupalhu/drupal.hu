@@ -29,7 +29,6 @@ function _webform_defaults_textarea() {
   );
 }
 
-
 /**
  * Implements _webform_theme_component().
  */
@@ -111,7 +110,8 @@ function _webform_render_textarea($component, $value = NULL, $filter = TRUE) {
     '#rows' => !empty($component['extra']['rows']) ? $component['extra']['rows'] : 5,
     '#cols' => !empty($component['extra']['cols']) ? $component['extra']['cols'] : 60,
     '#attributes' => $component['extra']['attributes'],
-    '#resizable' => (bool) $component['extra']['resizable'], // MUST be FALSE to disable.
+    // MUST be FALSE to disable.
+    '#resizable' => (bool) $component['extra']['resizable'],
     '#theme_wrappers' => array('webform_element'),
     '#translatable' => array('title', 'description'),
   );
@@ -187,7 +187,7 @@ function _webform_analysis_textarea($component, $sids = array()) {
 
   $rows[0] = array(t('Left Blank'), ($submissions - $nonblanks));
   $rows[1] = array(t('User entered value'), $nonblanks);
-  $rows[2] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount/$nonblanks, 2) : '0'));
+  $rows[2] = array(t('Average submission length in words (ex blanks)'), ($nonblanks != 0 ? number_format($wordcount / $nonblanks, 2) : '0'));
   return $rows;
 }
 

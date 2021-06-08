@@ -32,7 +32,6 @@ function _webform_defaults_grid() {
   );
 }
 
-
 /**
  * Implements _webform_theme_component().
  */
@@ -128,14 +127,14 @@ function _webform_edit_grid($component) {
     '#title' => t('Randomize Options'),
     '#default_value' => $component['extra']['optrand'],
     '#description' => t('Randomizes the order of options on the top when they are displayed in the form.'),
-    '#parents' => array('extra', 'optrand')
+    '#parents' => array('extra', 'optrand'),
   );
   $form['display']['qrand'] = array(
     '#type' => 'checkbox',
     '#title' => t('Randomize Questions'),
     '#default_value' => $component['extra']['qrand'],
     '#description' => t('Randomize the order of the questions on the side when they are displayed in the form.'),
-    '#parents' => array('extra', 'qrand')
+    '#parents' => array('extra', 'qrand'),
   );
   return $form;
 }
@@ -337,7 +336,6 @@ function _webform_analysis_grid($component, $sids = array()) {
   }
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('webform-grid'))));
 
-
   return array(array(array('data' => $output, 'colspan' => 2)));
 }
 
@@ -400,6 +398,9 @@ function _webform_csv_data_grid($component, $export_options, $value) {
   return $return;
 }
 
+/**
+ *
+ */
 function theme_webform_grid($variables) {
   $element = $variables['element'];
 

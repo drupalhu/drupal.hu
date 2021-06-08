@@ -251,6 +251,9 @@ function theme_webform_time($variables) {
   return $output;
 }
 
+/**
+ *
+ */
 function webform_validate_time($element, $form_state) {
   $form_key = $element['#webform_component']['form_key'];
   $name = $element['#webform_component']['name'];
@@ -411,6 +414,7 @@ function _webform_csv_data_time($component, $export_options, $value) {
  *   An array of hour, minute, second, and optionally ampm.
  * @param $format
  *   Either 12-hour or 24-hour.
+ *
  * @return
  *   An array with hour, minute, second, and ampm (if using "12-hour").
  */

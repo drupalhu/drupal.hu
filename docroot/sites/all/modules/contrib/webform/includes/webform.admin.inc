@@ -48,28 +48,28 @@ function webform_admin_settings() {
     '#collapsed' => FALSE,
   );
 
-  $form['email']['webform_default_from_address']  = array(
+  $form['email']['webform_default_from_address'] = array(
     '#type' => 'textfield',
     '#title' => t('From address'),
     '#default_value' => variable_get('webform_default_from_address', variable_get('site_mail', ini_get('sendmail_from'))),
     '#description' => t('The default sender address for emailed webform results; often the e-mail address of the maintainer of your forms.'),
   );
 
-  $form['email']['webform_default_from_name']  = array(
+  $form['email']['webform_default_from_name'] = array(
     '#type' => 'textfield',
     '#title' => t('From name'),
     '#default_value' => variable_get('webform_default_from_name', variable_get('site_name', '')),
     '#description' => t('The default sender name which is used along with the default from address.'),
   );
 
-  $form['email']['webform_default_subject']  = array(
+  $form['email']['webform_default_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Default subject'),
     '#default_value' => variable_get('webform_default_subject', t('Form submission from: %title')),
     '#description' => t('The default subject line of any e-mailed results.'),
   );
 
-  $form['email']['webform_default_format']  = array(
+  $form['email']['webform_default_format'] = array(
     '#type' => 'radios',
     '#title' => t('Format'),
     '#options' => array(
@@ -81,7 +81,7 @@ function webform_admin_settings() {
     '#access' => webform_email_html_capable(),
   );
 
-  $form['email']['webform_format_override']  = array(
+  $form['email']['webform_format_override'] = array(
     '#type' => 'radios',
     '#title' => t('Format override'),
     '#options' => array(
@@ -100,7 +100,7 @@ function webform_admin_settings() {
     '#collapsed' => TRUE,
   );
 
-  $form['advanced']['webform_use_cookies']  = array(
+  $form['advanced']['webform_use_cookies'] = array(
     '#type' => 'checkbox',
     '#checked_value' => 1,
     '#title' => t('Allow cookies for tracking submissions'),
@@ -108,7 +108,7 @@ function webform_admin_settings() {
     '#description' => t('<a href="http://www.wikipedia.org/wiki/HTTP_cookie">Cookies</a> can be used to help prevent the same user from repeatedly submitting a webform. This feature is not needed for limiting submissions per user, though it can increase accuracy in some situations. Besides cookies, Webform also uses IP addresses and site usernames to prevent repeated submissions.'),
   );
 
-  $form['advanced']['webform_search_index']  = array(
+  $form['advanced']['webform_search_index'] = array(
     '#type' => 'checkbox',
     '#checked_value' => 1,
     '#title' => t('Include webform forms in search index'),
@@ -135,7 +135,7 @@ function webform_admin_settings() {
     '#default_value' => variable_get('webform_export_format', 'delimited'),
   );
 
-  $form['advanced']['webform_csv_delimiter']  = array(
+  $form['advanced']['webform_csv_delimiter'] = array(
     '#type' => 'select',
     '#title' => t('Default export delimiter'),
     '#description' => t('This is the delimiter used in the CSV/TSV file when downloading Webform results. Using tabs in the export is the most reliable method for preserving non-latin characters. You may want to change this to another character depending on the program with which you anticipate importing results.'),
@@ -151,7 +151,7 @@ function webform_admin_settings() {
     ),
   );
 
-  $form['advanced']['webform_submission_access_control']  = array(
+  $form['advanced']['webform_submission_access_control'] = array(
     '#type' => 'radios',
     '#title' => t('Submission access control'),
     '#options' => array(
@@ -255,7 +255,7 @@ function theme_webform_admin_content($variables) {
   $header = array(
     t('Title'),
     array('data' => t('View'), 'colspan' => '4'),
-    array('data' => t('Operations'), 'colspan' => '3')
+    array('data' => t('Operations'), 'colspan' => '3'),
   );
 
   $rows = array();

@@ -45,7 +45,8 @@ function _webform_edit_pagebreak($component) {
     '#value' => '0',
   );
 
-  $form['display'] = array('#type' => 'markup'); // Hide the display options.
+  // Hide the display options.
+  $form['display'] = array('#type' => 'markup');
 
   $form['extra']['next_page_label'] = array(
     '#type' => 'textfield',

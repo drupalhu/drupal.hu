@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Menu callbacks and functions for configuring and editing webforms.
  */
 
@@ -66,7 +65,7 @@ function webform_configure_form($form, &$form_state, $node) {
     '#theme' => 'webform_advanced_redirection_form',
     '#description' => t('Choose where to redirect the user upon successful submission.') . ' ' . t('The <em>Custom URL</em> option supports Webform token replacements.') . theme('webform_token_help', array('groups' => array('basic', 'node', 'special', 'submission'))),
   );
-  $form['submission']['redirection']['redirect']= array(
+  $form['submission']['redirection']['redirect'] = array(
     '#type' => 'radios',
     '#default_value' => $redirect,
     '#options' => array(
@@ -290,7 +289,7 @@ function webform_configure_form_submit($form, &$form_state) {
   $node->webform['confirmation'] = $form_state['values']['confirmation']['value'];
   $node->webform['confirmation_format'] = $form_state['values']['confirmation']['format'];
 
-  // Save the redirect URL
+  // Save the redirect URL.
   $node->webform['redirect_url'] = $form_state['values']['redirect_url'];
 
   // Overall form status.

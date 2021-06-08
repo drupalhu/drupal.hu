@@ -13,7 +13,7 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
   /**
    * Renders the link.
    */
-  function render_link($node, $values) {
+  public function render_link($node, $values) {
     // Ensure user has access to edit this node.
     if (!webform_results_access($node)) {
       return;
@@ -27,4 +27,3 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
   }
 
 }
-

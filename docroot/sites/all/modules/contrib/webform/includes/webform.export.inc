@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Provides several different handlers for exporting webform results.
+ * Provides several different handlers for exporting webform results.
  */
 
 /**
@@ -68,7 +68,7 @@ function webform_export_create_handler($format, $options) {
   if (isset($definition) && class_exists($definition['handler'])) {
     $handler = new $definition['handler']($options);
   }
-  else  {
+  else {
     // TODO: Create a default broken exporter.
     $handler = new webform_exporter_broken($options);
   }
@@ -76,27 +76,53 @@ function webform_export_create_handler($format, $options) {
   return $handler;
 }
 
+/**
+ *
+ */
 class webform_exporter {
-  function add_row(&$file_handle, $data) {
+
+  /**
+   *
+   */
+  public function add_row(&$file_handle, $data) {
   }
 
-  function set_headers($filename) {
+  /**
+   *
+   */
+  public function set_headers($filename) {
     drupal_add_http_header('Content-Type', 'application/force-download');
     drupal_add_http_header('Pragma', 'public');
     drupal_add_http_header('Cache-Control', 'max-age=0');
   }
 
-  function bof(&$file_handle) {
+  /**
+   *
+   */
+  public function bof(&$file_handle) {
   }
 
-  function eof(&$file_handle) {
+  /**
+   *
+   */
+  public function eof(&$file_handle) {
   }
+
 }
 
+/**
+ *
+ */
 class webform_exporter_delimited extends webform_exporter {
-  var $delimiter;
+  public $delimiter;
 
-  function webform_exporter_delimited($options) {
+  /**
+   * Constructor.
+   *
+   * @param array $options
+   *   An associative array of options.
+   */
+  public function __construct($options) {
     $this->delimiter = isset($options['delimiter']) ? $options['delimiter'] : ',';
     // Convert tabs.
     if ($this->delimiter == '\t') {
@@ -104,7 +130,21 @@ class webform_exporter_delimited extends webform_exporter {
     }
   }
 
-  function bof(&$file_handle) {
+  /**
+   * PHP 4 constructor compatibility shim.
+   *
+   * @deprecated in 7.x-3.30 and is removed from 7.x-4.0. Use PHP 5 class
+   * instantiation instead.
+   * @see https://www.drupal.org/project/webform/issues/3011149
+   */
+  public function webform_exporter_delimited($options) {
+    self::__construct($options);
+  }
+
+  /**
+   *
+   */
+  public function bof(&$file_handle) {
     $output = '';
 
     // Include at BOM at the beginning of the file for Little Endian.
@@ -115,7 +155,10 @@ class webform_exporter_delimited extends webform_exporter {
     @fwrite($file_handle, $output);
   }
 
-  function add_row(&$file_handle, $data) {
+  /**
+   *
+   */
+  public function add_row(&$file_handle, $data) {
     foreach ($data as $key => $value) {
       // Escape inner quotes and wrap all contents in new quotes.
       $data[$key] = '"' . str_replace('"', '""', $data[$key]) . '"';
@@ -132,7 +175,10 @@ class webform_exporter_delimited extends webform_exporter {
     @fwrite($file_handle, $row);
   }
 
-  function set_headers($filename) {
+  /**
+   *
+   */
+  public function set_headers($filename) {
     parent::set_headers($filename);
 
     // Convert tabs.
@@ -148,23 +194,42 @@ class webform_exporter_delimited extends webform_exporter {
     drupal_add_http_header('Content-Type', $content_type);
     drupal_add_http_header('Content-Disposition', "attachment; filename=$filename.$extension");
   }
+
 }
 
 /**
  * The Excel exporter currently is just a tab-delimited export.
  */
 class webform_exporter_excel extends webform_exporter_delimited {
-  var $delimiter;
+  public $delimiter;
 
-  function webform_exporter_excel($options) {
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($options) {
     $options['delimiter'] = '\t';
-    parent::webform_exporter_delimited($options);
+    parent::__construct($options);
   }
 
-  function set_headers($filename) {
+  /**
+   * PHP 4 constructor compatibility shim.
+   *
+   * @deprecated in 7.x-3.30 and is removed from 7.x-4.0. Use PHP 5 class
+   * instantiation instead.
+   * @see https://www.drupal.org/project/webform/issues/3011149
+   */
+  public function webform_exporter_excel($options) {
+    self::__construct($options);
+  }
+
+  /**
+   *
+   */
+  public function set_headers($filename) {
     drupal_add_http_header('Content-Type', 'application/x-msexcel');
     drupal_add_http_header('Content-Disposition', "attachment; filename=$filename.xls");
     drupal_add_http_header('Pragma', 'public');
     drupal_add_http_header('Cache-Control', 'max-age=0');
   }
+
 }

@@ -198,7 +198,8 @@ function _webform_edit_validate_select($element, &$form_state) {
       $line = trim($line);
       if (preg_match('/^\<([^>]*)\>$/', $line, $matches)) {
         $group = $matches[1];
-        $key = NULL; // No need to store group names.
+        // No need to store group names.
+        $key = NULL;
       }
       elseif (preg_match('/^([^|]*)\|(.*)$/', $line, $matches)) {
         $key = $matches[1];
@@ -295,7 +296,8 @@ function _webform_render_select($component, $value = NULL, $filter = TRUE) {
     '#weight' => $component['weight'],
     '#description' => $filter ? _webform_filter_descriptions($component['extra']['description'], $node) : $component['extra']['description'],
     '#theme_wrappers' => array('webform_element'),
-    '#pre_render' => array(), // Needed to disable double-wrapping of radios and checkboxes.
+    // Needed to disable double-wrapping of radios and checkboxes.
+    '#pre_render' => array(),
     '#translatable' => array('title', 'description', 'options'),
   );
 
@@ -322,8 +324,8 @@ function _webform_render_select($component, $value = NULL, $filter = TRUE) {
     $value = $component['extra']['multiple'] ? array_filter(array_map('trim', explode(',', $default_value)), 'strlen') : $default_value;
   }
 
-  // Convert all values into an array; component may now be single but was previously multiple, or vice-versa
-  $value = (array)$value;
+  // Convert all values into an array; component may now be single but was previously multiple, or vice-versa.
+  $value = (array) $value;
 
   // Set the default value. Note: "No choice" is stored as an empty string,
   // which will match a 0 key for radios; NULL is used to avoid unintentional
