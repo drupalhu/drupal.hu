@@ -10,6 +10,7 @@
  * FeedsFileFetcher.
  */
 class FeedsFileFetcherResult extends FeedsFetcherResult {
+
   /**
    * Constructor.
    */
@@ -29,11 +30,10 @@ class FeedsFileFetcherResult extends FeedsFetcherResult {
    * Overrides parent::getFilePath().
    */
   public function getFilePath() {
-    if (!is_readable($this->file_path)) {
-      throw new Exception(t('File @filepath is not accessible.', array('@filepath' => $this->file_path)));
-    }
+    $this->checkFile();
     return $this->sanitizeFile($this->file_path);
   }
+
 }
 
 /**
@@ -72,7 +72,7 @@ class FeedsFileFetcher extends FeedsFetcher {
    * Returns an array of files in a directory.
    *
    * @param string $dir
-   *   A stream wreapper URI that is a directory.
+   *   A stream wrapper URI that is a directory.
    *
    * @return array
    *   An array of stream wrapper URIs pointing to files. The array is empty if
@@ -217,7 +217,7 @@ class FeedsFileFetcher extends FeedsFetcher {
       'direct' => FALSE,
       'directory' => $scheme . '://feeds',
       'allowed_schemes' => $schemes,
-    );
+    ) + parent::configDefaults();
   }
 
   /**

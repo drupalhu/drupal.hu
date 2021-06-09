@@ -139,22 +139,30 @@ function feeds_drush_help($section) {
   switch ($section) {
     case 'drush:feeds-list-importers':
       return dt('Show a list of available Feeds importers with information about them.');
+
     case 'drush:feeds-list-feeds':
       return dt("List all feed sources. You can limit the number of feed sources to display by setting the option '--limit'.");
+
     case 'drush:feeds-import':
       $help = dt("Import items from a feed. Follow the command with the importer name to import items with. If the importer is attached to a content type, specify also the feed node with the option '--nid'.");
       $help .= "\n" . dt("Note that the options '--file', '--stdin' and '--url' temporary bypass the configured fetcher and do *not* update the source configuration. For example, if a file was uploaded for the feed source, that file will remain there even when you specify a different file using the '--file' option. Same story applies for when importing from a url. If you omit these options, the last stored source will be used.");
       return $help;
+
     case 'drush:feeds-import-all':
       return dt('Import items from all feeds. Optionally specify the importer name to import all feeds for.');
+
     case 'drush:feeds-clear':
       return dt("Delete all items from a feed. Follow the command with the importer name to delete items from. If the importer is attached to a content type, specify also the feed node with the option '--nid'.");
+
     case 'drush:feeds-enable':
       return dt('Enable the specified Feeds importers. Follow the command with a space delimited list of importer names.');
+
     case 'drush:feeds-disable':
       return dt('Disable the specified Feeds importers. Follow the command with a space delimited list of importer names.');
+
     case 'drush:feeds-delete':
       return dt('Delete the specified Feeds importers. Follow the command with a space delimited list of importer names.');
+
     case 'drush:feeds-revert':
       return dt('Revert the specified Feeds importers. Follow the command with a space delimited list of importer names.');
   }
@@ -300,8 +308,15 @@ function drush_feeds_import($importer_id = NULL) {
   catch (FeedsNotExistingException $e) {
     $importer = feeds_importer_load($importer_id);
     if (!$importer) {
-      drush_set_error(dt("The importer '@importer' does not exist or is not enabled.", array(
+      drush_set_error(dt("The importer '@importer' does not exist.", array(
         '@importer' => $importer_id,
+      )));
+      return FALSE;
+    }
+    elseif (!$importer->isEnabled()) {
+      drush_set_error(dt("The importer '@importer' is not enabled. You can enable it with the command '@command'.", array(
+        '@importer' => $importer_id,
+        '@command' => 'drush feeds-enable ' . $importer_id,
       )));
       return FALSE;
     }
@@ -542,8 +557,15 @@ function drush_feeds_clear($importer_id = NULL) {
   catch (FeedsNotExistingException $e) {
     $importer = feeds_importer_load($importer_id);
     if (!$importer) {
-      drush_set_error(dt("The importer '@importer' does not exist or is not enabled.", array(
+      drush_set_error(dt("The importer '@importer' does not exist.", array(
         '@importer' => $importer_id,
+      )));
+      return FALSE;
+    }
+    elseif (!$importer->isEnabled()) {
+      drush_set_error(dt("The importer '@importer' is not enabled. You can enable it with the command '@command'.", array(
+        '@importer' => $importer_id,
+        '@command' => 'drush feeds-enable ' . $importer_id,
       )));
       return FALSE;
     }
@@ -827,7 +849,8 @@ function _drush_feeds_get_all($importer_id = NULL, $limit = DRUSH_FEEDS_DEFAULT_
  *   NULL otherwise.
  */
 function _drush_feeds_find_file($filename) {
-  // If the full path to the file is specified, the file will be found right away.
+  // If the full path to the file is specified, the file will be found right
+  // away.
   if (is_file($filename)) {
     // Found!
     return $filename;

@@ -99,7 +99,7 @@ class FeedsUserProcessor extends FeedsProcessor {
   /**
    * Validates a user account.
    */
-  protected function entityValidate($account) {
+  protected function entityValidate($account, FeedsSource $source = NULL) {
     parent::entityValidate($account);
 
     if (empty($account->name) || empty($account->mail) || !valid_email_address($account->mail)) {
@@ -108,10 +108,16 @@ class FeedsUserProcessor extends FeedsProcessor {
 
     // Check when an user ID gets set or changed during processing if that user
     // ID is not already in use.
+    $uid_is_set = FALSE;
     if (!empty($account->uid)) {
       $is_new = !empty($account->feeds_item->is_new);
       $different = !empty($account->feeds_item->entity_id) && $account->feeds_item->entity_id != $account->uid;
       if ($is_new || $different) {
+        // Flag that an user ID is explicitly set. This will skip the
+        // validations for existing user name and mail address defined below.
+        $uid_is_set = TRUE;
+
+        // Check if the given user ID already exists.
         $exists = entity_load_unchanged('user', $account->uid);
         if ($exists) {
           throw new FeedsValidationException(t('Could not update user ID to @uid since that ID is already in use.', array(
@@ -121,9 +127,31 @@ class FeedsUserProcessor extends FeedsProcessor {
       }
     }
 
+    // Look for other validation constraints.
+    $errors = array();
+
+    // Validate the user name.
+    if ($error = user_validate_name($account->name)) {
+      $errors[] = $error;
+    }
+
+    // Check for an existing user name, unless an user ID is explicitly set.
+    if (!$uid_is_set && (bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($account->name), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+      $errors[] = t("The name '@name' is already taken.", array('@name' => $account->name));
+    }
+
+    // Check for an existing mail address, unless an user ID is explicitly set.
+    if (!$uid_is_set && (bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($account->mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+      $errors[] = t("The e-mail address '@email' is already taken.", array('@email' => $account->mail));
+    }
+
     // Timezone validation.
     if (!empty($account->timezone) && !array_key_exists($account->timezone, system_time_zones())) {
-      throw new FeedsValidationException(t("Failed importing '@name'. User's timezone is not valid.", array('@name' => $account->name)));
+      $errors[] = t("Failed importing '@name'. User's timezone is not valid.", array('@name' => $account->name));
+    }
+
+    if (!empty($errors)) {
+      throw new FeedsValidationException(implode("\n", $errors));
     }
   }
 
@@ -516,7 +544,7 @@ class FeedsUserProcessor extends FeedsProcessor {
         '#title' => t('Allowed roles'),
         '#options' => $allowed_roles_options,
         '#default_value' => $mapping['allowed_roles'],
-        '#description' => t('Select the roles to accept from the feed.<br />Any other roles will be ignored.')
+        '#description' => t('Select the roles to accept from the feed.<br />Any other roles will be ignored.'),
       ),
       'autocreate' => array(
         '#type' => 'checkbox',
@@ -614,7 +642,7 @@ class FeedsUserProcessor extends FeedsProcessor {
    * Used by ::passSummaryCallback().
    *
    * @return array
-   *    An array of password encryption option titles.
+   *   An array of password encryption option titles.
    *
    * @see passSummaryCallback()
    */
@@ -646,7 +674,7 @@ class FeedsUserProcessor extends FeedsProcessor {
    * Used by ::passFormCallback().
    *
    * @return array
-   *    An array of password encryption option titles.
+   *   An array of password encryption option titles.
    *
    * @see passFormCallback()
    */
@@ -691,4 +719,5 @@ class FeedsUserProcessor extends FeedsProcessor {
         break;
     }
   }
+
 }
