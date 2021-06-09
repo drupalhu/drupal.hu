@@ -30,7 +30,6 @@ function _geshifilter_filter_settings($form, &$form_state, $filter, $format, $de
       '#markup' => '<p>'. t('GeSHi filter is configured to use global tag settings. For separate settings per text format, enable this option in the <a href="!geshi_admin_url">general GeSHi filter settings</a>.', array('!geshi_admin_url' => url('admin/config/content/formats/geshifilter'))) .'</p>'
     );
   }
-  $settings['#validate'][] = 'geshifilter_per_language_settings_validate';
 
   return $settings;
 }
@@ -331,6 +330,70 @@ function geshifilter_per_language_settings_validate($form, &$form_state) {
 }
 
 /**
+ * Validate function for per filter language settings.
+ *
+ * Check that language tags differ between languages and fro the generic tags.
+ */
+function geshifilter_per_filter_language_settings_validate($form, &$form_state) {
+  // If we do not have per filter settings, skip all this validation.
+  if (isset($form_state['values']['filters']['geshifilter']['settings']['per_language_settings'])) {
+    // if we're coming from the _geshifilter_filter_settings (sub)form, we should
+    // take the text format into account
+    $format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
+    $f = ($format === NULL) ? '' : "_$format";
+
+    // language tags should differ from each other
+    $languages = _geshifilter_get_available_languages();
+    $values = $form_state['values']['filters']['geshifilter']['settings']['per_language_settings']['table']['languages'];
+    foreach ($languages as $language1 => $language_data1) {
+      // iterate over the enabled languages: skip disabled ones
+      $field = "geshifilter_language_enabled_{$language1}";
+      if (!(isset($values[$language1][$field]) ? $values[$language1][$field] : variable_get($field, FALSE))) {
+        continue;
+      }
+      // get the associated tags as $tags1
+      $field = "geshifilter_language_tags_{$language1}{$f}";
+      if (isset($values[$language1][$field])) {
+        $tags1 = _geshifilter_tag_split($values[$language1][$field]);
+      }
+      else {
+        $tags1 = _geshifilter_tag_split(geshifilter_language_tags($language1, $format));
+      }
+      // also include the generic tags
+      $field = "geshifilter_tags{$f}";
+      $generic_tags = isset($values[$language1][$field]) ? $values[$language1][$field] : geshifilter_tags($format);
+      $tags1 = array_merge($tags1, _geshifilter_tag_split($generic_tags));
+
+      // check that other languages do not use these tags
+      foreach ($languages as $language2 => $language_data2) {
+        // check these tags against the tags of other enabled languages
+        $field = "geshifilter_language_enabled_{$language2}";
+        if ($language1 == $language2 || !(isset($values[$language2][$field]) ? $values[$language2][$field] : variable_get($field, FALSE))) {
+          continue;
+        }
+        // get tags for $language2, or skip when not in $form_state['values']
+        $field = "geshifilter_language_tags_{$language2}{$f}";
+        if (isset($values[$language2][$field])) {
+          $tags2 = _geshifilter_tag_split($values[$language2][$field]);
+        }
+        else {
+          continue;
+        }
+        // and now we can check tags1 against tags2
+        foreach ($tags1 as $tag1) {
+          foreach ($tags2 as $tag2) {
+            if ($tag1 == $tag2) {
+              form_set_error("filters][geshifilter][settings][per_language_settings][table][languages][{$language2}][geshifilter_language_tags_{$language2}{$f}", t('GeShi Filter: The language tags should differ between languages and from the generic tags.'));
+            }
+          }
+        }
+      }
+    }
+  }
+  return $form;
+}
+
+/**
  * Submit function for per language settings.
  */
 function geshifilter_admin_per_language_settings_submit($form, &$form_state) {
@@ -350,7 +413,7 @@ function _geshifilter_general_highlight_tags_settings($format = NULL) {
   $form = array();
   $f = ($format === NULL) ? '' : "_$format->format";
   $format_id = ($format === NULL) ? NULL : $format->format;
-  
+
   // generic tags
   $form["geshifilter_tags$f"] = array(
     '#type' => 'textfield',
@@ -358,6 +421,15 @@ function _geshifilter_general_highlight_tags_settings($format = NULL) {
     '#default_value' => geshifilter_tags($format_id),
     '#description' => t('Tags that should activate the GeSHi syntax highlighting. Specify a space-separated list of tagnames.'),
   );
+
+  // Decode entities.
+  $form["geshifilter_decode_entities$f"] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Decode entities'),
+    '#default_value' => geshifilter_decode_entities($format_id),
+    '#description' => t('Decode entities, for example, if the code has been typed in a WYSIWYG editor.'),
+  );
+
   // Container tag styles.
   $form["geshifilter_tag_styles$f"] = array(
     '#type' => 'checkboxes',
@@ -555,7 +627,7 @@ function _geshifilter_generate_languages_css_file($force=FALSE) {
     $stylesheet_filename = _geshifilter_language_css_path();;
     $ret = file_save_data($stylesheet, $stylesheet_filename, FILE_EXISTS_REPLACE);
     if ($ret) {
-      drupal_set_message(t('(Re)generated external CSS style sheet %file.', array('%file' => $ret)));
+      drupal_set_message(t('(Re)generated external CSS style sheet %file.', array('%file' => $ret->uri)));
     }
     else {
       drupal_set_message(t('Could not generate external CSS file. Check the settings of your <a href="!filesystem">file system</a>.',

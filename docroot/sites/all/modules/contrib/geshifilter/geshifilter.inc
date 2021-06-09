@@ -118,6 +118,13 @@ function geshifilter_tags($format = NULL) {
   return variable_get("geshifilter_tags_{$format}", geshifilter_tags());
 }
 
+function geshifilter_decode_entities($format = NULL) {
+  if (!geshifilter_use_format_specific_options() || $format === NULL) {
+    return variable_get('geshifilter_decode_entities', 0);
+  }
+  return variable_get("geshifilter_decode_entities_{$format}", geshifilter_decode_entities());
+}
+
 function _geshifilter_tag_styles($format = NULL) {
   if (!geshifilter_use_format_specific_options() || $format === NULL) {
     return variable_get('geshifilter_tag_styles', array(
