@@ -21,12 +21,15 @@ is important.
 
  1. Install the memcached binaries on your server and start the memcached
     service. Follow best practices for securing the service; for example,
-    lock it down so only your web servers can make connections.
+    lock it down so only your web servers can make connections. Find community
+    maintained documentation with a number of walk-throughs for various
+    operating systems at https://www.drupal.org/node/1131458.
  2. Install your chosen PECL memcache extension -- this is the memcache client
     library which will be used by the Drupal memcache module to interact with
     the memcached server(s). Generally PECL memcache (3.0.6+) is recommended,
     but PECL memcached (2.0.1+) also works well for some people. There are
-    known issues with older version.
+    known issues with older versions. Refer to the community maintained
+    documentation referenced above for more information.
  3. Put your site into offline mode.
  4. Download and install the memcache module.
  5. If you have previously been running the memcache module, run update.php.
@@ -52,11 +55,22 @@ is important.
     Call to undefined function module_list()".
 10. Bring your site back online.
 
-For more detailed instructions on (1) and (2) above, please see the
-documentation online on drupal.org which includes links to external
-walk-throughs for various operating systems.
+## DRUSH ##
 
-## Advanced Configuration ##
+Enable the memcache module at admin/modules or with 'drush en memcache', then
+rebuild the drush cache by running 'drush cc drush'. This will enable the
+following drush commands:
+
+  memcache-flush (mcf)  Flush all Memcached objects in a bin.
+  memcache-stats (mcs)  Retrieve statistics from Memcached.
+
+For more information about each command, use 'drush help'. For example:
+  drush help mcf
+
+Or:
+  drush help mcs
+
+## ADVANCED CONFIGURATION ##
 
 This module is capable of working with one memcached instance or with multiple
 memcached instances run across one or more servers. The default is to use one
@@ -88,6 +102,15 @@ to $conf; memcache_servers and memcache_bins. The arrays follow this pattern:
    binS => clusterS
 )
 
+You can optionally assign a weight to each server, favoring one server more than
+another. For example, to make it 10 times more likely to store an item on
+server1 versus server2:
+
+'memcache_servers' => array(
+  server1:port => array('cluster' => cluster1, 'weight' => 10),
+  server2:port => array('cluster' => cluster2, 'weight' => 1'),
+)
+
 The bin/cluster/server model can be described as follows:
 
 - Servers are memcached instances identified by host:port.
@@ -116,8 +139,8 @@ memcache cluster unless you explicitly configure a 'semaphore' cluster.
 
 ## STAMPEDE PROTECTION ##
 
-Memcache includes stampede protection for rebuilding expired and invalid cache
-items.  To enable stampede protection, define the following in settings.php:
+Memcache includes stampede protection for rebuilding expired cache items. To
+enable stampede protection, define the following in settings.php:
 
   $conf['memcache_stampede_protection'] = TRUE;
 
@@ -141,19 +164,23 @@ specific bins, or cid's starting with a specific prefix in specific bins. For
 example:
 
   $conf['memcache_stampede_protection_ignore'] = array(
-    // Ignore stampede protection for the entire 'cache_example' bin.
-    'cache_example',
     // Ignore some cids in 'cache_bootstrap'.
     'cache_bootstrap' => array(
       'module_implements',
       'variables',
+      'lookup_cache',
       'schema:runtime:*',
       'theme_registry:runtime:*',
+      '_drupal_file_scan_cache',
     ),
     // Ignore all cids in the 'cache' bin starting with 'i18n:string:'
     'cache' => array(
       'i18n:string:*',
     ),
+    // Disable stampede protection for the entire 'cache_path' and 'cache_rules'
+    // bins.
+    'cache_path',
+    'cache_rules',
   );
 
 Only change the following stampede protection tunables if you're sure you know
@@ -175,6 +202,62 @@ When adjusting these variables, be aware that:
  - wait_time * wait_limit is designed to default to a number less than
    standard web server timeouts (i.e. 15 seconds vs. apache's default of
    30 seconds).
+
+## CACHE LIFETIME ##
+
+Memcache respects Drupal core's minimum cache lifetime configuration. This
+setting affects all cached items, not just pages. In some cases, it may
+be desirable to cache different types of items for different amounts of time.
+You can override the minimum cache lifetime on a per-bin basis in settings.php.
+For example:
+
+  // Cache pages for 60 seconds.
+  $conf['cache_lifetime_cache_page'] = 60;
+  // Cache menus for 10 minutes.
+  $conf['cache_lifetime_menu'] = 600;
+
+## CACHE HEADER ##
+
+Drupal core indicates whether or not a page was served out of the cache by
+setting the 'X-Drupal-Cache' response header with a value of HIT or MISS. If
+you'd like to confirm whether pages are actually being retreived from Memcache
+and not another backend, you can enable the following option:
+
+  $conf['memcache_pagecache_header'] = TRUE;
+
+When enabled, the Memcache module will add its own 'Drupal-PageCache-Memcache'
+header. When cached pages are served out of the cache the header will include an
+'age=' value indicating how many seconds ago the page was stored in the cache.
+
+## PERSISTENT CONNECTIONS ##
+
+As of 7.x-1.6, the memcache module uses peristent connections by default. If
+this causes you problems you can disable persistent connections by adding the
+following to your settings.php:
+
+  $conf['memcache_persistent'] = FALSE;
+
+## STRICT COMPATIBILITY WITH DB CACHE EXPIRATIONS ##
+
+Due to the way database caching works, the native Drupal cache will return
+expired cache objects which were set to expire in the future even after their
+expiration timestamp, because it doesn't clean up cache entries until the
+cache bins are garbage collected (normally during a cron.php run's general
+cache wipe). However, memcache can expire cached items at the specific time
+requested. Therefore the default behavior of the memcache module does not
+match the Drupal API for cache_set, which states that cache items set to
+expire in the future are kept at least until the given timestamp, after which
+they behave like CACHE_TEMPORARY (removed at the next general cache wipe).
+
+If you wish to return to the behavior described in the cache_set API, and
+allow expired entries to appear valid until a general cache wipe, define the
+following in settings.php:
+
+  $conf['memcache_expire_wait_gc'] = TRUE;
+
+This setting works independently from stampede support, though it changes the
+time at which timestamp-cached items are considered expired, and therefore
+affects the time at which stampede behavior happens (if enabled).
 
 ## EXAMPLES ##
 
@@ -277,9 +360,101 @@ go to 'cluster2'. All other bins go to 'default'.
 
 If you want to have multiple Drupal installations share memcached instances,
 you need to include a unique prefix for each Drupal installation in the $conf
-array of settings.php:
+array of settings.php. This can be a single string prefix, or a keyed array of
+bin => prefix pairs:
 
-$conf['memcache_key_prefix'] = 'something_unique';
+   $conf['memcache_key_prefix'] = 'something_unique';
+
+Using a per-bin prefix:
+
+   $conf['memcache_key_prefix'] = array(
+     'default' => 'something_unique',
+     'cache_page' => 'something_else_unique'
+   );
+
+In the above example, the 'something_unique' prefix will be used for all bins
+except for the 'cache_page' bin which will use the 'something_else_unique'
+prefix. Note that if using a keyed array for specifying prefix, you must specify
+the 'default' prefix.
+
+It is also possible to specify multiple prefixes per bin. Only the first prefix
+will be used when setting/getting cache items, but all prefixes will be cleared
+when deleting cache items. This provides support for more complicated
+configurations such as a live instance and an administrative instance each with
+their own prefixes and therefore their own unique caches. Any time a cache item
+is deleted on either instance, it gets flushed on both -- thus, should an admin
+do something that flushes the page cache, it will appropriately get flushed on
+both instances. (For more discussion see the issue where support was added,
+https://www.drupal.org/node/1084448.) This feature is enabled when you configure
+prefixes as arrays within arrays. For example:
+
+  // Live instance.
+  $conf['memcache_key_prefix'] = array(
+    'default' => array(
+      'live_unique', // live cache prefix
+      'admin_unique', // admin cache prefix
+    ),
+  );
+
+The above would be the configuration of your live instance. Then, on your
+administrative instance you would flip the keys:
+
+  // Administrative instance.
+  $conf['memcache_key_prefix'] = array(
+    'default' => array(
+      'admin_unique', // admin cache prefix
+      'live_unique', // live cache prefix
+    ),
+  );
+
+## EXPERIMENTAL - ALTERNATIVE SERIALIZE ##
+
+This is a new experimental feature added to the memcache module in version
+7.x-1.6 and should be tested carefully before utilizing in production.
+
+To optimize how data is serialized before it is written to memcache, you can
+enable either the igbinary or msgpack PECL extension. Both switch from using
+PHP's own human-readable serialized data strucutres to more compact binary
+formats.
+
+No specicial configuration is required.  If both extensions are enabled,
+memcache will automatically use the igbinary extension. If only one extension
+is enabled, memcache will automatically use that extension.
+
+You can optionally specify which extension is used by adding one of the
+following to your settings.php:
+
+  // Force memcache to use PHP's core serialize functions
+  $conf['memcache_serialize'] = 'serialize';
+
+  // Force memcache to use the igbinary serialize functions (if available)
+  $conf['memcache_serialize'] = 'igbinary';
+
+  // Force memcache to use the msgpack serialize functions (if available)
+  $conf['memcache_serialize'] = 'msgpack';
+
+To review which serialize function is being used, enable the memcache_admin
+module and visit admin/reports/memcache.
+
+IGBINARY:
+
+The igbinary project is maintained on GitHub:
+ - https://github.com/phadej/igbinary
+
+The official igbinary PECL extension can be found at:
+ - https://pecl.php.net/package/igbinary
+
+Version 2.0.1 or greater is recommended.
+
+MSGPACK:
+
+The msgpack project is maintained at:
+  - https://msgpack.org
+
+The official msgpack PECL extension can be found at:
+  - https://pecl.php.net/package/msgpack
+
+Version 2.0.2 or greater is recommended.
 
 ## MAXIMUM LENGTHS ##
 
@@ -350,43 +525,50 @@ $conf['memcache_options'] = array(
   Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
 );
 
-## SESSIONS ##
+## DEBUG LOGGING ##
 
-NOTE: Session.inc is not yet ported to Drupal 7 and is not recommended for use
-in production.
+You can optionally enable debug logging by adding the following to your
+settings.php:
+  $conf['memcache_debug_log'] = '/path/to/file.log';
 
-Here is a sample config that uses memcache for sessions. Note you MUST have
-a session and a users server set up for memcached sessions to work.
+By default, only the following memcache actions are logged: 'set', 'add',
+'delete', and 'flush'. If you'd like to also log 'get' and 'getMulti' actions,
+enble verbose logging:
+  $conf['memcache_debug_verbose'] = TRUE;
 
-$conf['cache_backends'][] = 'sites/all/modules/memcache/memcache.inc';
-$conf['cache_default_class'] = 'MemCacheDrupal';
+This file needs to be writable by the web server (and/or by drush) or you will
+see lots of watchdog errors. You are responsible for ensuring that the debug log
+doesn't get too large. By default, enabling debug logging will write logs
+looking something like:
 
-// The 'cache_form' bin must be assigned no non-volatile storage.
-$conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
-$conf['session_inc'] = 'sites/all/modules/memcache/unstable/memcache-session.inc';
+  1484719570|add|semaphore|semaphore-memcache_system_list%3Acache_bootstrap|1
+  1484719570|set|cache_bootstrap|cache_bootstrap-system_list|1
+  1484719570|delete|semaphore|semaphore-memcache_system_list%3Acache_bootstrap|1
 
-$conf['memcache_servers'] = array(
-    '10.1.1.1:11211' => 'default',
-    '10.1.1.1:11212' => 'filter',
-    '10.1.1.1:11213' => 'menu',
-    '10.1.1.1:11214' => 'page',
-    '10.1.1.1:11215' => 'session',
-    '10.1.1.1:11216' => 'users',
-);
-$conf['memcache_bins'] = array(
-    'cache' => 'default',
-    'cache_filter' => 'filter',
-    'cache_menu' => 'menu',
-    'cache_page' => 'page',
-    'session' => 'session',
-    'users' => 'users',
-);
+The default log format is pipe delineated, containing the following fields:
+  timestamp|action|bin|cid|return code
+
+You can specify a custom log format by setting the memcache_debug_log_format
+variable. Supported variables that will be replaced in your format are:
+'!timestamp', '!action', '!bin', '!cid', and '!rc'.
+For example, the default log format (note that it includes a new line at the
+end) is:
+  $conf['memcache_debug_log_format'] = "!timestamp|!action|!bin|!cid|!rc\n";
+
+You can change the timestamp format by specifying a PHP date() format string in
+the memcache_debug_time_format variable. PHP date() formats are documented at
+http://php.net/manual/en/function.date.php. By default timestamps are written as
+a unix timestamp. For example:
+  $conf['memcache_debug_time_format'] = 'U';
 
 ## TROUBLESHOOTING ##
 
 PROBLEM:
  Error:
   Failed to load required file memcache/dmemcache.inc
+ Or:
+ cache_backends not properly configured in settings.php, failed to load
+ required file memcache.inc
 
 SOLUTION:
 You need to enable memcache in settings.php. Search for "Example 1" above
@@ -481,18 +663,20 @@ default options (selected through performance testing). These options will be
 set unless overridden in settings.php.
 
   $conf['memcache_options'] = array(
-    Memcached::OPT_COMPRESSION => FALSE,
     Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
   );
 
 These are as follows:
 
- * Turn off compression, as this takes more CPU cycles than it's worth for most
-   users
  * Turn on consistent distribution, which allows you to add/remove servers
    easily
 
 Other options you could experiment with:
+ + Memcached::OPT_COMPRESSION => FALSE,
+    * This disables compression in the Memcached extension. This may save some
+      CPU cost, but can result in significantly more data being transmitted and
+      stored. See: https://www.drupal.org/project/memcache/issues/2958403
+
  + Memcached::OPT_BINARY_PROTOCOL => TRUE,
     * This enables the Memcache binary protocol (only available in Memcached
       1.4 and later). Note that some users have reported SLOWER performance
@@ -507,7 +691,11 @@ Other options you could experiment with:
       tells the TCP stack to send packets immediately and without waiting for
       a full payload, reducing per-packet network latency (disabling "Nagling").
 
-It's possible to enable SASL authentication as documented here:
+### Authentication
+
+#### Binary Protocol SASL Authentication
+
+SASL authentication can be enabled as documented here:
   http://php.net/manual/en/memcached.setsaslauthdata.php
   https://code.google.com/p/memcached/wiki/SASLHowto
 
@@ -523,3 +711,67 @@ memcache_sasl_username and memcache_sasl_password in settings.php. For example:
   );
   $conf['memcache_sasl_username'] = 'yourSASLUsername';
   $conf['memcache_sasl_password'] = 'yourSASLPassword';
+
+#### ASCII Protocol Authentication
+
+If you do not want to enable the binary protocol, you can instead enable
+token authentication with the default ASCII protocol.
+
+ASCII protocol authentication requires Memcached version 1.5.15 or greater
+started with the -Y flag, and the PECL memcached client. It was originally
+documented in the memcached 1.5.15 release notes:
+  https://github.com/memcached/memcached/wiki/ReleaseNotes1515
+
+While it will work with 1.5.15 or greater, it's strongly recommended you
+use memcached 1.6.4 or greater due to the following bug fix:
+  https://github.com/memcached/memcached/wiki/ReleaseNotes164
+
+Additional detail about this feature can be found in the protocol documentation:
+  https://github.com/memcached/memcached/blob/master/doc/protocol.txt
+
+All your memcached servers need to be started with the -Y option to specify
+a local path to an authfile which can contain up to 8 "username:pasword"
+pairs, any of which can be used for authentication. For example, a simple
+authfile may look as follows:
+
+  foo:bar
+
+You can then configure your website to authenticate with this username and
+password as follows:
+
+  $conf['memcache_ascii_auth'] = 'foo bar';
+
+Enabling ASCII protocol authentication during load testing resulted in less than
+1% overhead.
+
+## Amazon Elasticache
+
+You can use the Drupal Memcache module to talk with Amazon Elasticache, but to
+enable Automatic Discovery you must use Amazon's forked version of the PECL
+Memcached extension with Dynamic Client Mode enabled.
+
+Their PECL Memcached fork is maintained on GitHub:
+ - https://github.com/awslabs/aws-elasticache-cluster-client-memcached-for-php
+
+If you are using PHP 7 you need to select the php7 branch of their project.
+
+Once the extension is installed, you can enable Dynamic Client Mode as follows:
+
+  $conf['memcache_options'] = array(
+    Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
+    Memcached::OPT_CLIENT_MODE  => Memcached::DYNAMIC_CLIENT_MODE,
+  );
+
+You then configure the module normally. Amazon explains:
+  "If you use Automatic Discovery, you can use the cluster's Configuration
+   Endpoint to configure your Memcached client."
+
+The Configuration Endpoint must have 'cfg' in the name or it won't work. Further
+documentation can be found here:
+http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/Endpoints.html
+
+If you don't want to use Automatic Discovery you don't need to install the
+forked PECL extension, Amazon explains:
+  "If you don't use Automatic Discovery, you must configure your client to use
+   the individual node endpoints for reads and writes. You must also keep track
+   of them as you add and remove nodes."
