@@ -5,8 +5,9 @@
  * Author: Ron Fredericks (ronf@LectureMaker.com)
  * Contributors:
  *  - Benilton Carvalho (beniltoncarvalho@gmail.com)
+ *  - Fernando Henrique Ferraz Pereira da Rosa (mentus@gmail.com)
  * Copyright: (c) 2009 Ron Fredericks (http://www.LectureMaker.com)
- * Release Version: 1.0.8.10
+ * Release Version: 1.0.9.1
  * Date Started: 2009/03/28
  *
  * R language file for GeSHi.
@@ -373,7 +374,7 @@ $language_data = array (
             'getS3method', 'getTxtProgressBar', 'glob2rx', 'head', 'head.matrix', 'help', 'help.request', 'help.search',
             'help.start', 'history', 'index.search', 'install.packages', 'installed.packages', 'is.relistable',
             'limitedLabels', 'loadhistory', 'localeToCharset', 'ls.str', 'lsf.str', 'make.packages.html', 'make.socket',
-            'makeRweaveLatexCodeRunner', 'memory.limit', 'memory.size', 'menu', 'methods', 'mirror2html', 'modifyList',
+            'makeRweaveLatexCodeRunner', 'memory.limit', 'memory.size', 'menu', 'mirror2html', 'modifyList',
             'new.packages', 'normalizePath', 'nsl', 'object.size', 'old.packages', 'package.contents', 'package.skeleton',
             'packageDescription', 'packageStatus', 'page', 'person', 'personList', 'pico', 'prompt', 'promptData',
             'promptPackage', 'rc.getOption', 'rc.options', 'rc.settings', 'rc.status', 'read.csv', 'read.csv2', 'read.delim',
@@ -440,18 +441,17 @@ $language_data = array (
             0 => 'color:#A020F0;'
             ),
         'SCRIPT' => array(
-            0 => ''
-            )
+            0 => ''            )
         ),
     'URLS' => array(
         1 => '',
-        2 => 'http://astrostatistics.psu.edu/su07/R/html/graphics/html/{FNAME}.html', // http://sekhon.berkeley.edu/library/graphics/html/{FNAME}.html
-        3 => 'http://astrostatistics.psu.edu/su07/R/html/stats/html/Normal.html', // http://sekhon.berkeley.edu/library/stats/html/Normal.html
-        4 => 'http://astrostatistics.psu.edu/su07/R/html/stats/html/{FNAME}.html', // http://sekhon.berkeley.edu/library/stats/html/{FNAME}.html
-        5 => 'http://astrostatistics.psu.edu/su07/R/html/stats/html/summary.lm.html', // http://sekhon.berkeley.edu/library/stats/html/summary.lm.html
-        6 => 'http://astrostatistics.psu.edu/su07/R/html/base/html/Log.html', // http://sekhon.berkeley.edu/library/base/html/Log.html
-        7 => '',
-        8 => ''
+        2 => 'http://stat.ethz.ch/R-manual/R-devel/library/base/html/{FNAME}.html', // Base Package
+        3 => 'http://stat.ethz.ch/R-manual/R-devel/library/datasets/html/{FNAME}.html', // Datasets
+        4 => 'http://stat.ethz.ch/R-manual/R-devel/library/graphics/html/{FNAME}.html', // Graphics Package
+        5 => 'http://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/{FNAME}.html', // grDevices
+        6 => 'http://stat.ethz.ch/R-manual/R-devel/library/methods/html/{FNAME}.html', // methods
+        7 => 'http://stat.ethz.ch/R-manual/R-devel/library/stats/html/{FNAME}.html', // stats
+        8 => 'http://stat.ethz.ch/R-manual/R-devel/library/utils/html/{FNAME}.html' // utils
         ),
     'OOLANG' => true,
     'OBJECT_SPLITTERS' => array(
@@ -479,5 +479,3 @@ $language_data = array (
             )
         )
 );
-
-?>
