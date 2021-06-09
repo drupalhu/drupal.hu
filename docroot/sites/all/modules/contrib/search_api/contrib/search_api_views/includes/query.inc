@@ -135,7 +135,9 @@ class SearchApiViewsQuery extends views_plugin_query {
    *   The order to sort items in - either 'ASC' or 'DESC'. Defaults to 'ASC'.
    */
   public function add_selector_orderby($selector, $order = 'ASC') {
-    $this->query->sort($selector, $order);
+    if (!$this->errors) {
+      $this->query->sort($selector, $order);
+    }
   }
 
   /**
@@ -195,6 +197,10 @@ class SearchApiViewsQuery extends views_plugin_query {
       'parse_mode' => array(
         'default' => 'terms',
       ),
+      'preserve_facet_query_args' => array(
+        'default' => FALSE,
+        'bool' => TRUE,
+      ),
     );
   }
 
@@ -213,7 +219,7 @@ class SearchApiViewsQuery extends views_plugin_query {
       '#default_value' => $this->options['search_api_bypass_access'],
     );
 
-    if ($this->index->getEntityType()) {
+    if ($this->index && $this->index->getEntityType()) {
       $form['entity_access'] = array(
         '#type' => 'checkbox',
         '#title' => t('Additional access checks on result entities'),
@@ -240,6 +246,14 @@ class SearchApiViewsQuery extends views_plugin_query {
           '#states' => $states,
         );
       }
+    }
+    if (module_exists('facetapi')) {
+      $form['preserve_facet_query_args'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Preserve facets while using filters'),
+        '#description' => t('By default, changing an exposed filter would reset all selected facets. This option allows you to prevent this behavior.'),
+        '#default_value' => $this->options['preserve_facet_query_args'],
+      );
     }
   }
 
