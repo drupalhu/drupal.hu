@@ -1,9 +1,9 @@
-name = Flag actions
-description = Execute actions on Flag events.
+name = Flag Bookmark
+description = Provides an example bookmark flag and supporting views.
 core = 7.x
 dependencies[] = flag
 package = Flags
-configure = admin/structure/flags/actions
+files[] = plugins/flag_bookmark_plugin_validate_user.inc
 
 ; Information added by Drupal.org packaging script on 2016-09-23
 version = "7.x-3.9"
