@@ -39,7 +39,8 @@
       modalOptions: {
         opacity: 0.55,
         background: '#fff'
-      }
+      },
+      modalClass: 'default'
     };
 
     var settings = {};
@@ -99,16 +100,16 @@
     resize();
 
     $('.modal-title', Drupal.CTools.Modal.modal).html(Drupal.CTools.Modal.currentSettings.loadingText);
-    Drupal.CTools.Modal.modalContent(Drupal.CTools.Modal.modal, settings.modalOptions, settings.animation, settings.animationSpeed);
-    $('#modalContent .modal-body').html(Drupal.theme(settings.throbberTheme));
+    Drupal.CTools.Modal.modalContent(Drupal.CTools.Modal.modal, settings.modalOptions, settings.animation, settings.animationSpeed, settings.modalClass);
+    $('#modalContent .modal-body').html(Drupal.theme(settings.throbberTheme)).addClass('ctools-modal-loading');
   };
 
-  Drupal.CTools.Modal.dismiss = function() {
-    if (Drupal.CTools.Modal.modal) {
-      $('body').removeClass('modal-open');
-      Drupal.CTools.Modal.unmodalContent(Drupal.CTools.Modal.modal);
-    }
-  };
+  /**
+   * Remove modal class from body when closing modal.
+   */
+  $(document).on('CToolsDetachBehaviors', function() {
+    $('body').removeClass('modal-open');
+  });
 
   /**
    * Provide the HTML to create the modal dialog in the Bootstrap style.

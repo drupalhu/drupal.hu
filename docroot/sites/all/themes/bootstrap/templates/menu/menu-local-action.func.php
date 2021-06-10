@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Stub file for bootstrap_menu_local_action().
@@ -20,23 +21,22 @@
  *
  * @ingroup theme_functions
  */
-function bootstrap_menu_local_action($variables) {
+function bootstrap_menu_local_action(array $variables) {
   $link = $variables['element']['#link'];
 
   $options = isset($link['localized_options']) ? $link['localized_options'] : array();
 
-  // If the title is not HTML, sanitize it.
-  if (empty($options['html'])) {
-    $link['title'] = check_plain($link['title']);
-  }
+  // Filter the title if the "html" is set, otherwise l() will automatically
+  // sanitize using check_plain(), so no need to call that here.
+  $title = empty($options['html']) ? filter_xss_admin($link['title']) : $link['title'];
 
-  $icon = _bootstrap_iconize_text($link['title']);
+  $icon = _bootstrap_iconize_text($title);
+  $href = !empty($link['href']) ? $link['href'] : FALSE;
 
   // Format the action link.
-  $output = '';
-  if (isset($link['href'])) {
+  if ($href) {
     // Turn link into a mini-button and colorize based on title.
-    if ($class = _bootstrap_colorize_text($link['title'])) {
+    if ($class = _bootstrap_colorize_text($title)) {
       if (!isset($options['attributes']['class'])) {
         $options['attributes']['class'] = array();
       }
@@ -53,11 +53,7 @@ function bootstrap_menu_local_action($variables) {
     }
     // Force HTML so we can render any icon that may have been added.
     $options['html'] = !empty($options['html']) || !empty($icon) ? TRUE : FALSE;
-    $output .= l($icon . $link['title'], $link['href'], $options);
-  }
-  else {
-    $output .= $icon . $link['title'];
   }
 
-  return $output;
+  return $href ? l($icon . $title, $href, $options) : $icon . $title;
 }

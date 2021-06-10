@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Stub file for bootstrap_container().
@@ -23,7 +24,7 @@
  *
  * @ingroup theme_functions
  */
-function bootstrap_container($variables) {
+function bootstrap_container(array $variables) {
   $element = $variables['element'];
 
   // Ensure #attributes is set.
@@ -40,7 +41,9 @@ function bootstrap_container($variables) {
     $element['#attributes']['class'][] = 'form-wrapper';
 
     // Add Bootstrap "form-group" class.
-    $element['#attributes']['class'][] = 'form-group';
+    if (!isset($element['#form_group']) || !!$element['#form_group']) {
+      $element['#attributes']['class'][] = 'form-group';
+    }
   }
 
   return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
