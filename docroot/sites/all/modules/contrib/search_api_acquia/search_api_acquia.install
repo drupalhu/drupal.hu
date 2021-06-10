@@ -24,8 +24,6 @@ function search_api_acquia_install() {
 }
 
 /**
- * Implements hook_update_N().
- *
  * Sets the threshold between GET and POST requests to a value compatible with Acquia Search.
  */
 function search_api_acquia_update_7001() {
