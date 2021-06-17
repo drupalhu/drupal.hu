@@ -49,7 +49,7 @@ function hook_webform_select_options_info() {
 /**
  * Alter the list of select list options provided by Webform and other modules.
  *
- * @see hook_webform_select_options_info().
+ * @see hook_webform_select_options_info()
  */
 function hook_webform_select_options_info_alter(&$items) {
   // Remove the days of the week options.
@@ -77,6 +77,7 @@ function hook_webform_select_options_info_alter(&$items) {
  *   needed if your list contains tokens).
  * @param $arguments
  *   The "options arguments" specified in hook_webform_select_options_info().
+ *
  * @return
  *   An array of key => value pairs suitable for a select list's #options
  *   FormAPI property.
@@ -305,7 +306,7 @@ function hook_webform_component_delete($component) {
  * Alter a Webform submission's header when exported.
  */
 function hook_webform_csv_header_alter(&$header, $component) {
-  // Use the machine name for component headers, but only for the webform 
+  // Use the machine name for component headers, but only for the webform
   // with node 5 and components that are text fields.
   if ($component['nid'] == 5 && $component['type'] == 'textfield') {
     $header[2] = $component['form_key'];
@@ -371,8 +372,8 @@ function hook_webform_csv_data_alter(&$data, $component, $submission) {
  *     - csv_headers
  *     - csv_data
  *
- * See the sample component implementation for details on each one of these
- * callbacks.
+ *   See the sample component implementation for details on each one of these
+ *   callbacks.
  *
  * @see webform_components()
  */
@@ -498,6 +499,7 @@ function hook_webform_component_defaults_alter(&$defaults, $type) {
  *   - "list"
  * @param $account
  *   A user account object.
+ *
  * @return
  *   TRUE if the current user has access to submission,
  *   or FALSE otherwise.
@@ -506,16 +508,20 @@ function hook_webform_submission_access($node, $submission, $op = 'view', $accou
   switch ($op) {
     case 'view':
       return TRUE;
-      break;
+
+    break;
     case 'edit':
       return FALSE;
-      break;
+
+    break;
     case 'delete':
       return TRUE;
-      break;
+
+    break;
     case 'list':
       return TRUE;
-      break;
+
+    break;
   }
 }
 
@@ -525,12 +531,13 @@ function hook_webform_submission_access($node, $submission, $op = 'view', $accou
  * Note in addition to the view access to the results granted here, the $account
  * must also have view access to the Webform node in order to see results.
  *
- * @see webform_results_access().
+ * @see webform_results_access()
  *
  * @param $node
  *   The Webform node to check access on.
  * @param $account
  *   The user account to check access on.
+ *
  * @return
  *   TRUE or FALSE if the user can access the webform results.
  */
@@ -550,19 +557,19 @@ function hook_webform_results_access($node, $account) {
  * Access via this hook is in addition (adds permission) to the standard
  * webform access (delete all webform submissions).
  *
- * @see webform_results_clear_access().
+ * @see webform_results_clear_access()
  *
- * @param $node object
+ * @param object $node
  *   The Webform node to check access on.
- * @param $account object
+ * @param object $account
  *   The user account to check access on.
- * @return boolean
+ *
+ * @return bool
  *   TRUE or FALSE if the user can access the webform results.
  */
 function hook_webform_results_clear_access($node, $account) {
   return user_access('my additional access', $account);
 }
-
 
 /**
  * Return an array of files associated with the component.
@@ -574,6 +581,7 @@ function hook_webform_results_clear_access($node, $account) {
  * @param $value
  *   An array of information containing the submission result, directly
  *   correlating to the webform_submitted_data database schema.
+ *
  * @return
  *   An array of files, each file is an array with following keys:
  *     - filepath: The relative path to the file.
@@ -641,6 +649,7 @@ function _webform_defaults_component() {
  *
  * @param $component
  *   A Webform component array.
+ *
  * @return
  *   An array of form items to be displayed on the edit component page
  */
@@ -716,6 +725,7 @@ function _webform_render_component($component, $value = NULL, $filter = TRUE) {
  *   Either 'html' or 'text'. Defines the format that the content should be
  *   returned as. Make sure that returned content is run through check_plain()
  *   or other filtering functions when returning HTML.
+ *
  * @return
  *   A renderable element containing at the very least these properties:
  *    - #title
@@ -758,6 +768,7 @@ function _webform_display_component($component, $value, $format = 'html') {
  *   A Webform component array.
  * @param $value
  *   The POST data associated with the user input.
+ *
  * @return
  *   An array of values to be saved into the database. Note that this should be
  *   a numerically keyed array.
@@ -846,6 +857,7 @@ function _webform_theme_component() {
  *   Boolean flag determining if the details about a single component are being
  *   shown. May be used to provided detailed information about a single
  *   component's analysis, such as showing "Other" options within a select list.
+ *
  * @return
  *   An array of data rows, each containing a statistic for this component's
  *   submissions.
@@ -908,6 +920,7 @@ function _webform_analysis_component($component, $sids = array(), $single = FALS
  * @param $value
  *   An array of information containing the submission result, directly
  *   correlating to the webform_submitted_data database schema.
+ *
  * @return
  *   Textual output formatted for human reading.
  */
@@ -938,6 +951,7 @@ function _webform_table_component($component, $value) {
  *   A Webform component array.
  * @param $export_options
  *   An array of options that may configure export of this field.
+ *
  * @return
  *   An array of data to be displayed in the first three rows of a CSV file, not
  *   including either prefixed or trailing commas.
@@ -975,6 +989,7 @@ function _webform_csv_headers_component($component, $export_options) {
  * @param $value
  *   An array of information containing the submission result, directly
  *   correlating to the webform_submitted_data database schema.
+ *
  * @return
  *   An array of items to be added to the CSV file. Each value within the array
  *   will be another column within the file. This function is called once for

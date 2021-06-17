@@ -54,7 +54,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
       array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.testdbname"),
       array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}"),
     );
-    $servers = $this->getMockedSearchAPIServers();
+    $server_id = 'ACQUIA';
 
     // No Acquia hosting and DB detected - should override into Readonly.
     unset($conf['search_api_acquia_overrides']);
@@ -63,7 +63,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
 
     require_once dirname(dirname(__FILE__)) . '/src/SAPIPreferredSearchCoreService.php';
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, 'ACQUIA');
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_AUTO_SHOULD_OVERRIDE_READ_ONLY);
     $this->assertTrue(empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -74,7 +74,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_env = 'dev';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
     $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -88,7 +88,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_db_name = 'testdbname';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
     $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -102,7 +102,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_db_name = 'testdbname';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_AUTO_SHOULD_OVERRIDE_READ_ONLY);
     $this->assertTrue(empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -116,7 +116,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_db_name = 'testdbname';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_AUTO_SHOULD_OVERRIDE_READ_ONLY);
     $this->assertTrue(empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -131,7 +131,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_db_name = 'testdbname';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
     $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -145,7 +145,7 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $ah_db_name = 'testdbname';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
     $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
@@ -175,38 +175,16 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
       array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.{$site_folder}"),
       array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}"),
     );
-    $servers = $this->getMockedSearchAPIServers();
 
     $ah_env = 'dev';
     $ah_db_name = 'testdbname';
+    $server_id = 'ACQUIA';
 
     $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
-    search_api_acquia_add_solr_overrides($core_service, $servers);
+    search_api_acquia_override_server($core_service, $server_id);
 
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['host'], $solr_hostname);
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['path'], "/solr/{$acquia_identifier}.dev.{$site_folder}");
-
-  }
-
-  /**
-   * Returns mocked Search API servers.
-   */
-  public function getMockedSearchAPIServers () {
-
-    return array(
-      'ACQUIA' => array(
-        'env_id' => 'acquia_search_server_1',
-        'name' => 'Search API Acquia',
-        'host' => 'mock.acquia-search.com',
-        'path' => '/solr/ABCD-12345',
-      ),
-      'ACQUIA_2' => array(
-        'env_id' => 'acquia_search_server_2',
-        'name' => 'Search API Acquia 2',
-        'host' => 'mock.acquia-search.com',
-        'path' => '/solr/WXYZ-67890',
-      ),
-    );
 
   }
 

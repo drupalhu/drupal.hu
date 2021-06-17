@@ -26,6 +26,47 @@ class SearchApiMultiViewsQuery extends SearchApiViewsQuery {
   }
 
   /**
+   * Adds settings for the UI.
+   *
+   * Adds an option for bypassing access checks.
+   */
+  public function options_form(&$form, &$form_state) {
+    $form['search_api_bypass_access'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Bypass access checks'),
+      '#description' => t('If the underlying search index has access checks enabled, this option allows to disable them for this view.'),
+      '#default_value' => $this->options['search_api_bypass_access'],
+    );
+
+    $form['entity_access'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Additional access checks on result entities'),
+      '#description' => t("Execute an access check for all result entities. This prevents users from seeing inappropriate content when the index contains stale data, or doesn't provide access checks. However, result counts, paging and other things won't work correctly if results are eliminated in this way, so only use this as a last ressort (and in addition to other checks, if possible)."),
+      '#default_value' => $this->options['entity_access'],
+    );
+
+    $form['parse_mode'] = array(
+      '#type' => 'select',
+      '#title' => t('Parse mode'),
+      '#description' => t('Choose how the search keys will be parsed.'),
+      '#options' => array(),
+      '#default_value' => $this->options['parse_mode'],
+    );
+    foreach ($this->query->parseModes() as $key => $mode) {
+      $form['parse_mode']['#options'][$key] = $mode['name'];
+      if (!empty($mode['description'])) {
+        $states['visible'][':input[name="query[options][parse_mode]"]']['value'] = $key;
+        $form["parse_mode_{$key}_description"] = array(
+          '#type' => 'item',
+          '#title' => $mode['name'],
+          '#description' => $mode['description'],
+          '#states' => $states,
+        );
+      }
+    }
+  }
+
+  /**
    * Helper function for adding results to a view in the format expected by the view.
    */
   protected function addResults(array $results, $view) {
@@ -50,7 +91,7 @@ class SearchApiMultiViewsQuery extends SearchApiViewsQuery {
 
       // Gather any fields from the search results.
       if (!empty($result['fields'])) {
-        foreach ($result['fields'] as $field_id => $value) {
+        foreach (search_api_get_sanitized_field_values($result['fields']) as $field_id => $value) {
           $field_id = $result['index_id'] . ':' . $field_id;
           $row['_entity_properties'][$field_id] = $value;
         }

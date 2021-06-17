@@ -9,7 +9,7 @@
  * Load the common translation API.
  */
 // @todo Combine functions differently in files to avoid unnecessary includes.
-// Follow-up issue http://drupal.org/node/1834298
+// Follow-up issue https://www.drupal.org/node/1834298
 require_once __DIR__ . '/l10n_update.translation.inc';
 
 /**
@@ -106,14 +106,26 @@ function _l10n_update_fetch_operations(array $projects, array $langcodes, array 
       watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $directory), WATCHDOG_ERROR);
       return $operations;
     }
+    l10n_update_ensure_htaccess();
   }
 
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
       if (l10n_update_use_remote_source()) {
-        $operations[] = array('l10n_update_batch_fetch_download', array($project, $langcode));
+        $operations[] = array(
+          'l10n_update_batch_fetch_download',
+          array(
+            $project,
+            $langcode,
+          ),
+        );
       }
-      $operations[] = array('l10n_update_batch_fetch_import', array($project, $langcode, $options));
+      $operations[] = array('l10n_update_batch_fetch_import', array(
+        $project,
+        $langcode,
+        $options,
+      ),
+      );
     }
   }
 

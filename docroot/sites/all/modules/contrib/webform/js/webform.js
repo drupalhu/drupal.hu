@@ -1,5 +1,5 @@
-
 /**
+ * @file
  * JavaScript behaviors for the front-end display of webforms.
  */
 
@@ -7,20 +7,20 @@
 
 Drupal.behaviors.webform = Drupal.behaviors.webform || {};
 
-Drupal.behaviors.webform.attach = function(context) {
+Drupal.behaviors.webform.attach = function (context) {
   // Calendar datepicker behavior.
   Drupal.webform.datepicker(context);
 };
 
 Drupal.webform = Drupal.webform || {};
 
-Drupal.webform.datepicker = function(context) {
-  $('div.webform-datepicker').each(function() {
+Drupal.webform.datepicker = function (context) {
+  $('div.webform-datepicker').each(function () {
     var $webformDatepicker = $(this);
     var $calendar = $webformDatepicker.find('input.webform-calendar');
 
     // Ensure the page we're on actually contains a datepicker.
-    if ($calendar.length == 0) { 
+    if ($calendar.length == 0) {
       return;
     }
 
@@ -48,13 +48,13 @@ Drupal.webform.datepicker = function(context) {
       firstDay: parseInt(firstDay),
       minDate: startDate,
       maxDate: endDate,
-      onSelect: function(dateText, inst) {
+      onSelect: function (dateText, inst) {
         var date = dateText.split('-');
         $webformDatepicker.find('select.year, input.year').val(+date[0]).trigger('change');
         $webformDatepicker.find('select.month').val(+date[1]).trigger('change');
         $webformDatepicker.find('select.day').val(+date[2]).trigger('change');
       },
-      beforeShow: function(input, inst) {
+      beforeShow: function (input, inst) {
         // Get the select list values.
         var year = $webformDatepicker.find('select.year, input.year').val();
         var month = $webformDatepicker.find('select.month').val();
@@ -76,7 +76,7 @@ Drupal.webform.datepicker = function(context) {
     });
 
     // Prevent the calendar button from submitting the form.
-    $calendar.click(function(event) {
+    $calendar.click(function (event) {
       $(this).focus();
       event.preventDefault();
     });

@@ -60,6 +60,8 @@ class MemCacheDrupal implements DrupalCacheInterface {
    * Implements DrupalCacheInterface::get().
    */
   public function get($cid) {
+    // Clean up.
+    $this->garbageCollection();
     $cache = dmemcache_get($cid, $this->bin, $this->memcache);
     return $this->valid($cid, $cache) ? $cache : FALSE;
   }
@@ -68,8 +70,10 @@ class MemCacheDrupal implements DrupalCacheInterface {
    * Implements DrupalCacheInterface::getMultiple().
    */
   public function getMultiple(&$cids) {
+    // Clean up.
+    $this->garbageCollection();
     $results = dmemcache_get_multi($cids, $this->bin, $this->memcache);
-    foreach ($results as $cid => $result) {
+    foreach ($results as $cid => &$result) {
       if (!$this->valid($cid, $result)) {
         // This object has expired, so don't return it.
         unset($results[$cid]);
@@ -82,21 +86,72 @@ class MemCacheDrupal implements DrupalCacheInterface {
   }
 
   /**
+   * Garbage collection for get() and getMultiple().
+   *
+   * This functions check for session indicators to NOT use the cache. It
+   * checks if the last cache clearing time in there expired and if so unsets
+   * them, so anonymous users can get out of the "sessions" after some time, to
+   * get fast delivered pages (e.g. from Varnish etc. again).
+   */
+  protected function garbageCollection() {
+    // Clean-up the per-user cache expiration session data, so that the session
+    // handler can properly clean-up the session data for anonymous users.
+    if (isset($_SESSION['cache_flush'])) {
+      foreach ($_SESSION['cache_flush'] as $bin => $timestamp) {
+        $expire = REQUEST_TIME - variable_get('cache_lifetime_' . $this->bin, variable_get('cache_lifetime', 0));
+        if ($timestamp < $expire) {
+          unset($_SESSION['cache_flush'][$bin]);
+        }
+      }
+      if (!$_SESSION['cache_flush']) {
+        unset($_SESSION['cache_flush']);
+      }
+    }
+  }
+
+  /**
    * Checks if a retrieved cache item is valid.
    *
    * @param string $cid
    *   The cache id of the item
    * @param mixed $cache
-   *   The cache item.
+   *   The cache item, which will be updated if needed.
    *
    * @return bool
    *   Whether the item is valid.
    */
-  protected function valid($cid, $cache) {
+  protected function valid($cid, &$cache) {
     if ($cache) {
+      // Legacy support
+      if (!isset($cache->expire)) {
+        $cache->expire = CACHE_TEMPORARY;
+      }
+      if (!isset($cache->created)) {
+        $cache->created = 0;
+      }
+
+      // Session storage is used to simulate a cache clear for the current user
+      // when cache_lifetime is greater than 0.
       $cache_tables = isset($_SESSION['cache_flush']) ? $_SESSION['cache_flush'] : NULL;
-      // Items that have expired are invalid.
-      if (isset($cache->expire) && $cache->expire !== CACHE_PERMANENT && $cache->expire <= $_SERVER['REQUEST_TIME']) {
+
+      // Items that have expired are invalid. This includes CACHE_TEMPORARY
+      // items that were set prior to the last garbage collection, and
+      // timestamp set items.
+      //
+      // Test whether this cache has been garbage collected (general cache
+      // flush) longer ago than the cache_lifetime setting.
+      $cache_garbage_collected = $cache->created + $this->cache_lifetime <= $this->cache_temporary_flush;
+
+      // Depending on value of memcache_expire_wait_gc, test if a timestamp
+      // cached item has expired:
+      // If memcache_expired_wait_gc is true, this includes any timestamp items
+      // that expired more than cache_lifetime seconds before the last garbage
+      // collection. If memcache_expire_wait_gc is false, this includes any
+      // items that expired before present time.
+      $cache_timestamp_expired = variable_get('memcache_expire_wait_gc', FALSE) ? ($cache->expire + $this->cache_lifetime <= $this->cache_temporary_flush) : ($cache->expire <= REQUEST_TIME);
+
+      // Test for expired items.
+      if (($cache->expire == CACHE_TEMPORARY && $cache_garbage_collected) || ($cache->expire > 0 && $cache_timestamp_expired)) {
         // If the memcache_stampede_protection variable is set, allow one
         // process to rebuild the cache entry while serving expired content to
         // the rest. Note that core happily returns expired cache items as valid
@@ -116,7 +171,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
       }
       // Items created before the last full wildcard flush against this bin are
       // invalid.
-      elseif (!isset($cache->created) || $cache->created <= $this->cache_flush) {
+      elseif ($cache->created <= $this->cache_flush) {
         $cache = FALSE;
       }
       // Items created before the last content flush on this bin i.e.
@@ -128,12 +183,6 @@ class MemCacheDrupal implements DrupalCacheInterface {
       // invalid.
       elseif ($cache->expire != CACHE_PERMANENT && is_array($cache_tables) && isset($cache_tables[$this->bin]) && $cache_tables[$this->bin] >= $cache->created) {
         // Cache item expired, return FALSE.
-        $cache = FALSE;
-      }
-      // Temporary items created before the cache was last flushed by
-      // cache_clear_all(NULL, $bin) are invalid.
-      elseif (!empty($cache->temporary) && $cache->created + $this->cache_lifetime <= $this->cache_temporary_flush) {
-        // CACHE_TEMPORARY item expired, return FALSE.
         $cache = FALSE;
       }
       // Finally, check for wildcard clears against this cid.
@@ -169,7 +218,18 @@ class MemCacheDrupal implements DrupalCacheInterface {
       }
     }
 
-    return (bool) $cache;
+    $valid = (bool) $cache;
+
+    if (variable_get('memcache_pagecache_header', FALSE) && ($this->bin == 'cache_page')) {
+      // Per RFC-6648, don't start with X-
+      $header = t('Drupal-Pagecache-Memcache: !status', array('!status' => $valid ? t('HIT') : t('MISS')));
+      if ($valid) {
+        $header .= t(', age=!age', array('!age' => REQUEST_TIME - $cache->created));
+      }
+      header ($header);
+    }
+
+    return $valid;
   }
 
   /**
@@ -178,44 +238,47 @@ class MemCacheDrupal implements DrupalCacheInterface {
   public function set($cid, $data, $expire = CACHE_PERMANENT) {
     $created_microtime = round(microtime(TRUE), 3);
 
+    // Positive expiration values of less than 30 days are seconds. Convert to
+    // an absolute timestamp.
+    if ($expire > 0 && $expire < 2592000) {
+      $expire = REQUEST_TIME + $expire;
+    }
+
     // Create new cache object.
     $cache = new stdClass();
     $cache->cid = $cid;
     $cache->data = is_object($data) ? clone $data : $data;
     $cache->created = REQUEST_TIME;
     $cache->created_microtime = $created_microtime;
+    $cache->expire = $expire;
     // Record the previous number of wildcard flushes affecting our cid.
     $cache->flushes = $this->wildcardFlushes($cid);
-    if ($expire == CACHE_TEMPORARY) {
-      // Convert CACHE_TEMPORARY (-1) into something that will live in memcache
-      // until the next flush.
-      $cache->expire = REQUEST_TIME + 2591999;
-      // This is a temporary cache item.
-      $cache->temporary = TRUE;
-    }
-    // Expire time is in seconds if less than 30 days, otherwise is a timestamp.
-    elseif ($expire != CACHE_PERMANENT && $expire < 2592000) {
-      // Expire is expressed in seconds, convert to the proper future timestamp
-      // as expected in dmemcache_get().
-      $cache->expire = REQUEST_TIME + $expire;
-      $cache->temporary = FALSE;
-    }
-    else {
-      $cache->expire = $expire;
-      $cache->temporary = FALSE;
-    }
 
-    // Manually track the expire time in $cache->expire.  When the object
-    // expires, if stampede protection is enabled, it may be served while one
-    // process rebuilds it. The ttl sent to memcache is set to the expire twice
-    // as long into the future, this allows old items to be expired by memcache
-    // rather than evicted along with a sufficient period for stampede
-    // protection to continue to work.
-    if ($cache->expire == CACHE_PERMANENT) {
-      $memcache_expire = $cache->expire;
+    // Determine stored memcache item lifetime.
+    if ($expire == CACHE_PERMANENT) {
+      // Set memcache item to never expire.
+      $memcache_expire = 0;
+    }
+    elseif (variable_get('memcache_expire_wait_gc', FALSE) || $expire == CACHE_TEMPORARY) {
+      // The cache_set() API states that an item set with a timestamp, once
+      // expired, behaves the same as CACHE_TEMPORARY: not removed till next
+      // general cache wipe (which is actually a garbage collection on each
+      // cache bin). However, the memcache module has traditionally treated
+      // timestamp-set items as expiring at that exact time. If
+      // memcache_expire_wait_gc is enabled, treat timestamp items the same as
+      // CACHE_TEMPORARY, and set the memcache expiration to something that
+      // keeps the item valid until the next garbage collection (30 days).
+      $memcache_expire = REQUEST_TIME + 2591999;
+    }
+    elseif (variable_get('memcache_stampede_protection', FALSE)) {
+      // If stampede protection is enabled, set the item expiration to twice
+      // its intended lifetime. The expired object may be served while one
+      // process rebuilds it.
+      $memcache_expire = REQUEST_TIME + (($expire - REQUEST_TIME) * 2);
     }
     else {
-      $memcache_expire = $cache->expire + (($cache->expire - REQUEST_TIME) * 2);
+      // Allow the memcache item to expire at the exact absolute timestamp.
+      $memcache_expire = $expire;
     }
     dmemcache_set($cid, $cache, $memcache_expire, $this->bin, $this->memcache);
 
@@ -245,7 +308,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
       // whether or not the cached item is still valid.
       $this->cache_content_flush = time();
       $this->variable_set('cache_content_flush_' . $this->bin, $this->cache_content_flush);
-      if (variable_get('cache_lifetime', 0)) {
+      if (variable_get('cache_lifetime_' . $this->bin, variable_get('cache_lifetime', 0))) {
         // We store the time in the current user's session. We then simulate
         // that the cache was flushed for this user by not returning cached
         // data to this user that was cached before the timestamp.
@@ -341,6 +404,10 @@ class MemCacheDrupal implements DrupalCacheInterface {
     static $wildcards = array();
     $matching = array();
 
+    if (!is_string($cid) && !is_int($cid)) {
+      register_shutdown_function('watchdog', 'memcache', 'Invalid cache id received in memcache.inc wildcards() of type !type.', array('!type' => gettype($cid)), WATCHDOG_ERROR);
+      return $matching;
+    }
     $length = strlen($cid);
 
     if (isset($this->wildcard_flushes[$this->bin]) && is_array($this->wildcard_flushes[$this->bin])) {
@@ -361,7 +428,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
       // valid wildcard flushes in this bin.
       if (isset($this->wildcard_flushes[$this->bin][$wildcard_key])) {
         foreach ($this->wildcard_flushes[$this->bin][$wildcard_key] as $flush_length => $timestamp) {
-          if ($length >= $flush_length && $timestamp >= ($_SERVER['REQUEST_TIME'] - $this->invalidate)) {
+          if ($length >= $flush_length && $timestamp >= (REQUEST_TIME - $this->invalidate)) {
             $wildcard = '.wildcard-' . substr($cid, 0, $flush_length);
             if (isset($wildcards[$this->bin][$wildcard])) {
               $matching[$wildcard] = $wildcards[$this->bin][$wildcard];
@@ -407,7 +474,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
       // Avoid too many calls to variable_set() by only recording a flush for
       // a fraction of the wildcard invalidation variable, per cid length.
       // Defaults to 28 / 4, or one week.
-      if (!isset($this->wildcard_flushes[$this->bin][$key][$length]) || ($_SERVER['REQUEST_TIME'] - $this->wildcard_flushes[$this->bin][$key][$length] > $this->invalidate / 4)) {
+      if (!isset($this->wildcard_flushes[$this->bin][$key][$length]) || (REQUEST_TIME - $this->wildcard_flushes[$this->bin][$key][$length] > $this->invalidate / 4)) {
 
         // If there are more than 50 different wildcard keys for this bin
         // shorten the key by one, this should reduce variability by
@@ -428,7 +495,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
           $this->cache_flush = time();
         }
         $key = substr($cid, 0, $key_length);
-        $this->wildcard_flushes[$this->bin][$key][$length] = $_SERVER['REQUEST_TIME'];
+        $this->wildcard_flushes[$this->bin][$key][$length] = REQUEST_TIME;
 
         variable_set('memcache_wildcard_flushes', $this->wildcard_flushes);
       }
@@ -516,16 +583,22 @@ class MemCacheDrupal implements DrupalCacheInterface {
         'module_implements',
         // Variables have their own lock protection.
         'variables',
+        // Delayed set.
+        'lookup_cache',
         // Both schema and the theme_registry uses DrupalCacheArray, which sets
         // the cache entry with a class destructor.
         'schema:runtime:*',
         'theme_registry:runtime:*',
+        // Not written until the end of drupal_page_footer()
+        '_drupal_file_scan_cache',
       ),
       // Disable stampede protection for cid prefix in 'cache'.
       'cache' => array(
-        // I18n uses a class destructor to write the cache.
+        // I18n uses a class destructor to set the cache.
         'i18n:string:*',
       ),
+      // Delayed set.
+      'cache_path',
       // Disable stampede protection for the contrib cache_rules bin as recent
       // versions of the rules module provides its own stampede protection.
       'cache_rules',
@@ -563,7 +636,7 @@ class MemCacheDrupal implements DrupalCacheInterface {
   public function reloadVariables() {
     $this->wildcard_flushes = variable_get('memcache_wildcard_flushes', array());
     $this->invalidate = variable_get('memcache_wildcard_invalidate', MEMCACHE_WILDCARD_INVALIDATE);
-    $this->cache_lifetime = variable_get('cache_lifetime', 0);
+    $this->cache_lifetime = variable_get('cache_lifetime_' . $this->bin, variable_get('cache_lifetime', 0));
     $this->cache_flush = variable_get('cache_flush_' . $this->bin);
     $this->cache_content_flush = variable_get('cache_content_flush_' . $this->bin, 0);
     $this->cache_temporary_flush = variable_get('cache_temporary_flush_' . $this->bin, 0);
@@ -576,9 +649,14 @@ class MemCacheDrupal implements DrupalCacheInterface {
   public function variable_set($name, $value) {
     global $conf;
 
+    // If the value appears unchanged, do nothing.
+    if (isset($conf[$name]) && $conf[$name] === $value) {
+      return;
+    }
+
     // When lots of writes happen in a short period of time db_merge can throw
-    // errors. This should only happen if another request has written the variable
-    // first, so we catch the error to prevent a fatal error.
+    // errors. This should only happen if another request has written the
+    // variable first, so we catch the error to prevent a fatal error.
     try {
       db_merge('variable')
         ->key(array('name' => $name))
@@ -586,8 +664,8 @@ class MemCacheDrupal implements DrupalCacheInterface {
         ->execute();
     }
     catch (Exception $e) {
-      // We can safely ignore the error, since it's likely a cache flush timestamp
-      // which should still be accurate.
+      // We can safely ignore the error, since it's likely a cache flush
+      // timestamp which should still be accurate.
     }
 
     // If the variables are cached, get a fresh copy, update with the new value

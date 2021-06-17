@@ -15,6 +15,7 @@
  *   The node object containing the current webform.
  * @param $submitted
  *   The submitted user values from the webform.
+ *
  * @return
  *   An array suitable for use in the 'data' property of a $submission object.
  */
@@ -45,6 +46,7 @@ function webform_submission_data($node, $submitted) {
  *   The node object containing the current webform.
  * @param $submission
  *   The webform submission object to be saved into the database.
+ *
  * @return
  *   The existing submission SID.
  */
@@ -91,6 +93,7 @@ function webform_submission_update($node, $submission) {
  *   The node object containing the current webform.
  * @param $submission
  *   The webform submission object to be saved into the database.
+ *
  * @return
  *   The new submission SID.
  */
@@ -354,6 +357,9 @@ function webform_submission_delete_form($form, $form_state, $node, $submission) 
   return confirm_form($form, NULL, $destination, $question, t('Delete'), t('Cancel'));
 }
 
+/**
+ *
+ */
 function webform_submission_delete_form_submit($form, &$form_state) {
   $node = node_load($form_state['values']['details']['nid']);
   $submission = webform_get_submission($form_state['values']['details']['nid'], $form_state['values']['details']['sid']);
@@ -515,6 +521,7 @@ function webform_submission_resend_submit($form, &$form_state) {
  *
  * @param $form
  *   The form array.
+ *
  * @return
  *   Formatted HTML form, ready for display.
  */
@@ -569,7 +576,7 @@ function webform_submission_render($node, $submission, $email, $format) {
 
   _webform_components_tree_build($components, $component_tree, 0, $page_count);
 
-  // Make sure at least one field is available
+  // Make sure at least one field is available.
   if (isset($component_tree['children'])) {
     // Recursively add components to the form.
     foreach ($component_tree['children'] as $cid => $component) {
@@ -707,7 +714,7 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
 
   // Reorder submissions to reflect table header sorting.
   $ordered_submissions = array();
-  foreach($sids as $sid) {
+  foreach ($sids as $sid) {
     $ordered_submissions[$sid] = $submissions[$sid];
   }
   return $ordered_submissions;
@@ -720,6 +727,7 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
  *   The node ID for which submissions are being fetched.
  * @param $uid
  *   Optional; the user ID to filter the submissions by.
+ *
  * @return
  *   An integer value of the number of submissions.
  */
@@ -774,13 +782,18 @@ function webform_get_submission($nid, $sid, $reset = FALSE) {
   return $submissions[$sid];
 }
 
+/**
+ *
+ */
 function _webform_submission_spam_check($to, $subject, $from, $headers = array()) {
-  $headers = implode('\n', (array)$headers);
+  $headers = implode('\n', (array) $headers);
   // Check if they are attempting to spam using a bcc or content type hack.
   if (preg_match('/(b?cc\s?:)|(content\-type:)/i', $to . "\n" . $subject . "\n" . $from . "\n" . $headers)) {
-    return TRUE; // Possible spam attempt.
+    // Possible spam attempt.
+    return TRUE;
   }
-  return FALSE; // Not spam.
+  // Not spam.
+  return FALSE;
 }
 
 /**
@@ -788,6 +801,7 @@ function _webform_submission_spam_check($to, $subject, $from, $headers = array()
  *
  * @param $node
  *   The webform node to be checked.
+ *
  * @return
  *   Boolean TRUE if the user has exceeded their limit. FALSE otherwise.
  */
@@ -796,7 +810,8 @@ function _webform_submission_user_limit_check($node) {
 
   // Check if submission limiting is enabled.
   if ($node->webform['submit_limit'] == '-1') {
-    return FALSE; // No check enabled.
+    // No check enabled.
+    return FALSE;
   }
 
   // Retrieve submission data for this IP address or username from the database.
@@ -854,6 +869,7 @@ function _webform_submission_user_limit_check($node) {
  *
  * @param $node
  *   The webform node to be checked.
+ *
  * @return
  *   Boolean TRUE if the form has exceeded it's limit. FALSE otherwise.
  */
@@ -861,7 +877,8 @@ function _webform_submission_total_limit_check($node) {
 
   // Check if submission limiting is enabled.
   if ($node->webform['total_submit_limit'] == '-1') {
-    return FALSE; // No check enabled.
+    // No check enabled.
+    return FALSE;
   }
 
   // Retrieve submission data from the database.

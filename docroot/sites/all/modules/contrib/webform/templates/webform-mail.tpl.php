@@ -19,7 +19,7 @@
  * when using the "default" e-mail template.
  */
 ?>
-<?php print ($email['html'] ? '<p>' : '') . t('Submitted on %date'). ($email['html'] ? '</p>' : ''); ?>
+<?php print ($email['html'] ? '<p>' : '') . t('Submitted on %date') . ($email['html'] ? '</p>' : ''); ?>
 
 <?php if ($user->uid): ?>
 <?php print ($email['html'] ? '<p>' : '') . t('Submitted by user: %username') . ($email['html'] ? '</p>' : ''); ?>

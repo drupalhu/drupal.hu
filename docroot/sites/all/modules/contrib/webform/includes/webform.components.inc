@@ -151,6 +151,7 @@ function webform_components_form($form, $form_state, $node) {
  *
  * @param $form
  *   The form array.
+ *
  * @return
  *   Formatted HTML form, ready for display.
  */
@@ -191,7 +192,10 @@ function theme_webform_components_form($variables) {
     $page_count = 1;
     _webform_components_tree_build($node->webform['components'], $component_tree, 0, $page_count);
     $component_tree = _webform_components_tree_sort($component_tree);
-    // Build the table rows.
+
+    /**
+     * Build the table rows.
+     */
     function _webform_components_form_rows($node, $cid, $component, $level, &$form, &$rows, &$add_form) {
       // Create presentable values.
       if (drupal_strlen($component['value']) > 30) {
@@ -250,6 +254,7 @@ function theme_webform_components_form($variables) {
         $add_form = FALSE;
       }
     }
+
     foreach ($component_tree['children'] as $cid => $component) {
       _webform_components_form_rows($node, $cid, $component, 0, $form, $rows, $add_form);
     }
@@ -556,7 +561,7 @@ function webform_component_edit_form($form, $form_state, $node, $component, $clo
     '#title' => t('Operator'),
     '#options' => array(
       '=' => t('Is one of'),
-      '!=' => t('Is not one of')
+      '!=' => t('Is not one of'),
     ),
     '#description' => t('Determines whether the list below is inclusive or exclusive.'),
     '#default_value' => $component['extra']['conditional_operator'],
@@ -645,7 +650,7 @@ function webform_component_edit_form_submit($form, &$form_state) {
   // Remove empty extra values.
   if (isset($form_state['values']['extra'])) {
     foreach ($form_state['values']['extra'] as $key => $value) {
-      if ($value  === '' && !isset($form['display'][$key]['#options'][''])) {
+      if ($value === '' && !isset($form['display'][$key]['#options'][''])) {
         unset($form_state['values']['extra'][$key]);
       }
     }
@@ -821,7 +826,7 @@ function webform_component_update($component) {
       'value' => isset($component['value']) ? $component['value'] : '',
       'extra' => serialize($component['extra']),
       'mandatory' => $component['mandatory'],
-      'weight' => $component['weight']
+      'weight' => $component['weight'],
     ))
     ->condition('nid', $component['nid'])
     ->condition('cid', $component['cid'])
@@ -831,10 +836,12 @@ function webform_component_update($component) {
   module_invoke_all('webform_component_update', $component);
 }
 
+/**
+ *
+ */
 function webform_component_delete($node, $component) {
   // Check if a delete function is available for this component. If so,
   // load all submissions and allow the component to delete each one.
-
   webform_component_include($component['type']);
   $delete_function = '_webform_delete_' . $component['type'];
   if (function_exists($delete_function)) {
@@ -1103,7 +1110,8 @@ function webform_validate_unique($element, $form_state) {
       ->condition('nid', $nid)
       ->condition('cid', $element['#webform_component']['cid'])
       ->condition('data', $element['#value'])
-      ->range(0, 1); // More efficient than using countQuery() for data checks.
+      // More efficient than using countQuery() for data checks.
+      ->range(0, 1);
     if ($sid) {
       $query->condition('sid', $sid, '<>');
     }

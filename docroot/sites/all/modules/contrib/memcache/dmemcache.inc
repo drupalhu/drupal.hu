@@ -8,10 +8,13 @@
  *   memcache.inc
  *   memcache-lock.inc
  *   memcache-lock-code.inc
- *   memcache-session.inc
  */
 
 define('MEMCACHED_E2BIG', 37);
+define('MEMCACHED_CLIENT_ERROR', 9);
+define('MEMCACHED_SERVER_TIMED_OUT', 47);
+define('DRUPAL_MEMCACHE_ASCII_AUTH_KEY', 'drupal:memcache:ascii:auth:key');
+define('DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY', 'drupal:memcache:ascii:auth:lifetime:key');
 
 global $_dmemcache_stats;
 $_dmemcache_stats = array('all' => array(), 'ops' => array());
@@ -49,6 +52,10 @@ function dmemcache_set($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
     if ($mc instanceof Memcached) {
       $rc = $mc->set($full_key, $value, $exp);
       if (empty($rc)) {
+        if ($mc->getResultCode() == MEMCACHED_CLIENT_ERROR && _dmemcache_ensure_ascii_auth($full_key, $mc)) {
+          $rc = $mc->set($full_key, $value, $exp);
+        }
+
         // If there was a MEMCACHED_E2BIG error, split the value into pieces
         // and cache them individually.
         if ($mc->getResultCode() == MEMCACHED_E2BIG) {
@@ -79,6 +86,8 @@ function dmemcache_set($key, $value, $exp = 0, $bin = 'cache', $mc = NULL) {
   if ($collect_stats) {
     dmemcache_stats_write('set', $bin, array($full_key => $rc));
   }
+
+  _dmemcache_write_debug('set', $bin, $full_key, $rc);
 
   return $rc;
 }
@@ -149,7 +158,8 @@ function _dmemcache_set_pieces($key, $value, $exp = 0, $bin = 'cache', $mc = NUL
     $serialized = FALSE;
   }
   else {
-    $data = serialize($value);
+    $serialize_function = dmemcache_serialize();
+    $data = $serialize_function($value);
     $serialized = TRUE;
   }
 
@@ -235,6 +245,9 @@ function dmemcache_add($key, $value, $exp = 0, $bin = 'cache', $mc = NULL, $flag
   if ($mc || ($mc = dmemcache_object($bin))) {
     if ($mc instanceof Memcached) {
       $rc = $mc->add($full_key, $value, $exp);
+      if (empty($rc) && $mc->getResultCode() == MEMCACHED_CLIENT_ERROR && _dmemcache_ensure_ascii_auth($full_key, $mc)) {
+        $rc = $mc->add($full_key, $value, $exp);
+      }
     }
     else {
       $rc = $mc->add($full_key, $value, $flag, $exp);
@@ -244,6 +257,8 @@ function dmemcache_add($key, $value, $exp = 0, $bin = 'cache', $mc = NULL, $flag
   if ($collect_stats) {
     dmemcache_stats_write('add', $bin, array($full_key => $rc));
   }
+
+  _dmemcache_write_debug('add', $bin, $full_key, $rc);
 
   return $rc;
 }
@@ -260,6 +275,8 @@ function dmemcache_add($key, $value, $exp = 0, $bin = 'cache', $mc = NULL, $flag
  *   The item which was originally saved or FALSE
  */
 function dmemcache_get($key, $bin = 'cache', $mc = NULL) {
+  static $memcache_ascii_auth = NULL;
+
   $collect_stats = dmemcache_stats_init();
 
   $result = FALSE;
@@ -270,6 +287,19 @@ function dmemcache_get($key, $bin = 'cache', $mc = NULL) {
     $php_errormsg = '';
 
     $result = @$mc->get($full_key);
+    if (empty($result)) {
+      if (!isset($memcache_ascii_auth)) {
+        $memcache_ascii_auth = _dmemcache_use_ascii_auth();
+      }
+      if ($memcache_ascii_auth) {
+        // As sets are costly we first check that the server is not authorized first.
+        $rc = $mc->getByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY);
+        if (empty($rc) && _dmemcache_ensure_ascii_auth($full_key, $mc)) {
+          $result = @$mc->get($full_key);
+        }
+      }
+    }
+
     // This is a multi-part value.
     if (is_object($result) && !empty($result->multi_part_data)) {
       $result = _dmemcache_get_pieces($result->data, $result->cid, $bin, $mc);
@@ -285,6 +315,8 @@ function dmemcache_get($key, $bin = 'cache', $mc = NULL) {
   if ($collect_stats) {
     dmemcache_stats_write('get', $bin, array($full_key => (bool) $result));
   }
+
+  _dmemcache_write_debug('get', $bin, $full_key, (bool) $result);
 
   return $result;
 }
@@ -311,22 +343,28 @@ function _dmemcache_get_pieces($item, $key, $bin = 'cache', $mc = NULL) {
     $keys[] = _dmemcache_key_piece($key, $id);
   }
 
-  // Retrieve all the pieces of data.
+  // Retrieve all the pieces of data and append them together.
   $pieces = dmemcache_get_multi($keys, $bin, $mc);
-  if (count($pieces) != $item->piece_count) {
-    // Some of the pieces don't exist, so our data cannot be reconstructed.
-    return FALSE;
-  }
-
-  // Append all of the pieces together.
   $data = '';
   foreach ($pieces as $piece) {
+    // The piece may be NULL if it didn't exist in memcache. If so,
+    // we have to just return false for the entire set because we won't
+    // be able to reconstruct the original data without all the pieces.
+    if (!$piece) {
+      return FALSE;
+    }
     $data .= $piece->data;
   }
   unset($pieces);
 
   // If necessary unserialize the item.
-  return empty($item->serialized) ? $data : unserialize($data);
+  if (empty($item->serialized)) {
+    return $data;
+  }
+  else {
+    $unserialize_function = dmemcache_unserialize();
+    return $unserialize_function($data);
+  }
 }
 
 /**
@@ -352,9 +390,12 @@ function _dmemcache_key_piece($key, $id) {
  *   The bin in which the item was stored.
  *
  * @return mixed
- *   The item which was originally saved or FALSE
+ *   An array keyed by $keys with the items requested or
+ *   NULL values if the data was not present.
  */
 function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
+  static $memcache_ascii_auth = NULL;
+
   $collect_stats = dmemcache_stats_init();
   $multi_stats = array();
 
@@ -372,7 +413,35 @@ function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
   $results = array();
   if ($mc || ($mc = dmemcache_object($bin))) {
     if ($mc instanceof Memcached) {
-      $results = $mc->getMulti($full_keys);
+      if (PHP_MAJOR_VERSION >= 7) {
+        // See https://www.drupal.org/node/2728427
+        $results = $mc->getMulti($full_keys, Memcached::GET_PRESERVE_ORDER);
+      }
+      else {
+        $cas_tokens = NULL;
+        $results = $mc->getMulti($full_keys, $cas_tokens, Memcached::GET_PRESERVE_ORDER);
+      }
+
+      // If $results is FALSE, convert it to an empty array.
+      if (!$results) {
+        $results = array();
+      }
+
+      if (!isset($memcache_ascii_auth)) {
+        $memcache_ascii_auth = _dmemcache_use_ascii_auth();
+      }
+
+      // Find out which results have values and which have not.
+      if ($memcache_ascii_auth && count(array_filter($results)) < count($full_keys)) {
+        // Convert empty results to the full keys with value of NULL.
+        if (empty($results)) {
+          $results = array_fill_keys($full_keys, NULL);
+        }
+        $new_results = _dmemcache_get_multi_2nd_chance_ascii_auth($results, $mc);
+        foreach ($new_results as $full_key => $value) {
+          $results[$full_key] = $value;
+        }
+      }
     }
     elseif ($mc instanceof Memcache) {
       $track_errors = ini_set('track_errors', '1');
@@ -385,11 +454,21 @@ function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
         $php_errormsg = '';
       }
       ini_set('track_errors', $track_errors);
+
+      // Order is not guaranteed, map responses to order of requests.
+      if (is_array($results)) {
+        $keys = array_fill_keys($full_keys, NULL);
+        $results = array_merge($keys, $results);
+      }
     }
   }
+
   // If $results is FALSE, convert it to an empty array.
   if (!$results) {
     $results = array();
+    $keys = array_fill_keys($full_keys, NULL);
+    $results = array_merge($keys, $results);
+    _dmemcache_write_debug('getMulti', $bin, implode(',', $full_keys), FALSE);
   }
 
   if ($collect_stats) {
@@ -407,6 +486,7 @@ function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
       $value = _dmemcache_get_pieces($value->data, $value->cid, $bin, $mc);
     }
     $cid_results[$cid_lookup[$key]] = $value;
+    _dmemcache_write_debug('getMulti', $bin, $key, TRUE);
   }
 
   if ($collect_stats) {
@@ -430,56 +510,65 @@ function dmemcache_get_multi($keys, $bin = 'cache', $mc = NULL) {
 function dmemcache_delete($key, $bin = 'cache', $mc = NULL) {
   $collect_stats = dmemcache_stats_init();
 
-  $full_key = dmemcache_key($key, $bin);
+  $full_keys = dmemcache_key($key, $bin, TRUE);
 
   $rc = FALSE;
   if ($mc || ($mc = dmemcache_object($bin))) {
-    $rc = $mc->delete($full_key, 0);
+    foreach ($full_keys as $fk) {
+      $rc = $mc->delete($fk, 0);
+      if (empty($rc) && $mc instanceof Memcached && _dmemcache_ensure_ascii_auth($fk, $mc)) {
+        $rc = $mc->delete($fk, 0);
+      }
 
-    if ($rc) {
-      // If the delete succeeded, we now check to see if this item has multiple
-      // pieces also needing to be cleaned up. If the delete failed, we assume
-      // these keys have already expired or been deleted (memcache will
-      // auto-expire eventually if we're wrong).
-      if ($piece_cache = dmemcache_piece_cache_get($full_key)) {
-        // First, remove from the piece_cache so we don't try and delete it
-        // again in another thread, then delete the actual cache data pieces.
-        dmemcache_piece_cache_set($full_key, NULL);
-        $next_id = 0;
-        do {
-          // Generate the cid of the next data piece.
-          $piece_key = _dmemcache_key_piece($key, $next_id);
-          $full_key = dmemcache_key($piece_key, $bin);
-          $next_id++;
+      if ($rc) {
+        // If the delete succeeded, we now check to see if this item has
+        //  multiple pieces also needing to be cleaned up. If the delete failed,
+        // we assume these keys have already expired or been deleted (memcache
+        // will auto-expire eventually if we're wrong).
+        if ($piece_cache = dmemcache_piece_cache_get($fk)) {
+          // First, remove from the piece_cache so we don't try and delete it
+          // again in another thread, then delete the actual cache data pieces.
+          dmemcache_piece_cache_set($fk, NULL);
+          $next_id = 0;
+          do {
+            if ($inner_rc) {
+              _dmemcache_write_debug("delete", $bin, $full_key, $inner_rc);
+            }
+            // Generate the cid of the next data piece.
+            $piece_key = _dmemcache_key_piece($key, $next_id);
+            $full_key = dmemcache_key($piece_key, $bin);
+            $next_id++;
 
-          // Keep deleting pieces until the operation fails. We accept that
-          // this could lead to orphaned pieces as memcache will auto-expire
-          // them eventually.
-        } while ($mc->delete($full_key, 0));
+            // Keep deleting pieces until the operation fails. We accept that
+            // this could lead to orphaned pieces as memcache will auto-expire
+            // them eventually.
+          } while ($inner_rc = $mc->delete($full_key, 0));
+          _dmemcache_write_debug("delete", $bin, $full_key, $inner_rc);
 
-        // Perform garbage collection for keys memcache has auto-expired. If we
-        // don't do this, this variable could grow over enough time as a slow
-        // memory leak.
-        // @todo: Consider moving this to hook_cron() and requiring people to
-        // enable the memcache module.
-        timer_start('memcache_gc_piece_cache');
-        $gc_counter = 0;
-        $piece_cache = &drupal_static('dmemcache_piece_cache', array());
-        foreach ($piece_cache as $cid => $expires) {
-          if (REQUEST_TIME > $expires) {
-            $gc_counter++;
-            dmemcache_piece_cache_set($cid, NULL);
+          // Perform garbage collection for keys memcache has auto-expired. If
+          // we don't do this, this variable could grow over enough time as a
+          // slow memory leak.
+          // @todo: Consider moving this to hook_cron() and requiring people to
+          // enable the memcache module.
+          timer_start('memcache_gc_piece_cache');
+          $gc_counter = 0;
+          $piece_cache = &drupal_static('dmemcache_piece_cache', array());
+          foreach ($piece_cache as $cid => $expires) {
+            if (REQUEST_TIME > $expires) {
+              $gc_counter++;
+              dmemcache_piece_cache_set($cid, NULL);
+            }
+          }
+          if ($gc_counter) {
+            register_shutdown_function('watchdog', 'memcache', 'Spent !time ms in garbage collection cleaning !count stale keys from the dmemcache_piece_cache.', array('!time' => timer_read('memcache_gc_piece_cache'), '!count' => $gc_counter), WATCHDOG_WARNING);
           }
         }
-        if ($gc_counter) {
-          register_shutdown_function('watchdog', 'memcache', 'Spent !time ms in garbage collection cleaning !count stale keys from the dmemcache_piece_cache.', array('!time' => timer_read('memcache_gc_piece_cache'), '!count' => $gc_counter), WATCHDOG_WARNING);
-        }
       }
+      if ($collect_stats) {
+        dmemcache_stats_write('delete', $bin, array($fk => $rc));
+      }
+      _dmemcache_write_debug('delete', $bin, $fk, $rc);
     }
-  }
-
-  if ($collect_stats) {
-    dmemcache_stats_write('delete', $bin, array($full_key => $rc));
   }
 
   return $rc;
@@ -504,12 +593,19 @@ function dmemcache_flush($bin = 'cache', $mc = NULL) {
 
   $rc = FALSE;
   if ($mc || ($mc = dmemcache_object($bin))) {
-    $rc = memcache_flush($mc);
+    $rc = $mc->flush();
+    // If a composite call fails, we need to reset the authentication
+    // for the whole mc object.
+    if (empty($rc) && _dmemcache_reset_ascii_auth($mc)) {
+      $mc->flush();
+    }
   }
 
   if ($collect_stats) {
     dmemcache_stats_write('flush', $bin, array('' => $rc));
   }
+
+  _dmemcache_write_debug('flush', $bin, '', $rc);
 
   return $rc;
 }
@@ -523,6 +619,9 @@ function dmemcache_flush($bin = 'cache', $mc = NULL) {
  *   The type of statistics to retrieve when using the Memcache extension.
  * @param bool $aggregate
  *   Whether to aggregate statistics.
+ *
+ * @return array
+ *   The statistics
  */
 function dmemcache_stats($stats_bin = 'cache', $stats_type = 'default', $aggregate = FALSE) {
   $memcache_bins = variable_get('memcache_bins', array('cache' => 'default'));
@@ -536,6 +635,11 @@ function dmemcache_stats($stats_bin = 'cache', $stats_type = 'default', $aggrega
       if ($mc = dmemcache_object($bin)) {
         if ($mc instanceof Memcached) {
           $stats[$bin] = $mc->getStats();
+          // If a composite call fails, we need to reset the authentication
+          // for the whole mc object.
+          if (empty($stats[$bin]) && _dmemcache_reset_ascii_auth($mc)) {
+            $stats[$bin] = $mc->getStats();
+          }
         }
         // The PHP Memcache extension 3.x version throws an error if the stats
         // type is NULL or not in {reset, malloc, slabs, cachedump, items,
@@ -543,7 +647,17 @@ function dmemcache_stats($stats_bin = 'cache', $stats_type = 'default', $aggrega
         // passed to the Memcache memcache_get_extended_stats() function.
         elseif ($mc instanceof Memcache) {
           if ($stats_type == 'default' || $stats_type == '') {
-            $stats[$bin] = $mc->getExtendedStats();
+            $rc = $mc->getExtendedStats();
+            if (is_array($rc)) {
+              foreach ($rc as $server => $data) {
+                if (empty($data)) {
+                  unset($rc[$server]);
+                }
+              }
+              if (!empty($rc)) {
+                $stats[$bin] = $rc;
+              }
+            }
           }
           // If $slab isn't zero, then we are dumping the contents of a
           // specific cache slab.
@@ -559,21 +673,12 @@ function dmemcache_stats($stats_bin = 'cache', $stats_type = 'default', $aggrega
   }
   // Optionally calculate a sum-total for all servers in the current bin.
   if ($aggregate) {
-    // Some variables don't logically aggregate.
-    $no_aggregate = array(
-      'pid',
-      'time',
-      'version',
-      'pointer_size',
-      'accepting_conns',
-      'listen_disabled_num',
-    );
     foreach ($stats as $bin => $servers) {
       if (is_array($servers)) {
         foreach ($servers as $server) {
           if (is_array($server)) {
             foreach ($server as $key => $value) {
-              if (!in_array($key, $no_aggregate)) {
+              if (is_numeric($value)) {
                 if (isset($stats[$bin]['total'][$key])) {
                   $stats[$bin]['total'][$key] += $value;
                 }
@@ -601,14 +706,14 @@ function dmemcache_extension() {
   if ($extension === NULL) {
     // If an extension is specified in settings.php, use that when available.
     $preferred = variable_get('memcache_extension', NULL);
-    if (isset($preferred) && class_exists($preferred)) {
+    if (isset($preferred) && class_exists($preferred, FALSE)) {
       $extension = ucfirst(strtolower($preferred));
     }
     // If no extension is set, default to Memcache.
-    elseif (class_exists('Memcache')) {
+    elseif (class_exists('Memcache', FALSE)) {
       $extension = 'Memcache';
     }
-    elseif (class_exists('Memcached')) {
+    elseif (class_exists('Memcached', FALSE)) {
       $extension = 'Memcached';
     }
     else {
@@ -619,18 +724,94 @@ function dmemcache_extension() {
 }
 
 /**
+ * Determine which serialize extension to use: serialize (none), igbinary,
+ * or msgpack.
+ *
+ * By default we prefer the igbinary extension, then the msgpack extension,
+ * then the core serialize functions. This can be overridden in settings.php.
+ */
+function dmemcache_serialize_extension() {
+  static $extension = NULL;
+  if ($extension === NULL) {
+    $preferred = strtolower(variable_get('memcache_serialize', NULL));
+    // Fastpath if we're forcing php's own serialize function.
+    if ($preferred == 'serialize') {
+      $extension = $preferred;
+    }
+    // Otherwise, find an available extension favoring configuration.
+    else {
+      $igbinary_available = extension_loaded('igbinary');
+      $msgpack_available = extension_loaded('msgpack');
+      if ($preferred == 'igbinary' && $igbinary_available) {
+        $extension = $preferred;
+      }
+      elseif ($preferred == 'msgpack' && $msgpack_available) {
+        $extension = $preferred;
+      }
+      else {
+        // No (valid) serialize extension specified, try igbinary.
+        if ($igbinary_available) {
+          $extension = 'igbinary';
+        }
+        // Next try msgpack.
+        else if ($msgpack_available) {
+          $extension = 'msgpack';
+        }
+        // Finally fall back to core serialize.
+        else {
+          $extension = 'serialize';
+        }
+      }
+    }
+  }
+  return $extension;
+}
+
+/**
+ * Return proper serialize function.
+ */
+function dmemcache_serialize() {
+  switch (dmemcache_serialize_extension()) {
+    case 'igbinary':
+      return 'igbinary_serialize';
+    case 'msgpack':
+      return 'msgpack_pack';
+    default:
+      return 'serialize';
+  }
+}
+
+/**
+ * Return proper unserialize function.
+ */
+function dmemcache_unserialize() {
+  switch (dmemcache_serialize_extension()) {
+    case 'igbinary':
+      return 'igbinary_unserialize';
+    case 'msgpack':
+      return 'msgpack_unpack';
+    default:
+      return 'unserialize';
+  }
+}
+
+/**
  * Return a new memcache instance.
  */
-function dmemcache_instance() {
+function dmemcache_instance($bin = 'cache') {
   static $error = FALSE;
   $extension = dmemcache_extension();
   if ($extension == 'Memcache') {
     return new Memcache();
   }
   elseif ($extension == 'Memcached') {
-    $memcache = new Memcached();
+    if (variable_get('memcache_persistent', TRUE)) {
+      $memcache = new Memcached($bin);
+    }
+    else {
+      $memcache = new Memcached;
+    }
     $default_opts = array(
-      Memcached::OPT_COMPRESSION => FALSE,
       Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
     );
     foreach ($default_opts as $key => $value) {
@@ -642,7 +823,7 @@ function dmemcache_instance() {
     foreach ($memconf as $key => $value) {
       $memcache->setOption($key, $value);
     }
-    if ($sasl_username = variable_get('memcache_sasl_username', '') && $sasl_password = variable_get('memcache_sasl_password', '')) {
+    if (($sasl_username = variable_get('memcache_sasl_username', '')) && ($sasl_password = variable_get('memcache_sasl_password', ''))) {
       $memcache->setSaslAuthData($sasl_username, $sasl_password);
     }
     return $memcache;
@@ -664,58 +845,40 @@ function dmemcache_instance() {
  * @param string $server
  *   A server string of the format "localhost:11211" or
  *   "unix:///path/to/socket".
- * @param bool $connection
- *   TRUE or FALSE, whether the $memcache instance already has at least one
- *   open connection.
+ * @param integer $weight
+ *   Weighted probability of talking to this server.
  *
  * @return bool
  *   TRUE or FALSE if connection was successful.
  */
-function dmemcache_connect($memcache, $server, $connection) {
+function dmemcache_connect($memcache, $server, $weight) {
   static $memcache_persistent = NULL;
+  static $memcache_ascii_auth = NULL;
 
   $extension = dmemcache_extension();
 
-  list($host, $port) = explode(':', $server);
+  @list($host, $port) = explode(':', trim($server));
+  if (empty($host)) {
+    register_shutdown_function('watchdog', 'memcache', 'You have specified an invalid address of "!server" in settings.php. Please review README.txt for proper configuration.', array('!server' => $server, '!ip' => t('127.0.0.1:11211'), '!host' => t('localhost:11211'), '!socket' => t('unix:///path/to/socket')), WATCHDOG_WARNING);
+  }
 
+  if (!isset($memcache_persistent)) {
+    $memcache_persistent = variable_get('memcache_persistent', TRUE);
+  }
+  if (!isset($memcache_ascii_auth)) {
+    $memcache_ascii_auth = _dmemcache_use_ascii_auth();
+  }
+
+  $port_error = FALSE;
   if ($extension == 'Memcache') {
-    // Allow persistent connection via Memcache extension -- note that this
-    // module currently doesn't support persistent connections with the
-    // Memcached extension. See http://drupal.org/node/822316#comment-4427676
-    // for details.
-    if (!isset($memcache_persistent)) {
-      $memcache_persistent = variable_get('memcache_persistent', FALSE);
-    }
-
     // Support unix sockets of the format 'unix:///path/to/socket'.
     if ($host == 'unix') {
       // Use full protocol and path as expected by Memcache extension.
       $host = $server;
       $port = 0;
     }
-
-    // When using the PECL memcache extension, we must use ->(p)connect
-    // for the first connection.
-    if (!$connection) {
-      $track_errors = ini_set('track_errors', '1');
-      $php_errormsg = '';
-
-      // The Memcache extension requires us to use (p)connect for the first
-      // server we connect to.
-      if ($memcache_persistent) {
-        $rc = @$memcache->pconnect($host, $port);
-      }
-      else {
-        $rc = @$memcache->connect($host, $port);
-      }
-      if (!empty($php_errormsg)) {
-        register_shutdown_function('watchdog', 'memcache', 'Exception caught in dmemcache_object: !msg', array('!msg' => $php_errormsg), WATCHDOG_WARNING);
-        $php_errormsg = '';
-      }
-      ini_set('track_errors', $track_errors);
-    }
-    else {
-      $rc = $memcache->addServer($host, $port, $memcache_persistent);
+    else if (!isset($port)) {
+      $port_error = TRUE;
     }
   }
   elseif ($extension == 'Memcached') {
@@ -725,7 +888,38 @@ function dmemcache_connect($memcache, $server, $connection) {
       $host = substr($server, 7);
       $port = 0;
     }
-    $rc = $memcache->addServer($host, $port);
+    else if (!isset($port)) {
+      $port_error = TRUE;
+    }
+  }
+
+  if ($port_error) {
+    register_shutdown_function('watchdog', 'memcache', 'You have specified an invalid address of "!server" in settings.php which does not include a port. Please review README.txt for proper configuration. You must specify both a server address and port such as "!ip" or "!host", or a unix socket such as "!socket".', array('!server' => $server, '!ip' => t('127.0.0.1:11211'), '!host' => t('localhost:11211'), '!socket' => t('unix:///path/to/socket')), WATCHDOG_WARNING);
+  }
+
+  if ($extension == 'Memcache') {
+    $rc = $memcache->addServer($host, $port, $memcache_persistent, $weight);
+  }
+  elseif ($extension == 'Memcached') {
+    $match = FALSE;
+    if ($memcache_persistent) {
+      $servers = $memcache->getServerList();
+      foreach ($servers as $s) {
+        if ($s['host'] == $host && $s['port'] == $port) {
+          $match = TRUE;
+          break;
+        }
+      }
+    }
+    if (!$match) {
+      $rc = $memcache->addServer($host, $port);
+      if ($rc && $memcache_ascii_auth) {
+        $rc = _dmemcache_ascii_authenticate_server($host, $port, $memcache);
+      }
+    }
+    else {
+      $rc = TRUE;
+    }
   }
   else {
     $rc = FALSE;
@@ -760,26 +954,26 @@ function dmemcache_close($memcache) {
  *
  * @param string $bin
  *   The bin which is to be used.
- * @param bool $flush
- *   Defaults to FALSE. Rebuild the bin/server/cache mapping.
+ * @param bool $reset
+ *   If TRUE will reset all static caches. Defaults to FALSE.
+ *   To force a reconnection to memcached, first call $mc->quit() or
+ *   $mc->close() (as appropriate for your PECL extension).
  *
  * @return mixed
  *   A Memcache object, or FALSE on failure.
  */
-function dmemcache_object($bin = NULL, $flush = FALSE) {
+function dmemcache_object($bin = NULL, $reset = FALSE) {
   static $memcache_cache = array();
   static $memcache_servers = array();
   static $memcache_bins = array();
   static $failed_connections = array();
 
-  if ($flush) {
-    foreach ($memcache_cache as $cluster) {
-      memcache_close($cluster);
-    }
+  if ($reset) {
     $memcache_cache = array();
+    $memcache_servers = array();
+    $memcache_bins = array();
+    $failed_connections = array();
   }
-
-  $extension = dmemcache_extension();
 
   if (empty($memcache_cache) || empty($memcache_cache[$bin])) {
     if (empty($memcache_servers)) {
@@ -798,26 +992,27 @@ function dmemcache_object($bin = NULL, $flush = FALSE) {
     }
     else {
       // Create a new memcache object for each cluster.
-      $memcache = dmemcache_instance();
+      $memcache = dmemcache_instance($bin);
 
       // Track whether or not we've opened any memcache connections.
       $connection = FALSE;
-
       // Link all the servers to this cluster.
-      foreach ($memcache_servers as $server => $c) {
-        if ($c == $cluster && !isset($failed_connections[$server])) {
-          $rc = dmemcache_connect($memcache, $server, $connection);
-          if ($rc !== FALSE) {
-            // We've made at least one successful connection.
-            $connection = TRUE;
-          }
-          else {
-            // Memcache connection failure. We can't log to watchdog directly
-            // because we're in an early Drupal bootstrap phase where watchdog
-            // is non-functional. Instead, register a shutdown handler so it
-            // gets recorded at the end of the page load.
-            register_shutdown_function('watchdog', 'memcache', 'Failed to connect to memcache server: !server', array('!server' => $server), WATCHDOG_ERROR);
-            $failed_connections[$server] = FALSE;
+      foreach ($memcache_servers as $server => $b) {
+        if ($c = dmemcache_object_cluster($b)) {
+          if ($c['cluster'] == $cluster && !isset($failed_connections[$server])) {
+            $rc = dmemcache_connect($memcache, $server, $c['weight'], $connection);
+            if ($rc) {
+              // We've made at least one connection.
+              $connection = TRUE;
+            }
+            else {
+              // Memcache connection failure. We can't log to watchdog directly
+              // because we're in an early Drupal bootstrap phase where watchdog
+              // is non-functional. Instead, register a shutdown handler so it
+              // gets recorded at the end of the page load.
+              register_shutdown_function('watchdog', 'memcache', 'Failed to connect to memcache server: !server', array('!server' => $server), WATCHDOG_ERROR);
+              $failed_connections[$server] = FALSE;
+            }
           }
         }
       }
@@ -841,27 +1036,83 @@ function dmemcache_object($bin = NULL, $flush = FALSE) {
 }
 
 /**
+ * Ensure that we're working with a proper cluster array.
+ */
+function dmemcache_object_cluster($cluster) {
+  if (!is_array($cluster)) {
+    // Set defaults.
+    $cluster = array(
+      'cluster' => $cluster,
+      'weight' => 1,
+    );
+  }
+  if (!isset($cluster['cluster']) || !is_string($cluster['cluster'])) {
+    // Cluster is required, complain if it's missing or invalid.
+    register_shutdown_function('watchdog', 'memcache', 'Ignoring invalid or missing cluster definition, review your memcache_servers configuration.', array(), WATCHDOG_ERROR);
+    return FALSE;
+  }
+  if (!isset($cluster['weight']) || !is_int($cluster['weight']) || $cluster['weight'] < 1) {
+    // Weight is optional.
+    $cluster['weight'] = 1;
+  }
+  return $cluster;
+}
+
+/**
  * Prefixes a key and ensures it is url safe.
  *
  * @param string $key
  *   The key to prefix and encode.
  * @param string $bin
  *   The cache bin which the key applies to.
+ * @param string $multiple
+ *   If TRUE will return all possible prefix variations.
  *
- * @return string
- *   The prefixed and encoded key.
+ * @return string or array
+ *   The prefixed and encoded key(s).
  */
-function dmemcache_key($key, $bin = 'cache') {
+function dmemcache_key($key, $bin = 'cache', $multiple = FALSE) {
   $prefix = '';
-  if ($prefix = variable_get('memcache_key_prefix', '')) {
-    $prefix .= '-';
+  if ($prefixes = variable_get('memcache_key_prefix', '')) {
+    if (is_array($prefixes)) {
+      // If no custom prefix defined for bin, use 'default'.
+      if (empty($prefixes[$bin])) {
+        $bin = 'default';
+      }
+      if (!empty($prefixes[$bin])) {
+        // There can be multiple prefixes specified for each bin.
+        if (is_array($prefixes[$bin])) {
+          // Optionally return key with all prefixes.
+          if ($multiple) {
+            $prefix = array();
+            foreach ($prefixes[$bin] as $pre) {
+              $prefix[] = $pre . '-';
+            }
+          }
+          // Otherwise just return a single prefixed key.
+          else {
+            $prefix = $prefixes[$bin][0] . '-';
+          }
+        }
+      }
+    }
+    else {
+      $prefix = $prefixes . '-';
+    }
   }
-  // When simpletest is running, emulate the simpletest database prefix here
-  // to avoid the child site setting cache entries in the parent site.
-  if (isset($GLOBALS['drupal_test_info']['test_run_id'])) {
-    $prefix .= $GLOBALS['drupal_test_info']['test_run_id'];
+
+  if (!is_array($prefix)) {
+    $prefix = array($prefix);
   }
-  $full_key = urlencode($prefix . $bin . '-' . $key);
+  $full_keys = array();
+  foreach ($prefix as $p) {
+    // When simpletest is running, emulate the simpletest database prefix here
+    // to avoid the child site setting cache entries in the parent site.
+    if (isset($GLOBALS['drupal_test_info']['test_run_id'])) {
+      $p .= $GLOBALS['drupal_test_info']['test_run_id'];
+    }
+    $full_keys[] = urlencode($p . $bin . '-' . $key);
+  }
 
   // Memcache truncates keys longer than 250 characters[*]. This could lead to
   // cache collisions, so we hash keys that are longer than this while still
@@ -871,12 +1122,22 @@ function dmemcache_key($key, $bin = 'cache') {
   // keys by setting memcache_key_max_length in settings.php.
   // [*]https://github.com/memcached/memcached/blob/master/doc/protocol.txt#L47
   $maxlen = variable_get('memcache_key_max_length', 250);
-  if (strlen($full_key) > $maxlen) {
-    $full_key = urlencode($prefix . $bin) . '-' . hash(variable_get('memcache_key_hash_algorithm', 'sha1'), $key);
-    $full_key .= '-' . substr(urlencode($key), 0, ($maxlen - 1) - strlen($full_key) - 1);
+
+  foreach ($full_keys as $k => $full_key) {
+    if (strlen($full_key) > $maxlen) {
+      $full_keys[$k] = urlencode($prefix[$k] . $bin) . '-' . hash(variable_get('memcache_key_hash_algorithm', 'sha1'), $key);
+      $full_keys[$k] .= '-' . substr(urlencode($key), 0, ($maxlen - 1) - strlen($full_keys[$k]) - 1);
+    }
   }
 
-  return $full_key;
+  if ($multiple) {
+    // An array of prefixed keys.
+    return $full_keys;
+  }
+  else {
+    // A single prefixed key.
+    return array_shift($full_keys);
+  }
 }
 
 /**
@@ -900,6 +1161,9 @@ function dmemcache_piece_cache_set($cid, $exp = NULL) {
   // Always refresh cached copy to minimize multi-thread race window.
   $piece_cache = &drupal_static('dmemcache_piece_cache', array());
   $piece_cache = dmemcache_get('__dmemcache_piece_cache');
+  if (!is_array($piece_cache)) {
+    $piece_cache = array();
+  }
 
   if (isset($exp)) {
     if ($exp <= 0) {
@@ -1027,4 +1291,262 @@ function dmemcache_stats_write($action, $bin, $keys) {
     }
   }
   // Reset the dmemcache timer for timing the next memcache operation.
+}
+
+/**
+ * Write to a debug log when enabled.
+ *
+ * @param string $action
+ *   The action being performed (get, set, etc...).
+ * @param string $bin
+ *   The memcache bin the action is being performed in.
+ * @param string $key
+ *   The key on which the action is being performed on.
+ * @param bool $rc
+ *   The return code of the action performed.
+ */
+function _dmemcache_write_debug($action, $bin, $key, $rc) {
+  static $memcache_debug_log = NULL;
+  static $memcache_debug_verbose = NULL;
+  if ($memcache_debug_log === NULL) {
+    $memcache_debug_log = variable_get('memcache_debug_log', FALSE);
+    $memcache_debug_verbose = variable_get('memcache_debug_verbose', FALSE);
+  }
+  if (($action == 'get' || $action == 'getMulti') && !$memcache_debug_verbose) {
+    return;
+  }
+  elseif ($memcache_debug_log) {
+    $debug_log = strtr(variable_get('memcache_debug_log_format', "!timestamp|!action|!bin|!cid|!rc\n"), array('!timestamp' => date(variable_get('memcache_debug_time_format', 'U')), '!action' => $action, '!bin' => $bin, '!cid' => $key, '!rc' => (int) $rc));
+    if (file_put_contents($memcache_debug_log, $debug_log, FILE_APPEND) === FALSE) {
+      // This can lead to a lot of watchdog entries...
+      register_shutdown_function('watchdog', 'memcache', 'Unable to write to debug log at !debug_file: !debug_log.', array('!debug_file' => $memcache_debug_log, '!debug_log' => $debug_log), WATCHDOG_ERROR);
+    }
+  }
+}
+
+/**
+ * Ensures memcache connection is authorized for the server
+ * that is mapped for the given key.
+ *
+ * @param string $full_key
+ *   The full key for the item whose server is checked for ascii
+ *   authentication.
+ * @param object $mc
+ *   The memcache object.
+ *
+ * @return bool
+ *   TRUE if the connection is authorized, FALSE otherwise.
+ */
+function _dmemcache_ensure_ascii_auth($full_key, $mc) {
+  static $memcache_ascii_auth = NULL;
+  static $memcache_ascii_auth_token = NULL;
+
+  if (!isset($memcache_ascii_auth)) {
+    $memcache_ascii_auth = _dmemcache_use_ascii_auth();
+    $memcache_ascii_auth_token = variable_get('memcache_ascii_auth', FALSE);
+  }
+
+  // Immediately return if there is no memcache authentication.
+  if (!$memcache_ascii_auth) {
+    return FALSE;
+  }
+
+  // Login to the server.
+  $rc = $mc->setByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_KEY, $memcache_ascii_auth_token);
+  if (!$rc && $mc->getResultCode() == MEMCACHED_SERVER_TIMED_OUT) {
+    // Quitting is the only way to recover from this failure.
+    $mc->quit();
+    $rc = $mc->setByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_KEY, $memcache_ascii_auth_token);
+  }
+  if (!$rc) {
+    $code = $mc->getResultCode();
+    $message = $mc->getResultMessage();
+    $t = explode(' ', $memcache_ascii_auth_token);
+    $s = $mc->getServerByKey($full_key);
+
+    register_shutdown_function('watchdog', 'memcache', 'Memcache ascii authentication failed to login with user %user to server: %server; error code: %code with message %message', array(
+      '%server' => $s['host'] . ':' . $s['port'],
+      '%user' => $t[0],
+      '%code' => $code,
+      '%message' => $message,
+    ), WATCHDOG_ERROR);
+
+    return FALSE;
+  }
+
+  // Login was successful, check if our lifetime key exists already.
+  $rc = $mc->getByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY);
+  if ($rc) {
+    return TRUE;
+  }
+
+  // Set the lifetime key.
+  $mc->setByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY, TRUE);
+
+  // Confirm the lifetime key properly set, setByKey() can return success
+  // even when it fails.
+  return $mc->getByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY);
+}
+
+/**
+ * Performs ascii authentication to the server given by host and port.
+ *
+ * @param string $host
+ *   The hostname of the server to authenticate to.
+ * @param int $port
+ *   The port of the server to authenticate to.
+ * @param object $mc
+ *   The memcache object.
+ *
+ * @return bool
+ *   TRUE on success, FALSE otherwise.
+ */
+function _dmemcache_ascii_authenticate_server($host, $port, $mc) {
+  $rc = FALSE;
+
+  // Find a working key that matches the specified server.
+  for ($key = 0; $key < 1000; $key++) {
+    // It's impossible to directly address a server, but we need to
+    // login to the specified connection before it can be used.
+    // So we check all keys from 0 to 1000 if it would map to this server.
+    // Once we have found one, we set the authentication data, because any key
+    // will work for authentication as the authentication data includes user and
+    // password.
+    $s = $mc->getServerByKey($key);
+    if ($s['host'] == $host && $s['port'] == $port) {
+      $rc = _dmemcache_ensure_ascii_auth($key, $mc);
+      break;
+    }
+  }
+
+  // This should never happen.
+  if ($key == 1000) {
+    register_shutdown_function('watchdog', 'memcache', 'Memcache ascii authentication could not find the server to authenticate to.', array(), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  return $rc;
+}
+
+/**
+ * Checks if cache items are really missing or only missing ascii authentication.
+ *
+ * This is essentially a cache miss and hence we would be going into a heavy
+ * code path anyway, therefore it is performance wise okay to check a special
+ * key that exists on all memcache servers to see if this is:
+ *
+ * a) real cache miss (where we need to do all the hard work)
+ * b) ascii authentication failure (where we just need to login and then can
+ *    hopefully have a cache hit)
+ *
+ * The edge case of the special lifetime key not existing is treated as a real
+ * cache miss.
+ *
+ * This is justified by the case that most likely memcache was just restarted
+ * (else the lifetime key would not be missing) and hence the real cache request
+ * likely would have been a real cache miss anyway.
+ *
+ * @param array $results
+ *   The results array to check for a 2nd chance.
+ * @param object $mc
+ *   The memcache object.
+ */
+function _dmemcache_get_multi_2nd_chance_ascii_auth($results, $mc) {
+  // Cache misses are very costly: Find out, if any servers need authentication.
+  $servers = array();
+  foreach ($results as $full_key => $value) {
+    if (!empty($value)) {
+      continue;
+    }
+
+    $s = $mc->getServerByKey($full_key);
+    $server_key = $s['host'] . ':' . $s['port'];
+    $servers[$server_key][$full_key] = $full_key;
+  }
+
+  if (empty($servers)) {
+    return array();
+  }
+
+  $try_again_full_keys = array();
+  foreach ($servers as $server_key => $full_keys) {
+    // Use the first key of the list as all keys map to this server.
+    $full_key = current($full_keys);
+
+    // Check if lifetime token exists and hence if we are authorized
+    // on this server.
+    $rc = $mc->getByKey($full_key, DRUPAL_MEMCACHE_ASCII_AUTH_LIFETIME_KEY);
+    if (empty($rc) && _dmemcache_ensure_ascii_auth($full_key, $mc)) {
+      // If we logged in after first failing a fetch for our lifetime key,
+      // then these keys need to be retried as the "not found" could have been
+      // an authentication failure.
+      $try_again_full_keys += $full_keys;
+    }
+  }
+
+  // In case no authentication succeeded, there will be no keys to get.
+  if (empty($try_again_full_keys)) {
+    return array();
+  }
+
+  $new_results = $mc->getMulti($try_again_full_keys);
+  if (empty($new_results)) {
+    return array();
+  }
+
+  return $new_results;
+}
+
+/**
+ * If using ascii authentication, re-authenticates all servers.
+ *
+ * @param string $mc
+ *   The mc object to re-authenticate all servers on.
+ *
+ * @return bool
+ *   TRUE on success, FALSE on failure.
+ */
+function _dmemcache_reset_ascii_auth($mc) {
+  static $memcache_ascii_auth = NULL;
+
+  if (!isset($memcache_ascii_auth)) {
+    $memcache_ascii_auth = _dmemcache_use_ascii_auth();
+  }
+
+  if (!$memcache_ascii_auth) {
+    return FALSE;
+  }
+
+  // Need to check all servers for authentication.
+  $servers = $mc->getServerList();
+  foreach ($servers as $s) {
+    $rc = _dmemcache_ascii_authenticate_server($s['host'], $s['port'], $mc);
+    if (!$rc) {
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
+/**
+ * Returns whether memcache_ascii_auth is used or not.
+ *
+ * @return bool
+ *   TRUE if authentication is used, FALSE otherwise.
+ */
+function _dmemcache_use_ascii_auth() {
+  static $memcache_ascii_auth = NULL;
+
+  if (!isset($memcache_ascii_auth)) {
+    $memcache_ascii_auth = variable_get('memcache_ascii_auth', FALSE);
+    $extension = dmemcache_extension();
+
+    if ($memcache_ascii_auth && $extension == 'Memcache') {
+      register_shutdown_function('watchdog', 'memcache', 'Memcache ascii authentication can only be used with Memcached extension', array(), WATCHDOG_ERROR);
+      $memcache_ascii_auth = FALSE;
+    }
+  }
+
+  return (bool) $memcache_ascii_auth;
 }

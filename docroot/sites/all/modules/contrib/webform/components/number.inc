@@ -295,7 +295,7 @@ function _webform_render_number($component, $value = NULL, $filter = TRUE) {
   }
 
   // Ensure #step starts with a zero if a decimal.
-  if (!is_int($element['#step'] * 1)) {
+  if (filter_var((float) $element['#step'], FILTER_VALIDATE_INT) === FALSE) {
     $decimals = strlen($element['#step']) - strrpos($element['#step'], '.') - 1;
     $element['#step'] = sprintf('%1.' . $decimals . 'F', $element['#step']);
   }
@@ -307,7 +307,7 @@ function _webform_render_number($component, $value = NULL, $filter = TRUE) {
     // Set the size property based on #max, to ensure consistent behavior for
     // browsers that do not support type = number.
     if ($element['#max']) {
-      $element['#size'] =  strlen($element['#max']) + 1;
+      $element['#size'] = strlen($element['#max']) + 1;
     }
   }
   else {
@@ -408,9 +408,9 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
   $result = $query->execute();
   foreach ($result as $data) {
     $value = trim($data['data']);
-    $number = (float)$value;
-    $non_empty += (integer)($value !== '');
-    $non_zero += (integer)($number != 0.0);
+    $number = (float) $value;
+    $non_empty += (integer) ($value !== '');
+    $non_zero += (integer) ($number != 0.0);
     $sum += $number;
     $population[] = $number;
     $submissions++;
@@ -452,7 +452,7 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
   if ($advanced_stats && $population_count && $sum != 0) {
     // Standard deviation.
     $stddev = 0;
-    foreach($population as $value) {
+    foreach ($population as $value) {
       // Obtain the total of squared variances.
       $stddev += pow(($value - $average), 2);
     }
@@ -494,21 +494,21 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
     $stddev = _webform_number_format($component, $stddev);
     $low = _webform_number_format($component, $population[0]);
     $high = _webform_number_format($component, end($population));
-    foreach($limit as $key => $value) {
+    foreach ($limit as $key => $value) {
       $limit[$key] = _webform_number_format($component, $value);
     }
 
     // Column headings (override potential theme uppercase, e.g. Seven in D7).
     $header = array(
       t('Normal Distribution'),
-      array('data' => '-4' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-3' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-2' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-1' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+1' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+2' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+3' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+4' . $sigma, 'style' => 'text-transform: lowercase;',),
+      array('data' => '-4' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-3' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-2' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-1' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+1' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+2' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+3' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+4' . $sigma, 'style' => 'text-transform: lowercase;'),
     );
 
     // Insert row labels.
@@ -562,6 +562,7 @@ function _webform_csv_data_number($component, $export_options, $value) {
  *   The form element. May either be a select or a webform_number element.
  * @param $form_state
  *   The full form state for the webform.
+ *
  * @return
  *   None. Calls a form_set_error if the number is not valid.
  */
@@ -672,6 +673,7 @@ function _webform_edit_number_validate($element, &$form_state) {
         }
       }
       break;
+
     case 'max':
       if ($values['max'] == '') {
         if (isset($values['type']) && $values['type'] === 'select') {
@@ -687,6 +689,7 @@ function _webform_edit_number_validate($element, &$form_state) {
         }
       }
       break;
+
     case 'step':
       if ($values['step'] !== '') {
         if (!is_numeric($values['step'])) {
@@ -730,10 +733,11 @@ function _webform_number_select_options($component) {
   // TODO: HTML5 browsers apparently do not include the max value if it does
   // not line up with step. Restore this if needed in the future.
   // Add end limit if it's been skipped due to step.
-  //if (end($options) != $max) {
-  //  $options[$f] = $max;
-  //}
-
+  // @code
+  // if (end($options) != $max) {
+  //   $options[$f] = $max;
+  // }
+  // @endcode
   if ($flipped) {
     $options = array_reverse($options, TRUE);
   }
@@ -816,5 +820,12 @@ function webform_number_standardize($value, $point) {
  * See https://drupal.org/node/1601968.
  */
 function webform_modulo($a, $b) {
+  // Ensure values are either int or float.
+  if (!is_numeric($a) || !is_numeric($b)) {
+    return 0.0;
+  }
+  $a = +$a;
+  $b = +$b;
+
   return $a - $b * (($b < 0) ? ceil($a / $b) : floor($a / $b));
 }

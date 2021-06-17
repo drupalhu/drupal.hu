@@ -53,7 +53,7 @@ function _stage_file_proxy_file_dir() {
  * Helper to retrieves original path for a styled image.
  *
  * @param string $uri
- *   A uri or path (may be prefixed with scheme)
+ *   A uri or path (may be prefixed with scheme).
  * @param bool $style_only
  *   Indicates if, the function should only return paths retrieved from style
  *   paths. Defaults to TRUE.
@@ -114,6 +114,13 @@ function stage_file_proxy_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
+  // If fast_404_path_check is enabled, the files path must be registered in
+  // the router table, otherwise fast_404 will abort the request before
+  // stage_file_proxy can handle it.
+  if ((variable_get('fast_404_path_check', FALSE)) && module_exists('fast_404')) {
+    $items[_stage_file_proxy_file_dir() . '/%'] = array();
+  }
+
   return $items;
 }
 
@@ -166,6 +173,14 @@ function stage_file_proxy_admin() {
     '#required' => FALSE,
   );
 
+  $form['stage_file_proxy_excluded_extensions'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Excluded Extensions.'),
+    '#default_value' => variable_get('stage_file_proxy_excluded_extensions', ''),
+    '#description' => t("A comma separated list of the extensions that will not be fetched by Stage File Proxy if Hotlinking is disabled. For example: 'mp3,ogg'"),
+    '#required' => FALSE,
+  );
+
   $form['stage_file_proxy_sslversion'] = array(
     '#type' => 'textfield',
     '#title' => t('SSL Version.'),
@@ -175,6 +190,14 @@ function stage_file_proxy_admin() {
       relatively common, but if you get 0 byte files you can try changing it to 2.'),
     '#size' => 2,
     '#maxlength' => 2,
+    '#required' => FALSE,
+  );
+
+  $form['stage_file_proxy_headers'] = array(
+    '#type' => 'textarea',
+    '#title' => t('HTTP headers.'),
+    '#default_value' => variable_get('stage_file_proxy_headers', ''),
+    '#description' => t('When Stage File Proxy is configured to transfer the remote file to local machine, it will use this headers for HTTP request. Use format like "Referer|http://example.com/".'),
     '#required' => FALSE,
   );
 
@@ -204,7 +227,7 @@ function stage_file_proxy_admin_validate($form, &$form_state) {
 /**
  * Fetches a normalized file URI from the current request.
  *
- * @param string $path
+ * @param string $path.
  *   An optional path
  *
  * @return bool|string
@@ -214,6 +237,11 @@ function stage_file_proxy_admin_validate($form, &$form_state) {
 function _stage_file_proxy_get_current_file_uri($path = NULL) {
   if (!isset($path)) {
     $path = $_GET['q'];
+  }
+
+  // Disallow directory traversal.
+  if (in_array('..', explode('/', $path))) {
+    return FALSE;
   }
 
   // Make sure we're requesting a file in the files dir.
@@ -246,8 +274,13 @@ function stage_file_proxy_get_file_remote_url($relative_path, array $options = a
 
   if (!isset($base_url)) {
     $base_url = FALSE;
+    $server = rtrim(variable_get('stage_file_proxy_origin'), '/');
 
-    if ($server = rtrim(variable_get('stage_file_proxy_origin'), '/')) {
+    // Quit if we are the origin. Ignore http(s) in the origin comparison.
+    if (preg_replace('#^[a-z]*://#', '', $server) == preg_replace('#^[a-z]*://#', '', $GLOBALS['base_url'])) {
+      return FALSE;
+    }
+    if ($server) {
       $base_url = $server . '/';
     }
     if ($dir = trim(variable_get('stage_file_proxy_origin_dir', _stage_file_proxy_file_dir()), '/')) {
@@ -293,27 +326,40 @@ function stage_file_proxy_fetch_file($relative_path, array $options = array()) {
     }
   }
 
+  $excluded_extensions = array_map('trim', explode(',', variable_get('stage_file_proxy_excluded_extensions', '')));
+
+  $path_info = pathinfo($relative_path);
+  $ext = $path_info['extension'];
+
+  if (in_array($ext, $excluded_extensions)) {
+    return FALSE;
+  }
+
   $url = stage_file_proxy_get_file_remote_url($relative_path, $options);
 
   if (!empty($failures[$url])) {
     return FALSE;
   }
 
-  $destination = _stage_file_proxy_file_dir() . '/' . dirname($relative_path);
+  $headers = _stage_file_proxy_create_headers_array(variable_get('stage_file_proxy_headers', ''));
+  $result = drupal_http_request($url, array('headers' => $headers));
+  if ($result->code != 200) {
+    watchdog('stage_file_proxy', 'HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url), WATCHDOG_ERROR);
+    $failures[$url] = TRUE;
+    cache_set('stage_file_proxy_fetch_url_failures', $failures, 'cache', CACHE_TEMPORARY);
+    return FALSE;
+  }
+
+  $destination = _stage_file_proxy_file_dir();
+  if (($dirname = dirname($relative_path)) !== '.') {
+    $destination = $destination . '/'. $dirname;
+  }
   if (!file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
     watchdog('stage_file_proxy', 'Unable to prepare local directory @path.', array('@path' => $destination), WATCHDOG_ERROR);
     return FALSE;
   }
 
   $destination = str_replace('///', '//', "$destination/") . drupal_basename($relative_path);
-
-  $result = drupal_http_request($url);
-  if ($result->code != 200) {
-    watchdog('stage_file_proxy', 'HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url), WATCHDOG_ERROR);
-    $failures[$url] = TRUE;
-    cache_set('stage_file_proxy_failures', $failures, 'cache', CACHE_TEMPORARY);
-    return FALSE;
-  }
 
   $local = file_unmanaged_save_data($result->data, $destination, FILE_EXISTS_REPLACE);
   if (!$local) {
@@ -322,6 +368,34 @@ function stage_file_proxy_fetch_file($relative_path, array $options = array()) {
   }
 
   return $local;
+}
+
+/**
+ * Implements hook_stage_file_proxy_excluded_paths_alter().
+ *
+ * @todo: Move this to the advagg module.
+ */
+function stage_file_proxy_stage_file_proxy_excluded_paths_alter(&$excluded_paths) {
+  // If this is a advagg path, ignore it.
+  if (module_exists('advagg')) {
+    $excluded_paths[] = '/advagg_';
+  }
+}
+
+/**
+ * Help function to generate HTTP headers for drupal_http_request.
+ */
+function _stage_file_proxy_create_headers_array($headers_string) {
+  $lines = explode("\n", $headers_string);
+  $headers = array();
+  foreach ($lines as $line) {
+    $header = explode('|', $line);
+    if (count ($header) > 1) {
+      $headers[$header[0]] = $header[1];
+    }
+  }
+
+  return $headers;
 }
 
 /**
@@ -341,27 +415,33 @@ function stage_file_proxy_process_file_uri($uri) {
     return FALSE;
   }
 
-  if (file_uri_scheme($uri) === 'public' && !is_file($uri)) {
-    // If this is a advagg path, ignore it.
-    if (strpos($uri, '/advagg_') !== FALSE && module_exists('advagg')) {
-      return FALSE;
+  // There are cases when this is called for non-files, e.g. when someone does a
+  // file_create_url() for a dir, and stage_file_proxy_file_url_alter calls us.
+  // Anyway, whatever is there - maybe a symlink or some other odd ork - will
+  // break our logic anyway. So checking for file_exists() here.
+  if (file_uri_scheme($uri) === 'public' && !file_exists($uri)) {
+    $excluded_paths = array();
+    drupal_alter('stage_file_proxy_excluded_paths', $excluded_paths, $uri);
+    foreach ($excluded_paths as $excluded_path) {
+      if (strpos($uri, $excluded_path) !== FALSE) {
+        return FALSE;
+      }
     }
 
+    // Path relative to file directory. Used for hotlinking.
     $relative_path = file_uri_target($uri);
     if ($proxy_url = stage_file_proxy_get_file_remote_url($relative_path)) {
-      // Check if hotlinking is enabled.
-      if (variable_get('stage_file_proxy_hotlink', FALSE)) {
-        return $proxy_url;
-      }
-
       // Is this imagecache? Request the root file and let imagecache resize.
-      if (variable_get('stage_file_proxy_use_imagecache_root', TRUE) && $original_path = _stage_file_proxy_image_style_path_original($relative_path, TRUE)) {
-        if (is_file($original_path)) {
+      // We check this first so locally added files have precedence.
+      $original_path = _stage_file_proxy_image_style_path_original($relative_path, TRUE);
+      if ($original_path) {
+        if (file_exists($original_path)) {
           // image_style_deliver() can generate the derivative since the
           // source file exists.
           return FALSE;
         }
-        else {
+        if (variable_get('stage_file_proxy_use_imagecache_root', TRUE)) {
+          // Config says: Fetch the original.
           // Attempt to download the source of the requested derivative image.
           stage_file_proxy_fetch_file(file_uri_target($original_path));
           // Do not change the file's URL since we want to still direct the
@@ -370,6 +450,11 @@ function stage_file_proxy_process_file_uri($uri) {
         }
       }
 
+      // Check if hotlinking is enabled.
+      if (variable_get('stage_file_proxy_hotlink', FALSE)) {
+        return $proxy_url;
+      }
+      // It's an image original, no hotlinking, so just fetch.
       if ($local = stage_file_proxy_fetch_file($relative_path)) {
         // If the file was downloaded successfully, then set the path to the
         // now local version of the file. This result is different since it
@@ -386,14 +471,22 @@ function stage_file_proxy_process_file_uri($uri) {
  * Implements hook_file_url_alter().
  */
 function stage_file_proxy_file_url_alter(&$url) {
-  stage_file_proxy_process_file_uri($url);
+  // Processed $url may return updated value in some cases (hotlinking etc.).
+  if ($processed_url = stage_file_proxy_process_file_uri($url)) {
+    $url = $processed_url;
+  }
 }
 
 /**
- * Implements hook_preprocess_picture().
+ * Implements hook_preprocess_HOOK() for theme_picture().
  */
-function template_preprocess_picture(&$variables) {
+function stage_file_proxy_preprocess_picture(&$variables) {
   // Run the image path through the stage file proxy process before the call
   // to image_load() makes everything fail in theme_picture().
-  stage_file_proxy_process_file_uri($variables['uri']);
+  if (!empty($variables['uri'])) {
+    stage_file_proxy_process_file_uri($variables['uri']);
+  }
+  elseif (!empty($variables['path'])) {
+    stage_file_proxy_process_file_uri($variables['path']);
+  }
 }

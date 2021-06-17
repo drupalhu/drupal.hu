@@ -10,7 +10,9 @@
  */
 function bueditor_sprite($editor, $buttons = array()) {
   if (!empty($buttons)) {
-    uasort($buttons, create_function('$b1,$b2', 'return $b1->weight - $b2->weight;'));
+    uasort($buttons, function ($b1, $b2) {
+      return $b1->weight - $b2->weight;
+    });
     return bueditor_sprite_buttons($buttons, $editor->iconpath);
   }
   elseif (isset($editor->eid) && $editor->eid > 0) {

@@ -5,6 +5,9 @@
  * Views hooks implemented for the Webform module.
  */
 
+/**
+ *
+ */
 function webform_views_data() {
 
   /**
@@ -19,7 +22,7 @@ function webform_views_data() {
     ),
   );
 
-  // status
+  // Status.
   $data['webform']['status'] = array(
     'title' => t('Status'),
     'help' => t('The open or closed status of a webform.'),
@@ -47,7 +50,7 @@ function webform_views_data() {
     'help' => t('Submissions generated from Webform forms.'),
   );
 
-  // sid
+  // Sid.
   $data['webform_submissions']['sid'] = array(
     'title' => t('Sid'),
     'help' => t('The submission ID of the submission.'),
@@ -67,7 +70,7 @@ function webform_views_data() {
     ),
   );
 
-  // nid
+  // Nid.
   $data['webform_submissions']['nid'] = array(
     'title' => t('Node'),
     'help' => t('The webform node this submission was generated from.'),
@@ -79,7 +82,7 @@ function webform_views_data() {
     ),
   );
 
-  // uid
+  // Uid.
   $data['webform_submissions']['uid'] = array(
     'title' => t('User'),
     'help' => t('The user who sent the webform submission.'),
@@ -91,7 +94,7 @@ function webform_views_data() {
     ),
   );
 
-  // is_draft
+  // is_draft.
   $data['webform_submissions']['is_draft'] = array(
     'title' => t('Draft'),
     'help' => t('Whether or not the submission is a draft.'),
@@ -103,11 +106,11 @@ function webform_views_data() {
       'handler' => 'webform_handler_filter_is_draft',
     ),
     'sort' => array(
-       'handler' => 'views_handler_sort',
+      'handler' => 'views_handler_sort',
     ),
   );
 
-  // submitted
+  // Submitted.
   $data['webform_submissions']['submitted'] = array(
     'title' => t('Submitted'),
     'help' => t('The date this submission was submitted.'),
@@ -124,7 +127,7 @@ function webform_views_data() {
     ),
   );
 
-  // remote_addr
+  // remote_addr.
   $data['webform_submissions']['remote_addr'] = array(
     'title' => t('Remote address'),
     'help' => t('The remote IP address of the user that submitted this submission.'),
@@ -141,7 +144,7 @@ function webform_views_data() {
     ),
   );
 
-  // view link
+  // View link.
   $data['webform_submissions']['view_submission'] = array(
     'field' => array(
       'title' => t('View link'),
@@ -151,7 +154,7 @@ function webform_views_data() {
     ),
   );
 
-  // edit link
+  // Edit link.
   $data['webform_submissions']['edit_submission'] = array(
     'field' => array(
       'title' => t('Edit link'),
@@ -161,7 +164,7 @@ function webform_views_data() {
     ),
   );
 
-  // delete link
+  // Delete link.
   $data['webform_submissions']['delete_submission'] = array(
     'field' => array(
       'title' => t('Delete link'),
@@ -205,7 +208,6 @@ function webform_views_data_alter(&$data) {
       'count_type' => 'node',
     ),
   );
-
 
   // Webform submission of user.
   $data['users']['webform_submission'] = array(

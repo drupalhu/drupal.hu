@@ -87,6 +87,7 @@ function webform_emails_form($form, $form_state, $node) {
  *
  * @param $form
  *   The form array.
+ *
  * @return
  *   Formatted HTML form, ready for display.
  */
@@ -188,16 +189,19 @@ function webform_email_edit_form($form, $form_state, $node, $email = array()) {
         $title = t('E-mail to address');
         $description = t('Form submissions will be e-mailed to this address. Any email, select, or hidden form element may be selected as the recipient address. Multiple e-mail addresses may be separated by commas.');
         break;
+
       case 'subject':
         $default_value = _webform_filter_values(webform_variable_get('webform_default_subject'), $node);
         $title = t('E-mail subject');
         $description = t('Any textfield, select, or hidden form element may be selected as the subject for e-mails.');
         break;
+
       case 'from_address':
         $default_value = _webform_filter_values(webform_variable_get('webform_default_from_address'), $node);
         $title = t('E-mail from address');
         $description = t('Any email, select, or hidden form element may be selected as the sender\'s e-mail address.');
         break;
+
       case 'from_name':
         $default_value = _webform_filter_values(webform_variable_get('webform_default_from_name'), $node);
         $title = t('E-mail from name');
@@ -226,7 +230,7 @@ function webform_email_edit_form($form, $form_state, $node, $email = array()) {
     $options = webform_component_list($node, $field == 'from_address' || $field == 'email' ? 'email_address' : 'email_name', FALSE);
     $form[$field . '_component'] = array(
       '#type' => 'select',
-      '#default_value' =>  is_numeric($email[$field]) ? $email[$field] : NULL,
+      '#default_value' => is_numeric($email[$field]) ? $email[$field] : NULL,
       '#options' => empty($options) ? array('' => t('No available components')) : $options,
       '#disabled' => empty($options) ? TRUE : FALSE,
       '#weight' => 6,

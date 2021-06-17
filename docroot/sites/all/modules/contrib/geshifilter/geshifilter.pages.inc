@@ -52,6 +52,7 @@ function _geshifilter_parse_attributes($attributes, $format) {
     $att_value = $attribute_matches[2][$a_key];
 
     // Check for the language attributes.
+    $class_to_lang = str_replace('language-', '', $att_value);
     if (in_array($att_name, $language_attributes)) {
       // Try first to map the attribute value to geshi language code.
       if (in_array($att_value, $language_tags)) {
@@ -60,6 +61,10 @@ function _geshifilter_parse_attributes($attributes, $format) {
       // Set language if extracted language is an enabled language.
       if (array_key_exists($att_value, $enabled_languages)) {
         $lang = $att_value;
+      }
+      // class_to_lang hotfix: language never filled cause ckeditor plugin uses classes instead of tags.
+      elseif($att_name == 'class' && array_key_exists($class_to_lang, $enabled_languages)) {
+        $lang = $class_to_lang;
       }
     }
 
@@ -123,22 +128,30 @@ function _geshifilter_prepare($format, $text) {
   if (in_array(GESHIFILTER_BRACKETS_ANGLE, $tag_styles)) {
     // Prepare <foo>..</foo> blocks.
     $pattern = '#(<)('. $tags_string .')((\s+[^>]*)*)(>)(.*?)(</\2\s*>|$)#s';
-    $text = preg_replace_callback($pattern, create_function('$match', "return _geshifilter_prepare_callback(\$match, '$format');"), $text);
+    $text = preg_replace_callback($pattern, function($match) use ($format) {
+      return _geshifilter_prepare_callback($match, $format);
+    }, $text);
   }
   if (in_array(GESHIFILTER_BRACKETS_SQUARE, $tag_styles)) {
     // Prepare [foo]..[/foo] blocks.
     $pattern = '#((?<!\[)\[)('. $tags_string .')((\s+[^\]]*)*)(\])(.*?)((?<!\[)\[/\2\s*\]|$)#s';
-    $text = preg_replace_callback($pattern, create_function('$match', "return _geshifilter_prepare_callback(\$match, '$format');"), $text);
+    $text = preg_replace_callback($pattern, function($match) use ($format) {
+      return _geshifilter_prepare_callback($match, $format);
+    }, $text);
   }
   if (in_array(GESHIFILTER_BRACKETS_DOUBLESQUARE, $tag_styles)) {
     // Prepare [[foo]]..[[/foo]] blocks.
     $pattern = '#(\[\[)('. $tags_string .')((\s+[^\]]*)*)(\]\])(.*?)(\[\[/\2\s*\]\]|$)#s';
-    $text = preg_replace_callback($pattern, create_function('$match', "return _geshifilter_prepare_callback(\$match, '$format');"), $text);
+    $text = preg_replace_callback($pattern, function($match) use ($format) {
+      return _geshifilter_prepare_callback($match, $format);
+    }, $text);
   }
   if (in_array(GESHIFILTER_BRACKETS_PHPBLOCK, $tag_styles)) {
     // Prepare < ?php ... ? > blocks.
     $pattern = '#[\[<](\?php|\?PHP|%)(.+?)((\?|%)[\]>]|$)#s';
-    $text = preg_replace_callback($pattern, '_geshifilter_prepare_php_callback', $text);
+    $text = preg_replace_callback($pattern, function($match) use ($format) {
+      return _geshifilter_prepare_php_callback($match, $format);
+    }, $text);
   }
   return $text;
 }
@@ -163,6 +176,11 @@ function _geshifilter_prepare_callback($match, $format) {
   $tag_name = $match[2];
   $tag_attributes = $match[3];
   $content = $match[6];
+
+  // Decode HTML entities if option has been set
+  if (geshifilter_decode_entities($format)) {
+    $content = html_entity_decode($content, ENT_QUOTES);
+  }
 
   // get the default highlighting mode
   $lang = variable_get('geshifilter_default_highlighting', GESHIFILTER_DEFAULT_PLAINTEXT);
@@ -200,7 +218,11 @@ function _geshifilter_prepare_callback($match, $format) {
 /**
  * _geshifilter_prepare callback for < ?php ... ? > blocks.
  */
-function _geshifilter_prepare_php_callback($match) {
+function _geshifilter_prepare_php_callback($match, $format) {
+  // Decode HTML entities if option has been set
+  if (geshifilter_decode_entities($format)) {
+    $match[2] = html_entity_decode($match[2], ENT_QUOTES);
+  }
   return '[geshifilter-questionmarkphp]'
     . str_replace(array("\r", "\n"), array('', '&#10;'), check_plain($match[2]))
     .'[/geshifilter-questionmarkphp]';
@@ -228,7 +250,10 @@ function _geshifilter_process($format, $text) {
   $tags_string = implode('|', $tags);
   // Pattern for matching the prepared "<code>...</code>" stuff
   $pattern = '#\\[geshifilter-('. $tags_string .')([^\\]]*)\\](.*?)(\\[/geshifilter-\1\\])#s';
-  $text = preg_replace_callback($pattern, create_function('$match', "return _geshifilter_replace_callback(\$match, '$format');"), $text);
+  $text = preg_replace_callback($pattern, function($match) use ($format) {
+    return _geshifilter_replace_callback($match, $format);
+  }, $text);
+
   return $text;
 }
 
@@ -359,8 +384,11 @@ function geshifilter_geshi_process($source_code, $lang, $line_numbering=0, $line
     // To counter a change between GeSHi version 1.0.7.22 and 1.0.8 (svn
     // commit 1610), we use both the language and overall_class for the class,
     // to mimic the 1.0.8 behavior, which is backward compatible.
-    $code_class = "{$geshi->language} {$geshi->overall_class}";
-    $source_code = '<span class="geshifilter"'
+
+    // $language and $overall_class are protected with $geshi, with no get functions,
+    // recreate them manually.
+    $overall_class = 'geshifilter-' . $lang;
+    $code_class = "{$lang} {$overall_class}";$source_code = '<span class="geshifilter"'
       . (isset($title) ? ' title="'. check_plain($title) .'"' : '')
       . '><code class="'. $code_class .'">'. $geshi->parse_code() .'</code></span>';
   }

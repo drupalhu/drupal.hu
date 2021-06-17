@@ -74,17 +74,32 @@ function date_feeds_set_target(FeedsSource $source, $entity, $target, array $val
     $value = _date_feeds_get_date_object($value, $default_tz);
 
     if (!$value || !empty($value->errors)) {
-      $field[$language][$delta][$value_key] = '';
+      $field[$language][$delta][$value_key] = NULL;
     }
     else {
       if (!isset($field[$language][$delta]['timezone'])) {
-        $field[$language][$delta]['timezone'] = $value->getTimezone()->getName();
+        $timezone = $value->getTimezone()->getName();
+        if ($timezone == 'Z') {
+          // PHP < 5.5.10 doesn't know about the Zulu time zone (which equals
+          // the UTC time zone). Set timezone to "UTC".
+          $timezone = 'UTC';
+        }
+        $field[$language][$delta]['timezone'] = $timezone;
       }
 
       $value->setTimezone($db_tz);
 
       $field[$language][$delta][$value_key] = $value->format($format, TRUE);
       $field[$language][$delta][$offset_key] = $value->getOffset();
+
+      // Ensure that both value keys always exist to prevent php notices in
+      // date_field_validate().
+      if (!array_key_exists('value', $field[$language][$delta])) {
+        $field[$language][$delta]['value'] = NULL;
+      }
+      if (!array_key_exists('value2', $field[$language][$delta])) {
+        $field[$language][$delta]['value2'] = NULL;
+      }
     }
 
     $delta++;

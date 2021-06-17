@@ -9,8 +9,8 @@
 // @todo: test the tag style widget, both on general settings form and format specific form:  at least one tag style should be selected.
 
 /**
-* Funcional tests for the GeSHi filter administration.
-*/
+ * Funcional tests for the GeSHi filter administration.
+ */
 class GeshiFilterAdministrationTest extends DrupalWebTestCase {
 
   /**
@@ -53,15 +53,10 @@ class GeshiFilterAdministrationTest extends DrupalWebTestCase {
     $this->drupalLogin($this->filter_admin_user);
 
     // add an text format with only geshi filter
-    $edit = array(
-      'name' => $this->randomName(10, 'inputformat_'),
-      'filters[geshifilter/0]' => TRUE,
-      'roles[2]' => TRUE,
-    );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->createTextFormat('geshifilter_text_format', array('geshifilter'));
+
     // store the format id of the created text format
-    $this->input_format_id = db_result(db_query("SELECT format FROM {filter_format} WHERE name = '%s'", $edit['name']));
-    $this->assertTrue($this->input_format_id, t('Input format id (%s)'));
+    $this->input_format_id = 'geshifilter_text_format';
 
     // set some default GeSHi filter admin settings
     variable_set('geshifilter_format_specific_options', FALSE);
@@ -74,16 +69,24 @@ class GeshiFilterAdministrationTest extends DrupalWebTestCase {
   }
 
   /**
-   * SimpleTest core method: code run after each and every test method.
+   * Create a new text format.
    *
-   * Optional. You only need this if you have setup tasks.
+   * @param string $format_name
+   *   The name of new text format.
+   * @param array $filters
+   *   Array with the machine names of filters to enable.
    */
-  function tearDown() {
-    // Remove text format.
-    $this->drupalPost('admin/config/content/formats/delete/'. $this->input_format_id, array(), t('Delete'));
-
-    // Always call the tearDown() function from the parent class.
-    parent::tearDown();
+  protected function createTextFormat($format_name, $filters) {
+    $edit = array();
+    $edit['format'] = $format_name;
+    $edit['name'] = $this->randomName();
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
+    foreach ($filters as $filter) {
+      $edit['filters[' . $filter . '][status]'] = TRUE;
+    }
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
+    $this->drupalGet('admin/config/content/formats');
   }
 
   /**
@@ -102,7 +105,7 @@ class GeshiFilterAdministrationTest extends DrupalWebTestCase {
     $form_values = array(
       'geshifilter_language_tags_php' => 'php generictag',
     );
-    $this->drupalPost('admin/settings/geshifilter/languages', $form_values, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/geshifilter/languages', $form_values, t('Save configuration'));
     $this->assertText(t('The language tags should differ between languages and from the generic tags.'), t('Language tags should differ from generic tags (with generic tag options)'));
 
     // language tags should differ between languages
@@ -110,7 +113,7 @@ class GeshiFilterAdministrationTest extends DrupalWebTestCase {
       'geshifilter_language_tags_php' => 'php languagetag',
       'geshifilter_language_tags_python' => 'languagetag python',
     );
-    $this->drupalPost('admin/settings/geshifilter/languages/all', $form_values, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/geshifilter/languages/all', $form_values, t('Save configuration'));
     $this->assertText(t('The language tags should differ between languages and from the generic tags.'), t('Language tags should differ between languages (with generic tag options)'));
 
     // second round: with format specific tag options
@@ -119,27 +122,26 @@ class GeshiFilterAdministrationTest extends DrupalWebTestCase {
 
     // a language tag should differ from the generic tags
     $form_values = array(
-      'geshifilter_language_tags_php_' . $this->input_format_id => 'php generictag',
+      'filters[geshifilter][settings][per_language_settings][table][languages][php][geshifilter_language_tags_php_' . $this->input_format_id  . ']' => 'php generictag',
     );
-    $this->drupalPost('admin/config/content/formats/' . $this->input_format_id . '/configure', $form_values, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $this->input_format_id, $form_values, t('Save configuration'));
     $this->assertText(t('The language tags should differ between languages and from the generic tags.'), t('Language tags should differ from generic tags (with format specific tag options)'));
 
     // language tags should differ between languages
     $form_values = array(
-      'geshifilter_language_tags_php_' . $this->input_format_id => 'php languagetag',
-      'geshifilter_language_tags_python_' . $this->input_format_id => 'languagetag python',
+      'filters[geshifilter][settings][per_language_settings][table][languages][php][geshifilter_language_tags_php_' . $this->input_format_id  . ']' => 'php languagetag',
+      'filters[geshifilter][settings][per_language_settings][table][languages][python][geshifilter_language_tags_python_' . $this->input_format_id  . ']' => 'languagetag python',
     );
-    $this->drupalPost('admin/config/content/formats/' . $this->input_format_id . '/configure', $form_values, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $this->input_format_id, $form_values, t('Save configuration'));
     $this->assertText(t('The language tags should differ between languages and from the generic tags.'), t('Language tags should differ between languages (with format specific tag options)'));
 
   }
 
 }
 
-
-
-
-
+/**
+ * Funcional tests for the GeSHi filter node content.
+ */
 class GeshiFilterTest extends DrupalWebTestCase {
 
   /**
@@ -195,19 +197,10 @@ class GeshiFilterTest extends DrupalWebTestCase {
     $this->drupalLogin($this->filter_admin_user);
 
     // add an text format with only geshi filter
-    $edit = array(
-      'name' => $this->randomName(10, 'inputformat_'),
-      'filters[geshifilter/0]' => TRUE,
-      'filters[filter/0]' => FALSE,
-      'filters[filter/1]' => FALSE,
-      'filters[filter/2]' => FALSE,
-      'filters[filter/3]' => FALSE,
-      'roles[2]' => TRUE,
-    );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->createTextFormat('geshifilter_text_format', array('geshifilter'));
+
     // store the format id of the created text format
-    $this->input_format_id = db_result(db_query("SELECT format FROM {filter_formats} WHERE name = '%s'", $edit['name']));
-    $this->assertTrue($this->input_format_id, t('Valid text format id'));
+    $this->input_format_id = 'geshifilter_text_format';
 
     // set some default GeSHi filter admin settings
         // Set default highlighting mode to "do nothing".
@@ -231,20 +224,24 @@ class GeshiFilterTest extends DrupalWebTestCase {
   }
 
   /**
-   * SimpleTest core method: code run after each and every test method.
+   * Create a new text format.
    *
-   * Optional. You only need this if you have setup tasks.
+   * @param string $format_name
+   *   The name of new text format.
+   * @param array $filters
+   *   Array with the machine names of filters to enable.
    */
-  function tearDown() {
-    // log in as filter admin
-    $this->drupalGet('logout');
-    $this->drupalLogin($this->filter_admin_user);
-
-    // remove text format
-    $this->drupalPost('admin/config/content/formats/delete/'. $this->input_format_id, array(), t('Delete'));
-
-    // Always call the tearDown() function from the parent class.
-    parent::tearDown();
+  protected function createTextFormat($format_name, $filters) {
+    $edit = array();
+    $edit['format'] = $format_name;
+    $edit['name'] = $this->randomName();
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
+    foreach ($filters as $filter) {
+      $edit['filters[' . $filter . '][status]'] = TRUE;
+    }
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
+    $this->drupalGet('admin/config/content/formats');
   }
 
   /**
@@ -261,13 +258,18 @@ class GeshiFilterTest extends DrupalWebTestCase {
     // Create content.
     $edit = array(
       'title' => $this->randomName(32, 'simpletest_pagetitle_'),
-      'body' => $body ."\n". $this->randomName(100),
-      'format' => $this->input_format_id,
+      'body[und][0][value]' => $body ."\n". $this->randomName(100),
+      'body[und][0][format]' => $this->input_format_id,
     );
     // Post node
     $this->drupalPost('node/add/page', $edit, t('Save'));
     // check posted node
-    $node = node_load(array('title' => $edit['title']));
+    $query = new EntityFieldQuery();
+    $entities = $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('title', $edit['title'])
+      ->execute();
+    $node = node_load(current(array_keys($entities['node'])));
+
     $this->assertTrue($node, 'Node found in database. %s');
     // check if highlighting succeeded
     foreach ($check_list as $fragment) {
@@ -550,5 +552,26 @@ class GeshiFilterTest extends DrupalWebTestCase {
       t('Checking if [code language="ini"][section]...[/code] works'));
   }
 
-}
+  /**
+   * Issue https://www.drupal.org/node/2047021.
+   */
+  public function testSpecialChars() {
+    variable_set('geshifilter_tags', 'code');
+    variable_set('geshifilter_language_enabled_php', TRUE);
+    variable_set('geshifilter_decode_entities', TRUE);
 
+    $source = '<code language="php"><?php echo("&lt;b&gt;Hi&lt;/b&gt;"); ?></code>';
+
+    // Create a node.
+    $edit = array(
+      'title' => 'Test for Custom Filter',
+      'body[und][0][value]' => $source,
+      'body[und][0][format]' => $this->input_format_id,
+    );
+    // Post node
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalGet('node/1');
+    // The same string must be on page, not double encoded.
+    $this->assertRaw('&quot;&lt;b&gt;Hi&lt;/b&gt;&quot;', 'The code is not double encoded.');
+  }
+}

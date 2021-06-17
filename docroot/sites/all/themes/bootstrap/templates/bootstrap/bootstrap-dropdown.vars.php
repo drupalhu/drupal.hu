@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Stub file for "bootstrap_dropdown" theme hook [pre]process functions.
@@ -9,11 +10,14 @@
  *
  * See theme function for list of available variables.
  *
+ * @param array $variables
+ *   An associative array of variables, passed by reference.
+ *
  * @see bootstrap_bootstrap_dropdown()
  *
  * @ingroup theme_preprocess
  */
-function bootstrap_preprocess_bootstrap_dropdown(&$variables) {
+function bootstrap_preprocess_bootstrap_dropdown(array &$variables) {
   $element = &$variables['element'];
 
   // Provide defaults.
@@ -35,7 +39,7 @@ function bootstrap_preprocess_bootstrap_dropdown(&$variables) {
     if (is_string($element['#toggle'])) {
       $element['#toggle'] = array(
         '#theme' => 'link__bootstrap_dropdown__toggle',
-        '#text' => $element['#toggle'],
+        '#text' => filter_xss_admin($element['#toggle']),
         '#path' => '#',
         '#options' => array(
           'attributes' => array(),
@@ -67,11 +71,14 @@ function bootstrap_preprocess_bootstrap_dropdown(&$variables) {
  *
  * See theme function for list of available variables.
  *
+ * @param array $variables
+ *   An associative array of variables, passed by reference.
+ *
  * @see bootstrap_bootstrap_dropdown()
  *
  * @ingroup theme_process
  */
-function bootstrap_process_bootstrap_dropdown(&$variables) {
+function bootstrap_process_bootstrap_dropdown(array &$variables) {
   $element = &$variables['element'];
 
   $items = array();

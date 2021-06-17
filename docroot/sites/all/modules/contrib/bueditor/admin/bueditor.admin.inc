@@ -824,7 +824,9 @@ function bueditor_eop_copy($editor, $name) {
   $buttons = bueditor_buttons($editor->eid);
   $editor->eid = NULL;
   $editor->name = $name ? $name : 'Copy of ' . $editor->name;
-  array_walk($buttons, create_function('&$button', '$button->bid = NULL;'));
+  array_walk($buttons, function (&$button) {
+    $button->bid = NULL;
+  });
   if ($editor = bueditor_write_editor($editor, $buttons)) {
     bueditor_message_added($editor->name);
   }
@@ -927,7 +929,9 @@ function bueditor_write_editor($editor, $buttons = array()) {
  */
 function bueditor_icons($path) {
   $icons = file_scan_directory($path, '/\.(png|gif|jpg)$/', array('recurse' => FALSE, 'key' => 'filename'));
-  array_walk($icons, create_function('&$value', '$value = 1;'));
+  array_walk($icons, function (&$value) {
+    $value = 1;
+  });
   return $icons;
 }
 

@@ -196,9 +196,11 @@ function webform_expand_date($element) {
       case 'month':
         $none = t('Month');
         break;
+
       case 'day':
         $none = t('Day');
         break;
+
       case 'year':
         $none = t('Year');
         break;
@@ -262,7 +264,7 @@ function theme_webform_date($variables) {
     if ($element['#end_date']) {
       $calendar_class[] = 'webform-calendar-end-' . $element['#end_date'];
     }
-    $calendar_class[] ='webform-calendar-day-' . variable_get('date_first_day', 0);
+    $calendar_class[] = 'webform-calendar-day-' . variable_get('date_first_day', 0);
 
     $calendar = theme('webform_calendar', array('component' => $element['#webform_component'], 'calendar_classes' => $calendar_class));
   }

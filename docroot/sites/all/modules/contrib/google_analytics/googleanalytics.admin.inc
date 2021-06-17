@@ -18,10 +18,17 @@ function googleanalytics_admin_settings_form($form_state) {
     '#title' => t('Web Property ID'),
     '#type' => 'textfield',
     '#default_value' => variable_get('googleanalytics_account', 'UA-'),
-    '#size' => 15,
+    '#size' => 20,
     '#maxlength' => 20,
     '#required' => TRUE,
-    '#description' => t('This ID is unique to each site you want to track separately, and is in the form of UA-xxxxxxx-yy. To get a Web Property ID, <a href="@analytics">register your site with Google Analytics</a>, or if you already have registered your site, go to your Google Analytics Settings page to see the ID next to every site profile. <a href="@webpropertyid">Find more information in the documentation</a>.', array('@analytics' => 'http://www.google.com/analytics/', '@webpropertyid' => url('https://developers.google.com/analytics/resources/concepts/gaConceptsAccounts', array('fragment' => 'webProperty')))),
+    '#description' => t('This ID is unique to each site you want to track separately, and is in the form of UA-xxxxxxx-yy. To get a Web Property ID, <a href="@analytics">register your site with Google Analytics</a>, or if you already have registered your site, go to your Google Analytics Settings page to see the ID next to every site profile. <a href="@webpropertyid">Find more information in the documentation</a>.', array('@analytics' => 'https://marketingplatform.google.com/about/analytics/', '@webpropertyid' => url('https://developers.google.com/analytics/resources/concepts/gaConceptsAccounts', array('fragment' => 'webProperty')))),
+  );
+
+  $form['account']['googleanalytics_premium'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Premium account'),
+    '#description' => t('If you are a Google Analytics Premium customer, you can use up to 200 instead of 20 custom dimensions and metrics.'),
+    '#default_value' => variable_get('googleanalytics_premium', FALSE),
   );
 
   // Visibility settings.
@@ -169,7 +176,7 @@ function googleanalytics_admin_settings_form($form_state) {
     '#type' => 'fieldset',
     '#title' => t('Users'),
   );
-  $t_permission = array('%permission' => t('opt-in or out of tracking'));
+  $t_permission = array('%permission' => t('Opt-in or out of tracking'));
   $form['tracking']['user_vis_settings']['googleanalytics_custom'] = array(
     '#type' => 'radios',
     '#title' => t('Allow users to customize tracking on their account page'),
@@ -309,7 +316,7 @@ function googleanalytics_admin_settings_form($form_state) {
   $form['tracking']['privacy']['googleanalytics_privacy_donottrack'] = array(
     '#type' => 'checkbox',
     '#title' => t('Universal web tracking opt-out'),
-    '#description' => t('If enabled and your server receives the <a href="@donottrack">Do-Not-Track</a> header from the client browser, the Google Analytics module will not embed any tracking code into your site. Compliance with Do Not Track could be purely voluntary, enforced by industry self-regulation, or mandated by state or federal law. Please accept your visitors privacy. If they have opt-out from tracking and advertising, you should accept their personal decision. This feature is currently limited to logged in users and disabled page caching.', array('@donottrack' => 'http://donottrack.us/')),
+    '#description' => t('If enabled and your server receives the <a href="@donottrack">Do-Not-Track</a> header from the client browser, the Google Analytics module will not embed any tracking code into your site. Compliance with Do Not Track could be purely voluntary, enforced by industry self-regulation, or mandated by state or federal law. Please accept your visitors privacy. If they have opt-out from tracking and advertising, you should accept their personal decision. This feature is currently limited to logged in users and disabled page caching.', array('@donottrack' => 'https://www.eff.org/issues/do-not-track')),
     '#default_value' => variable_get('googleanalytics_privacy_donottrack', 1),
   );
 
@@ -326,8 +333,10 @@ function googleanalytics_admin_settings_form($form_state) {
 
   $googleanalytics_custom_dimension = variable_get('googleanalytics_custom_dimension', array());
 
-  // Google Analytics supports up to 20 custom dimensions.
-  for ($i = 1; $i <= 20; $i++) {
+  // Standard Google Analytics accounts support up to 20 custom dimensions,
+  // premium accounts support up to 200 custom dimensions.
+  $limit = (variable_get('googleanalytics_premium', FALSE)) ? 200 : 20;
+  for ($i = 1; $i <= $limit; $i++) {
     $form['googleanalytics_custom_dimension']['indexes'][$i]['index'] = array(
       '#default_value' => $i,
       '#description' => t('Index number'),
@@ -354,7 +363,7 @@ function googleanalytics_admin_settings_form($form_state) {
 
   $form['googleanalytics_custom_dimension']['googleanalytics_description'] = array(
     '#type' => 'item',
-    '#description' => t('You can supplement Google Analytics\' basic IP address tracking of visitors by segmenting users based on custom dimensions. Section 7 of the <a href="@ga_tos">Google Analytics terms of service</a> requires that You will not (and will not allow any third party to) use the Service to track, collect or upload any data that personally identifies an individual (such as a name, userid, email address or billing information), or other data which can be reasonably linked to such information by Google. You will have and abide by an appropriate Privacy Policy and will comply with all applicable laws and regulations relating to the collection of information from Visitors. You must post a Privacy Policy and that Privacy Policy must provide notice of Your use of cookies that are used to collect traffic data, and You must not circumvent any privacy features (e.g., an opt-out) that are part of the Service.', array('@ga_tos' => 'http://www.google.com/analytics/terms/gb.html')),
+    '#description' => t('You can supplement Google Analytics\' basic IP address tracking of visitors by segmenting users based on custom dimensions. Section 7 of the <a href="@ga_tos">Google Analytics terms of service</a> requires that You will not (and will not allow any third party to) use the Service to track, collect or upload any data that personally identifies an individual (such as a name, userid, email address or billing information), or other data which can be reasonably linked to such information by Google. You will have and abide by an appropriate Privacy Policy and will comply with all applicable laws and regulations relating to the collection of information from Visitors. You must post a Privacy Policy and that Privacy Policy must provide notice of Your use of cookies that are used to collect traffic data, and You must not circumvent any privacy features (e.g., an opt-out) that are part of the Service.', array('@ga_tos' => 'https://www.google.com/analytics/terms/gb.html')),
   );
   if (module_exists('token')) {
     $form['googleanalytics_custom_dimension']['googleanalytics_token_tree'] = array(
@@ -377,8 +386,9 @@ function googleanalytics_admin_settings_form($form_state) {
 
   $googleanalytics_custom_metric = variable_get('googleanalytics_custom_metric', array());
 
-  // Google Analytics supports up to 20 custom metrics.
-  for ($i = 1; $i <= 20; $i++) {
+  // Standard Google Analytics accounts support up to 20 custom metrics,
+  // premium accounts support up to 200 custom metrics.
+  for ($i = 1; $i <= $limit; $i++) {
     $form['googleanalytics_custom_metric']['indexes'][$i]['index'] = array(
       '#default_value' => $i,
       '#description' => t('Index number'),
@@ -405,7 +415,7 @@ function googleanalytics_admin_settings_form($form_state) {
 
   $form['googleanalytics_custom_metric']['googleanalytics_description'] = array(
     '#type' => 'item',
-    '#description' => t('You can supplement Google Analytics\' basic IP address tracking of visitors by segmenting users based on custom metrics. Section 7 of the <a href="@ga_tos">Google Analytics terms of service</a> requires that You will not (and will not allow any third party to) use the Service to track, collect or upload any data that personally identifies an individual (such as a name, userid, email address or billing information), or other data which can be reasonably linked to such information by Google. You will have and abide by an appropriate Privacy Policy and will comply with all applicable laws and regulations relating to the collection of information from Visitors. You must post a Privacy Policy and that Privacy Policy must provide notice of Your use of cookies that are used to collect traffic data, and You must not circumvent any privacy features (e.g., an opt-out) that are part of the Service.', array('@ga_tos' => 'http://www.google.com/analytics/terms/gb.html')),
+    '#description' => t('You can supplement Google Analytics\' basic IP address tracking of visitors by segmenting users based on custom metrics. Section 7 of the <a href="@ga_tos">Google Analytics terms of service</a> requires that You will not (and will not allow any third party to) use the Service to track, collect or upload any data that personally identifies an individual (such as a name, userid, email address or billing information), or other data which can be reasonably linked to such information by Google. You will have and abide by an appropriate Privacy Policy and will comply with all applicable laws and regulations relating to the collection of information from Visitors. You must post a Privacy Policy and that Privacy Policy must provide notice of Your use of cookies that are used to collect traffic data, and You must not circumvent any privacy features (e.g., an opt-out) that are part of the Service.', array('@ga_tos' => 'https://www.google.com/analytics/terms/gb.html')),
   );
   if (module_exists('token')) {
     $form['googleanalytics_custom_metric']['googleanalytics_token_tree'] = array(
@@ -447,7 +457,7 @@ function googleanalytics_admin_settings_form($form_state) {
     '#title' => t('Custom JavaScript code'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('You can add custom Google Analytics <a href="@snippets">code snippets</a> here. These will be added every time tracking is in effect. Before you add your custom code, you should read the <a href="@ga_concepts_overview">Google Analytics Tracking Code - Functional Overview</a> and the <a href="@ga_js_api">Google Analytics Tracking API</a> documentation. <strong>Do not include the &lt;script&gt; tags</strong>, and always end your code with a semicolon (;).', array('@snippets' => 'http://drupal.org/node/248699', '@ga_concepts_overview' => 'https://developers.google.com/analytics/resources/concepts/gaConceptsTrackingOverview', '@ga_js_api' => 'https://developers.google.com/analytics/devguides/collection/analyticsjs/method-reference')),
+    '#description' => t('You can add custom Google Analytics <a href="@snippets">code snippets</a> here. These will be added every time tracking is in effect. Before you add your custom code, you should read the <a href="@ga_concepts_overview">Google Analytics Tracking Code - Functional Overview</a> and the <a href="@ga_js_api">Google Analytics Tracking API</a> documentation. <strong>Do not include the &lt;script&gt; tags</strong>, and always end your code with a semicolon (;).', array('@snippets' => 'https://drupal.org/node/248699', '@ga_concepts_overview' => 'https://developers.google.com/analytics/resources/concepts/gaConceptsTrackingOverview', '@ga_js_api' => 'https://developers.google.com/analytics/devguides/collection/analyticsjs/method-reference')),
   );
   $form['advanced']['codesnippet']['googleanalytics_codesnippet_create'] = array(
     '#type' => 'textarea',
@@ -785,16 +795,18 @@ function _googleanalytics_validate_create_field_name($name) {
   // List of supported field names:
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#create
   $create_only_fields = array(
-    'clientId',
-    'userId',
-    'sampleRate',
-    'siteSpeedSampleRate',
-    'alwaysSendReferrer',
     'allowAnchor',
+    'alwaysSendReferrer',
+    'clientId',
     'cookieName',
     'cookieDomain',
     'cookieExpires',
     'legacyCookieDomain',
+    'legacyHistoryImport',
+    'sampleRate',
+    'siteSpeedSampleRate',
+    'storage',
+    'useAmpClientId',
   );
 
   if ($name == 'name') {
@@ -802,6 +814,9 @@ function _googleanalytics_validate_create_field_name($name) {
   }
   if ($name == 'allowLinker') {
     return t('Create only field name %name is a disallowed field name. Please select <em>Multiple top-level domains</em> under <em>What are you tracking</em> to enable cross domain tracking.', array('%name' => $name));
+  }
+  if ($name == 'userId') {
+    return t('Create only field name %name is a disallowed field name. Please enable <em>Track User ID</em> under <em>Tracking scope > Users</em>.', array('%name' => $name));
   }
   if (!in_array($name, $create_only_fields)) {
     return t('Create only field name %name is an unknown field name. Field names are case sensitive. Please see <a href="@url">create only fields</a> documentation for supported field names.', array('%name' => $name, '@url' => 'https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#create'));

@@ -65,7 +65,7 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
         foreach (array_reverse($values) as $filter) {
           // Skip this filter if it was already removed, or if it is the
           // "missing value" filter ("!").
-          if (!isset($active[$filter]) || !is_numeric($filter)) {
+          if (!isset($active[$filter]) || $filter == '!') {
             continue;
           }
           // Go through the entire hierarchy of the value and remove all its
@@ -115,7 +115,7 @@ class SearchApiFacetapiTerm extends FacetapiQueryType implements FacetapiQueryTy
     if ($filter == '!') {
       $query_filter->condition($field, NULL, $exclude ? '<>' : '=');
     }
-    elseif ($filter[0] == '[' && $filter[strlen($filter) - 1] == ']' && ($pos = strpos($filter, ' TO '))) {
+    elseif ($filter && $filter[0] == '[' && $filter[strlen($filter) - 1] == ']' && ($pos = strpos($filter, ' TO '))) {
       $lower = trim(substr($filter, 1, $pos));
       $upper = trim(substr($filter, $pos + 4, -1));
       if ($lower == '*' && $upper == '*') {

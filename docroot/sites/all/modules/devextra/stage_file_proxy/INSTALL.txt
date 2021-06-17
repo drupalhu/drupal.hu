@@ -1,8 +1,13 @@
 STEPS TO INSTALL:
 =========
-1. Enable the module.
+1.  Enable the module.
+    $ drush pm-download stage_file_proxy
+    $ drush pm-enable --yes stage_file_proxy
 
-2. Add variables to $conf in settings.php:
+2a. Set variables with drush:
+    $ drush variable-set stage_file_proxy_origin "http://www.example.com"
+    OR
+2b. Add variables to $conf in settings.php:
 
 REQUIRED:
 =========

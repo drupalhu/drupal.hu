@@ -520,6 +520,37 @@ function system_requirements($phase) {
     }
   }
 
+  // Warning for httpoxy on IIS with affected PHP versions.
+  // @see https://www.drupal.org/node/2783079
+  if (strpos($software, 'Microsoft-IIS') !== FALSE && (version_compare(PHP_VERSION, '5.5.38', '<')
+    || (version_compare(PHP_VERSION, '5.6.0', '>=') && version_compare(PHP_VERSION, '5.6.24', '<'))
+    || (version_compare(PHP_VERSION, '7.0.0', '>=') && version_compare(PHP_VERSION, '7.0.9', '<'))
+    )) {
+    $dom = new \DOMDocument('1.0', 'UTF-8');
+    $webconfig = file_get_contents('web.config');
+    // If you are here the web.config file must - of course - be well formed.
+    // But the PHP DOM component will throw warnings on some XML compliant
+    // stuff, so silently parse the configuration file.
+    @$dom->loadHTML($webconfig);
+    $httpoxy_rewrite = FALSE;
+    foreach ($dom->getElementsByTagName('rule') as $rule) {
+      foreach ($rule->attributes as $attr) {
+        if (@$attr->name == 'name' && @$attr->nodeValue == 'Erase HTTP_PROXY') {
+          $httpoxy_rewrite = TRUE;
+          break 2;
+        }
+      }
+    }
+    if (!$httpoxy_rewrite) {
+      $requirements['iis_httpoxy_protection'] = array(
+        'title' => t('IIS httpoxy protection'),
+        'value' => t('Your PHP runtime version is affected by the httpoxy vulnerability.'),
+        'description' => t('Either update your PHP runtime version or uncomment the "Erase HTTP_PROXY" rule in your web.config file and add HTTP_PROXY to the allowed headers list. See more details in the <a href="@link">security advisory</a>.', array('@link' => 'https://www.drupal.org/SA-CORE-2016-003')),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+
   return $requirements;
 }
 
@@ -2870,7 +2901,7 @@ function system_update_7061(&$sandbox) {
     if (!db_table_exists('system_update_7061')) {
       $table = array(
         'description' => t('Stores temporary data for system_update_7061.'),
-        'fields' => array('vid' => array('type' => 'int')),
+        'fields' => array('vid' => array('type' => 'int', 'not null' => TRUE)),
         'primary key' => array('vid'),
       );
       db_create_table('system_update_7061', $table);
@@ -3283,6 +3314,27 @@ function system_update_7081() {
     ->condition('status', 0)
     ->condition('schema_version', 0)
     ->execute();
+}
+
+/**
+ * Add 'jquery-extend-3.4.0.js' to the 'jquery' library.
+ */
+function system_update_7082() {
+  // Empty update to force a rebuild of hook_library() and JS aggregates.
+}
+
+/**
+ * Add 'jquery-html-prefilter-3.5.0-backport.js' to the 'jquery' library.
+ */
+function system_update_7083() {
+  // Empty update to force a rebuild of hook_library() and JS aggregates.
+}
+
+/**
+ * Rebuild JavaScript aggregates to include 'ajax.js' fix for Chrome 83.
+ */
+function system_update_7084() {
+  // Empty update to force a rebuild of JS aggregates.
 }
 
 /**

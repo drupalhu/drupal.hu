@@ -5,11 +5,14 @@
  * Webform module permission tests.
  */
 
-include_once(dirname(__FILE__) . '/webform.test');
-
+include_once dirname(__FILE__) . '/webform.test';
+/**
+ *
+ */
 class WebformPermissionsTestCase extends WebformTestCase {
+
   /**
-   * Implements getInfo().
+   * Implements hook.
    */
   public static function getInfo() {
     return array(
@@ -20,23 +23,23 @@ class WebformPermissionsTestCase extends WebformTestCase {
   }
 
   /**
-   * Implements setUp().
+   * Implements hook.
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
   }
 
   /**
-   * Implements tearDown().
+   * Implements hook.
    */
-  function tearDown() {
+  public function tearDown() {
     parent::tearDown();
   }
 
   /**
    * Create a webform node in which authenticated users have access to submit.
-  */
-  function testWebformSubmitAccess() {
+   */
+  public function testWebformSubmitAccess() {
     $this->webformReset();
     $node = $this->testWebformForm();
     $node->webform['roles'] = array(2);
@@ -61,7 +64,7 @@ class WebformPermissionsTestCase extends WebformTestCase {
   }
 
   /**
-   * Create webform
+   * Create webform.
    */
 
 }

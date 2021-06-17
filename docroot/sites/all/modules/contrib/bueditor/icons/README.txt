@@ -1,5 +1,5 @@
 
-All icons in this directory(not including subdirectories) will be avaliable for
+All icons in this directory(not including subdirectories) will be available for
 editors that identify this directory as icon path.
 In editor settings specify icon path as:
 %BUEDITOR/icons.

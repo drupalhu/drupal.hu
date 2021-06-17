@@ -40,6 +40,21 @@ in that position. If the query is sorted in this way, then the
 random sort, as an associative array with any of the following keys:
 - seed: A numeric seed value to use for the random sort.
 
+"BETWEEN operator" feature
+--------------------------
+This module defines the "BETWEEN operator" feature (feature key:
+"search_api_between") that adds the "BETWEEN" and "NOT BETWEEN" filter
+operators to search queries. If your search server supports this feature, you
+can use the "Is between" and "Is not between" operators when adding Views
+filters for numeric, string or date types.
+
+For developers:
+A service class that wants to support this feature has to accept "BETWEEN" and
+"NOT BETWEEN" as additional $operator values in query conditions. The value in
+both cases is an array with the keys 0 and 1, with the value under key 0 being
+the lower and the value under key 1 being the upper bound for the range in which
+the field's value should ("BETWEEN") or should not ("NOT BETWEEN") be.
+
 "Facets block" display
 ----------------------
 Most features should be clear to users of Views. However, the module also
@@ -121,6 +136,12 @@ Caution: For letting users use fulltext searches, always use the "Search:
 Fulltext search" filter or contextual filter – using a normal filter on a
 fulltext field won't parse the search keys, which means multiple words will only
 be found when they appear as that exact phrase.
+
+- Preserve facets while using filters
+This is another option under "Advanced" > "Query settings", only available when
+the Search Facets module is installed. When enabled, facet filters are persisted
+when submitting an exposed filters form. When disabled (the default), exposed
+filters will override and reset the selected facet filters.
 
 FAQ: Why „*Indexed* Node“?
 --------------------------

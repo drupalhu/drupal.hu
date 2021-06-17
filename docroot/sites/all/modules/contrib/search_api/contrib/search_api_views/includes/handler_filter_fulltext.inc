@@ -100,6 +100,13 @@ class SearchApiViewsHandlerFilterFulltext extends SearchApiViewsHandlerFilterTex
       return;
     }
 
+    // Don't validate on form reset.
+    if (!empty($form_state['triggering_element'])
+        && !empty($form['reset'])
+        && $form_state['triggering_element']['#value'] === $form['reset']['#value']) {
+      return;
+    }
+
     // We only need to validate if there is a minimum word length set.
     if ($this->options['min_length'] < 2) {
       return;
@@ -121,6 +128,11 @@ class SearchApiViewsHandlerFilterFulltext extends SearchApiViewsHandlerFilterTex
     $words = preg_split('/\s+/', $input);
     $quoted = FALSE;
     foreach ($words as $i => $word) {
+      $word_length = drupal_strlen($word);
+      if (!$word_length) {
+        unset($words[$i]);
+        continue;
+      }
       // Protect quoted strings.
       if ($quoted && $word[strlen($word) - 1] === '"') {
         $quoted = FALSE;
@@ -130,7 +142,7 @@ class SearchApiViewsHandlerFilterFulltext extends SearchApiViewsHandlerFilterTex
         $quoted = TRUE;
         continue;
       }
-      if (drupal_strlen($word) < $this->options['min_length']) {
+      if ($word_length < $this->options['min_length']) {
         unset($words[$i]);
       }
     }

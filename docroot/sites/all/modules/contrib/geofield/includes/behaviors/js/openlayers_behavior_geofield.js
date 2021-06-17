@@ -36,7 +36,7 @@ OpenLayers.Control.GeofieldEditingToolbar = OpenLayers.Class(
               if (this.feature && OpenLayers.Util.indexOf(this.deleteCodes, evt.keyCode) > -1) {
                 // We must unselect the feature before we delete it
                 var feature_to_delete = this.feature;
-                this.unselectFeature();
+                this.selectControl.unselectAll();
                 this.layer.removeFeatures([feature_to_delete]);
               }
             }

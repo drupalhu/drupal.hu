@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
  * Stub file for bootstrap_form_element().
  */
+
+/* @noinspection PhpDocMissingThrowsInspection */
 
 /**
  * Returns HTML for a form element.
@@ -55,10 +58,12 @@
  *
  * @ingroup theme_functions
  */
-function bootstrap_form_element(&$variables) {
+function bootstrap_form_element(array &$variables) {
   $element = &$variables['element'];
   $name = !empty($element['#name']) ? $element['#name'] : FALSE;
   $type = !empty($element['#type']) ? $element['#type'] : FALSE;
+  $wrapper = isset($element['#form_element_wrapper']) ? !!$element['#form_element_wrapper'] : TRUE;
+  $form_group = isset($element['#form_group']) ? !!$element['#form_group'] : $wrapper && $type && $type !== 'hidden';
   $checkbox = $type && $type === 'checkbox';
   $radio = $type && $type === 'radio';
 
@@ -75,12 +80,12 @@ function bootstrap_form_element(&$variables) {
   );
 
   // Add wrapper ID for 'item' type.
-  if ($type && $type === 'item' && !empty($element['#markup']) && !empty($element['#id'])) {
+  if ($type && $type === 'item' && isset($element['#markup']) && !empty($element['#id'])) {
     $wrapper_attributes['id'] = $element['#id'];
   }
 
   // Check for errors and set correct error class.
-  if ((isset($element['#parents']) && form_get_error($element)) || (!empty($element['#required']) && bootstrap_setting('forms_required_has_error'))) {
+  if ((isset($element['#parents']) && form_get_error($element) !== NULL) || (!empty($element['#required']) && (!isset($element['#value']) || $element['#value'] === '') && bootstrap_setting('forms_required_has_error'))) {
     $wrapper_attributes['class'][] = 'has-error';
   }
 
@@ -104,24 +109,25 @@ function bootstrap_form_element(&$variables) {
   if ($checkbox || $radio) {
     $wrapper_attributes['class'][] = drupal_html_class($type);
   }
-  elseif ($type && $type !== 'hidden') {
+  elseif ($form_group) {
     $wrapper_attributes['class'][] = 'form-group';
   }
 
   // Create a render array for the form element.
   $build = array(
-    '#theme_wrappers' => array('container__form_element'),
+    '#form_group' => $form_group,
     '#attributes' => $wrapper_attributes,
   );
 
-  // Render the label for the form element.
-  $build['label'] = array(
-    '#markup' => theme('form_element_label', $variables),
-  );
+  if ($wrapper) {
+    $build['#theme_wrappers'] = array('container__form_element');
 
-  // Increase the label weight if it should be displayed after the element.
-  if ($element['#title_display'] === 'after') {
-    $build['label']['#weight'] = 10;
+    // Render the label for the form element.
+    /* @noinspection PhpUnhandledExceptionInspection */
+    $build['label'] = array(
+      '#markup' => theme('form_element_label', $variables),
+      '#weight' => $element['#title_display'] === 'before' ? 0 : 2,
+    );
   }
 
   // Checkboxes and radios render the input element inside the label. If the
@@ -149,6 +155,7 @@ function bootstrap_form_element(&$variables) {
       '#markup' => $element['#children'],
       '#prefix' => !empty($prefix) ? $prefix : NULL,
       '#suffix' => !empty($suffix) ? $suffix : NULL,
+      '#weight' => 1,
     );
   }
 
@@ -159,7 +166,7 @@ function bootstrap_form_element(&$variables) {
       '#attributes' => array(
         'class' => array('help-block'),
       ),
-      '#weight' => 20,
+      '#weight' => isset($element['#description_display']) && $element['#description_display'] === 'before' ? 0 : 20,
       0 => array('#markup' => filter_xss_admin($element['#description'])),
     );
   }

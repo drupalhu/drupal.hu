@@ -326,3 +326,21 @@ function _geshifilter_language_css_path($dironly = FALSE) {
   $directory = file_default_scheme() . '://geshi';
   return $dironly ? $directory : $directory .'/geshifilter-languages.css';
 }
+
+function geshifilter_filter_admin_form_submit($form, &$form_state) {
+  if (isset($form_state['values']['filters']['geshifilter']['settings'])) {
+    $values = $form_state['values']['filters']['geshifilter']['settings'];
+    $f = $form_state['values']['format'];
+    variable_set("geshifilter_tags_{$f}", $values['general_tags']["geshifilter_tags_{$f}"]);
+    variable_set("geshifilter_tag_styles_{$f}", $values['general_tags']["geshifilter_tag_styles_{$f}"]);
+    $languages = $values['per_language_settings']['table']['languages'];
+    foreach($languages as $key => $value) {
+      variable_set("geshifilter_language_tags_{$key}_{$f}", $value["geshifilter_language_tags_{$key}_{$f}"]);
+    }
+  }
+}
+
+function geshifilter_form_filter_admin_format_form_alter(&$form, &$form_state, $form_id) {
+  $form['#submit'][] = 'geshifilter_filter_admin_form_submit';
+  $form['#validate'][] = 'geshifilter_per_filter_language_settings_validate';
+}
