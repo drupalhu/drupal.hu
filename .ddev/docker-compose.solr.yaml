@@ -1,0 +1,97 @@
+# DDev Apache Solr recipe file.
+#
+# @link https://ddev.readthedocs.io/en/latest/users/extend/additional-services/
+# @link https://github.com/drud/ddev/blob/8e0f758ebf80be4cf0aa9c8bc0bd7c8f93f23d36/pkg/servicetest/testdata/TestServices/docker-compose.solr.yaml
+# @link https://mglaman.dev/blog/using-multiple-solr-cores-ddev
+
+version: '3.6'
+
+services:
+  # This links the Solr service to the web service defined in the main
+  # docker-compose.yml, allowing applications running inside the web container to
+  # access the Solr service at http://solr:8983
+  web:
+    links:
+      - 'solr:solr'
+
+  solr:
+    container_name: 'ddev-${DDEV_SITENAME}-solr'
+
+    env_file:
+      - '.env'
+
+    external_links:
+      - 'ddev-router:${DDEV_SITENAME}.${DDEV_TLD}'
+
+    restart: 'no'
+
+    # The solr docker image is at https://hub.docker.com/_/solr/
+    # and code at https://github.com/docker-solr/docker-solr
+    # README: https://github.com/docker-solr/docker-solr/blob/master/README.md
+    # It's almost impossible to work with it if you don't read the docs there.
+    image: 'solr:8'
+
+    volumes:
+      # Standard ddev mount point.
+      #- '.:/mnt/ddev_config'
+      #
+      # Only the core configurations are needed.
+      - '../sites/default/solr/cores:/mnt/ddev_config/solr/cores'
+
+      # solr core *data* is stored on the 'solr' docker volume
+      # This mount is optional; without it your search index disappears
+      # each time the ddev project is stopped and started.
+      - 'solr:/var/solr'
+
+      # This mounts the conf in .ddev/solr into the container where
+      # the solr-precreate command in the entrypoint uses it as a one-time
+      # configuration to copy config into the newly-created core. It is not
+      # used if the core has previously been created.
+      #
+      # @todo Actually the standard /mnt/ddev_config mount point makes this unnecessary.
+      #- './solr:/solr-conf'
+
+      # The solr-configupdate.sh script copies fresh configuration files into
+      # the solr container on each startup, so if you change the config in
+      # .ddev/solr/conf it will be refreshed on `ddev start`.
+      # The file must be executable (`chmod +x .ddev/solr/solr-configupdate.sh`)
+      - './solr/solr-configupdate.sh:/docker-entrypoint-initdb.d/solr-configupdate.sh'
+
+    environment:
+      # This defines the host name the service should be accessible from.
+      # This will be sitename.ddev.site.
+      VIRTUAL_HOST: '${DDEV_HOSTNAME}'
+
+      # HTTP_EXPOSE exposes http traffic from the container port 8983
+      # to the host port 8983 vid ddev-router reverse proxy.
+      HTTP_EXPOSE: '${APP_SOLR_HOST_HTTP_PORT:-8983}:8983'
+
+      # HTTPS_EXPOSE exposes https traffic from the container port 8983
+      # to the host port 8984 vid ddev-router reverse proxy.
+      HTTPS_EXPOSE: '${APP_SOLR_HOST_HTTPS_PORT:-8984}:8983'
+
+    # @todo For some reason the `dev` core is always exists.
+    # It would be good to fully understood how the configuration process works.
+    #entrypoint: [ 'sh', '-c', 'docker-entrypoint.sh solr-precreate dev /solr-conf' ]
+    command: >-
+      bash -e -c "
+      for core_name in \"$$(find '/mnt/ddev_config/solr/cores' -mindepth 1 -maxdepth 1 -type 'd' -printf '%f ')\";
+      do precreate-core $$core_name /mnt/ddev_config/solr/cores/$$core_name/conf;
+      done;
+      solr-foreground;
+      "
+
+    # Solr is served from this port inside the container.
+    ports:
+      - 8983
+
+    labels:
+      # These labels ensure this service is discoverable by ddev.
+      com.ddev.site-name: '${DDEV_SITENAME}'
+      com.ddev.approot: '${DDEV_APPROOT}'
+
+volumes:
+  # solr is a persistent Docker volume for solr data.
+  # The persistent volume should have the same name as the service so it can be deleted
+  # when the project is deleted.
+  solr: ~

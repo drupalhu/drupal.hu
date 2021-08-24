@@ -14,12 +14,12 @@
     },
     "repositories": {
         "sweetchuck/dtt-core": {
-            "type": "path",
-            "url": "../../sweetchuck/dtt-core-9.x"
+            "type": "git",
+            "url": "https://github.com/Sweetchuck/dtt-core.git"
         },
         "sweetchuck/dtt-entity_legal": {
-            "type": "path",
-            "url": "../../sweetchuck/dtt-entity_legal-3.0.x"
+            "type": "git",
+            "url": "https://github.com/Sweetchuck/dtt-entity_legal.git"
         },
         "drupal/marvin": {
             "type": "git",
@@ -128,7 +128,7 @@
             "@reset:db"
         ],
         "reset:search": [
-            "drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
+            "[ \"$(drush --config=drush @app.local status --no-ansi --fields=bootstrap --format=string)\" = \"Successful\" ] && drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
         ],
         "reset:cache": [
             "drush --config=drush --yes @app.local cache:rebuild"
@@ -322,26 +322,6 @@
                     "config": {
                         "parents": ["repositories"],
                         "items": {
-                            "sweetchuck/dtt-core": {
-                                "type": "path",
-                                "url": "../../sweetchuck/dtt-core-9.x",
-                                "options": {
-                                    "repo-path": {
-                                        "url": "https://github.com/Sweetchuck/dtt-core.git",
-                                        "branch": "9.x"
-                                    }
-                                }
-                            },
-                            "sweetchuck/dtt-entity_legal": {
-                                "type": "path",
-                                "url": "../../sweetchuck/dtt-entity_legal-3.0.x",
-                                "options": {
-                                    "repo-path": {
-                                        "url": "https://github.com/Sweetchuck/dtt-entity_legal.git",
-                                        "branch": "3.x"
-                                    }
-                                }
-                            },
                             "sweetchuck/lint-report": {
                                 "type": "path",
                                 "url": "../../sweetchuck/lint-report-1.x",
@@ -450,6 +430,26 @@
                     "config": {
                         "parents": ["repositories"],
                         "items": {
+                            "sweetchuck/dtt-core": {
+                                "type": "path",
+                                "url": "../../sweetchuck/dtt-core-9.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/dtt-core.git",
+                                        "branch": "9.x"
+                                    }
+                                }
+                            },
+                            "sweetchuck/dtt-entity_legal": {
+                                "type": "path",
+                                "url": "../../sweetchuck/dtt-entity_legal-3.0.x",
+                                "options": {
+                                    "repo-path": {
+                                        "url": "https://github.com/Sweetchuck/dtt-entity_legal.git",
+                                        "branch": "3.0.x"
+                                    }
+                                }
+                            },
                             "drupal/marvin": {
                                 "type": "path",
                                 "url": "../../drupal/marvin-2.x",

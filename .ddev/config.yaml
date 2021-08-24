@@ -1,0 +1,223 @@
+# This config.yaml was created with ddev version v1.16.7
+
+# The top-level domain used for project URLs
+# The default "ddev.site" allows DNS lookup via a wildcard
+# If you prefer you can change this to "ddev.local" to preserve
+# pre-v1.9 behavior.
+#project_tld: ddev.site
+project_tld: 'hu'
+
+# Name of the project, automatically provides
+# http://projectname.ddev.site and https://projectname.ddev.site
+name: 'local.drupal'
+
+# drupal6/7/8, backdrop, typo3, wordpress, php
+type: 'drupal9'
+
+# Relative path to the directory containing index.php.
+# docroot: <relative_path>
+docroot: 'docroot'
+
+# PHP version to use, "5.6", "7.0", "7.1", "7.2", "7.3", "7.4" "8.0"
+php_version: '7.4'
+
+# webserver_type: nginx-fpm  # or apache-fpm
+webserver_type: 'nginx-fpm'
+
+# Port to be used for http (defaults to port 80)
+#router_http_port: 80
+
+# Port for https (defaults to 443)
+#router_https_port: 443
+
+# Set to true to enable xdebug and "ddev start" or "ddev restart"
+# Note that for most people the commands
+# "ddev xdebug" to enable xdebug and "ddev xdebug off" to disable it work better,
+# as leaving xdebug enabled all the time is a big performance hit.
+xdebug_enabled: false
+
+# Would provide http and https URLs for "somename.ddev.site"
+# and "someothername.ddev.site".
+additional_hostnames: []
+
+# Would provide http and https URLs for "example.com" and "sub1.example.com"
+# Please take care with this because it can cause great confusion.
+#additional_fqdns:
+#  - example.com
+#  - sub1.example.com
+additional_fqdns: []
+
+# ddev can use many versions of mariadb and mysql
+# However these directives are mutually exclusive
+#mariadb_version: 10.2
+#mysql_version: 8.0
+mariadb_version: '10.3'
+mysql_version: ''
+
+# Currently either "default" or "pantheon"
+provider: 'default'
+
+# If the host has internet access and the domain configured can
+# successfully be looked up, DNS will be used for hostname resolution
+# instead of editing /etc/hosts
+# Defaults to true
+use_dns_when_possible: true
+
+# if composer_version:"" it will use the current ddev default composer release.
+# It can also be set to "1", to get most recent composer v1
+# or "2" for most recent composer v2.
+# It can be set to any existing specific composer version.
+# After first project 'ddev start' this will not be updated until it changes
+composer_version: '2'
+
+# You can explicitly specify the webimage, dbimage, dbaimage lines,
+# but this is not recommended,
+# as the images are often closely tied to ddev's' behavior,
+# so this can break upgrades.
+#
+# However we do not recommend explicitly wiring these images into the
+# config.yaml as they may break future versions of ddev.
+# You can update this config.yaml using 'ddev config'.
+#webimage: drud/ddev-webserver:v1.16.7
+#dbimage: drud/ddev-dbserver-mariadb-10.2:v1.16.0
+#dbaimage: phpmyadmin:5
+
+# This is the timezone used in the containers and by PHP;
+# it can be set to any valid timezone,
+# see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# For example Europe/Dublin or MST7MDT
+timezone: 'Europe/Budapest'
+
+# Would set the destination path for ddev import-files to custom/upload/dir.
+#upload_dir: custom/upload/dir
+
+# Would set the default working directory for the web and db services.
+# These values specify the destination directory for ddev ssh and the
+# directory in which commands passed into ddev exec are run.
+working_dir:
+  web: '/var/www/html'
+  #db: '/home'
+
+# Currently only these containers are supported. Some containers can also be
+# omitted globally in the ~/.ddev/global_config.yaml. Note that if you omit
+# the "db" container, several standard features of ddev that access the
+# database container will be unusable.
+#omit_containers: [db, dba, ddev-ssh-agent]
+
+nfs_mount_enabled: true
+# Great performance improvement but requires host configuration first.
+# See https://ddev.readthedocs.io/en/stable/users/performance/#using-nfs-to-mount-the-project-into-the-container
+
+# The host port binding for https can be explicitly specified. It is
+# dynamic unless otherwise specified.
+# This is not used by most people, most people use the *router* instead
+# of the localhost port.
+#host_https_port: "59002"
+
+# The host port binding for the ddev-webserver can be explicitly specified. It is
+# dynamic unless otherwise specified.
+# This is not used by most people, most people use the *router* instead
+# of the localhost port.
+#host_webserver_port: "59001"
+
+# The host port binding for the ddev-dbserver can be explicitly specified. It is dynamic
+# unless explicitly specified.
+#host_db_port: "59002"
+
+# The PHPMyAdmin ports can be changed from the default 8036 and 8037
+#phpmyadmin_port: 8036
+#phpmyadmin_https_port: 8037
+
+# The MailHog ports can be changed from the default 8025 and 8026
+#mailhog_port: 8025
+
+#mailhog_https_port: 8026
+
+# Extra Debian packages that are needed in the webimage can be added here
+#webimage_extra_packages:
+#  - 'php7.3-tidy'
+#  - 'php-bcmath'
+webimage_extra_packages:
+  - 'php7.4-imagick'
+  - 'zsh'
+  - 'fzf'
+  - 'build-essential'
+  - 'libsass1'
+  - 'libsass-dev'
+
+# Extra Debian packages that are needed in the dbimage can be added here
+#dbimage_extra_packages:
+#  - 'telnet'
+#  - 'netcat'
+
+# Provide extra flags to the "ngrok http" command, see
+# https://ngrok.com/docs#http or run "ngrok http -h"
+#ngrok_args: --subdomain mysite --auth username:pass
+
+# If true, ddev will not create CMS-specific settings files like
+# Drupal's settings.php/settings.ddev.php or TYPO3's AdditionalSettings.php
+# In this case the user must provide all such settings.
+#disable_settings_management: false
+disable_settings_management: true
+
+# (Experimental) If true, ddev will not mount the project into the web container;
+# the user is responsible for mounting it manually or via a script.
+# This is to enable experimentation with alternate file mounting strategies.
+# For advanced users only!
+#no_project_mount: false
+
+# Many ddev commands can be extended to run tasks before or after the
+# ddev command is executed, for example "post-start", "post-import-db",
+# "pre-composer", "post-composer"
+# See https://ddev.readthedocs.io/en/stable/users/extending-commands/ for more
+# information on the commands that can be extended and the tasks you can define
+# for them. Example:
+#hooks:
+# post-import-db:
+#   - exec: drush cr
+#   - exec: drush updb
+hooks:
+  pre-start:
+    -
+      exec-host: >-
+        [[ -f './.ddev/.env' ]] || cp './.ddev/.env.example' './.ddev/.env'
+    -
+      exec-host: >-
+        bash ./.ddev/commands/host/generate-ddev-config-local.bash;
+    -
+      exec-host: >-
+        bash ./.ddev/commands/host/nfs-setup.bash;
+
+  post-start:
+    -
+      exec: >-
+        bash ./.ddev/commands/web/web-bash-init.bash;
+    -
+      exec: >-
+        mysql \
+          --user='root' \
+          --password='root' \
+          --host='db' \
+          --execute="
+            CREATE DATABASE IF NOT EXISTS \`drupalhu7__default\`;
+            GRANT ALL PRIVILEGES ON drupalhu7__default.* TO 'db'@'%';
+            FLUSH PRIVILEGES;
+          "
+    -
+      exec: >-
+        [ -f "$(composer config vendor-dir)/autoload.php" ]
+        || composer install
+    -
+      exec: >-
+        . ~/.bashrc ;
+        bin/drush --config=drush @app.local -vv marvin:onboarding --url="${DDEV_PRIMARY_URL}"
+    -
+      exec: >-
+        . ~/.bashrc ;
+        bin/drush --config='drush' @app.local marvin:build
+    -
+      # @todo This works only if there is no database table prefix.
+      exec: >-
+        bin/drush --config='drush' @app.local sql:query 'SHOW TABLES;'
+        | grep --perl-regexp '^users\s*$'
+        || composer run site:install:prod:default

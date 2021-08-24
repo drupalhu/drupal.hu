@@ -1,0 +1,13 @@
+
+version: '3.6'
+
+services:
+  web:
+    build:
+      args:
+        APP_NVM_REVISION: '${APP_NVM_REVISION}'
+        APP_NODE_VERSION: '${APP_NODE_VERSION}'
+        APP_NPM_GLOBAL_PACKAGES: '${APP_NPM_GLOBAL_PACKAGES}'
+        APP_YARN_GLOBAL_PACKAGES: '${APP_YARN_GLOBAL_PACKAGES}'
+    env_file:
+      - '.env'

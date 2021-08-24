@@ -16,11 +16,49 @@
  * at the bottom of 'sites/example.com/settings.php'.
  */
 
+/**
+ * @var string $app_root
+ *   Absolute path to the Drupal root.
+ *
+ * @var string $site_path
+ *   Relative path from Drupal root to the sites directory.
+ *   Example: "sites/default".
+ *
+ * @var array $config
+ */
+
+use Drupal\Component\Assertion\Handle;
+
+$is_ddev_on_host = !getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
+$is_ddev_inside = getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
+$is_ddev = $is_ddev_on_host || $is_ddev_inside;
+
 $databases['default']['default']['username'] = '';
 $databases['default']['default']['password'] = '';
 
-$databases['drupalhu7']['default'] = $databases['default']['default'];
-$databases['drupalhu7']['default']['database'] = 'drupalhu7__default';
+$databases['migrate']['default'] = $databases['default']['default'];
+$databases['migrate']['default']['database'] = 'drupalhu7__default';
+
+if ($is_ddev) {
+  $databases['default']['default']['username'] = 'db';
+  $databases['default']['default']['password'] = 'db';
+  $databases['default']['default']['host'] = $is_ddev_inside ? 'db' : '127.0.0.1';
+  $databases['default']['default']['port'] = $is_ddev_inside ? 3306 : 3306;
+  $databases['default']['default']['database'] = 'db';
+
+  $databases['migrate']['default'] = $databases['default']['default'];
+  $databases['migrate']['default']['database'] = 'drupalhu7__default';
+}
+
+$settings['trusted_host_patterns'] = [
+  '^drupalhu9\.localhost$',
+];
+
+if ($is_ddev_inside) {
+  $settings['trusted_host_patterns'][] = '^web$';
+  $settings['trusted_host_patterns'][] = '^' . preg_quote(getenv('DDEV_HOSTNAME')) . '$';
+  $settings['trusted_host_patterns'][] = '^ddev-' . preg_quote(getenv('DDEV_HOSTNAME')) . '-web.ddev_default$';
+}
 
 /**
  * Assertions.
@@ -39,12 +77,12 @@ $databases['drupalhu7']['default']['database'] = 'drupalhu7__default';
  * @see https://wiki.php.net/rfc/expectations
  */
 assert_options(ASSERT_ACTIVE, TRUE);
-\Drupal\Component\Assertion\Handle::register();
+Handle::register();
 
 /**
  * Enable local development services.
  */
-$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
+$settings['container_yamls'][] = "$app_root/$site_path/local.services.yml";
 
 /**
  * Show all error messages, with backtrace information.
@@ -153,16 +191,16 @@ $config['search_api.server.general']['backend'] = 'search_api_solr';
 $config['search_api.server.general']['backend_config']['connector'] = 'standard';
 $config['search_api.server.general']['backend_config']['connector_config'] = [
   'scheme' => 'http',
-  'host' => '127.0.0.1',
-  'port' => 8983,
+  'host' => $is_ddev ? 'solr' : '127.0.0.1',
+  'port' => $is_ddev ? 8983 : 8983,
   'path' => '/',
-  'core' => $databases['default']['default']['database'],
+  'core' => $is_ddev ? 'general' : $databases['default']['default']['database'],
   'timeout' => 5,
   'index_timeout' => 10,
   'optimize_timeout' => 15,
   'finalize_timeout' => 30,
   'commit_within' => 1000,
-  'solr_version' => '7',
+  'solr_version' => '8',
   'http_method' => 'AUTO',
   'jmx' => FALSE,
   'solr_install_dir' => '',

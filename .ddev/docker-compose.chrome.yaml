@@ -1,0 +1,102 @@
+##
+# @link https://github.com/drud/ddev-contrib/blob/master/docker-compose-services/headless-chrome
+##
+
+version: '3.6'
+
+services:
+  web:
+    links:
+      - 'chrome:chrome'
+
+  chrome:
+    container_name: 'ddev-${DDEV_SITENAME}-chrome'
+
+    external_links:
+      - 'ddev-router:${DDEV_SITENAME}.${DDEV_TLD}'
+
+    restart: 'no'
+
+    image: 'microbox/chromium-headless:88.0.4296.0'
+    entrypoint:
+      - 'chromium'
+    command:
+      # Disable various background network services, including extension updating,
+      # safe browsing service, upgrade detector, translate, UMA.
+      - '--disable-background-networking'
+
+      # Disable installation of default apps on first run.
+      #- '--disable-default-apps'
+
+      # Disable all chrome extensions entirely.
+      #- '--disable-extensions'
+
+      # Disable the GPU hardware acceleration.
+      - '--disable-gpu'
+
+      # Disable syncing to a Google account.
+      - '--disable-sync'
+
+      # Disable built-in Google Translate service
+      - '--disable-translate'
+
+      # Disable cross-origin safeguards.
+      #- '--disable-web-security'
+
+      # Run in headless mode.
+      - '--headless'
+
+      # Hide scrollbars on generated images/PDFs
+      #- '--hide-scrollbars'
+
+      # Disable reporting to UMA, but allows for collection.
+      #- '--metrics-recording-only'
+
+      # Mute audio.
+      - '--mute-audio'
+
+      # Skip first run wizards.
+      - '--no-first-run'
+
+      # Disable sandbox mode.
+      #- '--no-sandbox'
+
+      # Expose port 9222 for remote debugging
+      - '--remote-debugging-port=9222'
+
+      # Set remote debugging address — important, otherwise 'localhost' would be used
+      # which breaks container linking and port expose.
+      - '--remote-debugging-address=0.0.0.0'
+
+      # Disable fetching safebrowsing lists,
+      # likely redundant due to disable-background-networking.
+      #- '--safebrowsing-disable-auto-update'
+
+      # Make use of user data directory.
+      - '--user-data-dir'
+
+      - '--ignore-certificate-errors'
+
+    volumes:
+      # Standard ddev mount point.
+      - '.:/mnt/ddev_config'
+
+    environment:
+      # This defines the host name the service should be accessible from.
+      # This will be sitename.ddev.site.
+      VIRTUAL_HOST: '${DDEV_HOSTNAME}'
+
+      HTTP_EXPOSE: '${APP_CHROME_HOST_HEADLESS_PORT:-9222}:9222'
+
+    ports:
+      - 9222
+
+    labels:
+      # These labels ensure this service is discoverable by ddev.
+      com.ddev.site-name: '${DDEV_SITENAME}'
+      com.ddev.approot: '${DDEV_APPROOT}'
+
+    cap_add:
+      - 'SYS_ADMIN'
+
+    privileged: true

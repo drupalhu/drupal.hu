@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fb30639caaf78979ff1aed9d5b91d39",
+    "content-hash": "d7acb530c08c8a0fe36a697f7ce2a07d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -13831,11 +13831,15 @@
         {
             "name": "sweetchuck/dtt-core",
             "version": "9.x-dev",
-            "dist": {
-                "type": "path",
-                "url": "../../sweetchuck/dtt-core-9.x",
-                "reference": "af95582b732cc3d692a88249ea4288f61339fcb5"
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sweetchuck/dtt-core.git",
+                "reference": "bd8f25a4667b9183cb57d259b8d5f608f0818b75"
             },
+            "require": {
+                "php": ">=7.4"
+            },
+            "default-branch": true,
             "type": "drupal-dtt",
             "autoload": {
                 "psr-4": {
@@ -13866,18 +13870,17 @@
                 "source": "https://github.com/Sweetchuck/dtt-core",
                 "issues": "https://github.com/Sweetchuck/dtt-core/issues"
             },
-            "transport-options": {
-                "relative": true
-            }
+            "time": "2021-08-24T18:00:26+00:00"
         },
         {
             "name": "sweetchuck/dtt-entity_legal",
             "version": "3.0.x-dev",
-            "dist": {
-                "type": "path",
-                "url": "../../sweetchuck/dtt-entity_legal-3.0.x",
-                "reference": "942602471b27f46341892ff506a4b97e53144f9b"
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sweetchuck/dtt-entity_legal.git",
+                "reference": "1ad5ff9ef53ff2557bdfd2f3b1258268a6b9253d"
             },
+            "default-branch": true,
             "type": "drupal-dtt",
             "autoload": {
                 "psr-4": {
@@ -13908,9 +13911,7 @@
                 "source": "https://github.com/Sweetchuck/dtt-entity_legal",
                 "issues": "https://github.com/Sweetchuck/dtt-entity_legal/issues"
             },
-            "transport-options": {
-                "relative": true
-            }
+            "time": "2021-08-25T16:37:08+00:00"
         },
         {
             "name": "sweetchuck/git-hooks-stdinput-reader",
