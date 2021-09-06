@@ -47,13 +47,13 @@
       &:focus {
         // sass-lint:disable-block indentation
         box-shadow:
-          inset $focus-width $focus-width    0 0 $focus-color,
-          inset 0           0 - $focus-width 0 0 $focus-color;
+          inset $focus-width $focus-width     0 0 $focus-color,
+          inset 0            0 - $focus-width 0 0 $focus-color;
       }
     }
   }
 
-  > .modules-tabs__menu-item.is-next {
+  > .modules-tabs__menu-item.is-next  {
     border-top-right-radius: $border-radius;
 
     a {

@@ -40,6 +40,8 @@
 /vendor/
 
 /behat.local.yml
+/behat.local.*.yml
+!/behat.local.example.yml
 
 /composer.local.example.lock
 /composer.local.json

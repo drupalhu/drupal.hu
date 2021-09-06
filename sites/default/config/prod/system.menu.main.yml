@@ -6,5 +6,5 @@ _core:
   default_config_hash: Q2Ra3jfoIVk0f3SjxJX61byRQFVBAbpzYDQOiY-kno8
 id: main
 label: 'Fő navigáció'
-description: 'Oldalszekció hivatkozások'
+description: 'Webhely alegységeire mutató hivatkozások'
 locked: true

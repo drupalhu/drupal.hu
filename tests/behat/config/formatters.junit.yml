@@ -2,4 +2,4 @@
 default:
   formatters:
     junit:
-      output_path: '%paths.base%/reports/machine/junit/behat'
+      output_path: '%paths.base%/reports/machine/result/behat'

@@ -11,10 +11,12 @@ rules:
   border-zero: 1
   class-name-format:
     - 0
-    - convention: hyphenatedbem
+    -
+      convention: hyphenatedbem
   empty-line-between-blocks:
     - 2
-    - ignore-single-line-rulesets: true
+    -
+      ignore-single-line-rulesets: true
   extends-before-declarations: 0
   extends-before-mixins: 0
   final-newline:
@@ -25,27 +27,34 @@ rules:
   force-pseudo-nesting: 0
   function-name-format:
     - 2
-    - convention: hyphenatedlowercase
+    -
+      convention: hyphenatedlowercase
   hex-length:
     - 2
-    - style: long
+    -
+      style: long
   hex-notation:
     - 2
-    - style: lowercase
+    -
+      style: lowercase
   no-ids:
     - 1
   id-name-format:
     - 1
-    - convention: hyphenatedbem
+    -
+      convention: hyphenatedbem
   indentation:
     - 2
-    - size: 2
+    -
+      size: 2
   leading-zero:
     - 2
-    - include: true
+    -
+      include: true
   mixin-name-format:
     - 2
-    - convention: hyphenatedlowercase
+    -
+      convention: hyphenatedlowercase
   mixins-before-declarations: 2
   no-color-keywords: 2
   no-css-comments: 1
@@ -56,17 +65,20 @@ rules:
   no-mergeable-selectors: 2
   no-misspelled-properties:
     - 1
-    - extra-properties: []
+    -
+      extra-properties: []
   no-qualifying-elements: 0
   no-trailing-zero: 2
   no-url-protocols: 1
   placeholder-in-extend: 1
   placeholder-name-format:
     - 1
-    - convention: hyphenatedbem
+    -
+      convention: hyphenatedbem
   property-sort-order:
     - 2
-    - order:
+    -
+      order:
         - content
         - quotes
         - display
@@ -276,7 +288,8 @@ rules:
 
   quotes:
     - 2
-    - style: double
+    -
+      style: double
   shorthand-values: 1
   single-line-per-selector: 2
   space-after-colon: 2
@@ -285,13 +298,16 @@ rules:
   space-before-colon: 2
   space-between-parens:
     - 2
-    - include: false
+    -
+      include: false
   url-quotes: 2
   variable-name-format:
     - 2
-    - convention: hyphenatedlowercase
+    -
+      convention: hyphenatedlowercase
   zero-unit: 2
   nesting-depth:
     - 1
-    - max-depth: 5
+    -
+      max-depth: 5
   no-color-literals: 2

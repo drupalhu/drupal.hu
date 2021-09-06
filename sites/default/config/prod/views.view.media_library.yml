@@ -26,7 +26,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Default
+    display_title: Alapértelmezés
     position: 0
     display_options:
       access:
@@ -49,11 +49,11 @@ display:
         options:
           submit_button: 'Szűrők alkalmazása'
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: false
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növ
+          sort_desc_label: Csökk
       pager:
         type: mini
         options:
@@ -63,12 +63,12 @@ display:
           total_pages: null
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Elemek száma oldalanként'
             items_per_page_options: '6, 12, 24, 48'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '– Mind –'
             offset: false
-            offset_label: Offset
+            offset_label: Eltolás
           tags:
             previous: ‹‹
             next: ››
@@ -403,7 +403,7 @@ display:
   page:
     display_plugin: page
     id: page
-    display_title: Page
+    display_title: Oldal
     position: 1
     display_options:
       display_extenders: {  }

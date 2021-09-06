@@ -119,7 +119,7 @@
             "rm -rf docroot/themes/custom/*/**/*.css.map"
         ],
         "clean:translations": [
-            "git clean -X -f -- 'sites/all/translations/*.po'"
+            "git clean -X --force -- 'sites/all/translations/*.po'"
         ],
         "reset": [
             "@reset:search",
@@ -131,7 +131,7 @@
             "[ \"$(drush --config=drush @app.local status --no-ansi --fields=bootstrap --format=string)\" = \"Successful\" ] && drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
         ],
         "reset:cache": [
-            "drush --config=drush --yes @app.local cache:rebuild"
+            "drush --config=drush --yes @app.local cache:rebuild || true"
         ],
         "reset:files": [
             "rm -rf docroot/sites/*/files/*",
@@ -187,13 +187,21 @@
         ]
     },
     "scripts-descriptions": {
-        "clean": "<fg=yellow>Deletes</> all the third-party codes downloaded by the used <info>package managers</>.",
-        "clean:backend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <info>Composer</>.",
-        "clean:frontend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <info>Yarn</>.",
-        "clean:translations": "<fg=yellow>Deletes</> all the <info>*.po files</> which are belong to third-party codes.",
-        "reset": "<fg=red>Drops</> the <info>default database</> and <fg=red>deletes</> the uploaded <info>files</> (public and private).",
-        "reset:files": "<fg=red>Deletes</> the uploaded <info>files</> (public and private).",
-        "reset:db": "<fg=red>Drops</> the <info>default database</>."
+        "clean": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>package managers</>.",
+        "clean:backend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>Composer</>.",
+        "clean:frontend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>Yarn</>.",
+        "clean:translations": "<fg=yellow>Deletes</> all the <fg=cyan>*.po files</> which are belong to third-party codes.",
+        "reset": "<fg=red>Deletes</> all content from all data storage (database, cache, solr, public|pivate|temporary|php_storage files).",
+        "reset:search": "<fg=red>Deletes</> all content from <fg=cyan>Solr indexes</>.",
+        "reset:cache": "<fg=red>Deletes</> all content from <fg=cyan>cache</> storages.",
+        "reset:files": "<fg=red>Deletes</> all the uploaded <fg=cyan>files</> (public|pivate|temporary|php_storage files).",
+        "reset:db": "<fg=red>Drops</> the <fg=cyan>default database</>.",
+        "site:install:prod:empty": "drush site:install – without any required content (the site won't work properly).",
+        "site:install:prod:default": "drush site:install – with minimum required content.",
+        "site:install:prod:dummy": "drush site:install – with minimum required content and with the developer helper dummy contents.",
+        "site:install:local:empty": "drush site:install – same as 'prod' but the developer helper modules are enabled.",
+        "site:install:local:default": "drush site:install – same as 'prod' but the developer helper modules are enabled",
+        "site:install:local:dummy": "drush site:install – same as 'prod' but the developer helper modules are enabled."
     },
     "extra": {
         "installer-types": [

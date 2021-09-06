@@ -39,8 +39,8 @@
   </listeners>
 
   <logging>
-    <testdoxHtml outputFile="reports/human/junit/phpunit.html" />
-    <junit outputFile="reports/machine/junit/phpunit.xml" />
+    <testdoxHtml outputFile="reports/human/result/phpunit.html" />
+    <junit outputFile="reports/machine/result/phpunit.xml" />
   </logging>
 
   <coverage processUncoveredFiles="true">
@@ -62,9 +62,10 @@
 
     <report>
       <text outputFile="php://stdout" />
-      <clover outputFile="reports/machine/coverage/phpunit.xml" />
-      <html outputDirectory="reports/human/coverage/html" />
-      <xml outputDirectory="reports/machine/coverage/xml" />
+      <html outputDirectory="reports/human/coverage/phpunit.html" />
+      <clover outputFile="reports/machine/coverage/phpunit.clover.xml" />
+      <php outputFile="reports/machine/coverage/phpunit.php" />
+      <xml outputDirectory="reports/machine/coverage/phpunit.xml" />
     </report>
   </coverage>
 </phpunit>

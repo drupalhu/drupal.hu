@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('node-sass'));
 const sassLint = require('gulp-sass-lint');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
@@ -22,6 +22,7 @@ function taskLintSass() {
     .pipe(sassLint.format())
     .pipe(sassLint.failOnError());
 }
+taskLintSass.description = 'Lint *.scss and *.sass files';
 
 function taskBuildSass() {
   return gulp
@@ -39,6 +40,7 @@ function taskBuildSass() {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(config.paths.sass.dest))
 }
+taskBuildSass.description = 'Compiles *.scss files into *.css files.'
 
 function taskServe() {
   browserSync.init(config.browserSync.options);
@@ -50,13 +52,16 @@ function taskServe() {
     )
     .on('change', browserSync.reload)
 }
+taskServe.description = 'File watcher and browser sync.'
 
-gulp.task('lint', gulp.parallel(taskLintSass));
+const taskLint = gulp.parallel(taskLintSass);
+taskLint.description = 'Runs all lint:* tasks.';
 
+const taskBuild = gulp.parallel(taskBuildSass);
+taskBuild.description = 'Runs all build:* tasks.';
+
+gulp.task('lint', taskLint);
 gulp.task('lint:sass', taskLintSass);
-
-gulp.task('build', gulp.parallel(taskBuildSass));
-
+gulp.task('build', taskBuild);
 gulp.task('build:sass', taskBuildSass);
-
 gulp.task('serve', taskServe);

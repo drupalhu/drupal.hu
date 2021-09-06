@@ -1,14 +1,24 @@
 version: 2.1
 
+orbs:
+  codecov: 'codecov/codecov@3.0.0'
+
 .env_common: &env_common
   BASH_ENV: '/root/.bashrc'
 
+.env_composer: &env_composer
   COMPOSER_NO_INTERACTION: '1'
   COMPOSER_MEMORY_LIMIT: '-1'
+  COMPOSER_CACHE_DIR: '/root/.cache/composer'
 
+.env_drush: &env_drush
   DRUSH_OPTIONS_PROGRESS_DELAY: '9999'
   DRUSH_OPTIONS_NO_INTERACTION: '1'
 
+.env_node: &env_node
+  YARN_CACHE_FOLDER: '/root/.cache/yarn/v6'
+
+.env_app: &env_app
   appDrushExecutable: 'bin/drush --config=drush'
   appDrushSiteAlias: '@app.local'
   appDocroot: 'docroot'
@@ -16,131 +26,111 @@ version: 2.1
 
   appChromiumHostPort: 'localhost:9222'
 
+  appSolrRootPassword: 'root'
+
+  XDEBUG_MODE: 'coverage'
+  COLUMN: '110'
+
+
 .env_mysql: &env_mysql
+  MYSQL_ROOT_HOST: '%'
+  MYSQL_ROOT_PASSWORD: 'root'
   MYSQL_USER: 'drupalhu'
   MYSQL_PASSWORD: 'drupalhu'
-  MYSQL_HOST: 'database'
+  MYSQL_HOST: '127.0.0.1'
   MYSQL_PORT: '3306'
   MYSQL_DATABASE: 'drupalhu__default'
-  MYSQL_ROOT_PASSWORD: 'root'
+  appMysqlHost: 'database'
 
 
 executors:
-  php703:
-    environment:
-      <<: *env_common
-
+  php_min:
     docker:
-      -
+      - &docker_container_main
         name: 'main'
-        image: 'sweetchuck/php-env-dev:703-12.x.x'
+        image: 'sweetchuck/php-env-dev:7.4.23-n141701-20210914'
+        environment:
+          <<: *env_common
+          <<: *env_composer
+          <<: *env_drush
+          <<: *env_node
+          <<: *env_app
+          <<: *env_mysql
         entrypoint: ['/bin/bash']
 
-  php703-mysql506:
-    environment:
-      <<: *env_common
-      <<: *env_mysql
-
+  php_min_with_services:
     docker:
-      -
-        image: 'sweetchuck/php-env-dev:703-12.x.x'
-        entrypoint: ['/bin/bash']
-      -
+      - *docker_container_main
+      - &docker_container_database
         name: 'database'
-        image: 'mysql:5.6.45'
+        image: 'mysql:5.7.34'
         environment:
           <<: *env_mysql
+      - &docker_container_solr
+        name: 'solr'
+        image: 'sweetchuck/solr:7.7.3'
 
 commands:
-  init_git_identity:
-    description: 'Set global Git config user.{email,name}'
+  git_config:
+    description: 'Git config'
     steps:
       -
         run:
-          name: 'Set global Git config user.{email,name}'
+          name: 'Git config – user.{email,name}'
           command: |-
             git config --global user.email 'circleci@drupal.hu'
             git config --global user.name  "CircleCI ${CIRCLE_USERNAME}"
 
-  php_cli_enable_xdebug:
-    description: 'PHP CLI - enable xdebug'
-    steps:
-      -
-        run:
-          name: 'PHP CLI - enable xdebug'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appPhpCliExtensionEnable 'xdebug'
-
-  php_cli_disable_xdebug:
-    description: 'PHP CLI - disable xdebug'
-    steps:
-      -
-        run:
-          name: 'PHP CLI - disable xdebug'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appPhpCliExtensionDisable 'xdebug'
-
   composer_install:
-    description: 'Install Composer dependencies with cache restore and save'
+    description: 'Composer install'
     steps:
       -
         restore_cache:
-          name: 'Composer - cache restore'
+          name: 'Composer install – cache restore'
           keys:
-            - 'composer-{{ checksum "./composer.lock" }}-2'
+            - 'composer-{{ checksum "./composer.lock" }}-3'
 
       -
         run:
-          name: 'Composer - install'
+          name: 'Composer install – execute'
           command: >
-            [[ -d "$(composer config vendor-dir)" ]] || composer install --no-progress
+            composer install --no-progress
 
       -
         save_cache:
-          name: 'Composer - cache save'
-          key: 'composer-{{ checksum "./composer.lock" }}-2'
+          name: 'Composer install – cache save'
+          key: 'composer-{{ checksum "./composer.lock" }}-3'
           paths:
-            - './bin/'
-            - './docroot/core/'
-            - './docroot/modules/contrib/'
-            - './docroot/themes/contrib/'
-            - './docroot/profiles/contrib/'
-            - './docroot/libraries/'
-            - './drush/Commands/contrib/'
-            - './vendor/'
-            - '~/.composer/cache/'
+            - '/root/.cache/composer/'
 
-  marvin_build:
-    description: 'marvin:build'
+  main_instance_prepare:
+    description: 'Main instance prepare'
     steps:
       -
         run:
-          name: 'Calculate checksum of NPM tools'
+          name: 'Main instance prepare – Calculate checksum of NPM tools'
           command: |-
-            # Collect all the checksum of yarn.lock files in to one file.
+            # Collect all the checksum of yarn.lock files into one file.
             echo -n '' > 'checksum-of-frontend-asset-sources.sha256'
             git ls-files -- '**/yarn.lock' | xargs sha256sum >> 'checksum-of-frontend-asset-sources.sha256'
       -
         restore_cache:
-          name: 'NPM - cache restore'
+          name: 'Main instance prepare – NPM – cache restore'
           keys:
-            - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-1'
+            - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
       -
         run:
-          name: 'drush marvin:build'
+          name: 'Main instance prepare – drush marvin:build'
           command: >
             $appDrushExecutable marvin:build
-
       -
         save_cache:
-          name: 'NPM - cache save'
-          key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-1'
+          name: 'Main instance prepare – NPM – cache save'
+          key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
           paths:
-            - './docroot/themes/custom/appf/node_modules/'
+            - '/root/.cache/yarn/v6'
 
-  marvin_lint:
+  lint:
     description: 'Run linters'
     steps:
       -
@@ -149,26 +139,35 @@ commands:
           command: >-
             $appDrushExecutable marvin:lint
 
-  marvin_test_unit:
-    description: 'Run unit tests'
+  test_unit:
+    description: 'Test – Unit'
     steps:
       -
         run:
-          name: 'Run unit tests'
-          command: >-
-            $appDrushExecutable marvin:test:unit
-      -
-        store_test_results:
-          name: 'Store unit test results'
-          path: './reports/machine/junit'
+          name: 'Test – Unit – php.ini preset – xdebug3'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appPhpCliPresetActivate xdebug3
       -
         run:
-          name: 'Publish the code coverage report on Codecov.io'
-          when: 'always'
-          command: >-
-            [ ! -s reports/machine/coverage/*/coverage.xml ]
-            || bash <(curl -s https://codecov.io/bash)
-            || true
+          name: 'Test – Unit – execute'
+          command: |-
+            export XDEBUG_MODE='coverage'
+            $appDrushExecutable marvin:test:unit
+      -
+        run:
+          name: 'Test – Unit – php.ini preset – prod'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appPhpCliPresetActivate prod
+      -
+        store_test_results:
+          name: 'Test – Unit – Store unit test results'
+          path: './reports/machine/result'
+      -
+        codecov/upload:
+          flags: 'unit'
+          file: './reports/machine/coverage/phpunit.clover.xml'
 
   artifact_acquia_build:
     description: 'Build an Acquia specific release artifact'
@@ -195,202 +194,280 @@ commands:
           name: 'Restore the previously built Acquia artifact'
           at: './artifacts'
 
-  nginx_virtual_host:
-    description: 'Configure Nginx'
+  supervisor_start:
+    description: 'Start supervisor'
     steps:
       -
         run:
-          name: 'Configure Nginx'
+          name: 'Start Supervisor – execute'
+          command: |-
+            supervisord
+            sleep 3
+      # @todo Wait for supervisor.
+
+  mysql_start:
+    description: |-
+      MySQL is already running in another container,
+      but the configuration requires some adjustments.
+    steps:
+      -
+        run:
+          name: 'MySQL – start – wait'
           command: |-
             . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            appNginxVirtualHost "${PWD}/artifacts/${versionNumber}/acquia"
+            appWaitForMysql 'root' "${MYSQL_ROOT_PASSWORD}" "${appMysqlHost}" "${MYSQL_PORT}"
+      -
+        run:
+          name: 'MySQL – start – ~/.my.cnf'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appMysqlPrepareCnf
+      -
+        run:
+          name: 'MySQL – start – create migration source database'
+          command: |-
+            mysql \
+              --execute="
+                CREATE DATABASE migrate /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+                GRANT ALL PRIVILEGES ON migrate.* TO '${MYSQL_USER}'@'%';
+                FLUSH PRIVILEGES;
+                SHOW CREATE DATABASE migrate;
+              "
 
-  supervisor_start:
-    description: 'Start supervisor and wait until the servies are ready'
+  solr_start:
+    description: |-
+      Solr is already running in another container.
+      It has to be properly configured and restarted.
     steps:
       -
         run:
-          name: 'Start Supervisor'
+          name: 'Solr – start – Initialize SSH access to "solr" host'
           command: |-
-            supervisord --configuration /etc/supervisor/supervisor.ini
+            mkdir -p ~/.ssh
+            if ssh-keygen -F 'solr'; then
+                ssh-keygen -R 'solr'
+            fi
+            ssh-keyscan -H 'solr' >> ~/.ssh/known_hosts
       -
         run:
-          name: 'Wait for the headless Chromium'
+          name: 'Solr – start – Configure Solr cores'
+          command: |-
+            sshpass -p "${appSolrRootPassword}" scp -r './sites/default/solr/cores/' 'root@solr:/usr/local/share/solr/server/solr/'
+      -
+        run:
+          name: 'Solr – start – Restart the Solr server'
+          command: |-
+            sshpass -p "${appSolrRootPassword}" ssh 'root@solr' supervisorctl restart solr.07
+      # @todo Wait for the Solr service to be ready.
+
+  phpfpm_start:
+    description: 'PHP-FPM – start'
+    steps:
+      -
+        run:
+          name: 'PHP-FPM – start'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            supervisorctl start "php-fpm.$(appPhpbrewCurrent).prod"
+
+  nginx_start:
+    description: 'Nginx – start'
+    steps:
+      -
+        run:
+          name: 'Nginx – start – configure'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appNginxVirtualHost "${PWD}"
+      -
+        run:
+          name: 'Nginx – start – start'
+          command: |-
+            supervisorctl start nginx
+
+  headless_chromium_start:
+    description: 'Headless chromium – start'
+    steps:
+      -
+        run:
+          name: 'Headless chromium – start'
+          command: |-
+            supervisorctl start chromium.headless.9222
+      -
+        run:
+          name: 'Headless chromium start – Wait for the headless Chromium'
           command: |-
             . ./.circleci/scripts/include.bash
             appWaitForHeadlessChromium "${appChromiumHostPort}"
 
-  marvin_test_behat:
-    description: 'Run Behat tests'
+  artifact_acquia_instance_prepare:
+    description: 'Acquia artifact – prepare'
+    steps:
+      -
+        run:
+          name: 'Acquia artifact – prepare – settings.php'
+          command: |-
+            echo '@todo'
+
+
+  test_behat:
+    description: 'Test – Behat'
     steps:
       -
         attach_workspace:
+          name: ''
           at: './artifacts'
       -
         run:
-          name: 'marvin:onboarding'
+          name: 'Test – Behat – main instance – marvin:onboarding'
           command: |-
             . ./.circleci/scripts/include.bash
 
             appMarvinOnboarding \
               "${PWD}" \
               "${appDrushSiteAlias}"
-
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            appMarvinOnboarding \
-              "${PWD}/artifacts/${versionNumber}/acquia" \
-              "${appDrushSiteAlias}"
       -
         run:
-          name: 'Prepare Behat configuration'
+          name: 'Test – Behat – main instance – settings.php – general'
+          command: |-
+            echo '@todo e.g: thrusted host settings'
+      -
+        run:
+          name: 'Test – Behat – main instance – behat rerun cache directory'
+          command: |-
+            mkdir \
+              --parents \
+              "$(yq eval --no-colors '.default.testers.rerun_cache' './behat.yml' | sed --expression 's@%paths.base%@.@g')"
+      -
+        run:
+          name: 'Test – Behat – Site install'
+          command: |-
+            composer run site:install:prod:default
+      -
+        run:
+          name: 'Test – Behat – Check config status'
           command: |-
             . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            sed \
-              --in-place \
-              --expression "s@%paths.base%/../../@${PWD}/artifacts/${versionNumber}/acquia/@g" \
-              './tests/behat/config/extension.drupal.yml'
 
-            mkdir --parents ./tmp/behat_rerun_cache
+            appCheckConfigStatus "${PWD}/${appDocroot}" '@app.local'
       -
         run:
-          name: 'Site install'
+          name: 'Test – Behat – execute'
           command: |-
-            ${appDrushExecutable} \
-              "${appDrushSiteAlias}" \
-              site:install \
-              --yes \
-              "${appInstallProfileName}" \
-              --locale='hu' \
-              --existing-config \
-              --marvin-migrate='install'
-      -
-        run:
-          name: 'Sync files'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-
-            dstRoot="artifacts/${versionNumber}/acquia"
-
-            srcDir="${appDocroot}/sites/default/files"
-            rsync \
-              --archive \
-              --stats \
-              --recursive \
-              --owner \
-              --group \
-              --perms \
-              --delete \
-              "${srcDir}/" \
-              "${dstRoot}/${srcDir}"
-
-            srcDir="sites/default/private"
-            rsync \
-              --archive \
-              --stats \
-              --recursive \
-              --owner \
-              --group \
-              --perms \
-              --delete \
-              "${srcDir}/" \
-              "${dstRoot}/${srcDir}"
-      -
-        run:
-          name: 'Update translations'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            cd "./artifacts/${versionNumber}/acquia"
-
-            ${appDrushExecutable} \
-              "${appDrushSiteAlias}" \
-              locale:check
-
-            ${appDrushExecutable} \
-              "${appDrushSiteAlias}" \
-              locale:update
-
-            ${appDrushExecutable} \
-              "${appDrushSiteAlias}" \
-              cache:rebuild
-      -
-        run:
-          name: 'Check config status'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            versionNumber="$(appLatestArtifactVersionNumber)"
-            cd "./artifacts/${versionNumber}/acquia"
-
-            configStatus="$(${appDrushExecutable} "${appDrushSiteAlias}" config:status --format=yaml)"
-            echo "${configStatus}"
-            [[ "${configStatus}" == '' ]]
-      -
-        run:
-          name: 'Run Behat tests'
-          command: |-
-            cd tests/behat
-            ../../bin/behat
+            ./bin/behat
       -
         store_artifacts:
-          name: 'Store test reports as artifacts'
+          name: 'Test – Behat – Store test reports as artifacts'
           path: './reports'
           destination: 'reports'
       -
         store_test_results:
-          name: 'Store Behat test results'
-          path: './reports/machine/junit'
+          name: 'Test – Behat – Store Behat test results'
+          path: './reports/machine/result/behat'
+
+  mysql_debug:
+    description: 'MySQL – Debug'
+    steps:
+      -
+        run:
+          name: 'MySQL – Debug – ENV vars'
+          command: |-
+            echo "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${appMysqlHost}:${MYSQL_PORT}/${MYSQL_DATABASE}"
+      -
+        run:
+          name: 'MySQL – Debug – root connection'
+          command: |-
+            mysql \
+              --user='root' \
+              --password="${MYSQL_ROOT_PASSWORD}" \
+              --host="${appMysqlHost}" \
+              --port="${MYSQL_PORT}" \
+              "${MYSQL_DATABASE}" \
+              --execute='SELECT USER(); SHOW DATABASES;'
+      -
+        run:
+          name: 'MySQL – Debug – normal connection'
+          command: |-
+            mysql \
+              --user="${MYSQL_USER}" \
+              --password="${MYSQL_PASSWORD}" \
+              --host="${appMysqlHost}" \
+              --port="${MYSQL_PORT}" \
+              "${MYSQL_DATABASE}" \
+              --execute='SELECT USER(); SHOW DATABASES;'
 
 jobs:
-  qa_lint_unit:
-    executor: 'php703'
+  build:
+    executor: 'php_min'
     working_directory: '~/repo'
     steps:
       - 'checkout'
-      - 'php_cli_disable_xdebug'
       - 'composer_install'
-      - 'marvin_build'
-      - 'marvin_lint'
-      - 'php_cli_enable_xdebug'
-      - 'marvin_test_unit'
-      - 'php_cli_disable_xdebug'
+      - 'main_instance_prepare'
+
+  lint_and_test_unit:
+    executor: 'php_min'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'composer_install'
+      - 'main_instance_prepare'
+      - 'lint'
+      - 'test_unit'
 
   release_artifact_build:
-    executor: 'php703'
+    executor: 'php_min'
     working_directory: '~/repo'
     steps:
       - 'checkout'
-      - 'php_cli_disable_xdebug'
       - 'composer_install'
-      - 'marvin_build'
+      - 'main_instance_prepare'
       - 'artifact_acquia_build'
 
-  qa_behat:
-    executor: 'php703-mysql506'
+  test_behat:
+    executor: 'php_min_with_services'
     working_directory: '~/repo'
     steps:
       - 'checkout'
-      - 'php_cli_disable_xdebug'
+      - 'git_config'
       - 'composer_install'
-      - 'init_git_identity'
+      - 'main_instance_prepare'
       - 'artifact_acquia_restore'
-      - 'nginx_virtual_host'
       - 'supervisor_start'
-      - 'marvin_test_behat'
+      - 'mysql_start'
+      - 'solr_start'
+      - 'phpfpm_start'
+      - 'nginx_start'
+      - 'headless_chromium_start'
+      - 'test_behat'
+
+  mysql_debug:
+    executor: 'php_min_with_services'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'mysql_start'
+      - 'mysql_debug'
 
 workflows:
-  lint_unit_behat:
+  mysql_debug:
+    when: false
+    jobs:
+      - 'mysql_debug'
+
+  lint_and_test:
     jobs:
       -
-        qa_lint_unit:
-          name: 'QA - Lint and Unit tests'
+        build: {}
+      -
+        lint_and_test_unit:
+          requires:
+            - 'build'
       -
         release_artifact_build:
-          name: 'Build - Acquia artifact'
-      -
-        qa_behat:
-          name: 'QA - Behat'
           requires:
-            - 'Build - Acquia artifact'
+            - 'build'
+      -
+        test_behat:
+          requires:
+            - 'build'

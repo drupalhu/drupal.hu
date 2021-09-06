@@ -19,7 +19,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Default
+    display_title: Alapértelmezés
     position: 0
     display_options:
       access:

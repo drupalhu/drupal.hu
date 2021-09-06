@@ -24,7 +24,7 @@
     "configFile": "../appf/.sass-lint.yml"
   },
   "autoprefixer": {
-    "browsers": [
+    "overrideBrowserslist": [
       "Chrome >= 35",
       "Firefox >= 38",
       "Edge >= 12",
