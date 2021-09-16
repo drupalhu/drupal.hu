@@ -11,5 +11,5 @@ echo "alias d='drush --config=drush @app.local'" >> ~/.bash_aliases
 # @todo Read the project root (/var/www/html) from configuration.
 sudo sed \
     --in-place \
-    --expression 's/\/var\/www\/html\/vendor\/bin/\/var\/www\/html\/bin/g' \
+    --expression 's@/var/www/html/vendor/bin@/var/www/html/bin@g' \
     '/etc/bashrc/commandline-addons.bashrc'

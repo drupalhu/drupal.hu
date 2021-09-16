@@ -14,17 +14,19 @@
 /docroot/themes/custom/*/**/*.css.map
 /docroot/themes/custom/*/**/*.css.min.map
 /docroot/themes/custom/*/**/*.min.js
-/docroot/themes/custom/*/gulp.config.local.json
+/docroot/themes/custom/*/gulp.config.*.json
 
 /docroot/sites/simpletest/
 
 /docroot/sites/*/files/
-/docroot/sites/*/settings.local.php
+/docroot/sites/*/settings.*.php
 /docroot/sites/*/local.drush.yml
 /docroot/sites/*/local.services.yml
 
 /drush/Commands/contrib/
-/drush/drush.local.yml
+/drush/drush.*.yml
+!/drush/drush.app.yml
+!/drush/drush.local.example.yml
 
 /sites/all/translations/*
 !/sites/all/translations/app*.po
@@ -39,8 +41,7 @@
 
 /vendor/
 
-/behat.local.yml
-/behat.local.*.yml
+/behat.*.yml
 !/behat.local.example.yml
 
 /composer.local.example.lock
@@ -50,4 +51,6 @@
 /.env
 
 /phpcs.xml
+
 /phpunit.xml
+/phpunit.*.xml

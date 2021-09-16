@@ -43,10 +43,10 @@ Egy terminál ablakban az alábbi parancsok futtatása:
 A legtöbb esetben az alapértelmezett értékek megfelelőek, ezért nincs
 szükség testreszabásra. \
 Azonban ha a host gépen DDev-től függetlenül futnak olyan szolgáltatások,
-amik olyan port szomákoat használnak, amiket a DDev is szeretne – például
-80(http), 443(http), 8025(mailhog) stb – akkor az érintett konténereket
+amik olyan port számokat használnak, amiket a DDev is szeretne – például
+80(http), 443(https), 8025(mailhog) stb – akkor az érintett konténereket
 nem tudja elindítani. \
-Ilyenkor a `./.ddev/config.local.yaml` fájlban illetve a `./.ddev/env`
+Ilyenkor a `./.ddev/config.local.yaml` fájlban, illetve a `./.ddev/.env`
 fájlban kell a megfelelő értékeket beállítani.
 
 Például `./.ddev/config.local.yaml`:

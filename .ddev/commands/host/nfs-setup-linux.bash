@@ -12,7 +12,7 @@ set -o nounset
 
 OS=$(uname -s)
 
-if [ $OS != "Linux" ]; then
+if [ "${OS}" != "Linux" ]; then
     echo "This script is Linux-only and tailored for Debian/Ubuntu. Please do not run it on any other system."
 
     exit 101
@@ -20,7 +20,7 @@ fi
 
 variant=$(lsb_release -a 2>/dev/null | awk -F' *: *' '/Distributor ID/ { print $2 }')
 
-if [ ${variant} != "Debian" ] && [ ${variant} != "Ubuntu" ] ; then
+if [ "${variant}" != "Debian" ] && [ "${variant}" != "Ubuntu" ] ; then
     echo "This script is tailored for Debian/Ubuntu. Please do not run it on any other system. "
     echo "It can easily be tailored for other systems and their nfs requirements"
 
@@ -34,7 +34,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 mkdir -p ~/.ddev
-docker run --rm -t -v /$HOME/.ddev:/tmp/junker99 busybox:latest ls //tmp/junker99 >/dev/null || ( echo "Docker does not seem to be running or functional, please check it for problems" && exit 103)
+docker run --rm -t -v "/${HOME}/.ddev:/tmp/junker99" busybox:latest ls //tmp/junker99 >/dev/null || ( echo "Docker does not seem to be running or functional, please check it for problems" && exit 103)
 
 echo "
 +-------------------------------------------------------------------------+

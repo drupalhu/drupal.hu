@@ -17,12 +17,12 @@ fi
 offset=0
 
 yq_expressions=()
-yq_expressions+=(".router_http_port      = $(( $base + $offset ))"); (( offset+=1 ));
-yq_expressions+=(".router_https_port     = $(( $base + $offset ))"); (( offset+=1 ));
-yq_expressions+=(".mailhog_port          = $(( $base + $offset ))"); (( offset+=1 ));
-yq_expressions+=(".mailhog_https_port    = $(( $base + $offset ))"); (( offset+=1 ));
-yq_expressions+=(".phpmyadmin_port       = $(( $base + $offset ))"); (( offset+=1 ));
-yq_expressions+=(".phpmyadmin_https_port = $(( $base + $offset ))"); (( offset+=1 ));
+yq_expressions+=(".router_http_port      = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".router_https_port     = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".mailhog_port          = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".mailhog_https_port    = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".phpmyadmin_port       = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".phpmyadmin_https_port = $(( base + offset ))"); (( offset+=1 ));
 
 ddev_config_file_name='./.ddev/config.local.yaml'
 if [[ ! -f "${ddev_config_file_name}" ]]; then
@@ -58,10 +58,9 @@ if [[ ! -s "${env_file_name}" ]]; then
 fi
 
 for env_var in "${env_vars[@]}"; do
-    port_number=$(( $base + $offset ))
+    port_number=$(( base + offset ))
 
-    grep "${env_var}" "${env_file_name}" 1>/dev/null
-    if [ $? -eq 0 ]; then
+    if grep "${env_var}" "${env_file_name}" 1>/dev/null; then
         sed \
             --in-place \
             --regexp-extended \

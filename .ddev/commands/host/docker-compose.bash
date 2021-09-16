@@ -7,4 +7,4 @@
 docker-compose \
     --file './.ddev/.ddev-docker-compose-full.yaml' \
     --project-name "ddev-$(ddev describe --json-output | jq -r '.raw.name')" \
-    ${@}
+    "${@}"

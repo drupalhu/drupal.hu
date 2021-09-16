@@ -23,7 +23,7 @@ if [[ "${platform}" = 'linux' ]]; then
         echo '{}' > "${dst_filename}"
     fi
 
-    if [[ "$(yq eval '. | has("foo")' "${dst_filename}")" = 'false' ]]; then
+    if [[ "$(yq eval '. | has("nfs_mount_enabled")' "${dst_filename}")" = 'false' ]]; then
         yq \
             eval \
             '.nfs_mount_enabled = false' \
