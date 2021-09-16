@@ -144,6 +144,7 @@ webimage_extra_packages:
   - 'build-essential'
   - 'libsass1'
   - 'libsass-dev'
+  - 'shellcheck'
 
 # Extra Debian packages that are needed in the dbimage can be added here
 #dbimage_extra_packages:

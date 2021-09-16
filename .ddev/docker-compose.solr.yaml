@@ -74,12 +74,12 @@ services:
     # It would be good to fully understood how the configuration process works.
     #entrypoint: [ 'sh', '-c', 'docker-entrypoint.sh solr-precreate dev /solr-conf' ]
     command: >-
-      bash -e -c "
-      for core_name in \"$$(find '/mnt/ddev_config/solr/cores' -mindepth 1 -maxdepth 1 -type 'd' -printf '%f ')\";
-      do precreate-core $$core_name /mnt/ddev_config/solr/cores/$$core_name/conf;
+      bash -e -c '
+      for core_name in $$(find /mnt/ddev_config/solr/cores -mindepth 1 -maxdepth 1 -type d -printf "%f ");
+      do precreate-core "$${core_name}" "/mnt/ddev_config/solr/cores/$${core_name}/conf";
       done;
       solr-foreground;
-      "
+      '
 
     # Solr is served from this port inside the container.
     ports:

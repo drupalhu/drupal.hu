@@ -74,7 +74,7 @@ működött. További hiba keresést igényel. \
 Kerülő megoldásként az alábbi parancs futtatása javasolt minden terminál
 ablakban egyszer.
 ```bash
-export $(sed --expression '/^#/d' --expression '/^$/d' ./.ddev/.env | xargs);
+  
 ```
 
 A testreszabható környezeti változók listázására az alábbi parancs használható:
