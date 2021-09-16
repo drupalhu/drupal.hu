@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drush\Commands\app;
 
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 use Drupal\marvin\Robo\NodeDetectorTaskLoader;
 use Drupal\marvin\Utils as MarvinUtils;
 use Drush\Commands\marvin\CommandsBase;
@@ -12,13 +13,12 @@ use League\Container\ContainerAwareTrait;
 use Robo\Collection\CollectionBuilder;
 use Robo\Collection\loadTasks as ForEachTaskLoader;
 use Robo\Common\OutputAwareTrait;
-use Robo\Contract\OutputAwareInterface;
 use Robo\State\Data as RoboStateData;
 use Sweetchuck\Robo\Git\GitTaskLoader;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Webmozart\PathUtil\Path;
 
-class SassCommands extends CommandsBase implements
+class MarvinLintCommands extends CommandsBase implements
     ContainerAwareInterface,
     OutputAwareInterface {
 

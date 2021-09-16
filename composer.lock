@@ -1682,16 +1682,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.2.5",
+            "version": "9.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "96bb4da48ed4d5892247b8afed55ca3db9bc47f6"
+                "reference": "c51e9d9e28c08e284ff57ca42504cfe0ec9522db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/96bb4da48ed4d5892247b8afed55ca3db9bc47f6",
-                "reference": "96bb4da48ed4d5892247b8afed55ca3db9bc47f6",
+                "url": "https://api.github.com/repos/drupal/core/zipball/c51e9d9e28c08e284ff57ca42504cfe0ec9522db",
+                "reference": "c51e9d9e28c08e284ff57ca42504cfe0ec9522db",
                 "shasum": ""
             },
             "require": {
@@ -1930,13 +1930,13 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/9.2.5"
+                "source": "https://github.com/drupal/core/tree/9.2.6"
             },
-            "time": "2021-09-01T21:51:44+00:00"
+            "time": "2021-09-14T22:07:47+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.2.5",
+            "version": "9.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -1980,22 +1980,22 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.2.5"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.2.6"
             },
             "time": "2021-08-24T12:04:07+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "9.2.5",
+            "version": "9.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "a6738810628a3ee04a49265191b43b2b2de5aa60"
+                "reference": "e9bbd6d45dddc02157ea675b557c604feb31c80d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/a6738810628a3ee04a49265191b43b2b2de5aa60",
-                "reference": "a6738810628a3ee04a49265191b43b2b2de5aa60",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/e9bbd6d45dddc02157ea675b557c604feb31c80d",
+                "reference": "e9bbd6d45dddc02157ea675b557c604feb31c80d",
                 "shasum": ""
             },
             "require": {
@@ -2004,7 +2004,7 @@
                 "doctrine/annotations": "1.13.1",
                 "doctrine/lexer": "1.2.1",
                 "doctrine/reflection": "1.2.2",
-                "drupal/core": "9.2.5",
+                "drupal/core": "9.2.6",
                 "egulias/email-validator": "2.1.25",
                 "guzzlehttp/guzzle": "6.5.5",
                 "guzzlehttp/promises": "1.4.1",
@@ -2067,9 +2067,9 @@
             ],
             "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/9.2.5"
+                "source": "https://github.com/drupal/core-recommended/tree/9.2.6"
             },
-            "time": "2021-09-01T21:51:44+00:00"
+            "time": "2021-09-14T22:07:47+00:00"
         },
         {
             "name": "drupal/ctools",
@@ -13492,7 +13492,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -14288,29 +14287,30 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/robo-phpmd.git",
-                "reference": "7b6988a535f730c0ecfffa1738894a37d9120355"
+                "reference": "c9a5397d44a22a5be1594caafbc67d92589c7838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/robo-phpmd/zipball/7b6988a535f730c0ecfffa1738894a37d9120355",
-                "reference": "7b6988a535f730c0ecfffa1738894a37d9120355",
+                "url": "https://api.github.com/repos/Sweetchuck/robo-phpmd/zipball/c9a5397d44a22a5be1594caafbc67d92589c7838",
+                "reference": "c9a5397d44a22a5be1594caafbc67d92589c7838",
                 "shasum": ""
             },
             "require": {
                 "consolidation/robo": "^2.0",
                 "danielstjules/stringy": "^3.1",
-                "php": ">=7.3",
+                "php": ">=7.4",
                 "webmozart/path-util": "^2.3"
             },
             "require-dev": {
-                "codeception/codeception": "^4.0",
+                "codeception/codeception": "^4.1",
                 "codeception/module-asserts": "^1.1",
                 "ext-json": "*",
                 "mikey179/vfsstream": "^1.6",
+                "nuvoleweb/robo-config": "2.x-dev",
                 "phpmd/phpmd": "^2.6",
                 "phpunit/phpunit": "^8.0",
                 "squizlabs/php_codesniffer": "^3.5",
-                "sweetchuck/codeception-module-robo-task-runner": "^0.9",
+                "sweetchuck/codeception-module-robo-task-runner": "1.x-dev",
                 "sweetchuck/git-hooks": "2.x-dev",
                 "sweetchuck/robo-git": "1.x-dev",
                 "sweetchuck/robo-phpcs": "1.x-dev",
@@ -14321,7 +14321,6 @@
             "suggest": {
                 "phpmd/phpmd": "After all the 'phpmd' executable has to be available."
             },
-            "default-branch": true,
             "type": "robo-tasks",
             "autoload": {
                 "psr-4": {
@@ -14349,7 +14348,7 @@
                 "issues": "https://github.com/Sweetchuck/robo-phpmd/issues",
                 "source": "https://github.com/Sweetchuck/robo-phpmd"
             },
-            "time": "2021-05-21T17:56:50+00:00"
+            "time": "2021-09-03T21:10:23+00:00"
         },
         {
             "name": "sweetchuck/robo-phpunit",
