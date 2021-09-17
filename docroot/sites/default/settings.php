@@ -803,6 +803,16 @@ $ahSiteGroup = getenv('AH_SITE_GROUP');
 if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}-settings.inc")) {
   require "/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}-settings.inc";
 
+  // This was already set above, but for an unknown reason
+  // Acquia hosting overrides the value, or gets deleted
+  // and Drupal gives a default value, which looks something like this:
+  // sites/default/files/config_HASH/sync
+  // So set it again.
+  // @todo Figure it out if this makes any problem on the Acquia hosting.
+  // Without this the `drush config:status` and `drush config:import` commands
+  // aren't working as expected.
+  $settings['config_sync_directory'] = "../$site_path/config/prod";
+
   $ahSiteName = getenv('AH_SITE_NAME');
   $ahSiteEnvironment = getenv('AH_SITE_ENVIRONMENT');
   if ($ahSiteEnvironment !== 'prod') {
