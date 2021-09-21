@@ -15,7 +15,7 @@ src_cores_dir='/mnt/ddev_config/solr/cores'
 dst_cores_dir='/var/solr/data'
 
 core_names="$(find "${src_cores_dir}" -mindepth 1 -maxdepth 1 -printf '%f ')"
-for core_name in $core_names;
+for core_name in ${core_names};
 do
     rm \
         --force \

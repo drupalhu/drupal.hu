@@ -4,4 +4,4 @@
 ## Usage: zsh [flags] [args]
 ## Example: "ddev zsh"
 
-zsh $@
+zsh "${@}"

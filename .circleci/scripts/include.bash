@@ -76,15 +76,13 @@ function appPhpCliExtensionEnable() {
         extensionType='zend_extension'
     fi
 
-    echo "\$iniFileName = $iniFileName"
-
     sed \
         --in-place \
         --regexp-extended \
         --expression "s/^${extensionType}(.+)\/${extensionName}(\.so){0,1}$/;\0/g" \
         "${iniFileName}"
 
-    $phpExecutable -m | grep --silent --ignore-case "${extensionName}"
+    ${phpExecutable} -m | grep --silent --ignore-case "${extensionName}"
 
     return $?
 }
@@ -107,7 +105,7 @@ function appPhpCliExtensionDisable() {
         --expression "s/^(;|#)( |\t){0,}(${extensionType}(.+)\/${extensionName}(\.so){0,1})$/\3/g" \
         "${iniFileName}"
 
-    $phpExecutable -m | ( ! grep --silent "${extensionName}" )
+    ${phpExecutable} -m | ( ! grep --silent "${extensionName}" )
 
     return $?
 }
@@ -191,7 +189,7 @@ function appMarvinOnboarding() {
     local siteAlias="${2:?Drush site alias is required}"
 
     cd "${projectDir}" || exit 1
-    $appDrushExecutable "${appDrushSiteAlias}" \
+    ${appDrushExecutable} "${appDrushSiteAlias}" \
         marvin:onboarding \
         --url='http://localhost'
 
@@ -271,14 +269,14 @@ PHP
 
         name="$(yq eval --no-colors '.id' "${fileName}")"
         cat << PHP >> "${settingsPhpFileName}"
-\$config['search_api.server.$name']['backend'] = 'search_api_solr';
-\$config['search_api.server.$name']['backend_config']['connector'] = 'standard';
-\$config['search_api.server.$name']['backend_config']['connector_config'] = [
+\$config['search_api.server.${name}']['backend'] = 'search_api_solr';
+\$config['search_api.server.${name}']['backend_config']['connector'] = 'standard';
+\$config['search_api.server.${name}']['backend_config']['connector_config'] = [
   'scheme' => 'http',
   'host' => 'solr',
   'port' => 8983,
   'path' => '/',
-  'core' => '$name',
+  'core' => '${name}',
   'timeout' => 5,
   'index_timeout' => 10,
   'optimize_timeout' => 15,

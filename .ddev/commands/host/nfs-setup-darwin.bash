@@ -18,7 +18,7 @@ if [ "${OS}" != "Darwin" ]; then
     exit 101
 fi
 
-if [[ $EUID -eq 0 ]]; then
+if [[ ${EUID} -eq 0 ]]; then
     echo "This script must NOT be run with sudo/root. Please re-run without sudo." 1>&2
 
     exit 102
@@ -65,12 +65,12 @@ esac
 
 
 FILE=/etc/exports
-sudo bash -c "echo >> $FILE" || ( echo "Unable to edit /etc/exports, need Full Disk Access on Mojave and later" && exit 103 )
-grep -qF -- "$LINE" "$FILE" || ( sudo echo "$LINE" | sudo tee -a $FILE > /dev/null )
+sudo bash -c "echo >> ${FILE}" || ( echo "Unable to edit /etc/exports, need Full Disk Access on Mojave and later" && exit 103 )
+grep -qF -- "${LINE}" "${FILE}" || ( sudo echo "${LINE}" | sudo tee -a "${FILE}" > /dev/null )
 
 LINE="nfs.server.mount.require_resv_port = 0"
 FILE=/etc/nfs.conf
-grep -qF -- "$LINE" "$FILE" || ( sudo echo "$LINE" | sudo tee -a $FILE > /dev/null )
+grep -qF -- "${LINE}" "${FILE}" || ( sudo echo "${LINE}" | sudo tee -a "${FILE}" > /dev/null )
 
 echo "== Restarting nfsd..."
 sudo nfsd enable && sudo nfsd restart && sleep 1 && sudo nfsd restart

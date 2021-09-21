@@ -7,7 +7,7 @@
 base="${1}"
 : "${base:?'port number base argument is required and it has to be an integer'}"
 
-if ! [[ "$base" =~ ^[1-9][0-9]*$ ]];
+if ! [[ "${base}" =~ ^[1-9][0-9]*$ ]];
 then
     echo 1>&2 "port number base is not a positive integer: ${base}"
 

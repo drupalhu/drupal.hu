@@ -27,7 +27,7 @@ if [ "${variant}" != "Debian" ] && [ "${variant}" != "Ubuntu" ] ; then
     exit 102
 fi
 
-if [[ $EUID -eq 0 ]]; then
+if [[ ${EUID} -eq 0 ]]; then
     echo "This script should NOT be run with sudo/root. Please re-run without sudo." 1>&2
 
     exit 103
@@ -73,7 +73,7 @@ echo "== Setting up nfs..."
 # for more information.
 FILE=/etc/exports
 LINE="${HOME} ${primary_ip}(rw,sync,no_subtree_check)"
-grep -qF -- "$LINE" "$FILE" 2>/dev/null || ( sudo echo "$LINE" | sudo tee -a $FILE > /dev/null )
+grep -qF -- "${LINE}" "${FILE}" 2>/dev/null || ( sudo echo "${LINE}" | sudo tee -a "${FILE}" > /dev/null )
 
 echo "== Restarting nfs-kernel-server..."
 sudo systemctl restart nfs-kernel-server

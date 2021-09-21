@@ -184,7 +184,18 @@
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
             "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
-        ]
+        ],
+        "lint": [
+            "@lint:shellcheck"
+        ],
+        "lint:shellcheck": [
+            "@lint:shellcheck:circleci",
+            "@lint:shellcheck:ddev",
+            "@lint:shellcheck:hooks"
+        ],
+        "lint:shellcheck:circleci": "shellcheck $(git ls-files -- './.circleci/*.sh' './.circleci/*.bash' './.circleci/*.zsh')",
+        "lint:shellcheck:ddev": "shellcheck $(git ls-files -- './.ddev/*.sh' './.ddev/*.bash' './.ddev/*.zsh')",
+        "lint:shellcheck:hooks": "shellcheck $(git ls-files -- './hooks/*.sh' './hooks/*.bash' './hooks/*.zsh')"
     },
     "scripts-descriptions": {
         "clean": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>package managers</>.",
@@ -201,7 +212,8 @@
         "site:install:prod:dummy": "drush site:install – with minimum required content and with the developer helper dummy contents.",
         "site:install:local:empty": "drush site:install – same as 'prod' but the developer helper modules are enabled.",
         "site:install:local:default": "drush site:install – same as 'prod' but the developer helper modules are enabled",
-        "site:install:local:dummy": "drush site:install – same as 'prod' but the developer helper modules are enabled."
+        "site:install:local:dummy": "drush site:install – same as 'prod' but the developer helper modules are enabled.",
+        "lint": "@todo Create native marvin commands like 'drush marvin:lint:phpcs'."
     },
     "extra": {
         "installer-types": [
