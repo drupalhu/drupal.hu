@@ -17,10 +17,15 @@ services:
 
     restart: 'no'
 
+    shm_size: '3072m'
+
     image: 'microbox/chromium-headless:88.0.4296.0'
     entrypoint:
       - 'chromium'
     command:
+      # Run in headless mode.
+      - '--headless'
+
       # Disable various background network services, including extension updating,
       # safe browsing service, upgrade detector, translate, UMA.
       - '--disable-background-networking'
@@ -38,13 +43,10 @@ services:
       - '--disable-sync'
 
       # Disable built-in Google Translate service
-      - '--disable-translate'
+      - '--disable-features=Translate'
 
       # Disable cross-origin safeguards.
       #- '--disable-web-security'
-
-      # Run in headless mode.
-      - '--headless'
 
       # Hide scrollbars on generated images/PDFs
       #- '--hide-scrollbars'
@@ -61,21 +63,24 @@ services:
       # Disable sandbox mode.
       #- '--no-sandbox'
 
-      # Expose port 9222 for remote debugging
-      - '--remote-debugging-port=9222'
-
       # Set remote debugging address — important, otherwise 'localhost' would be used
       # which breaks container linking and port expose.
       - '--remote-debugging-address=0.0.0.0'
+
+      # Expose port 9222 for remote debugging
+      - '--remote-debugging-port=9222'
 
       # Disable fetching safebrowsing lists,
       # likely redundant due to disable-background-networking.
       #- '--safebrowsing-disable-auto-update'
 
       # Make use of user data directory.
-      - '--user-data-dir'
+      #- '--user-data-dir'
 
       - '--ignore-certificate-errors'
+
+      - '--enable-logging'
+      - '--v=0'
 
     volumes:
       # Standard ddev mount point.
@@ -90,6 +95,7 @@ services:
 
     ports:
       - 9222
+      - 4444
 
     labels:
       # These labels ensure this service is discoverable by ddev.

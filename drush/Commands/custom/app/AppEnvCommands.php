@@ -203,7 +203,7 @@ class AppEnvCommands extends CommandsBase {
       });
   }
 
-  protected function getTaskSwitchBuilderCallback(string $env, string $fileName, ListFilesItem $file): \Closure {
+  protected function getTaskSwitchBuilderCallback(string $env, string $fileName, ListFilesItem $file): callable {
     return function () use ($env, $fileName, $file): int {
       $baseExtension = pathinfo($fileName, PATHINFO_EXTENSION);
       $baseExtensionSafe = preg_quote($baseExtension);

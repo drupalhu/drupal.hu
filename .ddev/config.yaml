@@ -206,6 +206,18 @@ hooks:
           "
     -
       exec: >-
+        timeout \
+          10 \
+          bash \
+          '-c' "
+            while ! curl -H 'host: localhost' --silent --show-error 'http://chrome:9222/json/version';
+            do
+              sleep 1;
+              echo 'Waiting for Chromium on http://chrome:9222';
+            done;
+          "
+    -
+      exec: >-
         [ -f "$(composer config vendor-dir)/autoload.php" ]
         || composer install
     -

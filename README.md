@@ -96,8 +96,8 @@ APP_SOLR_HOST_HTTPS_PORT=5984
 
 ## Bekapcsolódás a fejlesztésbe - Local
 
-A szükséges szerverek (HTTP, MySQL, Solr) konfigurációját kézzel kell
-megoldani.
+A szükséges szoftverek (PHP, NVM, HTTP, MySQL, Solr) telepítését és
+konfigurációját kézzel kell megoldani.
 
 
 ### Bekapcsolódás a fejlesztésbe - Local - előfeltételek

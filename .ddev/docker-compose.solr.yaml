@@ -25,6 +25,8 @@ services:
 
     restart: 'no'
 
+    shm_size: '2048m'
+
     # The solr docker image is at https://hub.docker.com/_/solr/
     # and code at https://github.com/docker-solr/docker-solr
     # README: https://github.com/docker-solr/docker-solr/blob/master/README.md
