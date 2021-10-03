@@ -21,15 +21,17 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
    * @hook post-command site:install
    */
   public function onPostSiteInstall($parentResult, CommandData $commandData) {
-    // @todo Detect automatically.
-    $siteDir = 'default';
-    $adminName = $commandData->input()->getOption('account-name') ?: 'admin';
+    $input = $commandData->input();
+    if ($input->getOption('existing-config')) {
+      $siteDir = $input->getOption('sites-subdir') ?: 'default';
+      $this
+        ->localeCheck()
+        ->localeUpdate()
+        ->importCustomTranslations($siteDir);
+    }
 
-    $this
-      ->localeCheck()
-      ->localeUpdate()
-      ->importCustomTranslations($siteDir)
-      ->addRoleToUser('administrator', $adminName);
+    $adminName = $input->getOption('account-name') ?: 'admin';
+    $this->addRoleToUser('administrator', $adminName);
   }
 
   /**

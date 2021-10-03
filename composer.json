@@ -96,7 +96,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DrupalHu\\DrupalHu\\Tests\\Unit\\": "tests/src/Unit/",
+            "DrupalHu\\DrupalHu\\Tests\\": "tests/src/",
             "Drush\\Commands\\app\\": "drush/Commands/custom/app/"
         }
     },
@@ -122,13 +122,9 @@
             "git clean -X --force -- 'sites/all/translations/*.po'"
         ],
         "reset": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "@reset:db"
-        ],
-        "reset:search": [
-            "[ \"$(drush --config=drush @app.local status --no-ansi --fields=bootstrap --format=string)\" = \"Successful\" ] && drush --ansi --config=drush --yes @app.local search-api:server-clear general || true"
         ],
         "reset:cache": [
             "drush --config=drush --yes @app.local cache:rebuild || true"
@@ -143,34 +139,29 @@
             "drush --config=drush --yes @app.local sql:drop"
         ],
         "site:install:prod:empty": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''"
         ],
         "site:install:prod:default": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:prod:dummy": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
         ],
         "site:install:local:empty": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
             "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
         ],
         "site:install:local:default": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
@@ -178,7 +169,6 @@
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:local:dummy": [
-            "@reset:search",
             "@reset:cache",
             "@reset:files",
             "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
@@ -203,7 +193,6 @@
         "clean:frontend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>Yarn</>.",
         "clean:translations": "<fg=yellow>Deletes</> all the <fg=cyan>*.po files</> which are belong to third-party codes.",
         "reset": "<fg=red>Deletes</> all content from all data storage (database, cache, solr, public|pivate|temporary|php_storage files).",
-        "reset:search": "<fg=red>Deletes</> all content from <fg=cyan>Solr indexes</>.",
         "reset:cache": "<fg=red>Deletes</> all content from <fg=cyan>cache</> storages.",
         "reset:files": "<fg=red>Deletes</> all the uploaded <fg=cyan>files</> (public|pivate|temporary|php_storage files).",
         "reset:db": "<fg=red>Drops</> the <fg=cyan>default database</>.",
