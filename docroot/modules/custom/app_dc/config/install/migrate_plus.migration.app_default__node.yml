@@ -11,10 +11,7 @@ migration_group: app_default
 
 migration_dependencies:
   required:
-    - app_default__file__public
-    - app_default__media__image
     - app_default__taxonomy_term
-    - app_default__user
 
 source:
   fileName: node/all.yml
@@ -67,14 +64,14 @@ process:
 
   uid:
     source: uid
-    plugin: migration_lookup
-    migration:
-      - app_default__user
+    plugin: default_value
+    default_value: 1
 
   status:
     source: status
     plugin: default_value
     default_value: true
+    strict: true
 
   created:
     -
@@ -99,10 +96,10 @@ process:
       source: app_image
       plugin: skip_on_empty
       method: process
-    -
-      plugin: migration_lookup
-      migration:
-        - app_default__media__image
+#    -
+#      plugin: migration_lookup
+#      migration:
+#        - app_default__media__image
 
   app_teaser:
     source: app_teaser

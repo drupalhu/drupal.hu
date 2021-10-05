@@ -68,6 +68,7 @@ process:
     source: status
     plugin: default_value
     default_value: true
+    strict: true
 
   created:
     -

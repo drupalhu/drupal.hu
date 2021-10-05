@@ -59,16 +59,19 @@ process:
     source: external
     plugin: default_value
     default_value: true
+    strict: true
 
   expanded:
     source: expanded
     plugin: default_value
     default_value: true
+    strict: true
 
   enabled:
     source: enabled
     plugin: default_value
     default_value: true
+    strict: true
 
   rediscover:
     source: rediscover

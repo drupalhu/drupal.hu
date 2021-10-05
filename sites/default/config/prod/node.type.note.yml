@@ -1,7 +1,13 @@
 uuid: 5a2d1a97-88eb-4d11-8384-effde053a6ac
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
 name: Feljegyzés
 type: note
 description: ''

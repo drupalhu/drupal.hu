@@ -34,6 +34,7 @@ process:
       source: status
       plugin: default_value
       default_value: true
+      strict: true
 
 destination:
   plugin: entity:path_alias

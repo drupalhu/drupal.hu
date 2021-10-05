@@ -1,8 +1,17 @@
 
+attachments/2021/dummy.pdf:
+  uid: Gizi
+
+attachments/2021/note-01.pdf:
+  uid: Gizi
+
 pictures/bela.png:
   uid: Béla
 
 pictures/gizi.png:
+  uid: Gizi
+
+images/casestudy-01.jpg:
   uid: Gizi
 
 images/comb.jpg:
@@ -12,6 +21,9 @@ images/desiccation-cracks.jpg:
   uid: Gizi
 
 images/geometry.jpg:
+  uid: Gizi
+
+images/job-01.jpg:
   uid: Gizi
 
 images/mosque.jpg:

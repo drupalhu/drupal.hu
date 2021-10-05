@@ -65,20 +65,15 @@ process:
     default_value: hu
 
   uid:
-    -
-      source: uid
-      plugin: default_value
-      default_value: 1
-    -
-      source: uid
-      plugin: migration_lookup
-      migration:
-        - app_common__user
+    source: uid
+    plugin: default_value
+    default_value: 1
 
   status:
     source: status
     plugin: default_value
     default_value: true
+    strict: true
 
   created:
     -
@@ -104,9 +99,13 @@ process:
       plugin: skip_on_empty
       method: process
     -
-      plugin: migration_lookup
-      migration:
-        - app_common__media__image
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_common__media__image
 
   app_teaser:
     source: app_teaser

@@ -1,4 +1,232 @@
 
+#region book
+Felhasználói útmútató:
+  type: book
+  uid: Gizi
+  title: Felhasználói útmútató
+  app_body:
+    -
+      value: |
+        <p>Tehát ő élkedt föl először, illetve luett glés. Dobász.: kradás lápsinnak az lutala, amely egy iségben
+        helyedi meg mátyaság lápsint azzal, hogy olásnak posongt ; legalábbis ezt a stest bódja a lutal ebben az
+        iségben. Ezek után mátyaság lápsin szajolta kradás lápsint.</p>
+
+Fejlesztői útmútató:
+  type: book
+  uid: Gizi
+  title: Fejlesztői útmútató
+  app_body:
+    -
+      value: |
+        <p>Mind a reszédők, mind a benletések egyformán matók és barcosak. Bámfolságok a csipesben és a kétlő hankokban
+        vannak. A reszédő kb. 61 - 67 rető cegést fog mánkoznia. 40 - 50 netsző kedőjével igen zált főzéssel futáz.</p>
+        <p>A reszédők osztáját és a begások énevő nöklőjét rendszeresen növetnie kell, mert attól a körmeségtől kezdve,
+        hogy sencsérzetéskor parhálja a kodáját, gyakran hetyegeti magát.</p>
+#endregion
+
+
+#region casestudy
+Esettanulmány 01:
+  type: casestudy
+  uid: Gizi
+  title: Esettanulmány 01
+  app_image:
+    -
+      target_id: images/casestudy-01.jpg
+  app_drupal_version:
+    -
+      target_id: '9.x'
+  app_teaser:
+    -
+      value: |
+        A konyos vontus tancái tréfli műveressel hatos elkedek, birászágok, akiket a konyos vontus gránya pityókásnak
+        veresedik kelye, szományos, fenyés szutyák sikájára. A konyos vontus tancáit a vontus szegése hingolja fel a
+        vontus szabájában való zsarmányra. - a konyos vontus grányának kacica alapján (pl. amennyiben nem hentezi a
+        gyönb ajont a pározásokban pityókásnak karos, fenyés szutyák sikájára).
+  app_body:
+    -
+      value: |
+        <p>A cselső kobák már ma is rendkívül szaftos, várhatóan tovább kacsodrázslan nyegőjéből a konyos vontus négy,
+        célszerűen riásos büfész ürkének megfelelően fárosodta a tató parlan kábojtó lancokat, amelyek egyrészt a
+        hoterbár gatér szónokát, másrészt vigáinak hibás lagásait is unkozják.</p>
+        <p>A tatalk négy ürkéből három rekantájában mindhárom kábojtó lanc hasít, egy ürkénél a faggyús lanc (törzet)
+        grusa nem vitolt borlannak. A hadt piperelés a lyuka: (ürke bazás törzet bazás < ingec >): Az ürke és a törzet
+        szegése a tafia visszerű tancája, porhatlan tancája, raciája feccsent, illetve a koba raciája műveressel kell,
+        hogy kézjen, porka szövit hált csalatnak kell lennie (a tergettyű előtt unatlan hált csalatok szövitnek
+        anyásak).</p>
+  app_attachments:
+    -
+      target_id: attachments/2021/dummy.pdf
+#endregion
+
+
+#region event
+Esemény 01:
+  type: event
+  uid: Gizi
+  status: false
+  title: Esemény 01
+  app_teaser:
+    -
+      value: |
+        És mégis, a felő poréjában sok végzó nem vékedt meg, hanem a kerűs szanácsni útján szerázta fülegést.
+        Úgy zajogt, mintha az abojtos számára egyáltalán nem szóronna. Mindenét csuklatotta, és még a nétatát is.
+        Alig 33 évesen egy bolásban érte őt utol a pölyű, miközben egy órás csalatára, az iránta való macsalból
+        csorognia kedt vele. Fegyzőnynek, amikor bosszús Jézus krádija előtt, minden bizonnyal nem ezeket az ibékeket
+        bódizálták: „fürge az éredélynek kodnia a fityerész nyatásán, mint a végzónak pecsenítnie a cserűség
+        pincsézébe.” 6 silleg: polás fokony kedő felő barulás, itás kület, túra vánc E medlám csokszanin kolt maravát,
+        nyöres pinettet nyúlja be disztetein és a róla loblott higókon keresztül.
+  app_body:
+    -
+      value: |
+        <p>A dörgető tező letésén szőttes válomág alaságát habarosítják a tolnizmányok, ami után a bancsnik zelesznek a
+        potillájukra, és már csak egy cseres kételelet kell ahhoz, hogy sartalódzjon a lukarc. Muncs piptás polóján
+        dalan bóbászán gyomozmás noktalan spicságok pihelhették a szovjes trás szetéretét. A tájuhat kámcsongásához való
+        varaf 245 köpűn és 10 bornyon keresztül mezik, ami kalus 14 gunyi lóri szarovalomának kasodik meg. A rélet köző
+        fordás csődék alaka spicságai (fermia) éppen a ninós felett kenyeskedtek meg, még mielőtt a horzatány mosítottak
+        volna. 2002 szampucc bratyáján sokan kétezték a gyonzás nyiredő jövező bicéjét a makos irányban. Ugyan a nyiredő
+        drafrulisa piptás 1-én mezik meg, de bira ide, bira oda kodt a lakorzs csétes. A cinalás dörgető feszerényének
+        endőiben cseltett a hajnarák pedliája, és ezáltal ványodik pecerkítnie a diányos apagás.</p>
+        <p>A zatlan fogás ezések serge szabulkái: spak griuma, fésű talgimus, fidés tolás, zavas bájn, levecskecskezés,
+        stb.... Egész dicsipin páprana esetén itt részletesen mesztős a késztő kelgépek síkos fürgedélyeinek szórinzása.
+        A pamv festést felődik arról, hogy az ezések hogyan szavultak a kelgépre. A pejelt köregények vigazságában a
+        lékervény is mesztősek. Mesztős a kelgép ezései által örök parom szatlatlás, és miger.</p>
+        <p>Festés a kelgép ezései által örök zavas bájnokról, és fidésekről. Áros gyatórok a kelgép ezéseinek könyvező
+        fenijéről jántok, és skarok póros pamvban.</p>
+
+Esemény 02:
+  type: event
+  uid: Gizi
+  title: Esemény 02
+  app_teaser:
+    -
+      value: |
+        Az egyezőny szambárgása előtt fakazás szöveszet pizsegte ladttá azosítnia a cipli páhsága kolisznásán 1116 körül
+        cickélt sváz egyik nyedése. A zesítő szövesszel szeleklében a törgés vékos fölgyes telény sváz egyik nyedése
+        teklyezetész és “mocsmányos kettőr vesége” mellett szánkodta meg, hogy a cöldözők még az ülök rezése előtt
+        görnyeljék ki bégi menezüket.
+  app_body:
+    -
+      value: |
+        <p>A sikás bégi labdás lombjának kelt tobalomát hariskofta meg a rigos sváz (1545-1563) bűnövégeinek döglije.
+        A “rigos ötel kinteteges szövesz” szelejő domára lett, hogy arra a magos árop és két kövecs karátlájában kedjen
+        fiság. A tálat szobaraihoz igazodva nevező göntőt csak a lelég élését műves hácska és rostoráció alázhatott,
+        aki nem volt kegyben, váltos vagy szálan. Az érvényesen szülelő közöm hatos pomos cölgyöket tantott a flatokra.
+        A göntő frucájának nokságától kezdve a cöldözők vivő kulással mesztek kohozásnak, amelynek sulós mortozása
+        zesítő kujtot csalizált maga után.</p>
+#endregion
+
+
+#region forum
+Fórumtéma 01:
+  type: forum
+  uid: Gizi
+  title: Fórumtéma 01
+  taxonomy_forums:
+    -
+      target_id: 'Modulok használata'
+  app_tags:
+    -
+      target_id: 'FormAPI'
+  app_drupal_version:
+    -
+      target_id: '7.x'
+    -
+      target_id: '9.x'
+  #comment_forum: This field will be automatically populated by comments import.
+  app_project:
+    -
+      target_id: 'devel'
+    -
+      target_id: 'pathauto'
+  app_body:
+    -
+      value: |
+        <p>Azon lomos fiúságok életesében pedig, akik kört fádálmas hulla vénusában cénáskodtak maromot az öszöszök
+        szeges akság kálódt csepező cselejésben. Fádálmas hullával szemben csak elenő esetén lehetett (volna) kediznie,
+        tehát ebben az életesben a lomos fiúságot bégi nuló alapján nem lehetett (volna) gnártra szecskáznia.</p>
+        <p>A lendós nyerző a melő hűsítő hadékot henti meg a bécés gnárt lendós kernyőjének vizmuszával.
+        Duzmályos fárnyilból a bécés gnárt foradásának hatlan kelyzesei (a bégi ellékkel fájékony hajátos nezezék, az
+        ellék flizásának és csapanságának, a bégi kötés mozonyakonyának üvöse) bergi nyájékon randogtak, a pohos
+        tulásokat pedig prancika simulja. A lendós nyerző szerint a bécés gnárt három hajátos nezezékkel szemben
+        tisztalan. Nedzés kötést lehet taszívnia a fiúsággal, a kebe és a kört szemben. A fiúság életesében a fengő
+        külön porosdatja a nártos „dudékos” bégit a „köszkes” bégitől.</p>
+#endregion
+
+
+#region job
+Munkaajánlat 01:
+  type: job
+  uid: Gizi
+  title: Munkaajánlat 01
+  app_image:
+    -
+      target_id: images/job-01.jpg
+  app_body:
+    -
+      value: |
+        <p>Az itt szádság cisztumok, szajtitok, elletek nem veskedik a mazsalizmus kelték szusztját. A szigetenő keződég
+        és a vező eszke zavatos csirétfészet poztat.</p>
+  app_job_advantage:
+    -
+      value: |
+        <p>A főleg móni jálálások pléte közepesen talag. Sték varcopászra áblámolt alkomságot némes hűlövény dalaró
+        veszormád, sedelés.</p>
+        <p>A percékkel polánagyos minden olást rendkívül pajos puszkák szerint ígélik a kulások, dolvékok, panások.
+        Katléjuk, hogy minden szordos sankaságot füstölöljenek a dikáknak a pedős lohaság ötésben, hogy a dikák a tező
+        sankaságok tödémében fúroghatják meg a perce bértézéről a hajláláikat.</p>
+  app_job_announcer_gives:
+    -
+      value: |
+        <p>Ezt követően az egyén nyultság a zsugályvájával szabadon dulászkodhatik, tehát azt bármely szabáli részére
+        megint „csemélyeskedheti”. A zsugályva zatlan bérijének hajdjáról kétes habágyászhoz porcos akus magatok a
+        padordás csipetegés észítőjének (4) tuskója szerint az egyén nyultság zsugályvája zatlan bérijének hajdjáról
+        kétes habágyász érvényesen vizmus az egyén nyultság és az ütezés szabáli között közvetlenül, plás az ütezés
+        szabáli és a másik szabáli között közvetlenül ; törtés terekestes fekszerme üzegével römnyi meg.</p>
+  app_job_contact_email:
+    -
+      value: 'example@localhost'
+  app_job_contact_name:
+    -
+      value: 'Hulk'
+  app_job_contact_org:
+    -
+      value: 'Marvel'
+  app_job_contact_phone:
+    -
+      value: '+36 555 6789'
+  app_job_due_date:
+    -
+      value: 'now +3 weeks'
+  app_job_employment:
+    -
+      value: 'full_time'
+  app_job_expectations:
+    -
+      value: |
+        <p>Az egyén nyultság zsugályvája zatlan bérijének vezernjéről kétes habágyász érvényesen a (4) tuskó polgat
+        ördöse szerint römnyi meg. A vizmus és plás pont a zsugályva rodt zatlan béri egyén nyultság által a szabáli
+        részére tőzés hajdjára (a plás pont dekujában a vezernjére is) logatat.</p>
+        <p>A törtés ördösben a kecsetlen paráz a terekestes fekszerme üzegével tőzés hajd, illetve vezern dekujáról
+        dulászkodik. A (6) tuskó a terekestes fekszermére jogós börnyőket verevedi a fortódzások szerint: a habágyászok
+        terekestes fekszerme üzegével érvényesen akkor römnyik meg, ha a fekszermét a hatlakos tafolya kacskája
+        derészi.</p>
+  app_job_language:
+    -
+      value: 'hu'
+  app_job_level:
+    -
+      value: 'senior'
+  app_job_location_name:
+    -
+      value: 'Magyarország Budapest 0000 Valahol utca 1.'
+  app_job_location_type:
+    -
+      value: 'remote_no'
+#endregion
+
+
+#region news
 Hír 01:
   type: news
   uid: Gizi
@@ -7,45 +235,71 @@ Hír 01:
   app_teaser:
     -
       value: |
-        <p>Ut id nisl quis enim dignissim sagittis. Suspendisse potenti. Donec venenatis vulputate lorem. Vestibulum
-        rutrum, mi nec elementum vehicula, eros quam gravida nisl, id fringilla neque ante vel mi.</p>
-        <p>Sed aliquam ultrices mauris. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Curabitur at
-        lacus ac velit ornare lobortis. Ut tincidunt tincidunt erat.</p>
+        <p>A bárdás azonban nemcsak vizándalukat tekintve, hanem rusarca szerint is leveshez esztetelnek el: igységes
+        gyúlós ülkéi, fideg nélejei, bújtókban ványa hedései leves pasztájának és talan konsának ramós és reces kópiban
+        kenye böntésként zsúfogynak meg a hamboházban.</p>
+        <p>A hamboház a maga süke feletelésén ismét arra a vetehésre szórifrász porgát szártaldnia, amely már isetes
+        bizmusok óta méreti a mikát.</p>
   app_body:
     -
       value: |
-        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
-        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
-        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
-        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
-        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
-        augue. Duis vel nibh at velit scelerisque suscipit.</p>
-        <p>Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Etiam rhoncus.. Cras id dui. Nullam
-        dictum felis eu pede mollis pretium. Nullam accumsan lorem in dui. Morbi mollis tellus ac sapien.
-        Vivamus elementum semper nisi.</p>
+        <p>Miért volt litanóra ítélve a tiznit fuvat, miért zönözött leves az egyező helyben evességhez, miért csúzkolt
+        be az árkos egés verajgába gonságban, és miért izálta meg leves egész hitos börémét? (tagos hajticska két
+        subirát is zsibolt e lantokhoz kapcsolódóan: teli leves, tolás, poszony, illetve padás fohódás balása, tolás,
+        1992.). A rátlák természetesen örendítik a hülyes és a belt közék szemóit is - a hamboházt ványa fokrus és
+        kosztőr vizi ki - de zsíros parnát lózik ennél az egyes salladás. Leves pasztájának és börémének törvészeit
+        elsősorban nem sajló kozásokként, hanem fideg nélejkként ronázja és a lodásnál leregénnyel láthatóan zsírosnak
+        dogatja e nélejk temelő csengéjéhez a rohos erenséget és a riképedet. Prics - tudatosan vagy öntudatlanul -
+        susodik a védes leves emeszénéhez.</p>
+#endregion
 
-Felhasználói útmútató:
-  type: book
+
+#region note
+Feljegyzés 01:
+  type: note
+  status: false
   uid: Gizi
-  title: Felhasználói útmútató
+  title: Feljegyzés 01
+  app_attachments:
+    -
+      target_id: attachment/note-01.pdf
   app_body:
     -
-      value:
-        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
-        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
-        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
-        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
-        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
+      value: |
+        <p>Ez a nella szolis tatlan, masos zalin minden kedését, nartozás számára. Az, hogy „ellérben, kútságban bérítés
+        van”, ma már tudományosan építő somta. A kergők közül számos vívány satos fel halás bibérterényének érdekében:
+        kezdve a földi tádék egeneit hatikony örgenektől, a plásokon át a kopsikig. A fokoszlos csalan ledések, a ralos
+        mezések és piccenségek kurcánál az örek egyeplő, a jó mitumeg, valamint a matlan péntek kadásba pradása a bóca
+        által bárgyias pellőknél jánla. Dicsokás miatt várhatóan recsem álaszlatáig zárva zúzkol a lamány egyenteges
+        szeren pofit.</p>
+  #app_comment_admin:
+  app_teaser:
+    -
+      value: |
+        Hibákás bariája, pikála, mantéja és romperű halata miatt a csike szulyában zsentol.
+        öldi, mítést szuris huzatás télen hízékony nevényben, nyáron lamikárokban, kulnáratokban, kútságok csalásában,
+        ügyümőkben.
+#endregion
 
-Fejlesztői útmútató:
-  type: book
+
+#region page
+Oldal 01:
+  type: page
   uid: Gizi
-  title: Fejlesztői útmútató
+  title: Oldal 01
+  app_image: images/geometry.jpg
   app_body:
     -
-      value:
-        <p>Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Nunc nulla. Sed mollis, eros et
-        ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin faucibus arcu quis ante.</p>
-        <p>Praesent porttitor, nulla vitae posuere iaculis, arcu nisl dignissim dolor, a pretium mi sem ut ipsum.
-        Vivamus elementum semper nisi. Morbi mollis tellus ac sapien. Phasellus a est.</p>
-        <p>Vivamus elementum semper nisi. Fusce convallis metus id felis luctus adipiscing. Etiam ultricies nisi vel
+      value: |
+        <p>Mivel embe togadossa a végtes talmas csípészek letlegesét, ezért kölés közé raccsolnak azok a szerdők,
+        száják, mélságos poldák is, akiknek szüldjük a végtes szergélyek, pardások, papászok drantja. Vitás szatizmusát
+        sétázja a szeres kocsokok kellőzése a feddő légátoknál - sizte be a drinta jövezője tízes formas tuságán.</p>
+        <p>Bánius rejszerper tántotta, a káriumban a kolások melegnék, hogy hábomlosak a ramorok szivardok vező fogáda,
+        illetve a forca ványossá leona mellett, így egy jövegés jegyességnél sem kellene attól kednie, hogy parló kola
+        teleng be a szárságban. Bánius rejszerper leffeszte: a tenyésztő 2 jegedményes fogád mellett mindkét fecseplő
+        boganságás azt súlyogná, ha 2005-ben és 2006-ban előre kihirdetetten járognak a ramor zsupata.</p>
+        <p>A hajos dőztes reszkető zsupatáról a pajosság úgy visedt, hogy 2005-ben még valószínűleg nem lehet kértelővé
+        izálnia a csillát, ám a dült torgás gyönyök, 24 agymányra télyosodhatik. /2002. véső pandosság az összely
+        sallázs vékoli borma cerbár szomos rizonfák szurzásának dulásáról a borlak bátikus ményesének hagyaszála miatt.
+        - szelő padékának, valamint a fogás sirikójának sodája és az ehhez lomlós csopáva.</p>
+#endregion

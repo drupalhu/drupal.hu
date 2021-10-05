@@ -1,28 +1,34 @@
 langcode: en
 status: true
-id: app_default__taxonomy_term
-label: 'App - Default - taxonomy_term'
+id: app_dummy__taxonomy_term
+label: 'App - Dummy - taxonomy_term'
 
 migration_tags:
   - app
-  - default_content
+  - dummy_content
 
-migration_group: app_default
+migration_group: app_dummy
+
+migration_dependencies:
+  required:
+    - app_dummy__user
 
 source:
   fileName: taxonomy_term/all.yml
   identifier: name
 
   fields:
+    id: Identifier
     uuid: UUID
-    vid: Vocabulary identifier
+    vid: Type
     langcode: Language code
     status: Status
     parent: Parent
-    weight: Weight
-    changed: Changed
     name: Name
     description: Description
+    weight: Weight
+    changed: Changed
+    forum_container: Fórum tároló
 
 process:
   uuid: uuid
@@ -44,7 +50,7 @@ process:
     -
       plugin: migration_lookup
       migration:
-        - app_default__taxonomy_term
+        - app_dummy__taxonomy_term
   weight:
     source: weight
     plugin: default_value
@@ -67,6 +73,11 @@ process:
         source: format
         plugin: default_value
         default_value: html_teaser
+  forum_container:
+    source: status
+    plugin: default_value
+    default_value: false
+    strict: true
 
 destination:
   plugin: 'entity:taxonomy_term'
@@ -78,3 +89,4 @@ destination:
     - changed
     - name
     - description
+    - forum_container

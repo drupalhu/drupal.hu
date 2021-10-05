@@ -13,6 +13,8 @@ migration_dependencies:
   required:
     - app_dummy__file__public
     - app_dummy__media__image
+    - app_default__taxonomy_term
+    - app_dummy__taxonomy_term
     - app_dummy__user
 
 source:
@@ -24,6 +26,7 @@ source:
     uuid: UUID
     type: Type
     langcode: Language code
+    uid: Author
     status: Status
     created: Created
     changed: Changed
@@ -64,16 +67,24 @@ process:
     plugin: default_value
     default_value: hu
 
+  uid_lookup:
+    -
+      source: uid
+      plugin: migration_lookup
+      no_stub: true
+      migration:
+        - app_dummy__user
   uid:
-    source: uid
-    plugin: migration_lookup
-    migration:
-      - app_dummy__user
+    -
+      source: '@uid_lookup'
+      plugin: default_value
+      default_value: 1
 
   status:
     source: status
     plugin: default_value
     default_value: true
+    strict: true
 
   created:
     -
@@ -93,15 +104,152 @@ process:
 
   title: title
 
+  app_attachments:
+    -
+      source: app_attachments
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_dummy__file__public
+
+  app_body:
+    source: app_body
+    plugin: sub_process
+    process:
+      value: value
+      format:
+        source: format
+        plugin: default_value
+        default_value: html_body
+
+#  app_comment_admin:
+#    -
+#      source: app_comment_admin
+
+  app_drupal_version:
+    -
+      source: app_drupal_version
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_default__taxonomy_term
+            - app_dummy__taxonomy_term
+
   app_image:
     -
       source: app_image
       plugin: skip_on_empty
       method: process
     -
-      plugin: migration_lookup
-      migration:
-        - app_dummy__media__image
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_dummy__media__image
+
+  app_job_advantage:
+    source: app_job_advantage
+    plugin: sub_process
+    process:
+      value: value
+      format:
+        source: format
+        plugin: default_value
+        default_value: html_body
+
+  app_job_announcer_gives:
+    source: app_job_announcer_gives
+    plugin: sub_process
+    process:
+      value: value
+      format:
+        source: format
+        plugin: default_value
+        default_value: html_body
+
+  app_job_contact_email: app_job_contact_email
+
+  app_job_contact_name: app_job_contact_name
+
+  app_job_contact_phone: app_job_contact_phone
+
+  app_job_contact_org: app_job_contact_org
+
+  app_job_due_date:
+    -
+      source: app_job_due_date
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        value:
+          source: value
+          plugin: migrate_dc_str_to_time
+          output_format: 'Y-m-d\TH:i:s'
+
+  app_job_employment: app_job_employment
+
+  app_job_expectations:
+    source: app_job_expectations
+    plugin: sub_process
+    process:
+      value: value
+      format:
+        source: format
+        plugin: default_value
+        default_value: html_body
+
+  app_job_language: app_job_language
+
+  app_job_level: app_job_level
+
+  app_job_location_name: app_job_location_name
+
+  app_job_location_type: app_job_location_type
+
+  app_tags:
+    -
+      source: app_tags
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_dummy__taxonomy_term
+
+  app_project:
+    -
+      source: app_project
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_default__taxonomy_term
+            - app_dummy__taxonomy_term
 
   app_teaser:
     source: app_teaser
@@ -113,15 +261,21 @@ process:
         plugin: default_value
         default_value: html_teaser
 
-  app_body:
-    source: app_body
-    plugin: sub_process
-    process:
-      value: value
-      format:
-        source: format
-        plugin: default_value
-        default_value: html_body
+  taxonomy_forums:
+    -
+      source: taxonomy_forums
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          source: target_id
+          plugin: migration_lookup
+          migration:
+            - app_default__taxonomy_term
+            - app_dummy__taxonomy_term
+
 
 destination:
   plugin: 'entity:node'
@@ -154,6 +308,7 @@ destination:
     - app_job_location_type
     - app_links
     - app_project
+    - app_tags
     - app_target_audience
     - app_teaser
     - body

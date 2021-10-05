@@ -1,0 +1,37 @@
+
+# Forum terms are not needed in the "dummy" content.
+
+
+# Competence terms are not needed in the "dummy" content.
+
+
+# Target audience terms are not needed in the "dummy" content.
+
+
+#region tag
+FormAPI:
+  vid: 'tag'
+  name: 'FormAPI'
+#endregion
+
+
+# Drupal version terms are not needed in the "dummy" content.
+
+
+#region planet
+# @todo
+#endregion
+
+
+#region project
+admin_toolbar:
+  vid: project
+devel:
+  vid: project
+masquerade:
+  vid: project
+pathauto:
+  vid: project
+token:
+  vid: project
+#endregion

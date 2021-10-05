@@ -59,6 +59,7 @@ process:
     source: status
     plugin: default_value
     default_value: true
+    strict: true
 
   changed:
     -
@@ -73,6 +74,7 @@ process:
     source: reusable
     plugin: default_value
     default_value: true
+    strict: true
 
   info: info
 

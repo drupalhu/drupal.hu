@@ -1,7 +1,14 @@
 uuid: 8e3be97a-c983-49a7-97e0-90e5536f1359
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
 name: Esemény
 type: event
 description: 'Események felviteléhez használható tartalomtípus, a honlap elkülönített részén jelenik meg.'

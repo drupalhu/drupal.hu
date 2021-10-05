@@ -1,38 +1,5 @@
 
-Kezdő:
-  vid: competence
-  weight: 0
-Haladó:
-  vid: competence
-  weight: 1
-Tapasztalt:
-  vid: competence
-  weight: 2
-
-
-9.x:
-  vid: drupal_version
-  weight: 0
-8.x:
-  vid: drupal_version
-  weight: 1
-7.x:
-  vid: drupal_version
-  weight: 2
-6.x:
-  vid: drupal_version
-  weight: 3
-5.x:
-  vid: drupal_version
-  weight: 4
-4.7.x:
-  vid: drupal_version
-  weight: 5
-4.6.x:
-  vid: drupal_version
-  weight: 6
-
-
+#region forums
 Telepítés előtt:
   vid: forums
   weight: 0
@@ -75,20 +42,23 @@ MDE:
 Egyéb:
   vid: forums
   weight: 13
+#endregion
 
 
-admin_toolbar:
-  vid: project
-devel:
-  vid: project
-masquerade:
-  vid: project
-pathauto:
-  vid: project
-token:
-  vid: project
+#region competence
+Kezdő:
+  vid: competence
+  weight: 0
+Haladó:
+  vid: competence
+  weight: 1
+Tapasztalt:
+  vid: competence
+  weight: 2
+#endregion
 
 
+#region target_audience
 Dizájner:
   vid: target_audience
   weight: 0
@@ -147,3 +117,41 @@ Rendezvény szervező:
     -
       value: |
         <p>Drupallal kapcsolatos rendezvények szervezésével foglalkozó személyek.</p>
+# endregion
+
+
+# Tags terms are not needed in the "default" content.
+
+
+#region drupal_version
+10.x:
+  vid: drupal_version
+  weight: -10
+9.x:
+  vid: drupal_version
+  weight: -9
+8.x:
+  vid: drupal_version
+  weight: -8
+7.x:
+  vid: drupal_version
+  weight: -7
+6.x:
+  vid: drupal_version
+  weight: -6
+5.x:
+  vid: drupal_version
+  weight: -5
+4.7.x:
+  vid: drupal_version
+  weight: -4
+4.6.x:
+  vid: drupal_version
+  weight: -3
+#endregion
+
+
+# Planet terms are not needed in the "default" content.
+
+
+# Project terms are not needed in the "default" content.

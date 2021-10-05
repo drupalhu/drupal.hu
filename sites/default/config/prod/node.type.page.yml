@@ -1,7 +1,15 @@
 uuid: 2a36fc59-1cd3-4818-b49d-d2214171e0f3
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+      - footer
+    parent: 'main:'
 name: Oldal
 type: page
 description: 'Statikus tartalmú oldalak.'
