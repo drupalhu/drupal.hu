@@ -6,7 +6,14 @@ dependencies:
     - comment.type.admin
     - field.storage.comment.comment_body
   module:
+    - allowed_formats
     - text
+third_party_settings:
+  allowed_formats:
+    html_body: html_body
+    html_teaser: '0'
+    html_full: '0'
+    plain_text: '0'
 id: comment.admin.comment_body
 field_name: comment_body
 entity_type: comment

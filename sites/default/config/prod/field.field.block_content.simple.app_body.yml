@@ -10,8 +10,8 @@ dependencies:
     - text
 third_party_settings:
   allowed_formats:
+    html_body: html_body
     html_full: html_full
-    html_body: '0'
     html_teaser: '0'
     plain_text: '0'
 id: block_content.simple.app_body
