@@ -1,0 +1,22 @@
+uuid: 2a353aa5-dfe0-4b51-8969-149083e4df6a
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: casestudy
+label: Esettanulmány
+type: 'canonical_entities:node'
+pattern: '/esettanulmany/[node:title]'
+selection_criteria:
+  64a65982-e2b6-4512-ba51-edbec116e55f:
+    id: node_type
+    bundles:
+      casestudy: casestudy
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 64a65982-e2b6-4512-ba51-edbec116e55f
+selection_logic: and
+weight: -5
+relationships: {  }

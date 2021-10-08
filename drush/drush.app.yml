@@ -50,7 +50,6 @@ marvin:
         devel: true
         field_ui: true
         kint: false
-        memcache_admin: true
         menu_ui: true
         migrate_tools: true
         module_filter: true

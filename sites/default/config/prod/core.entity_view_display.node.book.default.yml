@@ -11,9 +11,9 @@ dependencies:
     - field.field.node.book.app_target_audience
     - node.type.book
   module:
-    - bootstrap_layouts
     - file
     - layout_builder
+    - layout_discovery
     - text
     - user
 third_party_settings:
@@ -22,26 +22,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           c212158e-452e-40bf-b51f-dc2188bd8d2d:
             uuid: c212158e-452e-40bf-b51f-dc2188bd8d2d
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -57,7 +44,7 @@ third_party_settings:
             weight: 1
           26e55e69-4221-4d4a-9a9d-45ac4bc02b2b:
             uuid: 26e55e69-4221-4d4a-9a9d-45ac4bc02b2b
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -73,7 +60,7 @@ third_party_settings:
             weight: 2
           49230cf4-fee1-4fdb-a8b7-67cbebd7eb13:
             uuid: 49230cf4-fee1-4fdb-a8b7-67cbebd7eb13
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -89,7 +76,7 @@ third_party_settings:
             weight: 3
           ca5c5cba-4aa2-4a30-be3e-c45fb004525c:
             uuid: ca5c5cba-4aa2-4a30-be3e-c45fb004525c
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -105,7 +92,7 @@ third_party_settings:
             weight: 4
           3e96c62c-dec6-4aa4-9f66-8a3ba6af0af1:
             uuid: 3e96c62c-dec6-4aa4-9f66-8a3ba6af0af1
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -120,7 +107,7 @@ third_party_settings:
             weight: 5
           b1b2c3b4-7747-4914-a2b1-ccef1ca88d20:
             uuid: b1b2c3b4-7747-4914-a2b1-ccef1ca88d20
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -136,7 +123,7 @@ third_party_settings:
             weight: 6
           5d8fc0c3-4831-449c-bec4-191303febdfd:
             uuid: 5d8fc0c3-4831-449c-bec4-191303febdfd
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:

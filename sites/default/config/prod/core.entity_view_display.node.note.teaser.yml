@@ -10,8 +10,8 @@ dependencies:
     - field.field.node.note.app_teaser
     - node.type.note
   module:
-    - bootstrap_layouts
     - layout_builder
+    - layout_discovery
     - text
     - user
 third_party_settings:
@@ -20,26 +20,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           f2e03ea9-b9f9-45fa-aa4a-424d70abfbc4:
             uuid: f2e03ea9-b9f9-45fa-aa4a-424d70abfbc4
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -54,31 +41,6 @@ third_party_settings:
             weight: 0
           a3d0cc97-9a4b-430b-b697-92798a127c58:
             uuid: a3d0cc97-9a4b-430b-b697-92798a127c58
-            region: main
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'extra_field_block:node:note:links'
-            additional: {  }
-            weight: 1
-          4aa22a4f-0dfe-4cc9-8c47-18f91d7275fa:
-            uuid: 4aa22a4f-0dfe-4cc9-8c47-18f91d7275fa
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:note:app_teaser'
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            additional: {  }
-            weight: 0
-          736deaaf-9301-42e4-bba3-1ea1f4d5eda0:
-            uuid: 736deaaf-9301-42e4-bba3-1ea1f4d5eda0
             region: content
             configuration:
               label_display: '0'

@@ -1,0 +1,23 @@
+uuid: c80819ed-f260-4ec1-8b3e-ac88191b2f4e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: news
+label: 'Hírek és események'
+type: 'canonical_entities:node'
+pattern: '/hir/[node:title]'
+selection_criteria:
+  e25ad92a-e8a6-456b-98b8-8a1badb9965f:
+    id: node_type
+    bundles:
+      event: event
+      news: news
+    negate: false
+    context_mapping:
+      node: node
+    uuid: e25ad92a-e8a6-456b-98b8-8a1badb9965f
+selection_logic: and
+weight: 1
+relationships: {  }

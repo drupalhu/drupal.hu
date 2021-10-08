@@ -1,7 +1,14 @@
 uuid: 47e2d007-1296-4a93-b177-87858a9b2424
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
 name: Hír
 type: news
 description: ''

@@ -237,7 +237,20 @@ display:
       title: Dokumentáció
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<p>Nincsen megjeleníthető tartalom.</p>'
+            format: html_body
+          plugin_id: text
       relationships:
         bid:
           id: bid
@@ -273,7 +286,7 @@ display:
         description: ''
         expanded: false
         parent: ''
-        weight: 10
+        weight: 20
         context: '0'
         menu_name: main
     cache_metadata:

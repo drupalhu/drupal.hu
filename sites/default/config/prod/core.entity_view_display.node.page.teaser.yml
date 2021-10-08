@@ -1,5 +1,5 @@
 uuid: ce5b8dcf-3b5e-444b-a5b3-c2b5da09a35c
-langcode: en
+langcode: hu
 status: true
 dependencies:
   config:
@@ -10,8 +10,8 @@ dependencies:
     - image.style.media_library
     - node.type.page
   module:
-    - bootstrap_layouts
     - layout_builder
+    - layout_discovery
     - media
     - text
     - user
@@ -21,26 +21,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           1fabd4f6-e20f-482e-817b-0524e4afc36f:
             uuid: 1fabd4f6-e20f-482e-817b-0524e4afc36f
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -57,23 +44,26 @@ third_party_settings:
             weight: 0
           8ec2c7d3-a65e-4502-a3c9-b89712381f24:
             uuid: 8ec2c7d3-a65e-4502-a3c9-b89712381f24
-            region: main
+            region: content
             configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
               id: 'field_block:node:page:app_body'
+              label: Törzs
+              provider: layout_builder
+              label_display: '0'
               formatter:
-                type: text_trimmed
                 label: hidden
+                type: text_trimmed
                 settings:
                   trim_length: 600
                 third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
             additional: {  }
             weight: 1
           4e8997d6-4257-4255-bd88-a0b9a103b21e:
             uuid: 4e8997d6-4257-4255-bd88-a0b9a103b21e
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:

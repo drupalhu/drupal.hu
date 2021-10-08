@@ -315,7 +315,7 @@ $settings['config_sync_directory'] = "../$site_path/config/prod";
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = getenv('APP_HASH_SALT') ?: file_get_contents("../$site_path/hash_salt.txt");
+$settings['hash_salt'] = getenv('APP_HASH_SALT') ?: file_get_contents("$app_root/../$site_path/hash_salt.txt");
 
 /**
  * Deployment identifier.
@@ -811,7 +811,7 @@ if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}
   // @todo Figure it out if this makes any problem on the Acquia hosting.
   // Without this the `drush config:status` and `drush config:import` commands
   // aren't working as expected.
-  $settings['config_sync_directory'] = "../$site_path/config/prod";
+  $settings['config_sync_directory'] = "$app_root/../$site_path/config/prod";
 
   $ahSiteName = getenv('AH_SITE_NAME');
   $ahSiteEnvironment = getenv('AH_SITE_ENVIRONMENT');

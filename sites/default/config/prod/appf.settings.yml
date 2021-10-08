@@ -14,7 +14,6 @@ logo:
   url: ''
   use_default: true
 schemas:
-  bootstrap_barrio: 8000
   appf: 8000
 langcode: hu
 reset_http_request_cache: ''

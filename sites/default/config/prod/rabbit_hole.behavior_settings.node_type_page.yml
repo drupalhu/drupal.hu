@@ -1,0 +1,14 @@
+uuid: a24da461-31e4-45d1-aabc-881565cea0c4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node_type_page
+entity_type_id: node_type
+entity_id: page
+action: display_page
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

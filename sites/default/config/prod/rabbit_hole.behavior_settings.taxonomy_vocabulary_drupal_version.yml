@@ -1,0 +1,14 @@
+uuid: 41010ccb-c11b-468a-ac57-8a133c4a06e3
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.drupal_version
+id: taxonomy_vocabulary_drupal_version
+entity_type_id: taxonomy_vocabulary
+entity_id: drupal_version
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

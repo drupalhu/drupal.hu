@@ -1,4 +1,15 @@
 
+#region Account.
+account:node-add:
+  menu_name: 'account'
+  title: 'Tartalom beküldés'
+  link: 'internal:/node/add'
+  description: ''
+  weight: 0
+  enabled: 1
+#endregion
+
+#region Main.
 main.forum:
   menu_name: 'main'
   title: 'Fórum'
@@ -6,7 +17,9 @@ main.forum:
   description: ''
   weight: 1
   enabled: 1
+#endregion
 
+#region Footer.
 footer:impressum:
   menu_name: 'footer'
   title: 'Impresszum'
@@ -30,3 +43,4 @@ footer:terms_of_use:
   description: ''
   weight: 3
   enabled: 1
+#endregion

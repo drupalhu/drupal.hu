@@ -10,10 +10,10 @@ dependencies:
     - field.field.node.note.app_teaser
     - node.type.note
   module:
-    - bootstrap_layouts
     - comment
     - file
     - layout_builder
+    - layout_discovery
     - text
     - user
 third_party_settings:
@@ -22,26 +22,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           a440cee4-d99b-4658-99ea-851a4010fb76:
             uuid: a440cee4-d99b-4658-99ea-851a4010fb76
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -56,7 +43,7 @@ third_party_settings:
             weight: 0
           e9d46321-520a-4368-b4c2-3bc5d7bd8e8f:
             uuid: e9d46321-520a-4368-b4c2-3bc5d7bd8e8f
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -71,7 +58,7 @@ third_party_settings:
             weight: 1
           c5fff1d0-8191-4fab-887a-5144a678b8d1:
             uuid: c5fff1d0-8191-4fab-887a-5144a678b8d1
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -81,7 +68,7 @@ third_party_settings:
             weight: 2
           b82091ab-e013-4402-b0fa-22645f5ee259:
             uuid: b82091ab-e013-4402-b0fa-22645f5ee259
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -97,79 +84,6 @@ third_party_settings:
             weight: 3
           6e248703-7108-4d07-a238-676bcaf37fd1:
             uuid: 6e248703-7108-4d07-a238-676bcaf37fd1
-            region: main
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:note:app_comment_admin'
-              formatter:
-                label: above
-                settings:
-                  view_mode: default
-                  pager_id: 0
-                third_party_settings: {  }
-                type: comment_default
-            additional: {  }
-            weight: 4
-          5412e068-469a-4e3e-9cab-b9a50b7e2a5a:
-            uuid: 5412e068-469a-4e3e-9cab-b9a50b7e2a5a
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:note:app_teaser'
-              formatter:
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-                type: text_default
-            additional: {  }
-            weight: 0
-          d46afd9d-a928-4d7b-9584-be904d35efac:
-            uuid: d46afd9d-a928-4d7b-9584-be904d35efac
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:note:app_body'
-              formatter:
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-                type: text_default
-            additional: {  }
-            weight: 1
-          dbd84ba9-94d5-421c-81f7-698c71350ba7:
-            uuid: dbd84ba9-94d5-421c-81f7-698c71350ba7
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'extra_field_block:node:note:links'
-            additional: {  }
-            weight: 2
-          1940b6f5-8158-40a5-833e-f60bafe4b968:
-            uuid: 1940b6f5-8158-40a5-833e-f60bafe4b968
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:note:app_attachments'
-              formatter:
-                label: above
-                settings:
-                  use_description_as_link_text: true
-                third_party_settings: {  }
-                type: file_default
-            additional: {  }
-            weight: 3
-          fbf5ae24-9c8d-43b8-acdf-0a93fe9534d4:
-            uuid: fbf5ae24-9c8d-43b8-acdf-0a93fe9534d4
             region: content
             configuration:
               label_display: '0'

@@ -53,10 +53,10 @@ process:
     plugin: default_value
     default_value: comment_forum
   # cid: It is what it is. No need to migrate.
-#  comment_type:
-#    source: comment_type
-#    plugin: default_value
-#    default_value: comment_forum
+  comment_type:
+    source: comment_type
+    plugin: default_value
+    default_value: comment_forum
   pid:
     -
       source: pid
@@ -119,11 +119,7 @@ destination:
   overwrite_properties:
     - entity_type
     - entity_id
-    - field_name
-    - cid
-    #- comment_type
     - pid
-    - thread
     - status
     - created
     - changed

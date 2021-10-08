@@ -1,0 +1,14 @@
+uuid: c24d412d-c7b0-44b0-8181-118f2135246c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.forums
+id: taxonomy_vocabulary_forums
+entity_type_id: taxonomy_vocabulary
+entity_id: forums
+action: page_redirect
+allow_override: 0
+redirect: '/forum/[term:tid]'
+redirect_code: 301
+redirect_fallback_action: page_not_found

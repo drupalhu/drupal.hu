@@ -12,8 +12,8 @@ dependencies:
     - field.field.node.book.app_target_audience
     - node.type.book
   module:
-    - bootstrap_layouts
     - layout_builder
+    - layout_discovery
     - text
     - user
 third_party_settings:
@@ -22,26 +22,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           be738a6d-4fce-47b5-a5c7-34de45798915:
             uuid: be738a6d-4fce-47b5-a5c7-34de45798915
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -57,7 +44,7 @@ third_party_settings:
             weight: 3
           85ea250b-ec49-4167-a106-61926ecec847:
             uuid: 85ea250b-ec49-4167-a106-61926ecec847
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -73,23 +60,26 @@ third_party_settings:
             weight: 4
           57d6eca7-9f4b-4850-a2b7-250068092396:
             uuid: 57d6eca7-9f4b-4850-a2b7-250068092396
-            region: main
+            region: content
             configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
               id: 'field_block:node:book:app_body'
+              label: Törzs
+              provider: layout_builder
+              label_display: '0'
               formatter:
-                type: text_trimmed
                 label: hidden
+                type: text_trimmed
                 settings:
                   trim_length: 600
                 third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
             additional: {  }
             weight: 5
           0a913868-0734-4e88-8c2b-740780241503:
             uuid: 0a913868-0734-4e88-8c2b-740780241503
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:

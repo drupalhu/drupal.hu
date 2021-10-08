@@ -1,9 +1,9 @@
 
 #region book
 Felhasználói útmútató:
-  type: book
-  uid: Gizi
-  title: Felhasználói útmútató
+  type: 'book'
+  uid: 'Gizi'
+  title: 'Felhasználói útmútató'
   app_body:
     -
       value: |
@@ -12,9 +12,9 @@ Felhasználói útmútató:
         iségben. Ezek után mátyaság lápsin szajolta kradás lápsint.</p>
 
 Fejlesztői útmútató:
-  type: book
-  uid: Gizi
-  title: Fejlesztői útmútató
+  type: 'book'
+  uid: 'Gizi'
+  title: 'Fejlesztői útmútató'
   app_body:
     -
       value: |
@@ -27,12 +27,12 @@ Fejlesztői útmútató:
 
 #region casestudy
 Esettanulmány 01:
-  type: casestudy
-  uid: Gizi
-  title: Esettanulmány 01
+  type: 'casestudy'
+  uid: 'Gizi'
+  title: 'Esettanulmány 01'
   app_image:
     -
-      target_id: images/casestudy-01.jpg
+      target_id: 'images/casestudy-01.jpg'
   app_drupal_version:
     -
       target_id: '9.x'
@@ -56,16 +56,19 @@ Esettanulmány 01:
         anyásak).</p>
   app_attachments:
     -
-      target_id: attachments/2021/dummy.pdf
+      target_id: 'attachments/2021/dummy.pdf'
 #endregion
 
 
 #region event
 Esemény 01:
-  type: event
-  uid: Gizi
+  type: 'event'
+  uid: 'Gizi'
   status: false
-  title: Esemény 01
+  title: 'Esemény 01'
+  app_image:
+    -
+      target_id: 'images/event-01.jpg'
   app_teaser:
     -
       value: |
@@ -95,9 +98,12 @@ Esemény 01:
         fenijéről jántok, és skarok póros pamvban.</p>
 
 Esemény 02:
-  type: event
-  uid: Gizi
-  title: Esemény 02
+  type: 'event'
+  uid: 'Gizi'
+  title: 'Esemény 02'
+  app_image:
+    -
+      target_id: 'images/event-02.jpg'
   app_teaser:
     -
       value: |
@@ -119,9 +125,9 @@ Esemény 02:
 
 #region forum
 Fórumtéma 01:
-  type: forum
-  uid: Gizi
-  title: Fórumtéma 01
+  type: 'forum'
+  uid: 'Gizi'
+  title: 'Fórumtéma 01'
   taxonomy_forums:
     -
       target_id: 'Modulok használata'
@@ -156,12 +162,12 @@ Fórumtéma 01:
 
 #region job
 Munkaajánlat 01:
-  type: job
-  uid: Gizi
-  title: Munkaajánlat 01
+  type: 'job'
+  uid: 'Gizi'
+  title: 'Munkaajánlat 01'
   app_image:
     -
-      target_id: images/job-01.jpg
+      target_id: 'images/job-01.jpg'
   app_body:
     -
       value: |
@@ -228,10 +234,12 @@ Munkaajánlat 01:
 
 #region news
 Hír 01:
-  type: news
-  uid: Gizi
-  title: Hír 01
-  app_image: images/comb.jpg
+  type: 'news'
+  uid: 'Gizi'
+  title: 'Hír 01'
+  app_image:
+    -
+      target_id: 'images/news-01.jpg'
   app_teaser:
     -
       value: |
@@ -256,10 +264,10 @@ Hír 01:
 
 #region note
 Feljegyzés 01:
-  type: note
+  type: 'note'
   status: false
-  uid: Gizi
-  title: Feljegyzés 01
+  uid: 'Gizi'
+  title: 'Feljegyzés 01'
   app_attachments:
     -
       target_id: attachment/note-01.pdf
@@ -284,10 +292,12 @@ Feljegyzés 01:
 
 #region page
 Oldal 01:
-  type: page
-  uid: Gizi
-  title: Oldal 01
-  app_image: images/geometry.jpg
+  type: 'page'
+  uid: 'Gizi'
+  title: 'Oldal 01'
+  app_image:
+    -
+      target_id: 'images/geometry.jpg'
   app_body:
     -
       value: |

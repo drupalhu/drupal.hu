@@ -1,0 +1,14 @@
+uuid: 658c9ec7-178d-443a-80b4-5c771b37a05d
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.project
+id: taxonomy_vocabulary_project
+entity_type_id: taxonomy_vocabulary
+entity_id: project
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

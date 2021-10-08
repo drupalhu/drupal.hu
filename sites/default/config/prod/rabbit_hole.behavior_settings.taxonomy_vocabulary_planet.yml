@@ -1,0 +1,14 @@
+uuid: f73dfd3e-2c69-426c-8c1e-a002f1f38c5e
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.planet
+id: taxonomy_vocabulary_planet
+entity_type_id: taxonomy_vocabulary
+entity_id: planet
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

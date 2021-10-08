@@ -1,0 +1,14 @@
+uuid: cee2b87b-463d-4cfb-a8e5-1c2abf480909
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.casestudy
+id: node_type_casestudy
+entity_type_id: node_type
+entity_id: casestudy
+action: display_page
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

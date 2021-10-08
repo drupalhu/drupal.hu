@@ -1,0 +1,22 @@
+uuid: 84731d5a-c2d8-4d95-99a6-08871a0804b9
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: job
+label: Munkaajánlatok
+type: 'canonical_entities:node'
+pattern: '/munkaajanlat/[node:title]'
+selection_criteria:
+  09b31ce3-2882-408e-90ae-bd1a49906748:
+    id: node_type
+    bundles:
+      job: job
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 09b31ce3-2882-408e-90ae-bd1a49906748
+selection_logic: and
+weight: 3
+relationships: {  }

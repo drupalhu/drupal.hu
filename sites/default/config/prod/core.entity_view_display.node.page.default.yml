@@ -1,5 +1,5 @@
 uuid: a67a07c5-eff0-4ac8-86e3-4c1ed7e6b55f
-langcode: en
+langcode: hu
 status: true
 dependencies:
   config:
@@ -9,9 +9,9 @@ dependencies:
     - image.style.media_library
     - node.type.page
   module:
-    - bootstrap_layouts
     - file
     - layout_builder
+    - layout_discovery
     - media
     - text
     - user
@@ -21,26 +21,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           04ddbe9c-abf0-4c84-bb01-01a8a689a090:
             uuid: 04ddbe9c-abf0-4c84-bb01-01a8a689a090
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -57,7 +44,7 @@ third_party_settings:
             weight: -10
           ce350878-a1c3-47d9-a038-4eee6d0a7ccf:
             uuid: ce350878-a1c3-47d9-a038-4eee6d0a7ccf
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -72,7 +59,7 @@ third_party_settings:
             weight: -9
           6b42afdb-2b0b-403a-aaea-ffcbe759ff94:
             uuid: 6b42afdb-2b0b-403a-aaea-ffcbe759ff94
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -82,7 +69,7 @@ third_party_settings:
             weight: -7
           68e32cc3-d351-4f83-9afb-0f90a7fae115:
             uuid: 68e32cc3-d351-4f83-9afb-0f90a7fae115
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:

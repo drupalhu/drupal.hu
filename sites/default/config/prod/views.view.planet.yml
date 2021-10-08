@@ -254,9 +254,25 @@ display:
         description: 'A Drupal közösség által írt blog bejegyzések gyűjteménye'
         expanded: false
         parent: ''
-        weight: 3
+        weight: 60
         context: '0'
         menu_name: main
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<p>Nincsen megjeleníthető tartalom</p>'
+            format: html_body
+          plugin_id: text
+      defaults:
+        empty: false
     cache_metadata:
       max-age: -1
       contexts:

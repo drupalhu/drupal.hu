@@ -1,0 +1,14 @@
+uuid: b65ef55b-d84e-4433-a9ee-86ac9f0b2bc9
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.target_audience
+id: taxonomy_vocabulary_target_audience
+entity_type_id: taxonomy_vocabulary
+entity_id: target_audience
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

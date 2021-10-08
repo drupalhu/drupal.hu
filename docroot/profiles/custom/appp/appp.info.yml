@@ -1,6 +1,9 @@
 type: profile
-core_version_requirement: '^8 || ^9'
+core_version_requirement: '^9'
 
 package: 'App'
-name: 'App'
+name: 'App - Profile'
 description: 'Custom installation profile'
+
+'interface translation project': 'app'
+'interface translation server pattern': '../sites/all/translations/%project.%language.po'

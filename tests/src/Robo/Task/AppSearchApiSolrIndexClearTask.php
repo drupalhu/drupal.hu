@@ -75,6 +75,7 @@ class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
   }
 
   protected function runAction() {
+    // @todo Use Solarium.
     $index = $this->getIndex();
     $connectorConfig =& $index['server']['backend_config']['connector_config'];
 
@@ -102,16 +103,15 @@ class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
   }
 
   protected function getIndexClearSolrQueryXml(): string {
-    $baseUrl = $this->getBaseUrl();
-    $index = $this->getIndex();
+    $baseUrlSafe = $this->escapeSolrQueryValue($this->getBaseUrl());
+    $indexIdSafe = $this->escapeSolrQueryValue($this->getIndex()['id']);
 
-    // @todo Escape user input.
     return <<< XML
 <delete>
     <query>
-        site: "$baseUrl"
+        site: "$baseUrlSafe"
         AND
-        index_id: "{$index['id']}"
+        index_id: "$indexIdSafe"
     </query>
 </delete>
 XML;
@@ -130,6 +130,10 @@ XML;
     }
 
     return $context;
+  }
+
+  protected function escapeSolrQueryValue(string $value):string {
+    return addcslashes($value, '"');
   }
 
 }

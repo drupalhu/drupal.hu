@@ -22,9 +22,9 @@ dependencies:
     - image.style.media_library
     - node.type.job
   module:
-    - bootstrap_layouts
     - datetime
     - layout_builder
+    - layout_discovery
     - media
     - options
     - user
@@ -34,26 +34,13 @@ third_party_settings:
     enabled: true
     sections:
       -
-        layout_id: bs_1col
+        layout_id: layout_onecol
         layout_settings:
           label: ''
-          layout:
-            wrapper: div
-            classes:
-              row: row
-            add_layout_class: 1
-            attributes: ''
-          regions:
-            main:
-              wrapper: div
-              classes:
-                col-sm-12: col-sm-12
-              add_region_classes: 1
-              attributes: ''
         components:
           4b3e0b1a-9241-4f76-a9b4-eb6011e7147b:
             uuid: 4b3e0b1a-9241-4f76-a9b4-eb6011e7147b
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -70,7 +57,7 @@ third_party_settings:
             weight: 1
           94216b80-0320-4b62-8b0c-542102b26d70:
             uuid: 94216b80-0320-4b62-8b0c-542102b26d70
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -85,7 +72,7 @@ third_party_settings:
             weight: 2
           0edc42eb-5d7f-4061-a9fc-8396ff36dfaf:
             uuid: 0edc42eb-5d7f-4061-a9fc-8396ff36dfaf
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -101,7 +88,7 @@ third_party_settings:
             weight: 3
           9da09f35-adb8-485e-9824-9207976bd9e5:
             uuid: 9da09f35-adb8-485e-9824-9207976bd9e5
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:
@@ -118,7 +105,7 @@ third_party_settings:
             weight: 4
           a22011cc-1f18-4456-8e5c-e1cfa72415d9:
             uuid: a22011cc-1f18-4456-8e5c-e1cfa72415d9
-            region: main
+            region: content
             configuration:
               label_display: '0'
               context_mapping:

@@ -1,0 +1,14 @@
+uuid: 56f0d9ba-cc23-49d5-a37b-c1ac75290b4e
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.tag
+id: taxonomy_vocabulary_tag
+entity_type_id: taxonomy_vocabulary
+entity_id: tag
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

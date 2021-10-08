@@ -1,0 +1,22 @@
+uuid: f6dbe35a-a9f0-4bb9-a740-09fb9e39f0ba
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: book
+label: Könyvoldal
+type: 'canonical_entities:node'
+pattern: '/dokumentáció/[node:title]'
+selection_criteria:
+  c7c416f3-05e0-4ff8-bdd6-30f41e82f7bc:
+    id: node_type
+    bundles:
+      book: book
+    negate: false
+    context_mapping:
+      node: node
+    uuid: c7c416f3-05e0-4ff8-bdd6-30f41e82f7bc
+selection_logic: and
+weight: 2
+relationships: {  }

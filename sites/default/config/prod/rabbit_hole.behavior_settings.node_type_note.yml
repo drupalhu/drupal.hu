@@ -1,0 +1,14 @@
+uuid: dfd8b5ae-1f0d-453d-a0f9-b4678bbea0cb
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.note
+id: node_type_note
+entity_type_id: node_type
+entity_id: note
+action: page_not_found
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

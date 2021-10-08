@@ -1,0 +1,14 @@
+uuid: 02ef930f-e528-49c4-add6-7b2163439c12
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.job
+id: node_type_job
+entity_type_id: node_type
+entity_id: job
+action: display_page
+allow_override: 0
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
