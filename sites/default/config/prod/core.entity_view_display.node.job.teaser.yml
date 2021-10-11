@@ -112,6 +112,25 @@ third_party_settings:
                 entity: layout_builder.entity
               id: 'extra_field_block:node:job:links'
             additional: {  }
+            weight: 6
+          4ca47d0f-1fc8-4c2b-b564-7f955171171d:
+            uuid: 4ca47d0f-1fc8-4c2b-b564-7f955171171d
+            region: content
+            configuration:
+              id: 'field_block:node:job:app_body'
+              label: 'Feladat leírása'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_trimmed
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
             weight: 5
         third_party_settings: {  }
 id: node.job.teaser
