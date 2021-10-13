@@ -6,6 +6,7 @@ namespace Drush\Commands\app;
 
 use Drush\Commands\marvin\CommandsBase;
 use Robo\State\Data as RoboStateData;
+use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
 
 class MarvinArtifactCommands extends CommandsBase {
@@ -27,8 +28,18 @@ class MarvinArtifactCommands extends CommandsBase {
    */
   protected function getTaskCollectFilesToCleanup() {
     return function (RoboStateData $data): int {
-      $buildDir = $data['buildDir'];
-      $data['filesToCleanup'][] = Path::join($buildDir, 'drush', 'Commands', 'custom');
+      $data['filesToCleanup'][] = Path::join($data['buildDir'], 'drush', 'Commands', 'custom');
+
+      // Can be removed once this solved:
+      // https://github.com/Sweetchuck/drupal-marvin_product/issues/39 .
+      $files = (new Finder())
+        ->in(Path::join($data['buildDir'], $data['newDrupalRootDir']))
+        ->files()
+        ->name('PATCHES.txt');
+      /** @var \Symfony\Component\Finder\SplFileInfo $file */
+      foreach ($files as $file) {
+        $data['filesToCleanup'][] = $file->getPathname();
+      }
 
       return 0;
     };
