@@ -67,6 +67,7 @@
         "oomphinc/composer-installers-extender": "^2.0"
     },
     "require-dev": {
+        "ext-dom": "*",
         "behat/mink": "^1.8",
         "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.4",
@@ -186,7 +187,12 @@
         ],
         "lint:shellcheck:circleci": "shellcheck $(git ls-files -- './.circleci/*.sh' './.circleci/*.bash' './.circleci/*.zsh')",
         "lint:shellcheck:ddev": "shellcheck $(git ls-files -- './.ddev/*.sh' './.ddev/*.bash' './.ddev/*.zsh')",
-        "lint:shellcheck:hooks": "shellcheck $(git ls-files -- './hooks/*.sh' './hooks/*.bash' './hooks/*.zsh')"
+        "lint:shellcheck:hooks": "shellcheck $(git ls-files -- './hooks/*.sh' './hooks/*.bash' './hooks/*.zsh')",
+        "suite:activate:local": [
+            "rm composer.local.lock",
+            "cp composer.lock composer.local.lock",
+            "COMPOSER='composer.local.json' composer update --lock"
+        ]
     },
     "scripts-descriptions": {
         "clean": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>package managers</>.",

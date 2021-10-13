@@ -15,6 +15,8 @@ orbs:
   DRUSH_OPTIONS_PROGRESS_DELAY: '9999'
   DRUSH_OPTIONS_NO_INTERACTION: '1'
 
+  DRUSH_MARVIN_ENVIRONMENT: 'ci'
+
 .env_node: &env_node
   YARN_CACHE_FOLDER: '/root/.cache/yarn/v6'
 
@@ -28,7 +30,6 @@ orbs:
 
   appSolrRootPassword: 'root'
 
-  XDEBUG_MODE: 'coverage'
   COLUMN: '110'
 
 
@@ -103,8 +104,8 @@ commands:
           paths:
             - '/root/.cache/composer/'
 
-  main_instance_prepare:
-    description: 'Main instance prepare'
+  main_instance_build:
+    description: 'Main instance code base'
     steps:
       -
         run:
@@ -152,8 +153,7 @@ commands:
         run:
           name: 'Test – Unit – execute'
           command: |-
-            export XDEBUG_MODE='coverage'
-            $appDrushExecutable marvin:test:unit
+            XDEBUG_MODE='coverage' bin/phpunit --testsuite='unit'
       -
         run:
           name: 'Test – Unit – php.ini preset – prod'
@@ -310,8 +310,9 @@ commands:
             echo '@todo'
 
 
-  test_behat:
-    description: 'Test – Behat'
+
+  main_instance_prepare:
+    description: 'Prepare the main Drupal instance for end-to-end tests'
     steps:
       -
         attach_workspace:
@@ -333,13 +334,6 @@ commands:
             echo '@todo e.g: thrusted host settings'
       -
         run:
-          name: 'Test – Behat – main instance – behat rerun cache directory'
-          command: |-
-            mkdir \
-              --parents \
-              "$(yq eval --no-colors '.default.testers.rerun_cache' './behat.yml' | sed --expression 's@%paths.base%@.@g')"
-      -
-        run:
           name: 'Test – Behat – Site install'
           command: |-
             composer run site:install:prod:default
@@ -350,6 +344,17 @@ commands:
             . ./.circleci/scripts/include.bash
 
             appCheckConfigStatus "${PWD}/${appDocroot}" '@app.local'
+
+  test_behat:
+    description: 'Test – Behat'
+    steps:
+      -
+        run:
+          name: 'Test – Behat – main instance – behat rerun cache directory'
+          command: |-
+            mkdir \
+              --parents \
+              "$(yq eval --no-colors '.default.testers.rerun_cache' './behat.yml' | sed --expression 's@%paths.base%@.@g')"
       -
         run:
           name: 'Test – Behat – execute'
@@ -362,8 +367,27 @@ commands:
           destination: 'reports'
       -
         store_test_results:
-          name: 'Test – Behat – Store Behat test results'
-          path: './reports/machine/result/behat'
+          name: 'Test – Behat – Store test results'
+          path: './reports/machine/result/behat/'
+
+  test_functional_javascript:
+    description: 'Test – Functional JavaScript'
+    steps:
+      -
+        run:
+          name: 'Test – Functional JavaScript – execute'
+          command: |-
+            # Environment variable XDEBUG_MODE=coverage is intentionally ignored.
+            ./bin/phpunit --testsuite 'functional-javascript'
+      -
+        store_artifacts:
+          name: 'Test – Functional JavaScript – Store test reports as artifacts'
+          path: './reports'
+          destination: 'reports'
+      -
+        store_test_results:
+          name: 'Test – Functional JavaScript – Store test results'
+          path: './reports/machine/result/'
 
   mysql_debug:
     description: 'MySQL – Debug'
@@ -403,7 +427,7 @@ jobs:
     steps:
       - 'checkout'
       - 'composer_install'
-      - 'main_instance_prepare'
+      - 'main_instance_build'
 
   lint_and_test_unit:
     executor: 'php_min'
@@ -411,7 +435,7 @@ jobs:
     steps:
       - 'checkout'
       - 'composer_install'
-      - 'main_instance_prepare'
+      - 'main_instance_build'
       - 'lint'
       - 'test_unit'
 
@@ -421,7 +445,7 @@ jobs:
     steps:
       - 'checkout'
       - 'composer_install'
-      - 'main_instance_prepare'
+      - 'main_instance_build'
       - 'artifact_acquia_build'
 
   test_behat:
@@ -431,7 +455,7 @@ jobs:
       - 'checkout'
       - 'git_config'
       - 'composer_install'
-      - 'main_instance_prepare'
+      - 'main_instance_build'
       - 'artifact_acquia_restore'
       - 'supervisor_start'
       - 'mysql_start'
@@ -439,7 +463,26 @@ jobs:
       - 'phpfpm_start'
       - 'nginx_start'
       - 'headless_chromium_start'
+      - 'main_instance_prepare'
       - 'test_behat'
+
+  test_functional_javascript:
+    executor: 'php_min_with_services'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'git_config'
+      - 'composer_install'
+      - 'main_instance_build'
+      - 'artifact_acquia_restore'
+      - 'supervisor_start'
+      - 'mysql_start'
+      - 'solr_start'
+      - 'phpfpm_start'
+      - 'nginx_start'
+      - 'headless_chromium_start'
+      - 'main_instance_prepare'
+      - 'test_functional_javascript'
 
   mysql_debug:
     executor: 'php_min_with_services'
@@ -469,5 +512,9 @@ workflows:
             - 'build'
       -
         test_behat:
+          requires:
+            - 'build'
+      -
+        test_functional_javascript:
           requires:
             - 'build'

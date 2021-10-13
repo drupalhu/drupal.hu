@@ -93,6 +93,11 @@ marvin:
         app_common: true
         app_dummy: true
 
+  phpunit:
+    testSuite:
+      default:
+        unit: true
+
   acquia:
     projectId: 'druphungary'
     artifact:
