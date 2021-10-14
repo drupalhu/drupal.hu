@@ -24,4 +24,5 @@ prod:
   host: 'ded-5779.prod.hosting.acquia.com'
   root: '/var/www/html/druphungary/docroot'
   paths:
-    drush-script: '/var/www/html/druphungary/bin/drush'
+    #drush-script: '/var/www/html/druphungary/bin/drush'
+    drush-script: 'drush8'

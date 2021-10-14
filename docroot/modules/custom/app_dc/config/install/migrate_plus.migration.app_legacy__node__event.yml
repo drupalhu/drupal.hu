@@ -62,10 +62,22 @@ process:
       value: value
       end_value: value2
 
-  app_teaser/0/value: body/0/summary
+  _app_teaser_value:
+    source:
+      - 'body/0/summary'
+      - 'body/0/value'
+    plugin: app_non_empty
+  app_teaser/0/value: '@_app_teaser_value'
   app_teaser/0/format: constants/teaser_text_format
 
-  app_body/0/value: body/0/value
+  app_body/0/value:
+    source:
+      - '@_app_teaser_value'
+      - ''
+      - 'body/0/value'
+    plugin: callback
+    callable: 'str_replace'
+    unpack_source: true
   app_body/0/format: constants/body_text_format
 
   app_attachments:
