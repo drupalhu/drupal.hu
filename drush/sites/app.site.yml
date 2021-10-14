@@ -10,7 +10,7 @@ dev:
   paths:
     drush-script: '/var/www/html/druphungarydev/bin/drush'
 
-stage:
+test:
   uri: 'http://stage.drupal.hu'
   user: 'druphungary.test'
   host: 'staging-5197.prod.hosting.acquia.com'

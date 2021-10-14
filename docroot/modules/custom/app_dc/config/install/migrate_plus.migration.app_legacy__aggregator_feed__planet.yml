@@ -19,7 +19,7 @@ source:
   plugin: app_feeds
 
   constants:
-    refresh: 10800
+    refresh: 0
 
 process:
   title: title

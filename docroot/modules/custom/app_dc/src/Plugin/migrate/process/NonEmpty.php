@@ -22,13 +22,16 @@ class NonEmpty extends ProcessPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $config = array_replace_recursive($this->getDefaultConfiguration(), $this->configuration);
 
     $items = array_values(array_filter(
       $value,
-      function ($item) use ($config) {
-        return ($config['strict'] && isset($item)) || !empty($item);
+      function ($item) use ($config): bool {
+        return $config['strict'] ? isset($item) : !empty($item);
       },
     ));
 

@@ -1,0 +1,24 @@
+uuid: b04dbc03-977b-4257-b0e9-f0703d47f3f0
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.app_links
+    - node.type.casestudy
+  module:
+    - link
+id: node.casestudy.app_links
+field_name: app_links
+entity_type: node
+bundle: casestudy
+label: Linkek
+description: 'A weboldal publikusan elérhető címe.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link
+

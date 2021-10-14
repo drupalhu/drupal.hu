@@ -21,7 +21,7 @@ source:
   plugin: d7_node_revision
   node_type: news
   constants:
-    teaaser_text_format: html_teaser
+    teaser_text_format: html_teaser
     body_text_format: html_body
     langcode: hu
     default_langcode: true

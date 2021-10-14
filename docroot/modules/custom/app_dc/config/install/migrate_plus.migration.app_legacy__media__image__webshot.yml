@@ -1,0 +1,65 @@
+langcode: en
+status: true
+id: app_legacy__media__image__webshot
+label: 'App - Legacy - media:image from field_webshot'
+
+migration_tags:
+  - app
+  - legacy_content
+
+migration_group: app_legacy
+
+migration_dependencies:
+  required:
+    - app_legacy__user__user
+    - app_legacy__file__public
+
+source:
+  plugin: 'app_imagefield'
+  filters:
+    entity_type: 'node'
+    bundle: 'link'
+    field_name: 'field_webshot'
+  constants:
+    langcode: 'hu'
+
+process:
+
+  langcode: 'constants/langcode'
+
+  uid:
+    -
+      source: uid
+      plugin: migration_lookup
+      no_stub: true
+      migration:
+        - app_legacy__user__user
+    -
+      plugin: default_value
+      default_value: 1
+
+  status:
+    source: status
+    plugin: default_value
+    default_value: true
+    strict: true
+
+  created: timestamp
+  changed: timestamp
+
+  field_media_image:
+    source: fid
+    plugin: migration_lookup
+    migration:
+      - app_legacy__file__public
+
+destination:
+  plugin: 'entity:media'
+  default_bundle: 'image'
+  overwrite_properties:
+    - langcode
+    - uid
+    - status
+    - created
+    - changed
+    - field_media_image

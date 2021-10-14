@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.casestudy.app_body
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
+    - field.field.node.casestudy.app_links
     - field.field.node.casestudy.app_teaser
     - image.style.media_library
     - node.type.casestudy
@@ -59,7 +60,7 @@ third_party_settings:
                   link: true
                 third_party_settings: {  }
             additional: {  }
-            weight: 1
+            weight: 3
           164d4fd0-125d-4b9b-8296-93643f61553b:
             uuid: 164d4fd0-125d-4b9b-8296-93643f61553b
             region: content
@@ -74,7 +75,7 @@ third_party_settings:
                 settings: {  }
                 third_party_settings: {  }
             additional: {  }
-            weight: 2
+            weight: 4
           e01e7597-d4bf-4c57-a317-ab865b109f70:
             uuid: e01e7597-d4bf-4c57-a317-ab865b109f70
             region: content
@@ -84,7 +85,30 @@ third_party_settings:
                 entity: layout_builder.entity
               id: 'extra_field_block:node:casestudy:links'
             additional: {  }
-            weight: 3
+            weight: 5
+          667732a5-45a7-4159-99f4-cd103e541ac1:
+            uuid: 667732a5-45a7-4159-99f4-cd103e541ac1
+            region: content
+            configuration:
+              id: 'field_block:node:casestudy:app_links'
+              label: Linkek
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: nofollow
+                  target: '0'
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 2
         third_party_settings: {  }
 id: node.casestudy.teaser
 targetEntityType: node
@@ -123,5 +147,7 @@ content:
 hidden:
   app_attachments: true
   app_body: true
+  app_links: true
   langcode: true
   search_api_excerpt: true
+

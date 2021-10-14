@@ -393,13 +393,14 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
         - 'url.query_args:sort_by'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.media_library'
   page:
     display_plugin: page
     id: page
@@ -417,16 +418,30 @@ display:
         weight: 5
         context: '0'
         menu_name: admin
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          content: '@start – @end / @total megjelenítése'
+          plugin_id: result
+      defaults:
+        header: false
     cache_metadata:
       max-age: 0
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
         - 'url.query_args:sort_by'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.media_library'
   widget:
     display_plugin: page
     id: widget
@@ -705,7 +720,9 @@ display:
         - url.query_args
         - 'url.query_args:sort_by'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.media_library'
   widget_table:
     display_plugin: page
     id: widget_table
@@ -954,3 +971,4 @@ display:
         - 'url.query_args:sort_by'
         - user.permissions
       tags: {  }
+

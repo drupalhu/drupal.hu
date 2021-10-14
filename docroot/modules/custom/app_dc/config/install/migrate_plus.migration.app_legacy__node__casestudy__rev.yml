@@ -13,6 +13,7 @@ migration_dependencies:
   required:
     - app_legacy__user__user
     - app_legacy__node__casestudy
+    - app_legacy__media__image__webshot
 
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 
@@ -20,10 +21,11 @@ source:
   plugin: d7_node_revision
   node_type: link
   constants:
-    teaaser_text_format: html_teaser
+    teaser_text_format: html_teaser
     body_text_format: html_body
     langcode: hu
     default_langcode: true
+    links_options: 'a:0:{}'
 
 process:
   langcode: constants/langcode
@@ -57,6 +59,17 @@ process:
 
   title: title
 
+  app_image:
+    -
+      source: 'field_webshot/0/fid'
+      plugin: migration_lookup
+      no_stub: true
+      migration:
+        - app_legacy__media__image__webshot
+    -
+      plugin: skip_on_empty
+      method: process
+
   _app_teaser_value:
     source:
       - 'body/0/summary'
@@ -74,6 +87,17 @@ process:
     callable: 'str_replace'
     unpack_source: true
   app_body/0/format: constants/body_text_format
+
+  app_links:
+    source: 'field_link'
+    plugin: 'sub_process'
+    process:
+      uri:
+        source: 'url'
+        plugin: 'skip_on_empty'
+        method: 'process'
+      title: 'title'
+      options: 'constants/links_options'
 
 destination:
   plugin: 'entity_revision:node'

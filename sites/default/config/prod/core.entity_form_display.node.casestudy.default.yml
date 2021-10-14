@@ -7,10 +7,12 @@ dependencies:
     - field.field.node.casestudy.app_body
     - field.field.node.casestudy.app_drupal_version
     - field.field.node.casestudy.app_image
+    - field.field.node.casestudy.app_links
     - field.field.node.casestudy.app_teaser
     - node.type.casestudy
   module:
     - file
+    - link
     - media_library
     - path
     - text
@@ -20,14 +22,14 @@ bundle: casestudy
 mode: default
 content:
   app_attachments:
-    weight: 26
+    weight: 7
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
   app_body:
-    weight: 5
+    weight: 6
     settings:
       rows: 5
       placeholder: ''
@@ -35,7 +37,7 @@ content:
     type: text_textarea
     region: content
   app_drupal_version:
-    weight: 3
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -47,8 +49,16 @@ content:
     third_party_settings: {  }
     type: media_library_widget
     region: content
+  app_links:
+    weight: 3
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   app_teaser:
-    weight: 4
+    weight: 5
     settings:
       rows: 5
       placeholder: ''
@@ -57,7 +67,7 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -70,7 +80,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -78,21 +88,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 10
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 13
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 11
     region: content
     third_party_settings: {  }
   title:
@@ -105,7 +115,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 8
     settings:
       match_operator: CONTAINS
       size: 60
@@ -114,3 +124,4 @@ content:
     region: content
     third_party_settings: {  }
 hidden: {  }
+
