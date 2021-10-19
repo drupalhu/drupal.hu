@@ -1,0 +1,8 @@
+marvin:
+  acquia:
+    projectId: 'druphungary'
+    gitHost: 'svn-3224.prod.hosting.acquia.com'
+    artifact:
+      gitCloneAndClean:
+        remoteName: 'acquia'
+        remoteUrl: '${marvin.acquia.projectId}@${marvin.acquia.gitHost}:${marvin.acquia.projectId}.git'

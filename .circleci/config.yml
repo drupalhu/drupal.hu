@@ -21,6 +21,7 @@ orbs:
   YARN_CACHE_FOLDER: '/root/.cache/yarn/v6'
 
 .env_app: &env_app
+  APP_HASH_SALT: '04Wz1klfHuAtBZh9ufzsDL8YIKJ6rZYPMwWFI4unhDU7'
   appDrushExecutable: 'bin/drush --config=drush'
   appDrushSiteAlias: '@app.local'
   appDocroot: 'docroot'
@@ -43,13 +44,20 @@ orbs:
   MYSQL_DATABASE: 'drupalhu__default'
   appMysqlHost: 'database'
 
+.parameters:
+  project_root: &parameter_project_root
+    type: 'string'
+    default: '.'
+  solr_cores_dir: &parameter_solr_cores_dir
+    type: 'string'
+    default: './sites/default/solr/cores/'
 
 executors:
   php_min:
     docker:
       - &docker_container_main
         name: 'main'
-        image: 'sweetchuck/php-env-dev:7.4.23-n141701-20210914'
+        image: 'sweetchuck/php-env-dev:7.4.24-n141701-20211019'
         environment:
           <<: *env_common
           <<: *env_composer
@@ -81,6 +89,7 @@ commands:
           command: |-
             git config --global user.email 'circleci@drupal.hu'
             git config --global user.name  "CircleCI ${CIRCLE_USERNAME}"
+            git config --global log.date   'iso'
 
   composer_install:
     description: 'Composer install'
@@ -105,40 +114,42 @@ commands:
             - '/root/.cache/composer/'
 
   main_instance_build:
-    description: 'Main instance code base'
+    description: 'Main instance build'
     steps:
       -
         run:
-          name: 'Main instance prepare – Calculate checksum of NPM tools'
+          name: 'Main instance build – Calculate checksum of NPM tools'
           command: |-
             # Collect all the checksum of yarn.lock files into one file.
             echo -n '' > 'checksum-of-frontend-asset-sources.sha256'
             git ls-files -- '**/yarn.lock' | xargs sha256sum >> 'checksum-of-frontend-asset-sources.sha256'
       -
         restore_cache:
-          name: 'Main instance prepare – NPM – cache restore'
+          name: 'Main instance build – NPM – cache restore'
           keys:
             - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
       -
         run:
-          name: 'Main instance prepare – drush marvin:build'
-          command: >
-            $appDrushExecutable marvin:build
+          name: 'Main instance build – drush marvin:build'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appMarvinOnboardingDrushLocalYml "${PWD}"
+            ${appDrushExecutable} marvin:build
       -
         save_cache:
-          name: 'Main instance prepare – NPM – cache save'
+          name: 'Main instance build – NPM – cache save'
           key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
           paths:
             - '/root/.cache/yarn/v6'
 
-  lint:
+  test_lint:
     description: 'Run linters'
     steps:
       -
         run:
           name: 'Run linters'
           command: >-
-            $appDrushExecutable marvin:lint
+            ${appDrushExecutable} marvin:lint
 
   test_unit:
     description: 'Test – Unit'
@@ -176,9 +187,7 @@ commands:
         run:
           name: 'Build an Acquia specific release artifact'
           command: |-
-            $appDrushExecutable \
-              --define='marvin.acquia.projectId=' \
-              marvin:artifact:build:acquia
+            ${appDrushExecutable} marvin:artifact:build:acquia
       -
         persist_to_workspace:
           name: 'Store the release artifact'
@@ -212,6 +221,7 @@ commands:
     steps:
       -
         run:
+          # The MySQL container is not immediately ready for connections.
           name: 'MySQL – start – wait'
           command: |-
             . ./.circleci/scripts/include.bash
@@ -224,6 +234,10 @@ commands:
             appMysqlPrepareCnf
       -
         run:
+          # Legacy migration not going to happen on CI,
+          # but the `drush migrate:import app_default*` command fails when a migration source is not available.
+          # So the source database has to be available,
+          # but luckily the database tables aren't required.
           name: 'MySQL – start – create migration source database'
           command: |-
             mysql \
@@ -235,24 +249,24 @@ commands:
               "
 
   solr_start:
+    # @todo Multi-site support.
     description: |-
       Solr is already running in another container.
       It has to be properly configured and restarted.
+    parameters:
+      solr_cores_dir: *parameter_solr_cores_dir
     steps:
       -
         run:
           name: 'Solr – start – Initialize SSH access to "solr" host'
           command: |-
-            mkdir -p ~/.ssh
-            if ssh-keygen -F 'solr'; then
-                ssh-keygen -R 'solr'
-            fi
-            ssh-keyscan -H 'solr' >> ~/.ssh/known_hosts
+            . ./.circleci/scripts/include.bash
+            appSshKnownHostsAdd 'solr'
       -
         run:
           name: 'Solr – start – Configure Solr cores'
           command: |-
-            sshpass -p "${appSolrRootPassword}" scp -r './sites/default/solr/cores/' 'root@solr:/usr/local/share/solr/server/solr/'
+            sshpass -p "${appSolrRootPassword}" scp -r '<<parameters.solr_cores_dir>>' 'root@solr:/usr/local/share/solr/server/solr/'
       -
         run:
           name: 'Solr – start – Restart the Solr server'
@@ -308,8 +322,6 @@ commands:
           name: 'Acquia artifact – prepare – settings.php'
           command: |-
             echo '@todo'
-
-
 
   main_instance_prepare:
     description: 'Prepare the main Drupal instance for end-to-end tests'
@@ -389,7 +401,173 @@ commands:
           name: 'Test – Functional JavaScript – Store test results'
           path: './reports/machine/result/'
 
-  mysql_debug:
+  acquia_instance_prepare:
+    description: 'Acquia instance prepare'
+    parameters:
+      project_root: *parameter_project_root
+      site:
+        type: 'string'
+        default: 'default'
+    steps:
+      -
+        run:
+          name: 'Acquia instance prepare – settings.local.php'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+
+            appMarvinOnboardingSettingsLocalPhp "${PWD}" 'default'
+
+  acquia_backup_download:
+    description: 'Download backup from AcquiaHosting:dev'
+    parameters:
+      project_root: *parameter_project_root
+    steps:
+      -
+        run:
+          name: 'Download backup from AcquiaHosting:dev'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+
+            remoteHome='/home/druphungary'
+            mkdir --parents './sites/default/backup/prod/'
+
+            ./bin/drush \
+              --config='drush' \
+              core:rsync \
+              "@app.dev:/${remoteHome}/backup/prod/default/" \
+              './sites/default/backup/prod/' \
+              -- \
+              --delete
+
+  backup_restore:
+    description: 'Backup restore'
+    parameters:
+      project_root: *parameter_project_root
+      site:
+        type: 'string'
+        default: 'default'
+      backup:
+        type: 'string'
+        default: 'prod'
+    # @todo Clear Solr indexes and reindex
+    steps:
+      -
+        run:
+          name: 'Backup restore – databases'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+            ./bin/drush \
+              --config='drush' \
+              --yes \
+              sql:drop \
+            && \
+            ./bin/drush \
+              --config='drush' \
+              --yes \
+              sql:cli \
+              < "./sites/<<parameters.site>>/backup/<<parameters.backup>>/database/default.mysql"
+      -
+        run:
+          name: 'Backup restore – files'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+
+            ./bin/drush \
+              --config='drush' \
+              --yes \
+              core:rsync \
+              "./sites/<<parameters.site>>/backup/<<parameters.backup>>/file/files/" \
+              @app.local:%files \
+              -- \
+              --delete \
+            && \
+            ./bin/drush \
+              --config='drush' \
+              --yes \
+              core:rsync \
+              "./sites/<<parameters.site>>/backup/<<parameters.backup>>/file/private/" \
+              @app.local:%private \
+              -- \
+              --delete
+
+  test_updatedb:
+    description: 'Test – update process'
+    steps:
+      -
+        run:
+          name: 'Test – update process'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            version="$(appLatestArtifactVersionNumber)"
+            cd "./artifacts/${version}/acquia"
+
+            ./bin/drush site:set "${PWD}/docroot#default"
+
+            ./bin/drush --config='drush' status || true
+
+            ./bin/drush --config='drush' --yes updatedb \
+            && \
+            ./bin/drush --config='drush' --yes config:import \
+            && \
+            ./bin/drush --config='drush' --yes locale:check \
+            && \
+            ./bin/drush --config='drush' --yes locale:update \
+
+            ./bin/drush site:set
+
+  add_ssh_keys_acquia:
+    description: 'Add SSH keys – Acquia'
+    steps:
+      -
+        add_ssh_keys:
+          fingerprints:
+            # https://app.circleci.com/settings/project/github/drupalhu/drupal.hu/ssh
+            - '3d:17:dd:de:41:4f:dc:a7:2a:ca:07:73:b3:82:7b:b7'
+      -
+        run:
+          name: 'Add SSH keys – Acquia – add to ~/.ssh/known_hosts'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appSshKnownHostsAdd "$(yq eval '.marvin.acquia.gitHost' ./.circleci/scripts/drush.acquia.yml)"
+            appSshKnownHostsAdd "$(yq eval '.dev.host'  ./drush/sites/app.site.yml)"
+            appSshKnownHostsAdd "$(yq eval '.test.host' ./drush/sites/app.site.yml)"
+
+  deploy_to_acquia_env_dev:
+    description: 'Deploy to Acquia environment – dev'
+    steps:
+      -
+        run:
+          name: 'Deploy to Acquia environment – dev – git push'
+          command: |-
+            . ./.circleci/scripts/include.bash
+
+            version="$(appLatestArtifactVersionNumber)"
+            acquiaGitRemoteBranch='2.x'
+
+            srcGitCommitHash="$(git log -1 --format='%h')"
+            srcGitCommitDate="$(git log -1 --format='%ad')"
+            (
+                cd "artifacts/${version}/acquia"
+                rm --recursive --force ./.git/hooks
+                composer update --no-dev --lock
+                acquiaGitLocalBranch="$(git rev-parse --abbrev-ref HEAD)"
+                git add .
+                git commit \
+                    --message="Built from ${srcGitCommitHash} ${srcGitCommitDate}" \
+                    --message="${APP_GITHUB_URL}/commit/${srcGitCommitHash}"
+                git push acquia "${acquiaGitLocalBranch}:${acquiaGitRemoteBranch}"
+            )
+
+  debug_mysql:
     description: 'MySQL – Debug'
     steps:
       -
@@ -420,6 +598,46 @@ commands:
               "${MYSQL_DATABASE}" \
               --execute='SELECT USER(); SHOW DATABASES;'
 
+  debug_ssh_config:
+    description: 'Debug – SSH config'
+    steps:
+      -
+        run:
+          name: 'Debug – SSH config'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appDebugSshConfig
+
+  debug_acquia_git_access:
+    description: 'Debug – Acquia Hosting – Git access'
+    steps:
+      -
+        run:
+          name: 'Debug – Acquia Hosting – Git access'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appDebugAcquiaGitAccess
+
+  debug_acquia_env_access:
+    description: 'Debug – Acquia Hosting – Environment access'
+    parameters:
+      ah_env:
+        type: 'string'
+    steps:
+      -
+        run:
+          name: 'Debug – Acquia Hosting – Environment access'
+          command: |-
+            . ./.circleci/scripts/include.bash
+            appDebugAcquiaEnvAccess '<<parameters.ah_env>>'
+
+##
+# @todo Replace "~/repo" with "/root/project" (or whatever the ~/ is in the used Docker container)
+#       because the tilde (~) symbol is not resolved by the shell in a case like this:
+#       shell: cd "${CIRCLE_WORKING_DIRECTORY}"
+#       Unfortunately all the examples uses the "~" char on this page:
+#       https://circleci.com/docs/2.0/configuration-reference/#example
+##
 jobs:
   build:
     executor: 'php_min'
@@ -429,14 +647,14 @@ jobs:
       - 'composer_install'
       - 'main_instance_build'
 
-  lint_and_test_unit:
+  test_static:
     executor: 'php_min'
     working_directory: '~/repo'
     steps:
       - 'checkout'
       - 'composer_install'
       - 'main_instance_build'
-      - 'lint'
+      - 'test_lint'
       - 'test_unit'
 
   release_artifact_build:
@@ -446,6 +664,7 @@ jobs:
       - 'checkout'
       - 'composer_install'
       - 'main_instance_build'
+      - 'add_ssh_keys_acquia'
       - 'artifact_acquia_build'
 
   test_behat:
@@ -484,30 +703,73 @@ jobs:
       - 'main_instance_prepare'
       - 'test_functional_javascript'
 
-  mysql_debug:
+  test_updatedb:
+    executor: 'php_min_with_services'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'git_config'
+      - 'add_ssh_keys_acquia'
+      - 'artifact_acquia_restore'
+      - 'mysql_start'
+      - 'solr_start'
+      -
+        acquia_instance_prepare:
+          project_root: 'artifacts/*/acquia'
+      -
+        acquia_backup_download:
+          project_root: 'artifacts/*/acquia'
+      -
+        backup_restore:
+          project_root: 'artifacts/*/acquia'
+          site: 'default'
+          backup: 'prod'
+      - 'test_updatedb'
+
+  deploy_to_acquia_env_dev:
+    executor: 'php_min'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'git_config'
+      - 'add_ssh_keys_acquia'
+      - 'artifact_acquia_restore'
+      - 'deploy_to_acquia_env_dev'
+
+  debug_acquia_access:
+    executor: 'php_min'
+    working_directory: '~/repo'
+    steps:
+      - 'checkout'
+      - 'git_config'
+      - 'add_ssh_keys_acquia'
+      - 'debug_acquia_git_access'
+      -
+        debug_acquia_env_access:
+          ah_env: 'dev'
+      -
+        debug_acquia_env_access:
+          ah_env: 'test'
+
+  debug_mysql:
     executor: 'php_min_with_services'
     working_directory: '~/repo'
     steps:
       - 'checkout'
       - 'mysql_start'
-      - 'mysql_debug'
+      - 'debug_mysql'
 
 workflows:
-  mysql_debug:
-    when: false
-    jobs:
-      - 'mysql_debug'
-
-  lint_and_test:
+  QA:
     jobs:
       -
         build: {}
       -
-        lint_and_test_unit:
+        release_artifact_build:
           requires:
             - 'build'
       -
-        release_artifact_build:
+        test_static:
           requires:
             - 'build'
       -
@@ -518,3 +780,45 @@ workflows:
         test_functional_javascript:
           requires:
             - 'build'
+      -
+        test_updatedb:
+          requires:
+            -
+              'release_artifact_build'
+      -
+        deploy_to_acquia_env_dev:
+          filters:
+            branches:
+              only: '2.x'
+          requires:
+            - 'test_static'
+            - 'test_behat'
+            - 'test_functional_javascript'
+            - 'test_updatedb'
+            - 'release_artifact_build'
+
+  debug_acquia_access:
+    when: false
+    jobs:
+      -
+        debug_acquia_access: {}
+
+  debug_test_updatedb:
+    when: false
+    jobs:
+      -
+        build: {}
+      -
+        release_artifact_build:
+          requires:
+            - 'build'
+      -
+        test_updatedb:
+          requires:
+            -
+              'release_artifact_build'
+
+  debug_mysql:
+    when: false
+    jobs:
+      - 'debug_mysql'

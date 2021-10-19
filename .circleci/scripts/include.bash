@@ -195,7 +195,9 @@ function appMarvinOnboarding() {
 
     local siteDir
     siteDir="$(${appDrushExecutable} "${siteAlias}" 'core:status' --field='site' --format='string')"
+    siteDir="${siteDir#sites/}"
 
+    appMarvinOnboardingDrushLocalYml "${projectDir}"
     appMarvinOnboardingSettingsLocalPhp "${projectDir}" "${siteDir}"
 }
 
@@ -223,18 +225,98 @@ function appPhpbrewCurrent() {
         --perl-regexp '(?<=^\* )[^\s+]+'
 }
 
+function appSshKnownHostsAdd() {
+    local host="${1}"
+    : "${host:?'host argument is required'}"
+
+    [ -d ~/.ssh ] || mkdir ~/.ssh
+    touch ~/.ssh/known_hosts
+    # Check if it is already added.
+    if ssh-keygen -F "${host}"; then
+        # Remove the existing entry.
+        ssh-keygen -R "${host}"
+    fi
+
+    # Add a fresh one.
+    ssh-keyscan -H "${host}" >> ~/.ssh/known_hosts
+}
+
+function appMarvinOnboardingDrushLocalYml() {
+    local projectDir="${1}"
+    : "${projectDir:?'projectDir argument is required'}"
+
+    local srcFileName="${projectDir}/.circleci/scripts/drush.acquia.yml"
+    local dstFileName="${projectDir}/drush/drush.local.yml"
+
+    if [[ ! -s "${dstFileName}" ]]; then
+        echo '{}' > "${dstFileName}"
+    fi
+
+    # shellcheck disable=SC2016
+    merged="$(yq \
+        eval-all \
+        '. as $item ireduce ({}; . * $item )' \
+        "${dstFileName}" \
+        "${srcFileName}" \
+    )"
+
+    echo "${merged}" > "${dstFileName}"
+}
+
+function appDebugSshConfig() {
+    ls -la ~/.ssh || true
+    cat ~/.ssh/known_hosts || true
+    cat ~/.ssh/config || true
+}
+
+function appDebugAcquiaGitAccess() {
+    local ahProjectId
+    ahProjectId="$(yq eval '.marvin.acquia.projectId' './.circleci/scripts/drush.acquia.yml')"
+
+    local ahGitHost
+    ahGitHost="$(yq eval '.marvin.acquia.gitHost' './.circleci/scripts/drush.acquia.yml')"
+
+    git ls-remote "${ahProjectId}@${ahGitHost}:${ahProjectId}.git"
+}
+
+function appDebugAcquiaEnvAccess() {
+    local ahEnv="${1}"
+    : "${ahEnv:?'ahEnv argument is required'}"
+
+    ahUser="$(yq eval ".${ahEnv}.user" './drush/sites/app.site.yml')" || return 1
+    ahHost="$(yq eval ".${ahEnv}.host" './drush/sites/app.site.yml')" || return 2
+    ssh "${ahUser}@${ahHost}" 'pwd ; ls -la' || return 3
+
+    return 0
+}
+
 function appMarvinOnboardingSettingsLocalPhp() {
     local projectDir="${1:?Project directory is required}"
     local siteDir="${2:?Site directory is required}"
 
-    local settingsPhpFileName="${projectDir}/${appDocroot}/${siteDir}/settings.local.php"
+    local settingsPhpFileName="${projectDir}/${appDocroot}/sites/${siteDir}/settings.local.php"
+
+    appMarvinOnboardingSettingsLocalPhpInit "${settingsPhpFileName}"
+    appMarvinOnboardingSettingsLocalPhpAddDatabases "${settingsPhpFileName}" "${siteDir}"
+    appMarvinOnboardingSettingsLocalPhpAddSearchApiSolr "${settingsPhpFileName}" "${siteDir}"
+
+    cat <<'PHP' >> "${settingsPhpFileName}"
+
+$settings['trusted_host_patterns'] = ['^localhost$'];
+
+PHP
+}
+
+function appMarvinOnboardingSettingsLocalPhpInit() {
+    local settingsPhpFileName="${1}"
+    : "${settingsPhpFileName:?'fileName argument is required'}"
 
     if [[ -d "$(dirname "${settingsPhpFileName}")" ]]; then
         mkdir --parents "$(dirname "${settingsPhpFileName}")"
     fi
 
     if [[ ! -f "${settingsPhpFileName}" ]]; then
-        cat << PHP > "${fileName}"
+        cat << PHP > "${settingsPhpFileName}"
 <?php
 
 /**
@@ -244,6 +326,11 @@ function appMarvinOnboardingSettingsLocalPhp() {
 
 PHP
     fi
+}
+
+function appMarvinOnboardingSettingsLocalPhpAddDatabases() {
+    local settingsPhpFileName="${1}"
+    : "${settingsPhpFileName:?'fileName argument is required'}"
 
     cat << PHP >> "${settingsPhpFileName}"
 \$databases['default']['default']['username'] = '${MYSQL_USER}';
@@ -255,14 +342,20 @@ PHP
 \$databases['migrate']['default'] = \$databases['default']['default'];
 \$databases['migrate']['default']['database'] = 'migrate';
 
-\$settings['trusted_host_patterns'] = ['^localhost\$'];
-
 PHP
+}
 
+function appMarvinOnboardingSettingsLocalPhpAddSearchApiSolr() {
+    local settingsPhpFileName="${1}"
+    : "${settingsPhpFileName:?'fileName argument is required'}"
 
-    fileNames=("$(find "./${siteDir}/config/prod" -name 'search_api.server.*.yml')")
-    for fileName in ${fileNames[*]}
-    do
+    local siteDir="${2}"
+    : "${siteDir:?'siteDir argument is required'}"
+
+    local fileNames
+    declare -a fileNames
+    fileNames=("$(find "./sites/${siteDir}/config/prod" -name 'search_api.server.*.yml')")
+    while read -r fileName && test "${fileName}" != ''; do
         if [[ "$(yq eval --no-colors '.backend_config.connector' "${fileName}")" != 'solr_acquia_connector' ]]; then
             continue
         fi
@@ -289,5 +382,5 @@ PHP
 ];
 
 PHP
-    done
+    done <<< "${fileNames[@]}"
 }

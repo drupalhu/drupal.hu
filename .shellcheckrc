@@ -1,1 +1,2 @@
+shell=bash
 enable=quote-safe-variables,require-variable-braces
