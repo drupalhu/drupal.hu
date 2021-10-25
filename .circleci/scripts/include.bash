@@ -155,33 +155,73 @@ function appLatestArtifactVersionNumber() {
 }
 
 function appWaitForMysql() {
-    local user="${1}"
+    local user="${1:-root}"
     local pass="${2}"
-    local host="${3}"
-    local port="${4}"
+    local host="${3:-127.0.0.0}"
+    local port="${4:-3306}"
 
-    timeout \
-        20 \
-        bash -c \
-        -- \
-        "while ! mysqladmin ping --user=\"${user}\" --password=\"${pass}\" --host=\"${host}\" --port=\"${port}\";
-        do
-            sleep 1;
-        done;"
+    local timeout
+    timeout='10'
+
+    local callback
+    callback="while ! mysqladmin ping --user='${user}' --password='${pass}' --host='${host}' --port='${port}';
+do
+    sleep 1;
+done;"
+
+    appWaitFor "${timeout}" "${callback}"
 }
 
 function appWaitForHeadlessChromium() {
-    local chromiumHostPort="${1:?Host and port of Chromium is required}"
+    local chromiumHostPort="${1}"
+    : "${chromiumHostPort:?'chromiumHostPort argument is required'}"
 
-    timeout \
-        10 \
-        bash -c \
-        -- \
-        "while ! curl --silent --show-error http://${chromiumHostPort}/json/version;
-        do
-            sleep 1;
-            echo Waiting for Chromium on http://${chromiumHostPort};
-        done;"
+    local timeout
+    timeout='10'
+
+    local callback
+    callback="while ! curl --silent --show-error 'http://${chromiumHostPort}/json/version';
+do
+    sleep 1;
+    echo 'Waiting for Chromium on http://${chromiumHostPort}';
+done;
+"
+
+    appWaitFor "${timeout}" "${callback}"
+}
+
+function appWaitForSupervisor() {
+    local baseUrl="${1}"
+    : "${baseUrl:?'baseUrl argument is required'}"
+
+    local timeout="${2}"
+    : "${timeout:?'timeout argument is required'}"
+
+    local requestBody
+    requestBody='<?xml version="1.0" encoding="utf-8"?>
+<methodCall>
+    <methodName>system.listMethods</methodName>
+    <params/>
+</methodCall>'
+
+    local callback
+    callback="while ! curl --silent --show-error --data '${requestBody}' '${baseUrl}/RPC2';
+do
+    sleep 1;
+    echo 'Waiting for Supervisor on ${baseUrl}';
+done;"
+
+    appWaitFor "${timeout}" "${callback}"
+}
+
+function appWaitFor() {
+    local timeout="${1}"
+    : "${timeout:?'timeout argument is required'}"
+
+    local callback="${2}"
+    : "${callback:?'callback argument is required'}"
+
+    timeout "${timeout}" bash -c -- "${callback}"
 }
 
 function appMarvinOnboarding() {

@@ -210,9 +210,10 @@ commands:
         run:
           name: 'Start Supervisor – execute'
           command: |-
+            . ./.circleci/scripts/include.bash
+
             supervisord
-            sleep 3
-      # @todo Wait for supervisor.
+            appWaitForSupervisor 'http://127.0.0.1:8999' '10'
 
   mysql_start:
     description: |-
