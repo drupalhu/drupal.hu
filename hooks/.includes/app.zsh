@@ -20,6 +20,11 @@ function onPostCodeDeploy() {
     fi
 
     appUpdate || returnCode=$?
+
+    if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
+        appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
+    fi
+
     appLogger 'END onPostCodeDeploy'
 
     return "${returnCode}"
@@ -44,6 +49,11 @@ function onPostCodeUpdate() {
     fi
 
     appUpdate || returnCode=$?
+
+    if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
+        appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
+    fi
+
     appLogger 'END onPostCodeUpdate'
 
     return "${returnCode}"
@@ -242,6 +252,38 @@ function appUpdateSite() {
     ./bin/drush site:set
 }
 #endregion
+
+function appHttpAuthEnable() {
+    local user="${1}"
+    : "${user:?'user argument is required'}"
+
+    local pass="${2}"
+    : "${pass:?'pass argument is required'}"
+
+    ./bin/drush \
+        --config='drush' \
+        --yes \
+        pm:enable \
+        'shield' \
+    && \
+    ./bin/drush \
+        --config='drush' \
+        --yes \
+        config:set \
+        'shield.settings' \
+        'credentials.shield.user' \
+        "${user}" \
+    && \
+    ./bin/drush \
+        --config='drush' \
+        --yes \
+        config:set \
+        'shield.settings' \
+        'credentials.shield.pass' \
+        "${pass}"
+
+    appLogger 'info' 'shield module is activated'
+}
 
 #region Helper functions
 function appLogger() {

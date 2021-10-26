@@ -62,6 +62,7 @@
         "drupal/rabbit_hole": "^1.0@beta",
         "drupal/schema_metatag": "^2.1",
         "drupal/search_api_solr": "^4.1",
+        "drupal/shield": "^1.4",
         "drupal/string_field_formatter": "^2.0",
         "drush/drush": "^10.0",
         "oomphinc/composer-installers-extender": "^2.0"
