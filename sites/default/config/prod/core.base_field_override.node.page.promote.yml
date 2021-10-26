@@ -17,6 +17,6 @@ default_value:
     value: 0
 default_value_callback: ''
 settings:
-  on_label: 'Be'
-  off_label: 'Ki'
+  on_label: Be
+  off_label: Ki
 field_type: boolean

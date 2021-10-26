@@ -7,16 +7,16 @@ dependencies:
 id: book
 label: Könyvoldal
 type: 'canonical_entities:node'
-pattern: '/dokumentáció/[node:title]'
+pattern: '/dokumentacio/[node:title]'
 selection_criteria:
-  c7c416f3-05e0-4ff8-bdd6-30f41e82f7bc:
+  55962af8-983d-47a8-9435-e9ac250cd640:
     id: node_type
     bundles:
       book: book
     negate: false
     context_mapping:
       node: node
-    uuid: c7c416f3-05e0-4ff8-bdd6-30f41e82f7bc
+    uuid: 55962af8-983d-47a8-9435-e9ac250cd640
 selection_logic: and
 weight: 2
 relationships: {  }

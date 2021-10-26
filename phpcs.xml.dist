@@ -20,6 +20,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.MissingParamComment"/>
     <exclude name="Drupal.Commenting.FunctionComment.MissingReturnComment"/>
     <exclude name="Drupal.Commenting.VariableComment.Missing"/>
+    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
     <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
   </rule>
 
@@ -32,6 +33,8 @@
   <rule ref="DrupalPractice"/>
 
   <file>./docroot/modules/custom/</file>
+  <file>./drush/Commands/custom/</file>
+  <file>./tests/src/</file>
 
   <file>./docroot/themes/custom/</file>
   <exclude-pattern>./docroot/themes/custom/*/.bundle/</exclude-pattern>

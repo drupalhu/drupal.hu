@@ -971,4 +971,3 @@ display:
         - 'url.query_args:sort_by'
         - user.permissions
       tags: {  }
-

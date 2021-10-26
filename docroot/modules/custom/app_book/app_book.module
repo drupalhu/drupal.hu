@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Book related functions.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function app_book_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  if ($node->bundle() !== 'book') {
+    return AccessResult::neutral();
+  }
+
+  if ($operation === 'update'
+    && !$node->isPublished()
+    && !$account->hasPermission('delete any book content')
+  ) {
+    return AccessResult::forbidden('Only administrators are allowed to edit unpublished book contents.');
+  }
+
+  return AccessResult::neutral();
+}

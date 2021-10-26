@@ -1,0 +1,6 @@
+type: 'module'
+core_version_requirement: '^9'
+
+package: 'App'
+name: 'App - Book'
+description: 'Documentation related functions'

@@ -5,6 +5,7 @@ module:
   admin_toolbar_tools: 0
   aggregator: 0
   allowed_formats: 0
+  app_book: 0
   app_core: 0
   big_pipe: 0
   block: 0
@@ -40,6 +41,7 @@ module:
   menu_ui: 0
   node: 0
   options: 0
+  override_node_options: 0
   page_cache: 0
   path: 0
   path_alias: 0
@@ -56,6 +58,7 @@ module:
   text: 0
   token: 0
   toolbar: 0
+  transliterate_filenames: 0
   user: 0
   forum: 1
   menu_link_content: 1
