@@ -248,6 +248,12 @@
         "enable-patching": true,
         "composer-exit-on-patch-failure": true,
         "patches": {
+            "behat/behat": {
+                "https://github.com/Behat/Behat/issues/1373 - Replace %1% with %count% in bg,hu,ko translations": "https://patch-diff.githubusercontent.com/raw/Behat/Behat/pull/1374.patch"
+            },
+            "dmore/chrome-mink-driver": {
+                "https://gitlab.com/DMore/chrome-mink-driver/-/merge_requests/111 - Deprecated: Required parameter $base_url follows optional parameter $api_url": "https://gitlab.com/DMore/chrome-mink-driver/-/merge_requests/111.patch"
+            },
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/2960714 - [meta] Improve ::generateSampleValue() for common field types": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch"
             },

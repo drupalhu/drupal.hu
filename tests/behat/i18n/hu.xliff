@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff
+  version="2.0"
+  srcLang="en"
+  trgLang="hu"
+  xmlns="urn:oasis:names:tc:xliff:document:2.0">
+
+  <file id="external-translations" >
+    <group id="Drupal.DrupalExtension.Context.MinkContext">
+      <unit id="assertAtPath">
+        <segment id="given-1" state="translated">
+          <source>I am at :path</source>
+          <target>:path útvonalon vagyok</target>
+        </segment>
+
+        <segment id="when-1">
+          <source>I visit :path</source>
+          <target>ellátogatok a :path útvonalra</target>
+        </segment>
+      </unit>
+    </group>
+  </file>
+</xliff>
