@@ -1,0 +1,10 @@
+uuid: 7d2a8f1c-efa1-4299-85fc-6df77cda1c3b
+langcode: hu
+status: true
+dependencies:
+  module:
+    - media
+id: media.hero
+label: Sajátságos
+targetEntityType: media
+cache: true

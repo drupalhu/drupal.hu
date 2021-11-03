@@ -20,3 +20,7 @@ regions:
   content_below: 'Content Below'
   footer_top: 'Footer Top'
   footer_bottom: 'Footer Bottom'
+
+libraries-extend:
+  olivero/global-styling:
+    - 'appf/global-styling'

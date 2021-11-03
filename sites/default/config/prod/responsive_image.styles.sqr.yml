@@ -1,0 +1,36 @@
+uuid: 53aeeb54-159f-4442-8463-4aaff888b721
+langcode: hu
+status: true
+dependencies:
+  config:
+    - image.style.sqrs40
+    - image.style.sqrs50
+    - image.style.sqrs60
+    - image.style.sqrs70
+  theme:
+    - appf
+id: sqr
+label: Négyzet
+image_style_mappings:
+  -
+    breakpoint_id: default.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: sqrs70
+  -
+    breakpoint_id: default.lg
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: sqrs60
+  -
+    breakpoint_id: default.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: sqrs50
+  -
+    breakpoint_id: default.sm
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: sqrs40
+breakpoint_group: appf
+fallback_image_style: sqrs40

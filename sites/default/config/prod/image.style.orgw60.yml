@@ -1,0 +1,16 @@
+uuid: 82cf576c-3858-44a1-9046-9ca0d75ae361
+langcode: hu
+status: true
+dependencies: {  }
+name: orgw60
+label: 'Eredeti – szélesség 992'
+effects:
+  8dc8dbe8-3d4a-4368-a79b-8df31556d670:
+    uuid: 8dc8dbe8-3d4a-4368-a79b-8df31556d670
+    id: image_scale
+    weight: 1
+    data:
+      width: 992
+      height: null
+      upscale: false
+pipeline: webp

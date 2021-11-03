@@ -1,0 +1,36 @@
+uuid: 51d23e94-97c2-4bab-b2e5-2a19254cc914
+langcode: hu
+status: true
+dependencies:
+  config:
+    - image.style.orgw40
+    - image.style.orgw50
+    - image.style.orgw60
+    - image.style.orgw70
+  theme:
+    - appf
+id: org
+label: Eredeti
+image_style_mappings:
+  -
+    breakpoint_id: default.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: orgw70
+  -
+    breakpoint_id: default.lg
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: orgw60
+  -
+    breakpoint_id: default.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: orgw50
+  -
+    breakpoint_id: default.sm
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: orgw40
+breakpoint_group: appf
+fallback_image_style: orgw40

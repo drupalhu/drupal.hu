@@ -270,7 +270,7 @@ Feljegyzés 01:
   title: 'Feljegyzés 01'
   app_attachments:
     -
-      target_id: attachment/note-01.pdf
+      target_id: attachment/2021/note-01.pdf
   app_body:
     -
       value: |

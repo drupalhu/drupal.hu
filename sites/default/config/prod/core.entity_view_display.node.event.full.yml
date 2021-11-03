@@ -35,17 +35,19 @@ third_party_settings:
             uuid: 7811e572-2815-4bf6-b9be-079bdf6c08eb
             region: content
             configuration:
+              id: 'field_block:node:event:app_image'
+              label: Kép
+              provider: layout_builder
               label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: hero
+                third_party_settings: {  }
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_image'
-              formatter:
-                type: media_thumbnail
-                label: hidden
-                settings:
-                  image_style: media_library
-                  image_link: ''
-                third_party_settings: {  }
+                view_mode: view_mode
             additional: {  }
             weight: 0
           35412fef-b868-49fa-b10a-c831c064f13b:

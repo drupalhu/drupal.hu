@@ -16,6 +16,7 @@ module:
   comment: 0
   config: 0
   contextual: 0
+  crop: 0
   ctools: 0
   datetime: 0
   datetime_range: 0
@@ -31,6 +32,8 @@ module:
   filter: 0
   history: 0
   image: 0
+  image_widget_crop: 0
+  imageapi_optimize: 0
   language: 0
   layout_builder: 0
   layout_discovery: 0
@@ -52,6 +55,8 @@ module:
   search_api: 0
   search_api_solr: 0
   string_field_formatter: 0
+  svg_image: 0
+  svg_image_responsive: 0
   system: 0
   taxonomy: 0
   telephone: 0
@@ -60,6 +65,7 @@ module:
   toolbar: 0
   transliterate_filenames: 0
   user: 0
+  webp: 0
   forum: 1
   menu_link_content: 1
   pathauto: 1

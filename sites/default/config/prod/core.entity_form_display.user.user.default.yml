@@ -6,11 +6,11 @@ dependencies:
     - field.field.user.user.app_homepage
     - field.field.user.user.app_introduction
     - field.field.user.user.app_picture
-    - image.style.thumbnail
+    - image.style.orgw40
   module:
-    - image
     - link
     - path
+    - svg_image
     - text
     - user
 id: user.user.default
@@ -42,7 +42,7 @@ content:
   app_picture:
     weight: 0
     settings:
-      preview_image_style: thumbnail
+      preview_image_style: orgw40
       progress_indicator: throbber
     third_party_settings: {  }
     type: image_image
@@ -52,6 +52,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  legal_data_protection:
+    weight: -4
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   legal_terms_of_use:
     weight: -4
     region: content

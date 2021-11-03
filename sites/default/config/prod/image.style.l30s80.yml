@@ -1,0 +1,26 @@
+uuid: c20e2587-4675-4625-ae11-53f8fe937c13
+langcode: hu
+status: true
+dependencies:
+  config:
+    - crop.type.l30
+  module:
+    - crop
+name: l30s80
+label: '16:9 – 1440×810'
+effects:
+  5c03ce20-961a-4f91-a30f-a4706622e866:
+    uuid: 5c03ce20-961a-4f91-a30f-a4706622e866
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: l30
+  fab454c8-bca6-4243-9067-0ec8a4e6c281:
+    uuid: fab454c8-bca6-4243-9067-0ec8a4e6c281
+    id: image_scale
+    weight: 2
+    data:
+      width: 1440
+      height: null
+      upscale: false
+pipeline: webp

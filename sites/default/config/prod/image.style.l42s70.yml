@@ -1,0 +1,26 @@
+uuid: c1e70527-dc2a-4217-984c-bd6d55183a85
+langcode: hu
+status: true
+dependencies:
+  config:
+    - crop.type.l42
+  module:
+    - crop
+name: l42s70
+label: '120:63 – 1200×630'
+effects:
+  97486710-00ad-46b8-97fe-72ae3094b882:
+    uuid: 97486710-00ad-46b8-97fe-72ae3094b882
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: l42
+  5597b992-2678-4049-b3ff-bf9dba7cb7b4:
+    uuid: 5597b992-2678-4049-b3ff-bf9dba7cb7b4
+    id: image_scale
+    weight: 2
+    data:
+      width: 1200
+      height: null
+      upscale: false
+pipeline: webp

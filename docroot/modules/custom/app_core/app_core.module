@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * App core functions.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\app_core\EntityHandler\CropType;
+use Drupal\crop\Entity\CropType as CropTypeBase;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function app_core_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (isset($entity_types['crop_type'])) {
+    $class = $entity_types['crop_type']->getClass();
+    if ($class === CropTypeBase::class) {
+      $entity_types['crop_type']->setClass(CropType::class);
+    }
+  }
+}

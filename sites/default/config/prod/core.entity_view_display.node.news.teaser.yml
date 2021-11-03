@@ -33,17 +33,20 @@ third_party_settings:
             uuid: 930a3d3a-590f-4ae1-b5d6-9dd723ad0f5a
             region: content
             configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
               id: 'field_block:node:news:app_image'
+              label: Kép
+              provider: layout_builder
+              label_display: '0'
               formatter:
-                type: media_thumbnail
                 label: hidden
+                type: media_thumbnail
                 settings:
-                  image_style: media_library
+                  image_style: l30s60
                   image_link: content
                 third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
             additional: {  }
             weight: 0
           b0c34ddc-ec52-4c94-98e5-cf182d2d2772:

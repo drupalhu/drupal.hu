@@ -1,0 +1,26 @@
+uuid: 8a254486-caa3-4059-a3b6-3ed4d71296e3
+langcode: hu
+status: true
+dependencies:
+  config:
+    - crop.type.sqr
+  module:
+    - crop
+name: sqrs40
+label: 'Négyzet – 576'
+effects:
+  dfb6588a-1a20-4784-98e2-e7425a2bae79:
+    uuid: dfb6588a-1a20-4784-98e2-e7425a2bae79
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: sqr
+  8807818b-52cc-4a70-9188-b6b935143f9c:
+    uuid: 8807818b-52cc-4a70-9188-b6b935143f9c
+    id: image_scale
+    weight: 2
+    data:
+      width: 576
+      height: null
+      upscale: false
+pipeline: webp

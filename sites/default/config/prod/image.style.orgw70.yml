@@ -1,0 +1,16 @@
+uuid: 6154b0b4-66a5-4a8b-a35e-17c00e4241c7
+langcode: hu
+status: true
+dependencies: {  }
+name: orgw70
+label: 'Eredeti – szélesség 1200'
+effects:
+  aeb45338-b1e9-4ba5-8dd2-6457bbd01a5c:
+    uuid: aeb45338-b1e9-4ba5-8dd2-6457bbd01a5c
+    id: image_scale
+    weight: 1
+    data:
+      width: 1200
+      height: null
+      upscale: false
+pipeline: webp

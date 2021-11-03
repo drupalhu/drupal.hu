@@ -4,10 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.media.image.field_media_image
-    - image.style.thumbnail
+    - image.style.orgw40
     - media.type.image
   module:
-    - image
+    - image_widget_crop
     - path
 id: media.image.default
 targetEntityType: media
@@ -23,10 +23,18 @@ content:
   field_media_image:
     weight: 0
     settings:
+      show_default_crop: true
+      warn_multiple_usages: true
+      preview_image_style: orgw40
+      crop_preview_image_style: orgw60
+      crop_list:
+        - l30
+        - l42
       progress_indicator: throbber
-      preview_image_style: thumbnail
+      crop_types_required: {  }
+      show_crop_area: false
     third_party_settings: {  }
-    type: image_image
+    type: image_widget_crop
     region: content
   langcode:
     type: language_select
@@ -63,6 +71,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     region: content
     third_party_settings: {  }
 hidden: {  }

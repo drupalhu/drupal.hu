@@ -1,0 +1,12 @@
+uuid: 051774ac-e8c8-436c-8091-1234da934486
+langcode: hu
+status: true
+dependencies: {  }
+id: sqr
+label: '1:1 – square'
+description: ''
+aspect_ratio: '1:1'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null

@@ -1,7 +1,7 @@
 {
-  "name": "app-appb",
+  "name": "app-appf",
   "version": "8.4.1",
-  "description": "Backend theme build scripts",
+  "description": "Frontend theme build scripts",
   "main": "index.js",
   "license": "MIT",
   "private": true,

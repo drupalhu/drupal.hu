@@ -1,0 +1,15 @@
+uuid: dbbf432c-d2dd-42a1-af1a-f8d47604c7fa
+langcode: hu
+status: true
+dependencies:
+  module:
+    - webp
+name: webp
+label: WebP
+processors:
+  5478c9e6-46d2-4d0f-bccb-e28d25b2b032:
+    uuid: 5478c9e6-46d2-4d0f-bccb-e28d25b2b032
+    id: webp_webp
+    weight: 1
+    data:
+      quality: '100'

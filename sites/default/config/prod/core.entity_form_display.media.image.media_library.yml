@@ -5,10 +5,10 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.image.field_media_image
-    - image.style.thumbnail
+    - image.style.orgw30
     - media.type.image
   module:
-    - image
+    - image_widget_crop
 id: media.image.media_library
 targetEntityType: media
 bundle: image
@@ -17,10 +17,18 @@ content:
   field_media_image:
     weight: -50
     settings:
+      show_default_crop: true
+      warn_multiple_usages: true
+      preview_image_style: orgw30
+      crop_preview_image_style: l10s50
+      crop_list:
+        - l30
+        - l42
       progress_indicator: throbber
-      preview_image_style: thumbnail
+      crop_types_required: {  }
+      show_crop_area: false
     third_party_settings: {  }
-    type: image_image
+    type: image_widget_crop
     region: content
 hidden:
   created: true

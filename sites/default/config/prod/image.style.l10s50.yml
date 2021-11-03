@@ -1,0 +1,26 @@
+uuid: d10f7037-cd01-4785-83bd-cfec809e7ae0
+langcode: hu
+status: true
+dependencies:
+  config:
+    - crop.type.l10
+  module:
+    - crop
+name: l10s50
+label: '4:3 – 768×576'
+effects:
+  b6280fae-eb5a-402f-8cde-87da6b254c68:
+    uuid: b6280fae-eb5a-402f-8cde-87da6b254c68
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: l10
+  3e0cfb86-07d4-4a5d-9e63-1f6db2272f70:
+    uuid: 3e0cfb86-07d4-4a5d-9e63-1f6db2272f70
+    id: image_scale
+    weight: 2
+    data:
+      width: 768
+      height: null
+      upscale: false
+pipeline: webp

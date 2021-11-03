@@ -1,0 +1,36 @@
+uuid: e0940d34-688a-4d65-9dee-9aed24d0b0b9
+langcode: hu
+status: true
+dependencies:
+  config:
+    - image.style.l10s40
+    - image.style.l10s50
+    - image.style.l10s60
+    - image.style.l10s70
+  theme:
+    - appf
+id: l10
+label: '4:3'
+image_style_mappings:
+  -
+    breakpoint_id: default.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: l10s70
+  -
+    breakpoint_id: default.lg
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: l10s60
+  -
+    breakpoint_id: default.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: l10s50
+  -
+    breakpoint_id: default.sm
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: l10s40
+breakpoint_group: appf
+fallback_image_style: l10s40

@@ -1,0 +1,12 @@
+uuid: fb282488-2416-4966-b0c7-a132ebcb4814
+langcode: hu
+status: true
+dependencies: {  }
+id: l10
+label: '4:3 – 1,33'
+description: ''
+aspect_ratio: '4:3'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null
