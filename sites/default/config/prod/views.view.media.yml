@@ -1,16 +1,17 @@
-uuid: c0b49ede-5a9e-4f55-8570-6851bd55ff05
-langcode: hu
+uuid: 7d878685-9d2f-49d6-a221-fa6fdb0874a6
+langcode: en
 status: true
 dependencies:
+  config:
+    - image.style.orgh10
   module:
     - media
+    - svg_image
     - user
-_core:
-  default_config_hash: rRzAWaXpJGYA2gPG6BmGxy8gfFd4srCc-LQY3JB6tR8
 id: media
-label: Média
+label: Media
 module: views
-description: 'Média keresés és kezelés.'
+description: 'Find and manage media.'
 tag: ''
 base_table: media_field_data
 base_field: mid
@@ -18,7 +19,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Alapértelmezés
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -39,13 +40,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Szűrő
+          submit_button: Filter
           reset_button: false
-          reset_button_label: Alaphelyzet
-          exposed_sorts_label: Rendezés
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
           expose_sort_order: true
-          sort_asc_label: Növ
-          sort_desc_label: Csökk
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       pager:
         type: full
         options:
@@ -55,17 +56,17 @@ display:
           total_pages: null
           expose:
             items_per_page: false
-            items_per_page_label: 'Elemek száma oldalanként'
+            items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '– Mind –'
+            items_per_page_options_all_label: '- All -'
             offset: false
-            offset_label: Eltolás
+            offset_label: Offset
           tags:
-            previous: '‹ Előző'
-            next: 'Következő ›'
-            first: '« Első'
-            last: 'Utolsó »'
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
           quantity: 9
       style:
         type: table
@@ -181,36 +182,47 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          action_title: Művelet
+          action_title: Action
           include_exclude: exclude
           selected_actions: {  }
           entity_type: media
           plugin_id: bulk_form
-        name:
-          id: name
+        thumbnail__target_id:
+          id: thumbnail__target_id
           table: media_field_data
-          field: name
-          entity_type: media
-          entity_field: media
-          alter:
-            alter_text: false
-            make_link: false
-            absolute: false
-            trim: false
-            word_boundary: false
-            ellipsis: false
-            strip_tags: false
-            html: false
-          hide_empty: false
-          empty_zero: false
-          settings:
-            link_to_entity: true
-          plugin_id: field
+          field: thumbnail__target_id
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Média neve'
+          label: Bélyegkép
           exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -220,9 +232,83 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_style: orgh10
+            image_link: ''
+            svg_render_as_image: true
+            svg_attributes:
+              width: null
+              height: null
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: media
+          entity_field: thumbnail
+          plugin_id: field
+        name:
+          id: name
+          table: media_field_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Név
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: string
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -233,6 +319,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+          entity_type: media
+          entity_field: media
+          plugin_id: field
         bundle:
           id: bundle
           table: media_field_data
@@ -370,7 +459,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Állapot
+          label: Státusz
           exclude: false
           alter:
             alter_text: false
@@ -415,8 +504,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_true: Közzétéve
-            format_custom_false: Rejtett
+            format_custom_true: Published
+            format_custom_false: Unpublished
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -562,10 +651,12 @@ display:
           exposed: true
           expose:
             operator_id: name_op
-            label: 'Média neve'
+            label: Név
             description: ''
             use_operator: false
             operator: name_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: name
             required: false
             remember: false
@@ -574,8 +665,7 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            operator_limit_selection: false
-            operator_list: {  }
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -608,6 +698,8 @@ display:
             description: ''
             use_operator: false
             operator: bundle_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: type
             required: false
             remember: false
@@ -617,8 +709,6 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -647,21 +737,21 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: Igaz
+            label: 'True'
             description: null
             use_operator: false
             operator: status_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: status
             required: true
             remember: false
             multiple: false
             remember_roles:
               authenticated: authenticated
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: true
           group_info:
-            label: 'Közzététel állapota'
+            label: Státusz
             description: ''
             identifier: status
             optional: true
@@ -672,16 +762,55 @@ display:
             default_group_multiple: {  }
             group_items:
               1:
-                title: Közzétéve
+                title: Published
                 operator: '='
                 value: '1'
               2:
-                title: Rejtett
+                title: Unpublished
                 operator: '='
                 value: '0'
           plugin_id: boolean
           entity_type: media
           entity_field: status
+        status_extra:
+          id: status_extra
+          table: media_field_data
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: media
+          plugin_id: media_status
         langcode:
           id: langcode
           table: media_field_data
@@ -699,6 +828,8 @@ display:
             description: ''
             use_operator: false
             operator: langcode_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: langcode
             required: false
             remember: false
@@ -708,8 +839,6 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -741,7 +870,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: Média
+      title: Media
       header: {  }
       footer: {  }
       empty:
@@ -754,7 +883,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'Nincs elérhető média.'
+          content: 'No media available.'
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }
@@ -766,16 +895,26 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - user.permissions
       tags: {  }
   media_page_list:
     display_plugin: page
     id: media_page_list
-    display_title: Média
+    display_title: Media
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/media-table
+      path: admin/content/media
+      menu:
+        type: tab
+        title: Media
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 0
+        context: '0'
+        menu_name: main
       display_description: ''
     cache_metadata:
       max-age: 0
@@ -784,5 +923,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - user.permissions
       tags: {  }

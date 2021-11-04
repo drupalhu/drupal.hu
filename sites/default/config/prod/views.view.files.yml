@@ -521,7 +521,7 @@ display:
           relationship: fid
           group_type: sum
           admin_label: ''
-          label: 'Ez használja'
+          label: Használatban
           exclude: false
           alter:
             alter_text: false
@@ -567,7 +567,7 @@ display:
           decimal: .
           separator: ','
           format_plural: true
-          format_plural_string: !!binary MSBwbGFjZQNAY291bnQgcGxhY2Vz
+          format_plural_string: !!binary MSBoZWx5ZW4DQGNvdW50IGhlbHllbg==
           prefix: ''
           suffix: ''
           plugin_id: numeric

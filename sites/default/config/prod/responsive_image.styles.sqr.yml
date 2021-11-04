@@ -3,10 +3,11 @@ langcode: hu
 status: true
 dependencies:
   config:
+    - image.style.orgw50
     - image.style.sqrs40
-    - image.style.sqrs50
     - image.style.sqrs60
     - image.style.sqrs70
+    - image.style.sqrs80
   theme:
     - appf
 id: sqr
@@ -16,21 +17,21 @@ image_style_mappings:
     breakpoint_id: default.xl
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: sqrs70
+    image_mapping: sqrs80
   -
     breakpoint_id: default.lg
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: sqrs60
+    image_mapping: sqrs70
   -
     breakpoint_id: default.md
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: sqrs50
+    image_mapping: sqrs60
   -
     breakpoint_id: default.sm
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: sqrs40
+    image_mapping: orgw50
 breakpoint_group: appf
 fallback_image_style: sqrs40

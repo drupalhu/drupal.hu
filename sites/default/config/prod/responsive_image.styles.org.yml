@@ -3,10 +3,12 @@ langcode: hu
 status: true
 dependencies:
   config:
+    - image.style.orgw30
     - image.style.orgw40
     - image.style.orgw50
     - image.style.orgw60
     - image.style.orgw70
+    - image.style.orgw80
   theme:
     - appf
 id: org
@@ -16,21 +18,26 @@ image_style_mappings:
     breakpoint_id: default.xl
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: orgw70
+    image_mapping: orgw80
   -
     breakpoint_id: default.lg
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: orgw60
+    image_mapping: orgw70
   -
     breakpoint_id: default.md
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: orgw50
+    image_mapping: orgw60
   -
     breakpoint_id: default.sm
     multiplier: 1x
     image_mapping_type: image_style
+    image_mapping: orgw50
+  -
+    breakpoint_id: default.xs
+    multiplier: 1x
+    image_mapping_type: image_style
     image_mapping: orgw40
 breakpoint_group: appf
-fallback_image_style: orgw40
+fallback_image_style: orgw30

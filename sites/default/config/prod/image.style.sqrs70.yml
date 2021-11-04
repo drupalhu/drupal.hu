@@ -7,7 +7,7 @@ dependencies:
   module:
     - crop
 name: sqrs70
-label: 'Négyzet – 1200'
+label: 'Négyzet – 1199'
 effects:
   5ec3abc7-529b-4953-bcca-08fec4d8b744:
     uuid: 5ec3abc7-529b-4953-bcca-08fec4d8b744
@@ -20,7 +20,7 @@ effects:
     id: image_scale
     weight: 2
     data:
-      width: 1200
+      width: 1199
       height: null
       upscale: false
 pipeline: webp

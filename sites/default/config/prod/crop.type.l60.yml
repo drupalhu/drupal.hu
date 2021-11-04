@@ -1,11 +1,11 @@
-uuid: 051774ac-e8c8-436c-8091-1234da934486
+uuid: dbed1073-d40d-47d0-ab93-1a250edf0a71
 langcode: hu
 status: true
 dependencies: {  }
-id: sqr
-label: '1:1 – négyzet'
+id: l60
+label: '5:2 – 2,5'
 description: ''
-aspect_ratio: '1:1'
+aspect_ratio: '5:2'
 soft_limit_width: null
 soft_limit_height: null
 hard_limit_width: null

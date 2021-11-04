@@ -1,0 +1,26 @@
+uuid: 94224248-6f27-4baf-b58a-65096b476e19
+langcode: hu
+status: true
+dependencies:
+  config:
+    - crop.type.l20
+  module:
+    - crop
+name: l20s40
+label: '3:2 – szélesség 575'
+effects:
+  f46d9da0-7674-4624-bca4-6c7f34ff76d5:
+    uuid: f46d9da0-7674-4624-bca4-6c7f34ff76d5
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: l20
+  8cee6cfc-0b0d-416a-84a5-9777fa7aef4e:
+    uuid: 8cee6cfc-0b0d-416a-84a5-9777fa7aef4e
+    id: image_scale
+    weight: 2
+    data:
+      width: 575
+      height: null
+      upscale: false
+pipeline: webp

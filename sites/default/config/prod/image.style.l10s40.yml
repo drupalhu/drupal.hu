@@ -7,7 +7,7 @@ dependencies:
   module:
     - crop
 name: l10s40
-label: '4:3 – 576×432'
+label: '4:3 – 575×431'
 effects:
   d592800b-2193-4d74-bf8d-0cdeec0d7cb5:
     uuid: d592800b-2193-4d74-bf8d-0cdeec0d7cb5
@@ -20,7 +20,7 @@ effects:
     id: image_scale
     weight: 2
     data:
-      width: 576
+      width: 575
       height: null
       upscale: false
 pipeline: webp

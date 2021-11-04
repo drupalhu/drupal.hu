@@ -33,10 +33,5 @@ image_style_mappings:
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: l30s50
-  -
-    breakpoint_id: default.xs
-    multiplier: 1x
-    image_mapping_type: image_style
-    image_mapping: l30s40
 breakpoint_group: appf
 fallback_image_style: l30s40

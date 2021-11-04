@@ -1,0 +1,16 @@
+uuid: 291b2c88-be12-4c07-accc-7bb3689f87c5
+langcode: hu
+status: true
+dependencies: {  }
+name: orgh10
+label: 'Eredeti – magasság 120'
+effects:
+  d20ee0f8-e5d3-469a-b39f-b7feca4adc5a:
+    uuid: d20ee0f8-e5d3-469a-b39f-b7feca4adc5a
+    id: image_scale
+    weight: 1
+    data:
+      width: null
+      height: 120
+      upscale: false
+pipeline: webp

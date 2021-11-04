@@ -1,7 +1,15 @@
 
-.views-ui-display-tab-bucket {
+$color-overridden-bg: #fafad2;
 
-  $color-overridden-bg: #fafad2;
+.views-ui-display-tab-setting {
+
+  &.overridden {
+    background-color: $color-overridden-bg;
+    font-style: inherit;
+  }
+}
+
+.views-ui-display-tab-bucket {
 
   margin-block-end: 1em;
 

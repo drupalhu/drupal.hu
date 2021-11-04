@@ -7,6 +7,7 @@ dependencies:
     - image.style.l10s50
     - image.style.l10s60
     - image.style.l10s70
+    - image.style.l10s80
   theme:
     - appf
 id: l10
@@ -16,21 +17,21 @@ image_style_mappings:
     breakpoint_id: default.xl
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: l10s70
+    image_mapping: l10s80
   -
     breakpoint_id: default.lg
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: l10s60
+    image_mapping: l10s70
   -
     breakpoint_id: default.md
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: l10s50
+    image_mapping: l10s60
   -
     breakpoint_id: default.sm
     multiplier: 1x
     image_mapping_type: image_style
-    image_mapping: l10s40
+    image_mapping: l10s50
 breakpoint_group: appf
 fallback_image_style: l10s40

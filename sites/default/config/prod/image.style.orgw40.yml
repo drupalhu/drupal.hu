@@ -3,14 +3,14 @@ langcode: hu
 status: true
 dependencies: {  }
 name: orgw40
-label: 'Eredeti – szélesség 576'
+label: 'Eredeti – szélesség 575'
 effects:
   91c85a5a-1ff2-4766-bf74-a6192e38c2df:
     uuid: 91c85a5a-1ff2-4766-bf74-a6192e38c2df
     id: image_scale
     weight: 1
     data:
-      width: 576
+      width: 575
       height: null
       upscale: false
 pipeline: webp

@@ -8,6 +8,8 @@
 declare(strict_types = 1);
 
 use Drupal\app_core\EntityHandler\CropType;
+use Drupal\app_core\EntityHandler\CropTypeStorage;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\crop\Entity\CropType as CropTypeBase;
 
 /**
@@ -19,6 +21,11 @@ function app_core_entity_type_alter(array &$entity_types) {
     $class = $entity_types['crop_type']->getClass();
     if ($class === CropTypeBase::class) {
       $entity_types['crop_type']->setClass(CropType::class);
+    }
+
+    $class = $entity_types['crop_type']->getStorageClass();
+    if ($class === ConfigEntityStorage::class) {
+      $entity_types['crop_type']->setStorageClass(CropTypeStorage::class);
     }
   }
 }
