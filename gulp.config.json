@@ -1,9 +1,7 @@
 {
   "postcssInlineSvg": {
     "removeFill": true,
-    "paths": [
-      "./node_modules/bootstrap-icons/icons"
-    ]
+    "paths": []
   },
   "pxtorem": {
     "propList": [
@@ -21,7 +19,7 @@
     "outputStyle": "expanded"
   },
   "sassLint": {
-    "configFile": "../appf/.sass-lint.yml"
+    "configFile": "./.sass-lint.yml"
   },
   "autoprefixer": {
     "overrideBrowserslist": [
@@ -41,19 +39,20 @@
   },
   "paths": {
     "sass": {
-      "src": [
-        "./css/**/*.scss"
-      ],
-      "dest": "./css"
+      "appb": {
+        "src": ["./docroot/themes/custom/appb/css/**/*.scss"],
+        "dst": "./docroot/themes/custom/appb/css"
+      },
+      "appf": {
+        "src": ["./docroot/themes/custom/appf/css/**/*.scss"],
+        "dst": "./docroot/themes/custom/appf/css"
+      }
     },
     "js": {
-      "src": [
-        "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "./node_modules/jquery/dist/jquery.min.js",
-        "./node_modules/popper.js/dist/umd/popper.min.js",
-        "./node_modules/popper.js/dist/umd/popper.min.js.map"
-      ],
-      "dest": "./js"
+      "appb": {
+        "src": [],
+        "dst": "./docroot/themes/custom/appb/js"
+      }
     }
   }
 }

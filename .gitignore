@@ -8,13 +8,13 @@
 /docroot/profiles/contrib/
 /docroot/themes/contrib/
 /docroot/themes/custom/*/.bundle/
-/docroot/themes/custom/*/node_modules/
 /docroot/themes/custom/*/assets/
 /docroot/themes/custom/*/**/*.css
 /docroot/themes/custom/*/**/*.css.map
 /docroot/themes/custom/*/**/*.css.min.map
 /docroot/themes/custom/*/**/*.min.js
-/docroot/themes/custom/*/gulp.config.*.json
+/**/node_modules/
+/**/gulp.config.*.json
 
 /docroot/sites/simpletest/
 

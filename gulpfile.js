@@ -17,16 +17,21 @@ merge(
 
 function taskLintSass() {
   return gulp
-    .src(config.paths.sass.src)
+    .src('./docroot/themes/custom/*/css/**/*.scss')
     .pipe(sassLint(config.sassLint))
     .pipe(sassLint.format())
     .pipe(sassLint.failOnError());
 }
 taskLintSass.description = 'Lint *.scss and *.sass files';
 
-function taskBuildSass() {
+/**
+ * @param {string} root
+ *
+ * @return {*}
+ */
+function taskBuildSassSingle(root) {
   return gulp
-    .src(config.paths.sass.src)
+    .src(config.paths.sass[root].src)
     .pipe(sourcemaps.init())
     .pipe(
       sass(config.sass)
@@ -38,8 +43,18 @@ function taskBuildSass() {
       ]
     ))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(config.paths.sass.dest))
+    .pipe(gulp.dest(config.paths.sass[root].dst))
 }
+
+function taskBuildSassAppb() {
+  return taskBuildSassSingle('appb');
+}
+
+function taskBuildSassAppf() {
+  return taskBuildSassSingle('appf');
+}
+
+const taskBuildSass = gulp.parallel(taskBuildSassAppb, taskBuildSassAppf);
 taskBuildSass.description = 'Compiles *.scss files into *.css files.'
 
 function taskServe() {
@@ -47,8 +62,15 @@ function taskServe() {
 
   gulp
     .watch(
-      config.paths.sass.src,
-      taskBuildSass,
+      config.paths.sass.appb.src,
+      taskBuildSassAppb,
+    )
+    .on('change', browserSync.reload)
+
+  gulp
+    .watch(
+      config.paths.sass.appf.src,
+      taskBuildSassAppf,
     )
     .on('change', browserSync.reload)
 }

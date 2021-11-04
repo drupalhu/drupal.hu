@@ -25,6 +25,6 @@
     "postcss": "^8.3.6"
   },
   "scripts": {
-    "clean": "git clean -X --force -- './css'"
+    "clean": "git clean -X --force -- './docroot/themes/custom/appb/css' './docroot/themes/custom/appf/css'"
   }
 }

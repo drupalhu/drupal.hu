@@ -82,7 +82,10 @@ class MarvinLintCommands extends CommandsBase implements
       ->addTask(
         $this
           ->taskGitListFiles()
-          ->setPaths(['*/gulpfile.js'])
+          ->setPaths([
+            'gulpfile.js',
+            '*/gulpfile.js',
+          ])
           ->setAssetNamePrefix('gulp.')
       )
       ->addCode($this->getTaskCollectGulpFileDirs())
@@ -111,7 +114,10 @@ class MarvinLintCommands extends CommandsBase implements
       ->addTask(
         $this
           ->taskGitListFiles()
-          ->setPaths(['*/gulpfile.js'])
+          ->setPaths([
+            'gulpfile.js',
+            '*/gulpfile.js',
+          ])
           ->setAssetNamePrefix('gulp.')
       )
       ->addCode($this->getTaskCollectGulpFileDirs())
@@ -172,7 +178,11 @@ class MarvinLintCommands extends CommandsBase implements
       $processHelper = $this->getProcessHelper();
       $process = $processHelper->run(
         $this->output(),
-        vsprintf($cmdPattern, $cmdArgs)
+        [
+          'bash',
+          '-c',
+          vsprintf($cmdPattern, $cmdArgs),
+        ],
       );
 
       if ($process->getExitCode()) {

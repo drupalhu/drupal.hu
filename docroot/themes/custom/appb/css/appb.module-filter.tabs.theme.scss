@@ -8,11 +8,11 @@
   $focus-color: #26a769;
   $focus-width: 0.25em;
 
+  background-color: $general-background-color;
+
   *:focus {
     box-shadow: inset 0 0 0 $focus-width $focus-color;
   }
-
-  background-color: $general-background-color;
 
   > .modules-tabs__menu-item {
     border-right: $border-width $border-style $border-color;
