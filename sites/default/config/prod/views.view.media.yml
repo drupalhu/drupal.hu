@@ -1,5 +1,5 @@
 uuid: 7d878685-9d2f-49d6-a221-fa6fdb0874a6
-langcode: en
+langcode: hu
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ dependencies:
 id: media
 label: Media
 module: views
-description: 'Find and manage media.'
+description: 'Média keresés és kezelés.'
 tag: ''
 base_table: media_field_data
 base_field: mid
@@ -19,7 +19,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Default
+    display_title: Alapértelmezés
     position: 0
     display_options:
       access:
@@ -40,13 +40,13 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Filter
+          submit_button: Alkalmaz
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
       pager:
         type: full
         options:
@@ -56,17 +56,17 @@ display:
           total_pages: null
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Elemek száma oldalanként'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '– Mind –'
             offset: false
-            offset_label: Offset
+            offset_label: Eltolás
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
-            first: '« First'
-            last: 'Last »'
+            previous: '‹ Előző'
+            next: 'Következő ›'
+            first: '« Első'
+            last: 'Utolsó »'
           quantity: 9
       style:
         type: table
@@ -182,7 +182,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          action_title: Action
+          action_title: Művelet
           include_exclude: exclude
           selected_actions: {  }
           entity_type: media
@@ -504,8 +504,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_true: Published
-            format_custom_false: Unpublished
+            format_custom_true: Közzétéve
+            format_custom_false: Rejtett
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -766,7 +766,7 @@ display:
                 operator: '='
                 value: '1'
               2:
-                title: Unpublished
+                title: Rejtett
                 operator: '='
                 value: '0'
           plugin_id: boolean
@@ -870,7 +870,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: Media
+      title: Média
       header: {  }
       footer: {  }
       empty:
@@ -901,7 +901,7 @@ display:
   media_page_list:
     display_plugin: page
     id: media_page_list
-    display_title: Media
+    display_title: Média
     position: 1
     display_options:
       display_extenders: {  }

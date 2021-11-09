@@ -8,7 +8,7 @@ dependencies:
 _core:
   default_config_hash: rR7s2SHuUVEW2pHcWUYbAewn3ntkoxagmKILO_w27mo
 id: legal_document_acceptances
-label: 'Legal document acceptances'
+label: 'Jogi dokumentum elfogadások'
 module: views
 description: ''
 tag: ''
@@ -48,10 +48,15 @@ display:
       pager:
         type: full
         options:
-          items_per_page: 10
+          items_per_page: 100
           offset: 0
           id: 0
           total_pages: null
+          tags:
+            previous: '‹ Előző'
+            next: 'Következő ›'
+            first: '« Első'
+            last: 'Utolsó »'
           expose:
             items_per_page: false
             items_per_page_label: 'Elemek száma oldalanként'
@@ -60,14 +65,54 @@ display:
             items_per_page_options_all_label: '– Mind –'
             offset: false
             offset_label: Eltolás
-          tags:
-            previous: '‹ Előző'
-            next: 'Következő ›'
-            first: '« Első'
-            last: 'Utolsó »'
           quantity: 9
       style:
         type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            document_version_name: document_version_name
+            name_1: document_version_name
+            name: name
+            acceptance_date: acceptance_date
+          info:
+            document_version_name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: '<br />'
+              empty_column: false
+              responsive: ''
+            name_1:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            acceptance_date:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: acceptance_date
+          empty_table: false
       row:
         type: fields
       fields:
@@ -78,7 +123,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Document_version_name
+          label: 'Dokumentum verzió elnevezés és azonosító'
           exclude: false
           alter:
             alter_text: false
@@ -135,6 +180,71 @@ display:
           field_api_classes: false
           entity_type: entity_legal_document_acceptance
           entity_field: document_version_name
+          plugin_id: field
+        name_1:
+          id: name_1
+          table: entity_legal_document_version_data
+          field: name
+          relationship: document_version_name
+          group_type: group
+          admin_label: ''
+          label: Név
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: entity_legal_document_version
+          entity_field: name
           plugin_id: field
         name:
           id: name
@@ -208,7 +318,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Elfogadott
+          label: 'Elfogadás dátuma'
           exclude: false
           alter:
             alter_text: false
@@ -269,6 +379,49 @@ display:
           entity_field: acceptance_date
           plugin_id: field
       filters:
+        name:
+          id: name
+          table: entity_legal_document_version_data
+          field: name
+          relationship: document_version_name
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: 'Dokumentum verzió azonosító'
+            description: ''
+            use_operator: false
+            operator: name_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: entity_legal_document_version
+          entity_field: name
+          plugin_id: string
         uid:
           id: uid
           table: users_field_data
@@ -312,9 +465,68 @@ display:
           entity_type: user
           entity_field: uid
           plugin_id: user_name
+        acceptance_date:
+          id: acceptance_date
+          table: entity_legal_document_acceptance
+          field: acceptance_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: acceptance_date_op
+            label: 'Elfogadás dátuma'
+            description: ''
+            use_operator: true
+            operator: acceptance_date_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: acceptance_date
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: entity_legal_document_acceptance
+          entity_field: acceptance_date
+          plugin_id: date
       sorts: {  }
-      title: 'Legal document acceptances'
-      header: {  }
+      title: 'Jogi dokumentum elfogadások'
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          content: '@start – @end / @total megjelenítése'
+          plugin_id: result
       footer: {  }
       empty: {  }
       relationships:
@@ -324,7 +536,7 @@ display:
           field: document_version_name
           relationship: none
           group_type: group
-          admin_label: 'Version name'
+          admin_label: 'Dokumentum verzió elnevezés'
           required: false
           entity_type: entity_legal_document_acceptance
           entity_field: document_version_name
@@ -379,6 +591,10 @@ display:
           entity_field: document_name
           plugin_id: string
       display_extenders: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:
@@ -397,7 +613,7 @@ display:
       path: admin/structure/legal/manage/%entity_legal_document/acceptances
       menu:
         type: tab
-        title: Acceptances
+        title: Elfogadások
         description: ''
         expanded: false
         parent: ''

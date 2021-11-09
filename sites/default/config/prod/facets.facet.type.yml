@@ -21,8 +21,8 @@ widget:
     show_numbers: true
     soft_limit: 0
     soft_limit_settings:
-      show_less_label: 'Show less'
-      show_more_label: 'Show more'
+      show_less_label: Kevesebb
+      show_more_label: Több
     show_reset_link: false
     reset_text: 'Összes megjelenítése'
     hide_reset_when_no_selection: false

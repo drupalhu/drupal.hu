@@ -131,9 +131,13 @@
             "git clean -X --force -- 'sites/all/translations/*.po'"
         ],
         "reset": [
+            "@reset:solr",
             "@reset:cache",
             "@reset:files",
             "@reset:db"
+        ],
+        "reset:solr": [
+            "drush --config=drush --yes @app.local app:search-api:index:clear || true"
         ],
         "reset:cache": [
             "drush --config=drush --yes @app.local cache:rebuild || true"
@@ -148,41 +152,38 @@
             "drush --config=drush --yes @app.local sql:drop"
         ],
         "site:install:prod:empty": [
+            "@reset:solr",
             "@reset:cache",
             "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''"
+            "drush --config=drush @app.local --yes site:install appp --locale='hu' --marvin-migrate=''",
+            "drush --config=drush @app.local --yes config:set system.site uuid \"$(yq eval '.uuid' \"$(drush --config=drush @app.local --yes status --format=list --fields=site)/config/prod/system.site.yml\")\"",
+            "drush --config=drush @app.local --yes config:set language.entity.hu uuid \"$(yq eval '.uuid' \"$(drush --config=drush @app.local --yes status --format=list --fields=site)/config/prod/language.entity.hu.yml\")\"",
+            "drush --config=drush @app.local --yes config:import",
+            "drush --config=drush @app.local --yes locale:check",
+            "drush --config=drush @app.local --yes locale:update"
         ],
         "site:install:prod:default": [
-            "@reset:cache",
-            "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
-            "bin/drush --config=drush @app.local --yes marvin:migrate default"
+            "@site:install:prod:empty",
+            "drush --config=drush @app.local --yes marvin:migrate default",
+            "drush --config=drush @app.local --yes config:import"
         ],
         "site:install:prod:dummy": [
-            "@reset:cache",
-            "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
-            "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
+            "@site:install:prod:empty",
+            "drush --config=drush @app.local --yes marvin:migrate dummy"
         ],
         "site:install:local:empty": [
-            "@reset:cache",
-            "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
-            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
+            "@site:install:prod:empty",
+            "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
         ],
         "site:install:local:default": [
-            "@reset:cache",
-            "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
-            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "@site:install:prod:empty",
+            "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:local:dummy": [
-            "@reset:cache",
-            "@reset:files",
-            "bin/drush --config=drush @app.local --yes site:install appp --existing-config --marvin-migrate=''",
-            "bin/drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
-            "bin/drush --config=drush @app.local --yes marvin:migrate dummy"
+            "@site:install:prod:empty",
+            "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "drush --config=drush @app.local --yes marvin:migrate dummy"
         ],
         "lint": [
             "@lint:shellcheck"
@@ -207,7 +208,8 @@
         "clean:frontend": "<fg=yellow>Deletes</> all the third-party codes downloaded by <fg=cyan>Yarn</>.",
         "clean:translations": "<fg=yellow>Deletes</> all the <fg=cyan>*.po files</> which are belong to third-party codes.",
         "reset": "<fg=red>Deletes</> all content from all data storage (database, cache, solr, public|pivate|temporary|php_storage files).",
-        "reset:cache": "<fg=red>Deletes</> all content from <fg=cyan>cache</> storages.",
+        "reset:solr": "<fg=yellow>Deletes</> all content <fg=cyan>SearchAPI indexes</> storages.",
+        "reset:cache": "<fg=yellow>Deletes</> all content from <fg=cyan>cache</> storages.",
         "reset:files": "<fg=red>Deletes</> all the uploaded <fg=cyan>files</> (public|pivate|temporary|php_storage files).",
         "reset:db": "<fg=red>Drops</> the <fg=cyan>default database</>.",
         "site:install:prod:empty": "drush site:install – without any required content (the site won't work properly).",
@@ -255,8 +257,9 @@
                 "https://gitlab.com/DMore/chrome-mink-driver/-/merge_requests/111 - Deprecated: Required parameter $base_url follows optional parameter $api_url": "https://gitlab.com/DMore/chrome-mink-driver/-/merge_requests/111.patch"
             },
             "drupal/core": {
+                "https://www.drupal.org/project/drupal/issues/2960714 - [meta] Improve ::generateSampleValue() for common field types": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch",
                 "https://www.drupal.org/project/drupal/issues/2985168 - Allow media items to be edited in a modal when using the field widget": "https://www.drupal.org/files/issues/2021-11-03/drupal-2985168-903-106-media-widget-edit-button.patch",
-                "https://www.drupal.org/project/drupal/issues/2960714 - [meta] Improve ::generateSampleValue() for common field types": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch"
+                "https://www.drupal.org/project/drupal/issues/3126929 - PoStreamReader::getSeek": "https://www.drupal.org/files/issues/2021-11-05/drupal-3126929-0903-26-po-stream-reader-seek.patch"
             },
             "drupal/entity_legal": {
                 "https://www.drupal.org/project/entity_legal/issues/3223107 - EntityLegalDocumentForm/path/#element_validate": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/1.patch"

@@ -521,7 +521,7 @@ display:
           relationship: fid
           group_type: sum
           admin_label: ''
-          label: Használatban
+          label: 'Ez használja'
           exclude: false
           alter:
             alter_text: false
@@ -1116,7 +1116,7 @@ display:
           field: fid
           relationship: none
           group_type: group
-          admin_label: 'File usage'
+          admin_label: 'Fájl használata'
           required: true
       display_extenders: {  }
     cache_metadata:

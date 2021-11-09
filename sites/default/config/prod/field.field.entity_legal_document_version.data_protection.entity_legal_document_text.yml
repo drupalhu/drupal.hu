@@ -18,7 +18,7 @@ id: entity_legal_document_version.data_protection.entity_legal_document_text
 field_name: entity_legal_document_text
 entity_type: entity_legal_document_version
 bundle: data_protection
-label: 'Document text'
+label: Törzs
 description: ''
 required: false
 translatable: true

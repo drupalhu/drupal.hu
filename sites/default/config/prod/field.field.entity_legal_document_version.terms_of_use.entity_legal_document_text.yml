@@ -18,7 +18,7 @@ id: entity_legal_document_version.terms_of_use.entity_legal_document_text
 field_name: entity_legal_document_text
 entity_type: entity_legal_document_version
 bundle: terms_of_use
-label: 'Document text'
+label: Törzs
 description: ''
 required: false
 translatable: true
