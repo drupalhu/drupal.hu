@@ -13,6 +13,7 @@
     <ini name="memory_limit" value="-1" />
 
     <env name="DTT_BASE_URL" value="http://drupalhu.localhost" />
+    <env name="DTT_API_URL" value="http://127.0.0.1:9222" />
     <env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value="../reports/human/functional-javascript" />
 
     <env name="SIMPLETEST_BASE_URL" value="http://drupalhu.localhost" />
@@ -22,6 +23,7 @@
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value="" />
 
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="/Drupal\\app(p|b|f|_.+?)\\/" />
+
     <!--<env name="MINK_DRIVER_CLASS" value="Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver" />-->
     <!--<env name="MINK_DRIVER_ARGS" value='["chrome", null, "http://127.0.0.1:4444/wd/hub"]' />-->
     <!--<env name="MINK_DRIVER_ARGS" value='["opera", null, "http://127.0.0.1:4444/wd/hub"]' />-->

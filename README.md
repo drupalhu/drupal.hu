@@ -22,7 +22,7 @@ Bekapcsolódás a fejlesztésbe [DDev local] használatával.
 ### Bekapcsolódás a fejlesztésbe - DDev - lépések
 
 Egy terminál ablakban az alábbi parancsok futtatása:
-1. `git clone https://github.com/drupalhu/drupal.hu.git`
+1. `git clone --origin 'upstream' --branch '2.x' https://github.com/drupalhu/drupal.hu.git`
 2. `cd drupal.hu`
 3. `ddev auth ssh`
 4. Linuxon NFS nélkül: `./.ddev/commands/host/generate-ddev-config-local.bash` \

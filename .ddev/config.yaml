@@ -234,3 +234,18 @@ hooks:
         bin/drush --config='drush' @app.local sql:query 'SHOW TABLES;'
         | grep --perl-regexp '^users\s*$'
         || composer run site:install:prod:default
+    -
+      exec: |-
+        chrome_host='chrome' ;
+        chrome_ip="$(ping -c 1 ${chrome_host} | grep --color='never' --only-matching --perl-regexp '(?<= \()\d+\.\d+\.\d+\.\d+(?=\): )')" ;
+        export chrome_api_url="http://${chrome_ip}:9222"
+
+        yq eval \
+          --inplace \
+          '.default.extensions."Drupal\MinkExtension".sessions.browserChrome.chrome.api_url = env(chrome_api_url)' \
+          './behat.local.yml'
+
+        sed \
+          --expression "s@http://127.0.0.1:9222@${chrome_api_url}@g" \
+          --in-place \
+          './phpunit.xml'

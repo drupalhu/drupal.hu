@@ -61,7 +61,7 @@ services:
       - '--no-first-run'
 
       # Disable sandbox mode.
-      #- '--no-sandbox'
+      - '--no-sandbox'
 
       # Set remote debugging address — important, otherwise 'localhost' would be used
       # which breaks container linking and port expose.
@@ -75,7 +75,7 @@ services:
       #- '--safebrowsing-disable-auto-update'
 
       # Make use of user data directory.
-      #- '--user-data-dir'
+      - '--user-data-dir=/root/.config/chromium'
 
       - '--ignore-certificate-errors'
 
@@ -85,6 +85,7 @@ services:
     volumes:
       # Standard ddev mount point.
       - '.:/mnt/ddev_config'
+      - '../tests/behat/media:/var/www/html/tests/behat/media'
 
     environment:
       # This defines the host name the service should be accessible from.

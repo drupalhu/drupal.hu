@@ -2,4 +2,8 @@
 default:
   extensions:
     Drupal\MinkExtension:
-      base_url: 'http://drupalhu.localhost'
+      base_url: 'https://local.drupal.hu'
+      sessions:
+        browserChrome:
+          chrome:
+            validate_certificate: false
