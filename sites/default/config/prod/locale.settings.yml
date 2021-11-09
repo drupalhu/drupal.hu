@@ -7,7 +7,7 @@ translation:
   default_filename: '%project-%version.%language.po'
   default_server_pattern: 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po'
   overwrite_customized: false
-  overwrite_not_customized: true
+  overwrite_not_customized: false
   update_interval_days: 0
   path: ''
   import_enabled: true

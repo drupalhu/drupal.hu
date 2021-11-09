@@ -23,11 +23,10 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
   public function onPostSiteInstall($parentResult, CommandData $commandData) {
     $input = $commandData->input();
     if ($input->getOption('existing-config')) {
-      $siteDir = $input->getOption('sites-subdir') ?: 'default';
       $this
         ->localeCheck()
         ->localeUpdate()
-        ->importCustomTranslations($siteDir);
+        ->configImport();
     }
 
     $adminName = $input->getOption('account-name') ?: 'admin';
@@ -70,43 +69,6 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     return $this;
   }
 
-  protected function importCustomTranslations(string $siteDir) {
-    $logger = $this->getLogger();
-    $languageCodes = $this->collectLanguageCodes($siteDir);
-    unset($languageCodes['en']);
-
-    $logger->info(
-      'Import custom translations for the following languages: <info>{languageCodes}</info>',
-      [
-        'languageCodes' => implode(', ', $languageCodes),
-      ],
-    );
-
-    foreach ($this->collectLanguageCodes($siteDir) as $languageCode) {
-      $filePath = $this->getTranslationFilePath('app', '9.x-1.x', $languageCode);
-      if (!file_exists($filePath)) {
-        $logger->info(
-          'There is no custom translation file: <info>{filePath}</info>',
-          [
-            'filePath' => $filePath,
-          ],
-        );
-
-        continue;
-      }
-
-      $logger->info(
-        'Import custom translations for the following language: <info>{languageCode}</info>',
-        [
-          'languageCode' => $languageCode,
-        ],
-      );
-      $this->localeImport($languageCode, $filePath);
-    }
-
-    return $this;
-  }
-
   /**
    * @return $this
    */
@@ -120,6 +82,21 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
 
     if ($exitCode) {
       $logger->error('locale:import failed.');
+    }
+
+    return $this;
+  }
+
+  protected function configImport() {
+    $logger = $this->getLogger();
+    $self = $this->siteAliasManager()->getSelf();
+
+    $exitCode = Drush::drush($self, 'config:import', [], ['yes' => TRUE])
+      ->setTimeout(NULL)
+      ->run();
+
+    if ($exitCode) {
+      $logger->error('config:import failed.');
     }
 
     return $this;
@@ -142,15 +119,6 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
       ->run();
 
     return $process;
-  }
-
-  protected function getTranslationFilePath(
-    string $project,
-    string $version,
-    string $langCode
-  ): string {
-    // @todo Get the official translations directory from the Drupal config.
-    return $this->getProjectRootDir() . "/sites/all/translations/$project-$version.$langCode.po";
   }
 
   protected function collectLanguageCodes(string $siteDir): array {

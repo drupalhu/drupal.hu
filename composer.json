@@ -155,17 +155,12 @@
             "@reset:solr",
             "@reset:cache",
             "@reset:files",
-            "drush --config=drush @app.local --yes site:install appp --locale='hu' --marvin-migrate=''",
-            "drush --config=drush @app.local --yes config:set system.site uuid \"$(yq eval '.uuid' \"$(drush --config=drush @app.local --yes status --format=list --fields=site)/config/prod/system.site.yml\")\"",
-            "drush --config=drush @app.local --yes config:set language.entity.hu uuid \"$(yq eval '.uuid' \"$(drush --config=drush @app.local --yes status --format=list --fields=site)/config/prod/language.entity.hu.yml\")\"",
-            "drush --config=drush @app.local --yes config:import",
-            "drush --config=drush @app.local --yes locale:check",
-            "drush --config=drush @app.local --yes locale:update"
+            "drush --config=drush @app.local --yes site:install appp --locale='hu' --existing-config --marvin-migrate=''",
+            "drush --config=drush @app.local --yes config:import"
         ],
         "site:install:prod:default": [
             "@site:install:prod:empty",
-            "drush --config=drush @app.local --yes marvin:migrate default",
-            "drush --config=drush @app.local --yes config:import"
+            "drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:prod:dummy": [
             "@site:install:prod:empty",
@@ -176,13 +171,11 @@
             "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local"
         ],
         "site:install:local:default": [
-            "@site:install:prod:empty",
-            "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "@site:install:local:empty",
             "bin/drush --config=drush @app.local --yes marvin:migrate default"
         ],
         "site:install:local:dummy": [
-            "@site:install:prod:empty",
-            "drush --config=drush @app.local --yes marvin:toggle-modules -vv --define=marvin.environment=local",
+            "@site:install:local:empty",
             "drush --config=drush @app.local --yes marvin:migrate dummy"
         ],
         "lint": [
