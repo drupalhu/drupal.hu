@@ -1,6 +1,9 @@
 
 # Drupal.hu
 
+[![CircleCI](https://circleci.com/gh/drupalhu/drupal.hu/tree/2.x.svg?style=svg)](https://circleci.com/gh/drupalhu/drupal.hu/?branch=2.x)
+
+
 A [Drupal.hu] weboldal kódbázisa.
 
 
