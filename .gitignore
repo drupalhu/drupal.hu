@@ -38,7 +38,7 @@
 /sites/*/hash_salt.txt
 
 /reports/
-
+/tmp/
 /vendor/
 
 /behat.*.yml

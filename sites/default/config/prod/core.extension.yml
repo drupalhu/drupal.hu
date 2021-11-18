@@ -15,6 +15,7 @@ module:
   ckeditor: 0
   comment: 0
   config: 0
+  contact: 0
   contextual: 0
   crop: 0
   ctools: 0
@@ -31,6 +32,7 @@ module:
   file: 0
   filter: 0
   history: 0
+  honeypot: 0
   image: 0
   image_widget_crop: 0
   imageapi_optimize: 0

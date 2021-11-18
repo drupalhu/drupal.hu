@@ -1,3 +1,14 @@
+/contact:
+  uuid: cd34c418-896b-4879-8d25-b9307bbc2858
+  path: /contact
+  alias: /kapcsolat
+  langcode: hu
+/contact/site_admin:
+  uuid: cd033876-1512-4812-add3-56d02631eb66
+  path: /contact/site_admin
+  alias: /kapcsolat/admin
+  langcode: hu
+
 /legal/document/terms_of_use:
   uuid: 5e148999-c0fc-4f07-b79b-672217d6575e
   path: /legal/document/terms_of_use

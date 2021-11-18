@@ -26,7 +26,11 @@ source:
 
 process:
   uuid: uuid
-  langcode: langcode
+  langcode:
+    -
+      source: langcode
+      plugin: default_value
+      default_value: hu
   path: path
   alias: alias
   status:
