@@ -19,8 +19,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  legal_terms_of_use:
+  legal_data_protection:
     weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  legal_terms_of_use:
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -28,6 +33,7 @@ hidden:
   app_homepage: true
   app_introduction: true
   app_picture: true
+  contact: true
   langcode: true
   language: true
   path: true

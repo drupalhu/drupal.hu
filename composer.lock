@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d2c71dbd878c716252b80b64e839faf",
+    "content-hash": "a9a1926f79b65efe0bc55146ded8b509",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2489,6 +2489,72 @@
                 "source": "https://git.drupalcode.org/project/facets_block",
                 "issues": "https://www.drupal.org/project/issues/facets_block",
                 "email": "goran@gorannikolovski.com"
+            }
+        },
+        {
+            "name": "drupal/honeypot",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/honeypot.git",
+                "reference": "2.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/honeypot-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "c29d248c0fdcdf733a31b9214355acfa73716632"
+            },
+            "require": {
+                "drupal/core": "^8.0 || ^9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.1",
+                    "datestamp": "1597855128",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jeff Geerling",
+                    "homepage": "https://www.drupal.org/user/213194",
+                    "email": "geerlingguy@mac.com"
+                },
+                {
+                    "name": "TR",
+                    "homepage": "https://www.drupal.org/user/202830"
+                },
+                {
+                    "name": "geerlingguy",
+                    "homepage": "https://www.drupal.org/user/389011"
+                },
+                {
+                    "name": "vijaycs85",
+                    "homepage": "https://www.drupal.org/user/93488"
+                }
+            ],
+            "description": "Mitigates spam form submissions using the honeypot method.",
+            "homepage": "https://www.drupal.org/project/honeypot",
+            "keywords": [
+                "deterrent",
+                "form",
+                "honeypot",
+                "honeytrap",
+                "php",
+                "spam"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/honeypot",
+                "issues": "https://www.drupal.org/project/issues/honeypot"
             }
         },
         {
@@ -14350,7 +14416,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/dtt-core.git",
-                "reference": "f769041a86ed86ee9272b054a5e1413e97260c4b"
+                "reference": "9d40dff29a4f30a73f59cb6607d154d163107de5"
             },
             "require": {
                 "php": ">=7.4",
@@ -14388,7 +14454,7 @@
                 "source": "https://github.com/Sweetchuck/dtt-core",
                 "issues": "https://github.com/Sweetchuck/dtt-core/issues"
             },
-            "time": "2021-11-01T17:29:08+00:00"
+            "time": "2021-11-19T14:28:23+00:00"
         },
         {
             "name": "sweetchuck/dtt-entity_legal",

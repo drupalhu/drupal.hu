@@ -47,29 +47,34 @@ content:
     third_party_settings: {  }
     type: image_image
     region: content
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   language:
     weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   legal_data_protection:
-    weight: -4
+    weight: 8
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   legal_terms_of_use:
-    weight: -4
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }

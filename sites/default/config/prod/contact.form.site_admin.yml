@@ -1,0 +1,12 @@
+uuid: 56464807-3236-4c86-b495-68df77111a09
+langcode: hu
+status: true
+dependencies: {  }
+id: site_admin
+label: 'Kapcsolat felvétel az adminisztrátorokkal'
+recipients:
+  - egyesulet@drupal.hu
+reply: ''
+weight: 0
+message: "Megkeresését köszönjük.\r\nA webhely adminisztrátorai értesítést kaptak, hamarosan felveszik önnel a kapcsoaltot.\r\n\r\nDrupal.hu"
+redirect: ''
