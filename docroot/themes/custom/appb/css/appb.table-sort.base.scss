@@ -1,0 +1,19 @@
+.table-sort--wrapper {
+  margin-inline-start: 0.5em;
+}
+
+.table-sort--trigger {
+  cursor: pointer;
+}
+
+.table-sort--wrapper.state-inactive .table-sort--trigger {
+  opacity: 0.3;
+}
+
+.table-sort--trigger > *:last-child {
+  margin-inline-start: 0.25em;
+}
+
+.table-sort--position {
+  font-family: monospace;
+}
