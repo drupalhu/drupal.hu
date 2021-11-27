@@ -9,3 +9,13 @@ views_ui.admin.styling:
   css:
     theme:
       css/appb.views-ui.admin.theme.css: {}
+
+table-sort:
+  js:
+    js/appb.table-sort.lib.js: {}
+    js/appb.table-sort.db.js: {}
+  css:
+    base:
+      css/appb.table-sort.base.css: {}
+  dependencies:
+    - 'core/jquery.once'

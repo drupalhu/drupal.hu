@@ -14806,12 +14806,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/robo-phpcs.git",
-                "reference": "b3e0f848084157aeaf4c79f131b1f5de568db6ba"
+                "reference": "a3bcccc8082f5938ab4e1fe90fef87afbc3ed47f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/robo-phpcs/zipball/b3e0f848084157aeaf4c79f131b1f5de568db6ba",
-                "reference": "b3e0f848084157aeaf4c79f131b1f5de568db6ba",
+                "url": "https://api.github.com/repos/Sweetchuck/robo-phpcs/zipball/a3bcccc8082f5938ab4e1fe90fef87afbc3ed47f",
+                "reference": "a3bcccc8082f5938ab4e1fe90fef87afbc3ed47f",
                 "shasum": ""
             },
             "require": {
@@ -14862,7 +14862,7 @@
                 "issues": "https://github.com/Sweetchuck/robo-phpcs/issues",
                 "source": "https://github.com/Sweetchuck/robo-phpcs"
             },
-            "time": "2021-09-03T10:56:44+00:00"
+            "time": "2021-11-24T18:46:24+00:00"
         },
         {
             "name": "sweetchuck/robo-phpmd",

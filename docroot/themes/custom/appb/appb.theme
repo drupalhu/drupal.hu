@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * App backend related theme functions.
+ */
+
+declare(strict_types = 1);
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function appb_preprocess_table(&$variables) {
+  if ($variables['attributes']['id'] ?? '' === 'field-overview') {
+    $variables['attributes']['class'][] = 'appb-table-sort';
+    $variables['#attached']['library'][] = 'appb/table-sort';
+    foreach (['label', 'field_name', 'field_type'] as $column) {
+      if (isset($variables['header'][$column])) {
+        $variables['header'][$column]['attributes']->addClass('table-sort--sortable');
+      }
+    }
+  }
+}
