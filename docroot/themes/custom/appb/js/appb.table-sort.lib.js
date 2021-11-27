@@ -231,8 +231,10 @@ class TableSort {
   getRowComparer() {
     /** @var {HTMLTableCellElement[]} headerCells */
     const headerCells = Array.from(this.tableElement.querySelectorAll('thead > tr > th[data-table-sort-position]'));
+
+    const originalIndexComparer = this.getElementComparerByNumericAttribute('data-table-sort-original-index');
     if (headerCells.length === 0) {
-      return this.getElementComparerByNumericAttribute('data-table-sort-original-index');
+      return originalIndexComparer;
     }
 
     headerCells.sort(this.getElementComparerByNumericAttribute('data-table-sort-position'));
@@ -265,7 +267,7 @@ class TableSort {
         break;
       }
 
-      return result;
+      return result || originalIndexComparer(a, b);
     };
   }
 

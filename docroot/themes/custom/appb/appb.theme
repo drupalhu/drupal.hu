@@ -19,5 +19,48 @@ function appb_preprocess_table(&$variables) {
         $variables['header'][$column]['attributes']->addClass('table-sort--sortable');
       }
     }
+
+    $fieldId = key($variables['rows']);
+    if ($fieldId !== NULL && isset($variables['header']['field_type'])) {
+      $etm = \Drupal::getContainer()->get('entity_type.manager');
+      $efm = \Drupal::getContainer()->get('entity_field.manager');
+
+      $fieldIdParts = array_combine(
+        ['entity_type', 'bundle', 'field_name'],
+        explode('.', $fieldId),
+      );
+      $fieldDefinitions = $efm->getFieldDefinitions(
+        $fieldIdParts['entity_type'],
+        $fieldIdParts['bundle'],
+      );
+      foreach ($variables['rows'] as $fieldId => &$row) {
+        $fieldIdParts = array_combine(
+          ['entity_type', 'bundle', 'field_name'],
+          explode('.', $fieldId),
+        );
+        $fieldConfig = $fieldDefinitions[$fieldIdParts['field_name']] ?? NULL;
+        if (!$fieldConfig) {
+          continue;
+        }
+
+        $fieldStorage = $fieldConfig->getFieldStorageDefinition();
+        $targetType = $fieldStorage->getSetting('target_type');
+        if ($targetType === NULL) {
+          continue;
+        }
+
+        $targetLabel = $targetType;
+        if ($etm->hasDefinition($targetType)) {
+          $targetLabel = $etm->getDefinition($targetType)->getLabel();
+        }
+
+        $row['cells']['field_type']['content'] = [
+          'link' => $row['cells']['field_type']['content'],
+          'extra' => [
+            '#markup' => " $targetLabel",
+          ],
+        ];
+      }
+    }
   }
 }
