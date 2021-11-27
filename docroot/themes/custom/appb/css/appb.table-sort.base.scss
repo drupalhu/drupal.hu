@@ -4,16 +4,16 @@
 
 .table-sort--trigger {
   cursor: pointer;
-}
 
-.table-sort--wrapper.state-inactive .table-sort--trigger {
-  opacity: 0.3;
-}
-
-.table-sort--trigger > *:last-child {
-  margin-inline-start: 0.25em;
+  .table-sort--wrapper.state-inactive & {
+    opacity: 0.3;
+  }
 }
 
 .table-sort--position {
   font-family: monospace;
+}
+
+.table-sort--dir {
+  margin-inline-start: 0.25em;
 }
