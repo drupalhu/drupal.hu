@@ -17,7 +17,7 @@ plugin: book_navigation
 settings:
   id: book_navigation
   label: 'Könyv navigáció'
-  provider: book
   label_display: visible
+  provider: book
   block_mode: 'book pages'
 visibility: {  }

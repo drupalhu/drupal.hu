@@ -18,14 +18,14 @@ content:
     type: image
     label: hidden
     settings:
-      image_style: orgw30
       image_link: ''
-      svg_render_as_image: true
+      image_style: orgw30
       svg_attributes:
         width: 480
         height: null
-    weight: 0
+      svg_render_as_image: true
     third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   created: true

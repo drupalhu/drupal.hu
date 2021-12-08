@@ -31,8 +31,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -43,245 +43,245 @@ third_party_settings:
             uuid: 4bdbfccb-67e1-443f-afff-25a39ecf6981
             region: content
             configuration:
+              id: 'field_block:node:job:app_image'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_image'
               formatter:
+                type: media_thumbnail
                 label: hidden
                 settings:
-                  image_style: media_library
                   image_link: content
+                  image_style: media_library
                 third_party_settings: {  }
-                type: media_thumbnail
-            additional: {  }
             weight: -10
+            additional: {  }
           000d897c-6561-47ff-892e-ad31d02f1aff:
             uuid: 000d897c-6561-47ff-892e-ad31d02f1aff
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_due_date'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_due_date'
               formatter:
+                type: datetime_default
                 label: inline
                 settings:
-                  format_type: medium
                   timezone_override: ''
+                  format_type: medium
                 third_party_settings: {  }
-                type: datetime_default
-            additional: {  }
             weight: -9
+            additional: {  }
           bac89d8c-10d4-4b65-b285-324ff48c17c6:
             uuid: bac89d8c-10d4-4b65-b285-324ff48c17c6
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_employment'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_employment'
               formatter:
+                type: list_default
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-            additional: {  }
             weight: -8
+            additional: {  }
           76125ab4-d179-4b2f-9c4e-330d4b609810:
             uuid: 76125ab4-d179-4b2f-9c4e-330d4b609810
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_location_name'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_location_name'
               formatter:
+                type: string
                 label: inline
                 settings:
                   link_to_entity: false
                 third_party_settings: {  }
-                type: string
-            additional: {  }
             weight: -7
+            additional: {  }
           010075de-b946-4c5f-b29c-e9f8f8fb3151:
             uuid: 010075de-b946-4c5f-b29c-e9f8f8fb3151
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_location_type'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_location_type'
               formatter:
+                type: list_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-            additional: {  }
             weight: -6
+            additional: {  }
           11792076-60e7-42f0-a646-b900656fca92:
             uuid: 11792076-60e7-42f0-a646-b900656fca92
             region: content
             configuration:
+              id: 'field_block:node:job:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_body'
               formatter:
+                type: text_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: -5
+            additional: {  }
           9c424e34-a690-4875-9445-c484591ed751:
             uuid: 9c424e34-a690-4875-9445-c484591ed751
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_expectations'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_expectations'
               formatter:
+                type: text_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: -4
+            additional: {  }
           6f44c085-1f6e-4d21-bffb-217db16cd28c:
             uuid: 6f44c085-1f6e-4d21-bffb-217db16cd28c
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_advantage'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_advantage'
               formatter:
+                type: text_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: -3
+            additional: {  }
           8e4525cb-e590-4416-9730-24ce8cf09be9:
             uuid: 8e4525cb-e590-4416-9730-24ce8cf09be9
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_announcer_gives'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_announcer_gives'
               formatter:
+                type: text_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: -2
+            additional: {  }
           7b6c0a8a-34aa-4271-85b9-49c010af8ec0:
             uuid: 7b6c0a8a-34aa-4271-85b9-49c010af8ec0
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_level'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_level'
               formatter:
+                type: list_default
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-            additional: {  }
             weight: -1
+            additional: {  }
           b1672f53-3af9-4ce9-b6fa-7e2baa43b770:
             uuid: b1672f53-3af9-4ce9-b6fa-7e2baa43b770
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_language'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_language'
               formatter:
+                type: list_default
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-            additional: {  }
             weight: 0
+            additional: {  }
           4fc03fa2-33f5-49e5-996b-135b8e976770:
             uuid: 4fc03fa2-33f5-49e5-996b-135b8e976770
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_contact_org'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_contact_org'
               formatter:
+                type: string
                 label: inline
                 settings:
                   link_to_entity: false
                 third_party_settings: {  }
-                type: string
-            additional: {  }
             weight: 1
+            additional: {  }
           7dcd10ca-eb0f-4020-b88a-428f009b3a63:
             uuid: 7dcd10ca-eb0f-4020-b88a-428f009b3a63
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_contact_name'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_contact_name'
               formatter:
+                type: string
                 label: inline
                 settings:
                   link_to_entity: false
                 third_party_settings: {  }
-                type: string
-            additional: {  }
             weight: 2
+            additional: {  }
           788718ba-9499-4df8-b6f5-0fb217003a78:
             uuid: 788718ba-9499-4df8-b6f5-0fb217003a78
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_contact_phone'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_contact_phone'
               formatter:
+                type: telephone_link
                 label: inline
                 settings:
                   title: ''
                 third_party_settings: {  }
-                type: telephone_link
-            additional: {  }
             weight: 3
+            additional: {  }
           afac8d1c-bdc1-478d-bb51-d3eb7bbd988b:
             uuid: afac8d1c-bdc1-478d-bb51-d3eb7bbd988b
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_contact_email'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_contact_email'
               formatter:
+                type: basic_string
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-                type: basic_string
-            additional: {  }
             weight: 4
+            additional: {  }
           7fe3b5dd-2e57-484a-9478-d94e17a5b27e:
             uuid: 7fe3b5dd-2e57-484a-9478-d94e17a5b27e
             region: content
             configuration:
+              id: 'extra_field_block:node:job:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:job:links'
-            additional: {  }
             weight: 5
+            additional: {  }
         third_party_settings: {  }
 id: node.job.default
 targetEntityType: node
@@ -289,123 +289,123 @@ bundle: job
 mode: default
 content:
   app_body:
-    weight: 1
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 1
     region: content
   app_image:
-    weight: 0
+    type: media_thumbnail
     label: hidden
     settings:
-      image_style: media_library
       image_link: content
+      image_style: media_library
     third_party_settings: {  }
-    type: media_thumbnail
+    weight: 0
     region: content
   app_job_advantage:
-    weight: 3
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 3
     region: content
   app_job_announcer_gives:
-    weight: 7
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 7
     region: content
   app_job_contact_email:
-    weight: 14
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 14
     region: content
   app_job_contact_name:
-    weight: 12
+    type: string
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 12
     region: content
   app_job_contact_org:
-    weight: 11
+    type: string
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 11
     region: content
   app_job_contact_phone:
-    weight: 13
+    type: telephone_link
     label: inline
     settings:
       title: ''
     third_party_settings: {  }
-    type: telephone_link
+    weight: 13
     region: content
   app_job_due_date:
-    weight: 8
+    type: datetime_default
     label: inline
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 8
     region: content
   app_job_employment:
-    weight: 6
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 6
     region: content
   app_job_expectations:
-    weight: 2
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
   app_job_language:
-    weight: 10
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 10
     region: content
   app_job_level:
-    weight: 9
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 9
     region: content
   app_job_location_name:
-    weight: 5
+    type: string
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 5
     region: content
   app_job_location_type:
-    weight: 4
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 4
     region: content
   links:
-    weight: 15
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 15
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

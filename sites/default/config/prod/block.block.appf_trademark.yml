@@ -17,8 +17,8 @@ plugin: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
 settings:
   id: 'block_content:d7acbe44-1cfb-4bf8-8294-ca25c40ef603'
   label: Védjegy
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full

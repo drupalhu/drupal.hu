@@ -2,8 +2,8 @@ uuid: dbed1073-d40d-47d0-ab93-1a250edf0a71
 langcode: hu
 status: true
 dependencies: {  }
-id: l60
 label: '5:2 – 2,5'
+id: l60
 description: ''
 aspect_ratio: '5:2'
 soft_limit_width: null

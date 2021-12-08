@@ -2,10 +2,6 @@ uuid: bfa37d40-6843-4216-987a-8161f4438551
 langcode: hu
 status: true
 dependencies:
-  module:
-    - search_api_solr
-    - node
-    - search_api
   config:
     - field.storage.node.app_target_audience
     - field.storage.node.app_tags
@@ -15,24 +11,25 @@ dependencies:
     - field.storage.node.app_competence
     - field.storage.node.app_body
     - search_api.server.general
+  module:
+    - search_api_solr
+    - node
+    - search_api
 third_party_settings:
   search_api_solr:
     finalize: false
     commit_before_finalize: false
     commit_after_finalize: false
-    multilingual:
-      limit_to_content_language: false
-      include_language_independent: true
     highlighter:
       maxAnalyzedChars: 51200
       fragmenter: gap
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
       regex:
         slop: 0.5
         pattern: blank
         maxAnalyzedChars: 10000
-      usePhraseHighlighter: true
-      highlightMultiTerm: true
-      preserveMulti: false
       highlight:
         mergeContiguous: false
         requireFieldMatch: false
@@ -56,6 +53,9 @@ third_party_settings:
       index_prefix: ''
       collection: ''
       timezone: ''
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
 id: content
 name: Tartalom
 description: ''
@@ -199,6 +199,6 @@ tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
 server: general

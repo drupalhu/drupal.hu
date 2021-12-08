@@ -11,13 +11,13 @@ pattern: '/hir/[node:title]'
 selection_criteria:
   e25ad92a-e8a6-456b-98b8-8a1badb9965f:
     id: node_type
+    negate: false
+    uuid: e25ad92a-e8a6-456b-98b8-8a1badb9965f
+    context_mapping:
+      node: node
     bundles:
       event: event
       news: news
-    negate: false
-    context_mapping:
-      node: node
-    uuid: e25ad92a-e8a6-456b-98b8-8a1badb9965f
 selection_logic: and
 weight: 1
 relationships: {  }

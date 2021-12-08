@@ -17,7 +17,7 @@ bundle: user
 mode: default
 content:
   app_homepage:
-    weight: 2
+    type: link
     label: inline
     settings:
       trim_length: 80
@@ -26,33 +26,33 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 2
     region: content
   app_introduction:
-    weight: 1
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 1
     region: content
   app_picture:
-    weight: 0
+    type: image
     label: hidden
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
       svg_attributes:
         width: null
         height: null
       svg_render_as_image: true
     third_party_settings: {  }
-    type: image
+    weight: 0
     region: content
   member_for:
-    weight: 3
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

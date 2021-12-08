@@ -16,57 +16,57 @@ bundle: aggregator_feed
 mode: default
 content:
   app_author:
-    weight: 7
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 7
     region: content
   app_category:
-    weight: 6
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 6
     region: content
   checked:
     type: timestamp_ago
-    weight: 1
-    region: content
+    label: inline
     settings:
       future_format: '@interval hence'
       past_format: '@interval ago'
       granularity: 2
     third_party_settings: {  }
-    label: inline
+    weight: 1
+    region: content
   description:
+    settings: {  }
+    third_party_settings: {  }
     weight: 3
     region: content
+  feed_icon:
     settings: {  }
     third_party_settings: {  }
-  feed_icon:
     weight: 5
     region: content
+  image:
     settings: {  }
     third_party_settings: {  }
-  image:
     weight: 2
     region: content
+  items:
     settings: {  }
     third_party_settings: {  }
-  items:
     weight: 0
     region: content
-    settings: {  }
-    third_party_settings: {  }
   link:
     type: uri_link
-    weight: 4
-    region: content
+    label: inline
     settings: {  }
     third_party_settings: {  }
-    label: inline
+    weight: 4
+    region: content
 hidden:
   langcode: true
   more_link: true

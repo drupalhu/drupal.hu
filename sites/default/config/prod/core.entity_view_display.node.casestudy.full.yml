@@ -20,8 +20,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -32,86 +32,89 @@ third_party_settings:
             uuid: e32e09eb-886d-474e-b615-134c29b4ba50
             region: content
             configuration:
+              id: 'field_block:node:casestudy:app_image'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:casestudy:app_image'
               formatter:
                 type: media_thumbnail
                 label: hidden
                 settings:
-                  image_style: media_library
                   image_link: ''
+                  image_style: media_library
                 third_party_settings: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           43610ae3-6d7a-4db6-a38a-543cb5cae72d:
             uuid: 43610ae3-6d7a-4db6-a38a-543cb5cae72d
             region: content
             configuration:
+              id: 'field_block:node:casestudy:app_drupal_version'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:casestudy:app_drupal_version'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 3
+            additional: {  }
           af405052-a563-437f-91dc-d519a29d9c56:
             uuid: af405052-a563-437f-91dc-d519a29d9c56
             region: content
             configuration:
+              id: 'field_block:node:casestudy:app_teaser'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:casestudy:app_teaser'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 4
+            additional: {  }
           c5666fac-5070-48c6-b59e-c5ee9f681177:
             uuid: c5666fac-5070-48c6-b59e-c5ee9f681177
             region: content
             configuration:
+              id: 'field_block:node:casestudy:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:casestudy:app_body'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 5
+            additional: {  }
           201a6bcb-8071-4252-a85d-4910763a0ac7:
             uuid: 201a6bcb-8071-4252-a85d-4910763a0ac7
             region: content
             configuration:
+              id: 'extra_field_block:node:casestudy:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:casestudy:links'
-            additional: {  }
             weight: 6
+            additional: {  }
           0b5b93fe-7d3a-4a29-8d8b-c0bda82d05db:
             uuid: 0b5b93fe-7d3a-4a29-8d8b-c0bda82d05db
             region: content
             configuration:
               id: 'field_block:node:casestudy:app_links'
               label: Linkek
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: inline
                 type: link
+                label: inline
                 settings:
                   trim_length: 80
                   url_only: false
@@ -119,11 +122,8 @@ third_party_settings:
                   rel: nofollow
                   target: '0'
                 third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 2
+            additional: {  }
         third_party_settings: {  }
 id: node.casestudy.full
 targetEntityType: node
@@ -131,41 +131,41 @@ bundle: casestudy
 mode: full
 content:
   app_body:
-    weight: 3
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 3
     region: content
   app_drupal_version:
-    weight: 1
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
     region: content
   app_image:
     type: media_thumbnail
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: media_library
       image_link: ''
+      image_style: media_library
     third_party_settings: {  }
+    weight: 0
+    region: content
   app_teaser:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
   links:
-    weight: 4
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: content
 hidden:
   app_attachments: true
   app_links: true

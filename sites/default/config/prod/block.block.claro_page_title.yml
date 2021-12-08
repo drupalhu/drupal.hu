@@ -15,6 +15,6 @@ plugin: page_title_block
 settings:
   id: page_title_block
   label: 'Oldal címe'
-  provider: core
   label_display: '0'
+  provider: core
 visibility: {  }

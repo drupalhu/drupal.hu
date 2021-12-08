@@ -13,11 +13,11 @@ bundle: data_protection
 mode: default
 content:
   entity_legal_document_text:
-    label: hidden
     type: text_default
-    weight: 0
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   search_api_excerpt: true

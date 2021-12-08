@@ -2,8 +2,8 @@ uuid: c3ad79a6-4486-434e-9f49-2a1e69aaeeb4
 langcode: hu
 status: true
 dependencies: {  }
-id: l42
 label: '120:63 – 1,90'
+id: l42
 description: 'https://developers.facebook.com/docs/sharing/webmasters/images/'
 aspect_ratio: '120:63'
 soft_limit_width: 600

@@ -30,8 +30,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -44,96 +44,96 @@ third_party_settings:
             configuration:
               id: 'field_block:node:job:app_image'
               label: Kép
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_reference_entity_view
-                settings:
-                  view_mode: hero
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: hero
+                third_party_settings: {  }
             weight: 1
+            additional: {  }
           94216b80-0320-4b62-8b0c-542102b26d70:
             uuid: 94216b80-0320-4b62-8b0c-542102b26d70
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_location_type'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_location_type'
               formatter:
                 type: list_default
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-            additional: {  }
             weight: 2
+            additional: {  }
           0edc42eb-5d7f-4061-a9fc-8396ff36dfaf:
             uuid: 0edc42eb-5d7f-4061-a9fc-8396ff36dfaf
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_location_name'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_location_name'
               formatter:
                 type: string
                 label: inline
                 settings:
                   link_to_entity: false
                 third_party_settings: {  }
-            additional: {  }
             weight: 3
+            additional: {  }
           9da09f35-adb8-485e-9824-9207976bd9e5:
             uuid: 9da09f35-adb8-485e-9824-9207976bd9e5
             region: content
             configuration:
+              id: 'field_block:node:job:app_job_due_date'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:job:app_job_due_date'
               formatter:
                 type: datetime_default
                 label: inline
                 settings:
-                  format_type: medium
                   timezone_override: ''
+                  format_type: medium
                 third_party_settings: {  }
-            additional: {  }
             weight: 4
+            additional: {  }
           a22011cc-1f18-4456-8e5c-e1cfa72415d9:
             uuid: a22011cc-1f18-4456-8e5c-e1cfa72415d9
             region: content
             configuration:
+              id: 'extra_field_block:node:job:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:job:links'
-            additional: {  }
             weight: 6
+            additional: {  }
           4ca47d0f-1fc8-4c2b-b564-7f955171171d:
             uuid: 4ca47d0f-1fc8-4c2b-b564-7f955171171d
             region: content
             configuration:
               id: 'field_block:node:job:app_body'
               label: 'Feladat leírása'
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: text_trimmed
-                settings:
-                  trim_length: 600
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
             weight: 5
+            additional: {  }
         third_party_settings: {  }
 id: node.job.teaser
 targetEntityType: node
@@ -142,42 +142,42 @@ mode: teaser
 content:
   app_image:
     type: media_thumbnail
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: media_library
       image_link: content
+      image_style: media_library
     third_party_settings: {  }
+    weight: 0
+    region: content
   app_job_due_date:
     type: datetime_default
-    weight: 3
-    region: content
     label: inline
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
+    weight: 3
+    region: content
   app_job_location_name:
     type: string
-    weight: 2
-    region: content
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 2
+    region: content
   app_job_location_type:
     type: list_default
-    weight: 1
-    region: content
     label: inline
     settings: {  }
     third_party_settings: {  }
-  links:
-    weight: 4
+    weight: 1
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: content
 hidden:
   app_body: true
   app_job_advantage: true

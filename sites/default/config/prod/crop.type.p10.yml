@@ -2,8 +2,8 @@ uuid: fff82358-d60d-4a6f-ad5e-86b5884b69b0
 langcode: hu
 status: true
 dependencies: {  }
-id: p10
 label: '3:4 – 0,75'
+id: p10
 description: ''
 aspect_ratio: '3:4'
 soft_limit_width: null

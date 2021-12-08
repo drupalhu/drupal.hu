@@ -16,13 +16,13 @@ bundle: user
 mode: compact
 content:
   app_picture:
-    weight: 0
+    type: image
     label: hidden
     settings:
       image_link: ''
       image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 0
     region: content
 hidden:
   app_homepage: true

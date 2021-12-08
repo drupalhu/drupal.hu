@@ -1,4 +1,4 @@
-cdn_provider: ''
+langcode: hu
 favicon:
   mimetype: image/svg+xml
   path: themes/custom/appf/favicon.svg
@@ -13,8 +13,8 @@ logo:
   path: ''
   url: ''
   use_default: true
+cdn_provider: ''
 schemas:
   appf: 8000
-langcode: hu
 reset_http_request_cache: ''
 table: ''

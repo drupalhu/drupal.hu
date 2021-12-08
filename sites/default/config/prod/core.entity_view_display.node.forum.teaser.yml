@@ -18,8 +18,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -30,60 +30,60 @@ third_party_settings:
             uuid: 30f20723-1dc9-4158-bddd-483c2cc84574
             region: content
             configuration:
+              id: 'field_block:node:forum:taxonomy_forums'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:taxonomy_forums'
               formatter:
                 type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           39284b4d-d376-4a06-8604-46555d4567c0:
             uuid: 39284b4d-d376-4a06-8604-46555d4567c0
             region: content
             configuration:
+              id: 'field_block:node:forum:app_drupal_version'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_drupal_version'
               formatter:
                 type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-            additional: {  }
             weight: 1
+            additional: {  }
           c2100e6a-8a7b-4357-a949-0fe7af8a9630:
             uuid: c2100e6a-8a7b-4357-a949-0fe7af8a9630
             region: content
             configuration:
+              id: 'field_block:node:forum:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_body'
               formatter:
                 type: text_trimmed
                 label: hidden
                 settings:
                   trim_length: 600
                 third_party_settings: {  }
-            additional: {  }
             weight: 2
+            additional: {  }
           342ed78f-65f6-4f96-a48c-9de4acfef993:
             uuid: 342ed78f-65f6-4f96-a48c-9de4acfef993
             region: content
             configuration:
+              id: 'extra_field_block:node:forum:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:forum:links'
-            additional: {  }
             weight: 3
+            additional: {  }
         third_party_settings: {  }
 _core:
   default_config_hash: MK_j248n6esK84n87ulM_yPeqdkndKn94h4vTJC4wjw
@@ -94,33 +94,33 @@ mode: teaser
 content:
   app_body:
     type: text_trimmed
-    weight: 2
-    region: content
     label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
+    weight: 2
+    region: content
   app_drupal_version:
     type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
     weight: 1
     region: content
-    label: inline
-    settings:
-      link: true
-    third_party_settings: {  }
   links:
-    weight: 3
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
   taxonomy_forums:
     type: entity_reference_label
-    weight: 0
-    region: content
     label: inline
     settings:
       link: true
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   app_project: true
   app_tags: true

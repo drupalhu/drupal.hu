@@ -13,20 +13,20 @@ bundle: aggregator_feed
 mode: default
 content:
   app_author:
+    type: entity_reference_autocomplete
     weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   app_category:
+    type: options_buttons
     weight: 4
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   langcode:
     type: language_select
     weight: 0

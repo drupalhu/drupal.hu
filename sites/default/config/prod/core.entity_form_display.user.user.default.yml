@@ -24,29 +24,29 @@ content:
     settings: {  }
     third_party_settings: {  }
   app_homepage:
+    type: link_default
     weight: 2
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   app_introduction:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   app_picture:
-    weight: 0
-    settings:
-      preview_image_style: orgw40
-      progress_indicator: throbber
-    third_party_settings: {  }
     type: image_image
+    weight: 0
     region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: orgw40
+    third_party_settings: {  }
   contact:
     weight: 5
     region: content

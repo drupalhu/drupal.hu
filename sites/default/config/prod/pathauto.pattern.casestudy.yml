@@ -11,12 +11,12 @@ pattern: '/esettanulmany/[node:title]'
 selection_criteria:
   64a65982-e2b6-4512-ba51-edbec116e55f:
     id: node_type
-    bundles:
-      casestudy: casestudy
     negate: false
+    uuid: 64a65982-e2b6-4512-ba51-edbec116e55f
     context_mapping:
       node: node
-    uuid: 64a65982-e2b6-4512-ba51-edbec116e55f
+    bundles:
+      casestudy: casestudy
 selection_logic: and
 weight: -5
 relationships: {  }

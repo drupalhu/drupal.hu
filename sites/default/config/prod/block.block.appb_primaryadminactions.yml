@@ -13,6 +13,6 @@ plugin: local_actions_block
 settings:
   id: local_actions_block
   label: 'Elsődleges adminisztrátori műveletek'
-  provider: core
   label_display: '0'
+  provider: core
 visibility: {  }

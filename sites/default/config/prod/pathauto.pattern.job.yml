@@ -11,12 +11,12 @@ pattern: '/munkaajanlat/[node:title]'
 selection_criteria:
   09b31ce3-2882-408e-90ae-bd1a49906748:
     id: node_type
-    bundles:
-      job: job
     negate: false
+    uuid: 09b31ce3-2882-408e-90ae-bd1a49906748
     context_mapping:
       node: node
-    uuid: 09b31ce3-2882-408e-90ae-bd1a49906748
+    bundles:
+      job: job
 selection_logic: and
 weight: 3
 relationships: {  }

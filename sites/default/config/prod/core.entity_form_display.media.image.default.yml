@@ -21,21 +21,21 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_media_image:
+    type: image_widget_crop
     weight: 0
+    region: content
     settings:
-      show_default_crop: true
-      warn_multiple_usages: true
+      progress_indicator: throbber
       preview_image_style: orgw40
       crop_preview_image_style: orgw60
       crop_list:
         - l30
         - l42
-      progress_indicator: throbber
       crop_types_required: {  }
+      warn_multiple_usages: true
       show_crop_area: false
+      show_default_crop: true
     third_party_settings: {  }
-    type: image_widget_crop
-    region: content
   langcode:
     type: language_select
     weight: 2
@@ -59,19 +59,19 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 100
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
 hidden: {  }

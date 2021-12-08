@@ -4,11 +4,11 @@ status: true
 dependencies:
   config:
     - crop.type.sqr
+  module:
+    - crop
   enforced:
     module:
       - media_library
-  module:
-    - crop
 _core:
   default_config_hash: KK5aodHH54Bc7Q3LmjfrsYlRV-nQtCjCXlkZOFTW6v0
 name: media_library

@@ -2,8 +2,8 @@ uuid: 24bce0e6-72be-4ba6-825b-29954fbb5d80
 langcode: hu
 status: true
 dependencies: {  }
-id: l30
 label: '16:9 – 1,77'
+id: l30
 description: ''
 aspect_ratio: '16:9'
 soft_limit_width: null

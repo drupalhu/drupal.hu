@@ -16,8 +16,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -28,27 +28,27 @@ third_party_settings:
             uuid: f2e03ea9-b9f9-45fa-aa4a-424d70abfbc4
             region: content
             configuration:
+              id: 'field_block:node:note:app_teaser'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:note:app_teaser'
               formatter:
                 type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           a3d0cc97-9a4b-430b-b697-92798a127c58:
             uuid: a3d0cc97-9a4b-430b-b697-92798a127c58
             region: content
             configuration:
+              id: 'extra_field_block:node:note:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:note:links'
-            additional: {  }
             weight: 1
+            additional: {  }
         third_party_settings: {  }
 id: node.note.teaser
 targetEntityType: node
@@ -57,16 +57,16 @@ mode: teaser
 content:
   app_teaser:
     type: text_default
-    weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  links:
-    weight: 1
+    weight: 0
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   app_attachments: true
   app_body: true
