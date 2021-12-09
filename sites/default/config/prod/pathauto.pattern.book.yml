@@ -11,12 +11,12 @@ pattern: '/dokumentacio/[node:title]'
 selection_criteria:
   55962af8-983d-47a8-9435-e9ac250cd640:
     id: node_type
-    bundles:
-      book: book
     negate: false
+    uuid: 55962af8-983d-47a8-9435-e9ac250cd640
     context_mapping:
       node: node
-    uuid: 55962af8-983d-47a8-9435-e9ac250cd640
+    bundles:
+      book: book
 selection_logic: and
 weight: 2
 relationships: {  }

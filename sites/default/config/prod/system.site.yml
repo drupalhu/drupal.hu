@@ -1,3 +1,6 @@
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
+langcode: hu
 uuid: ac6dae37-ab30-4ab1-bb3d-8d0422f96f89
 name: Drupal.hu
 mail: info@drupal.hu
@@ -8,8 +11,5 @@ page:
   front: /hir
 admin_compact_mode: false
 weight_select_max: 100
-langcode: hu
 default_langcode: hu
-_core:
-  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
 mail_notification: ''

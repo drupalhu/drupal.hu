@@ -17,8 +17,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -29,48 +29,48 @@ third_party_settings:
             uuid: 1fabd4f6-e20f-482e-817b-0524e4afc36f
             region: content
             configuration:
+              id: 'field_block:node:page:app_image'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:page:app_image'
               formatter:
                 type: media_thumbnail
                 label: hidden
                 settings:
-                  image_style: media_library
                   image_link: content
+                  image_style: media_library
                 third_party_settings: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           8ec2c7d3-a65e-4502-a3c9-b89712381f24:
             uuid: 8ec2c7d3-a65e-4502-a3c9-b89712381f24
             region: content
             configuration:
               id: 'field_block:node:page:app_body'
               label: Törzs
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: text_trimmed
-                settings:
-                  trim_length: 600
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
             weight: 1
+            additional: {  }
           4e8997d6-4257-4255-bd88-a0b9a103b21e:
             uuid: 4e8997d6-4257-4255-bd88-a0b9a103b21e
             region: content
             configuration:
+              id: 'extra_field_block:node:page:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:page:links'
-            additional: {  }
             weight: 2
+            additional: {  }
         third_party_settings: {  }
 id: node.page.teaser
 targetEntityType: node
@@ -79,26 +79,26 @@ mode: teaser
 content:
   app_body:
     type: text_trimmed
-    weight: 1
-    region: content
     label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
+    weight: 1
+    region: content
   app_image:
     type: media_thumbnail
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: media_library
       image_link: content
+      image_style: media_library
     third_party_settings: {  }
-  links:
-    weight: 2
+    weight: 0
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   app_attachments: true
   langcode: true

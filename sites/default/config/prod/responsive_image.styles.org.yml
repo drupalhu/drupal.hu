@@ -15,29 +15,29 @@ id: org
 label: Eredeti
 image_style_mappings:
   -
-    breakpoint_id: default.xl
-    multiplier: 1x
     image_mapping_type: image_style
     image_mapping: orgw80
-  -
-    breakpoint_id: default.lg
+    breakpoint_id: default.xl
     multiplier: 1x
+  -
     image_mapping_type: image_style
     image_mapping: orgw70
-  -
-    breakpoint_id: default.md
+    breakpoint_id: default.lg
     multiplier: 1x
+  -
     image_mapping_type: image_style
     image_mapping: orgw60
-  -
-    breakpoint_id: default.sm
+    breakpoint_id: default.md
     multiplier: 1x
+  -
     image_mapping_type: image_style
     image_mapping: orgw50
-  -
-    breakpoint_id: default.xs
+    breakpoint_id: default.sm
     multiplier: 1x
+  -
     image_mapping_type: image_style
     image_mapping: orgw40
+    breakpoint_id: default.xs
+    multiplier: 1x
 breakpoint_group: appf
 fallback_image_style: orgw30

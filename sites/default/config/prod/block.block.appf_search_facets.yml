@@ -16,8 +16,8 @@ plugin: facets_block
 settings:
   id: facets_block
   label: 'Kereső facets'
-  provider: facets_block
   label_display: '0'
+  provider: facets_block
   show_title: true
   exclude_empty_facets: true
   facets_to_include:
@@ -31,5 +31,5 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: /kereso
     negate: false
+    pages: /kereso

@@ -1,3 +1,6 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
+langcode: hu
 module:
   acquia_connector: 0
   acquia_search: 0
@@ -79,6 +82,3 @@ theme:
   appf: 1
   olivero: 0
 profile: appp
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
-langcode: hu

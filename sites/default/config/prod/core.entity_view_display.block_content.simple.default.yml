@@ -13,11 +13,11 @@ bundle: simple
 mode: default
 content:
   app_body:
-    weight: 0
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 0
     region: content
 hidden:
   langcode: true

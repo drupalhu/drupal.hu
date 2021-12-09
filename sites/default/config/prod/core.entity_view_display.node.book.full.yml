@@ -19,8 +19,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -31,107 +31,107 @@ third_party_settings:
             uuid: e2ce1cbe-f90f-4fd5-bf03-f6838e49b130
             region: content
             configuration:
+              id: 'field_block:node:book:app_drupal_version'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_drupal_version'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 1
+            additional: {  }
           42f847d0-6c37-4e9c-9d1e-e37d530ffece:
             uuid: 42f847d0-6c37-4e9c-9d1e-e37d530ffece
             region: content
             configuration:
+              id: 'field_block:node:book:app_target_audience'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_target_audience'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 2
+            additional: {  }
           505b4d28-ed92-4399-9649-aa7bd61d82cf:
             uuid: 505b4d28-ed92-4399-9649-aa7bd61d82cf
             region: content
             configuration:
+              id: 'field_block:node:book:app_competence'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_competence'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 3
+            additional: {  }
           0eb1104c-a13a-415e-aa86-da07203151c4:
             uuid: 0eb1104c-a13a-415e-aa86-da07203151c4
             region: content
             configuration:
+              id: 'field_block:node:book:app_tags'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_tags'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 4
+            additional: {  }
           96f2bf9f-4855-47b2-9eed-ab84976d2331:
             uuid: 96f2bf9f-4855-47b2-9eed-ab84976d2331
             region: content
             configuration:
+              id: 'field_block:node:book:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_body'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 5
+            additional: {  }
           ae113c08-deee-42e7-a719-cf87a5758502:
             uuid: ae113c08-deee-42e7-a719-cf87a5758502
             region: content
             configuration:
+              id: 'field_block:node:book:app_attachments'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_attachments'
               formatter:
+                type: file_default
                 label: above
                 settings:
                   use_description_as_link_text: true
                 third_party_settings: {  }
-                type: file_default
-            additional: {  }
             weight: 6
+            additional: {  }
           fd3878be-fbb6-4d70-810a-1eeabb82d55d:
             uuid: fd3878be-fbb6-4d70-810a-1eeabb82d55d
             region: content
             configuration:
+              id: 'extra_field_block:node:book:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:book:links'
-            additional: {  }
             weight: 7
+            additional: {  }
         third_party_settings: {  }
 _core:
   default_config_hash: UWTnZUj-u-jp8I_S1C1nUCTlM5iIV2QKdxm37ehFjoI
@@ -141,57 +141,57 @@ bundle: book
 mode: full
 content:
   app_attachments:
-    weight: 6
+    type: file_default
     label: above
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    type: file_default
+    weight: 6
     region: content
   app_body:
-    weight: 5
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 5
     region: content
   app_competence:
-    weight: 3
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 3
     region: content
   app_drupal_version:
-    weight: 1
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
     region: content
   app_tags:
-    weight: 4
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 4
     region: content
   app_target_audience:
-    weight: 2
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 2
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

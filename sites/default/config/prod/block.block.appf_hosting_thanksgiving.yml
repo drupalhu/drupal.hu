@@ -17,8 +17,8 @@ plugin: 'block_content:6a290725-ba59-4318-891c-52834d6a4bbb'
 settings:
   id: 'block_content:6a290725-ba59-4318-891c-52834d6a4bbb'
   label: 'Hosting köszönet nyilvánítás'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full

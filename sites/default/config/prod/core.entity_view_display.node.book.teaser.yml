@@ -18,8 +18,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -30,63 +30,63 @@ third_party_settings:
             uuid: be738a6d-4fce-47b5-a5c7-34de45798915
             region: content
             configuration:
+              id: 'field_block:node:book:app_drupal_version'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_drupal_version'
               formatter:
                 type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-            additional: {  }
             weight: 3
+            additional: {  }
           85ea250b-ec49-4167-a106-61926ecec847:
             uuid: 85ea250b-ec49-4167-a106-61926ecec847
             region: content
             configuration:
+              id: 'field_block:node:book:app_tags'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:book:app_tags'
               formatter:
                 type: entity_reference_label
                 label: above
                 settings:
                   link: true
                 third_party_settings: {  }
-            additional: {  }
             weight: 4
+            additional: {  }
           57d6eca7-9f4b-4850-a2b7-250068092396:
             uuid: 57d6eca7-9f4b-4850-a2b7-250068092396
             region: content
             configuration:
               id: 'field_block:node:book:app_body'
               label: Törzs
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: text_trimmed
-                settings:
-                  trim_length: 600
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: text_trimmed
+                label: hidden
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
             weight: 5
+            additional: {  }
           0a913868-0734-4e88-8c2b-740780241503:
             uuid: 0a913868-0734-4e88-8c2b-740780241503
             region: content
             configuration:
+              id: 'extra_field_block:node:book:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:book:links'
-            additional: {  }
             weight: 6
+            additional: {  }
         third_party_settings: {  }
 _core:
   default_config_hash: krIbNOdqw4vMF3Ty8qAW6AxgxmdBig5XuQRBW8-HYCU
@@ -97,33 +97,33 @@ mode: teaser
 content:
   app_body:
     type: text_trimmed
-    weight: 2
-    region: content
     label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
+    weight: 2
+    region: content
   app_drupal_version:
     type: entity_reference_label
-    weight: 0
-    region: content
     label: inline
     settings:
       link: true
     third_party_settings: {  }
+    weight: 0
+    region: content
   app_tags:
     type: entity_reference_label
-    weight: 1
-    region: content
     label: above
     settings:
       link: true
     third_party_settings: {  }
-  links:
-    weight: 3
+    weight: 1
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
   app_attachments: true
   app_competence: true

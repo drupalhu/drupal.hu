@@ -19,8 +19,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -31,108 +31,108 @@ third_party_settings:
             uuid: 56815186-043c-4dcd-b90c-fbc752abc604
             region: content
             configuration:
+              id: 'field_block:node:forum:taxonomy_forums'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:taxonomy_forums'
               formatter:
                 type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           1e01c33c-a68b-4e90-99e6-627809a2c6bf:
             uuid: 1e01c33c-a68b-4e90-99e6-627809a2c6bf
             region: content
             configuration:
+              id: 'field_block:node:forum:app_drupal_version'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_drupal_version'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 1
+            additional: {  }
           231b2626-c7b5-424a-af46-d40cb57a3c1e:
             uuid: 231b2626-c7b5-424a-af46-d40cb57a3c1e
             region: content
             configuration:
+              id: 'field_block:node:forum:app_project'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_project'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 2
+            additional: {  }
           ccf404e9-a0af-4542-b36d-8c424daf1417:
             uuid: ccf404e9-a0af-4542-b36d-8c424daf1417
             region: content
             configuration:
+              id: 'field_block:node:forum:app_tags'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_tags'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 3
+            additional: {  }
           d2303090-608b-4083-a1c8-edac60d06072:
             uuid: d2303090-608b-4083-a1c8-edac60d06072
             region: content
             configuration:
+              id: 'field_block:node:forum:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:app_body'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 4
+            additional: {  }
           b4a1027a-fc86-4395-bac2-a907a8902c3c:
             uuid: b4a1027a-fc86-4395-bac2-a907a8902c3c
             region: content
             configuration:
+              id: 'extra_field_block:node:forum:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:forum:links'
-            additional: {  }
             weight: 5
+            additional: {  }
           ba756b6d-fb9e-4c14-afd8-bedf3c24be9f:
             uuid: ba756b6d-fb9e-4c14-afd8-bedf3c24be9f
             region: content
             configuration:
+              id: 'field_block:node:forum:comment_forum'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:forum:comment_forum'
               formatter:
-                label: hidden
                 type: comment_default
+                label: hidden
                 settings:
                   view_mode: default
                   pager_id: 0
                 third_party_settings: {  }
-            additional: {  }
             weight: 6
+            additional: {  }
         third_party_settings: {  }
 _core:
   default_config_hash: TM_8DV1XKUAtF-wGxTBLOtg_GTtF5CX9WLrADxG7Xm4
@@ -142,58 +142,58 @@ bundle: forum
 mode: default
 content:
   app_body:
-    weight: 4
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 4
     region: content
   app_drupal_version:
-    weight: 1
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
     region: content
   app_project:
-    weight: 2
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 2
     region: content
   app_tags:
-    weight: 3
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 3
     region: content
   comment_forum:
-    label: hidden
     type: comment_default
-    weight: 6
-    region: content
+    label: hidden
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-  links:
-    weight: 5
+    weight: 6
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 5
+    region: content
   taxonomy_forums:
     type: entity_reference_label
-    weight: 0
-    region: content
     label: inline
     settings:
       link: true
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

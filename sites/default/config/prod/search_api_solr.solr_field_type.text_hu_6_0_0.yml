@@ -72,9 +72,9 @@ field_type:
           class: solr.LowerCaseFilterFactory
         -
           class: solr.SynonymFilterFactory
+          ignoreCase: true
           synonyms: synonyms_hu.txt
           expand: true
-          ignoreCase: true
         -
           class: solr.StopFilterFactory
           ignoreCase: true
@@ -143,9 +143,9 @@ unstemmed_field_type:
           class: solr.LowerCaseFilterFactory
         -
           class: solr.SynonymFilterFactory
+          ignoreCase: true
           synonyms: synonyms_hu.txt
           expand: true
-          ignoreCase: true
         -
           class: solr.StopFilterFactory
           ignoreCase: true
@@ -1025,8 +1025,6 @@ text_files:
     ők
     őket
     őt
-  synonyms: |
-    drupal, durpal
   protwords: ''
   accents: |
     # À => A
@@ -1215,3 +1213,5 @@ text_files:
     "\u0165" => "t"
     # ď => d
     "\u010F" => "d"
+  synonyms: |
+    drupal, durpal

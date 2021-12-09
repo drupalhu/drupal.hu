@@ -18,8 +18,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -30,75 +30,75 @@ third_party_settings:
             uuid: a440cee4-d99b-4658-99ea-851a4010fb76
             region: content
             configuration:
+              id: 'field_block:node:note:app_teaser'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:note:app_teaser'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 0
+            additional: {  }
           e9d46321-520a-4368-b4c2-3bc5d7bd8e8f:
             uuid: e9d46321-520a-4368-b4c2-3bc5d7bd8e8f
             region: content
             configuration:
+              id: 'field_block:node:note:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:note:app_body'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 1
+            additional: {  }
           c5fff1d0-8191-4fab-887a-5144a678b8d1:
             uuid: c5fff1d0-8191-4fab-887a-5144a678b8d1
             region: content
             configuration:
+              id: 'extra_field_block:node:note:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:note:links'
-            additional: {  }
             weight: 2
+            additional: {  }
           b82091ab-e013-4402-b0fa-22645f5ee259:
             uuid: b82091ab-e013-4402-b0fa-22645f5ee259
             region: content
             configuration:
+              id: 'field_block:node:note:app_attachments'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:note:app_attachments'
               formatter:
+                type: file_default
                 label: above
                 settings:
                   use_description_as_link_text: true
                 third_party_settings: {  }
-                type: file_default
-            additional: {  }
             weight: 3
+            additional: {  }
           6e248703-7108-4d07-a238-676bcaf37fd1:
             uuid: 6e248703-7108-4d07-a238-676bcaf37fd1
             region: content
             configuration:
+              id: 'field_block:node:note:app_comment_admin'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:note:app_comment_admin'
               formatter:
+                type: comment_default
                 label: above
                 settings:
                   view_mode: default
                   pager_id: 0
                 third_party_settings: {  }
-                type: comment_default
-            additional: {  }
             weight: 4
+            additional: {  }
         third_party_settings: {  }
 id: node.note.default
 targetEntityType: node
@@ -106,41 +106,41 @@ bundle: note
 mode: default
 content:
   app_attachments:
-    weight: 3
+    type: file_default
     label: above
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    type: file_default
+    weight: 3
     region: content
   app_body:
-    weight: 1
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 1
     region: content
   app_comment_admin:
-    weight: 4
+    type: comment_default
     label: above
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    weight: 4
     region: content
   app_teaser:
-    weight: 0
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 0
     region: content
   links:
-    weight: 2
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

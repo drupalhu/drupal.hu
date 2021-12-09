@@ -18,76 +18,23 @@ base_table: search_api_index_content
 base_field: search_api_id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Alapértelmezés
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: none
-        options: {  }
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          bypass_access: false
-          skip_access: false
-          preserve_facet_query_args: false
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Alkalmaz
-          reset_button: false
-          reset_button_label: Alaphelyzet
-          exposed_sorts_label: Rendezés
-          expose_sort_order: false
-          sort_asc_label: Növekvő
-          sort_desc_label: Csökkenő
-      pager:
-        type: mini
-        options:
-          items_per_page: 30
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Elemek száma oldalanként'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '– Mind –'
-            offset: false
-            offset_label: Eltolás
-          tags:
-            previous: ‹‹
-            next: ››
-      style:
-        type: default
-      row:
-        type: search_api
-        options:
-          view_modes:
-            'entity:comment':
-              comment_forum: full
-            'entity:node':
-              book: teaser
-              casestudy: teaser
-              event: teaser
-              forum: teaser
-              news: teaser
+      title: Kereső
       fields:
         app_body:
+          id: app_body
           table: search_api_index_content
           field: app_body
-          id: app_body
-          entity_type: null
-          entity_field: null
-          plugin_id: search_api_field
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: null
+          entity_field: null
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -149,6 +96,56 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 30
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Elemek száma oldalanként'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '– Mind –'
+            offset: false
+            offset_label: Eltolás
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Alkalmaz
+          reset_button: false
+          reset_button_label: Alaphelyzet
+          exposed_sorts_label: Rendezés
+          expose_sort_order: false
+          sort_asc_label: Növekvő
+          sort_desc_label: Csökkenő
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts:
+        search_api_relevance:
+          id: search_api_relevance
+          table: search_api_index_content
+          field: search_api_relevance
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: Relevancia
+            field_identifier: search_api_relevance
+          exposed: false
+      arguments: {  }
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -157,6 +154,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: or
           value: ''
           group: 1
@@ -177,8 +175,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            placeholder: ''
             expose_fields: false
+            placeholder: ''
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
@@ -197,31 +195,34 @@ display:
           fields:
             - app_body
             - title
-          plugin_id: search_api_fulltext
-      sorts:
-        search_api_relevance:
-          id: search_api_relevance
-          table: search_api_index_content
-          field: search_api_relevance
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: Relevancia
-          plugin_id: search_api
-      title: Kereső
-      header: {  }
-      footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
-      display_extenders: {  }
       filter_groups:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:comment':
+              comment_forum: full
+            'entity:node':
+              book: teaser
+              casestudy: teaser
+              event: teaser
+              forum: teaser
+              news: teaser
+      query:
+        type: views_query
+        options:
+          bypass_access: false
+          skip_access: false
+          preserve_facet_query_args: false
+      relationships: {  }
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -234,27 +235,27 @@ display:
         - 'config:field.storage.node.app_body'
         - 'config:search_api.index.content'
   page:
-    display_plugin: page
     id: page
     display_title: Oldal
+    display_plugin: page
     position: 1
     display_options:
+      cache:
+        type: none
+      defaults:
+        cache: false
+      display_description: ''
       display_extenders: {  }
       path: kereso
       menu:
         type: normal
         title: Kereső
         description: ''
-        expanded: false
-        parent: ''
         weight: 70
-        context: '0'
+        expanded: false
         menu_name: main
-      display_description: ''
-      cache:
-        type: none
-      defaults:
-        cache: false
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

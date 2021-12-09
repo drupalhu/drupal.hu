@@ -23,8 +23,8 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_onecol
@@ -37,91 +37,91 @@ third_party_settings:
             configuration:
               id: 'field_block:node:event:app_image'
               label: Kép
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_reference_entity_view
-                settings:
-                  view_mode: hero
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: hero
+                third_party_settings: {  }
             weight: 0
+            additional: {  }
           35412fef-b868-49fa-b10a-c831c064f13b:
             uuid: 35412fef-b868-49fa-b10a-c831c064f13b
             region: content
             configuration:
+              id: 'field_block:node:event:app_date'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_date'
               formatter:
+                type: daterange_default
                 label: inline
                 settings:
-                  separator: '-'
-                  format_type: medium
                   timezone_override: ''
+                  format_type: medium
+                  separator: '-'
                 third_party_settings: {  }
-                type: daterange_default
-            additional: {  }
             weight: 1
+            additional: {  }
           373e657c-f03a-4410-9fe5-b6f64162de73:
             uuid: 373e657c-f03a-4410-9fe5-b6f64162de73
             region: content
             configuration:
+              id: 'field_block:node:event:app_teaser'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_teaser'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 2
+            additional: {  }
           e8a760ba-2d5c-40fc-8ffb-ed58367bdc1f:
             uuid: e8a760ba-2d5c-40fc-8ffb-ed58367bdc1f
             region: content
             configuration:
+              id: 'field_block:node:event:app_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_body'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 3
+            additional: {  }
           4d38f865-0082-4387-b1ea-a818a0ac3600:
             uuid: 4d38f865-0082-4387-b1ea-a818a0ac3600
             region: content
             configuration:
+              id: 'field_block:node:event:app_attachments'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_attachments'
               formatter:
+                type: file_default
                 label: above
                 settings:
                   use_description_as_link_text: true
                 third_party_settings: {  }
-                type: file_default
-            additional: {  }
             weight: 4
+            additional: {  }
           a014d59c-9a30-46f7-aa54-43f917f61fb6:
             uuid: a014d59c-9a30-46f7-aa54-43f917f61fb6
             region: content
             configuration:
+              id: 'field_block:node:event:app_links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:event:app_links'
               formatter:
                 type: link
                 label: above
@@ -132,18 +132,18 @@ third_party_settings:
                   rel: ''
                   target: ''
                 third_party_settings: {  }
-            additional: {  }
             weight: 5
+            additional: {  }
           f0160fce-c58e-4563-a1dd-86ea2b9d9514:
             uuid: f0160fce-c58e-4563-a1dd-86ea2b9d9514
             region: content
             configuration:
+              id: 'extra_field_block:node:event:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:event:links'
-            additional: {  }
             weight: 6
+            additional: {  }
         third_party_settings: {  }
 id: node.event.full
 targetEntityType: node
@@ -151,43 +151,41 @@ bundle: event
 mode: full
 content:
   app_attachments:
-    weight: 4
+    type: file_default
     label: above
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    type: file_default
+    weight: 4
     region: content
   app_body:
-    weight: 3
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 3
     region: content
   app_date:
-    weight: 1
+    type: daterange_default
     label: inline
     settings:
-      separator: '-'
-      format_type: medium
       timezone_override: ''
+      format_type: medium
+      separator: '-'
     third_party_settings: {  }
-    type: daterange_default
+    weight: 1
     region: content
   app_image:
     type: media_thumbnail
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: media_library
       image_link: ''
+      image_style: media_library
     third_party_settings: {  }
+    weight: 0
+    region: content
   app_links:
     type: link
-    weight: 5
-    region: content
     label: above
     settings:
       trim_length: 80
@@ -196,18 +194,20 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
+    weight: 5
+    region: content
   app_teaser:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
   links:
-    weight: 6
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 6
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true
