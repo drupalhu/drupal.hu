@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba700e4c20c33025bb6c3ff77716f771",
+    "content-hash": "f09f20983d746bdbae13b550dcb89c94",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -11576,8 +11576,8 @@
                     "dev-5.x": "5.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-5.0+19-dev",
-                    "datestamp": "1637161832",
+                    "version": "8.x-5.0+20-dev",
+                    "datestamp": "1637259316",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -14431,16 +14431,16 @@
         },
         {
             "name": "sweetchuck/composer-suite",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/composer-suite.git",
-                "reference": "e95e980b57c9d8e42e29099508b1dd4f5ad6ba26"
+                "reference": "ab0d30a7afe1920069d2bdc5048945ef0733aa60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/composer-suite/zipball/e95e980b57c9d8e42e29099508b1dd4f5ad6ba26",
-                "reference": "e95e980b57c9d8e42e29099508b1dd4f5ad6ba26",
+                "url": "https://api.github.com/repos/Sweetchuck/composer-suite/zipball/ab0d30a7afe1920069d2bdc5048945ef0733aa60",
+                "reference": "ab0d30a7afe1920069d2bdc5048945ef0733aa60",
                 "shasum": ""
             },
             "require": {
@@ -14492,7 +14492,7 @@
                 "issues": "https://github.com/Sweetchuck/composer-suite/issues",
                 "source": "https://github.com/Sweetchuck/composer-suite"
             },
-            "time": "2021-05-03T08:41:41+00:00"
+            "time": "2021-12-03T21:26:03+00:00"
         },
         {
             "name": "sweetchuck/dtt-core",
