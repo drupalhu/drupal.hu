@@ -883,16 +883,16 @@
         },
         {
             "name": "consolidation/site-process",
-            "version": "4.1.1",
+            "version": "4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/site-process.git",
-                "reference": "4817b35b2f98a2e3ad82956a968b49f7b257d26c"
+                "reference": "ca41dc82b280bccdf1b231d5599c7d506fba5c04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consolidation/site-process/zipball/4817b35b2f98a2e3ad82956a968b49f7b257d26c",
-                "reference": "4817b35b2f98a2e3ad82956a968b49f7b257d26c",
+                "url": "https://api.github.com/repos/consolidation/site-process/zipball/ca41dc82b280bccdf1b231d5599c7d506fba5c04",
+                "reference": "ca41dc82b280bccdf1b231d5599c7d506fba5c04",
                 "shasum": ""
             },
             "require": {
@@ -900,7 +900,7 @@
                 "consolidation/site-alias": "^3",
                 "php": ">=7.1.3",
                 "symfony/console": "^2.8.52|^3|^4.4|^5",
-                "symfony/process": "^4.3.4"
+                "symfony/process": "^4.3.4|^5"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5.20|^8.5.14",
@@ -935,9 +935,9 @@
             "description": "A thin wrapper around the Symfony Process Component that allows applications to use the Site Alias library to specify the target for a remote call.",
             "support": {
                 "issues": "https://github.com/consolidation/site-process/issues",
-                "source": "https://github.com/consolidation/site-process/tree/4.1.1"
+                "source": "https://github.com/consolidation/site-process/tree/4.1.3"
             },
-            "time": "2022-01-03T18:57:42+00:00"
+            "time": "2022-01-18T23:04:54+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -1683,16 +1683,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.3.2",
+            "version": "9.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "6c9ba6b6314550e7efb8f5f4e2a40f54cfd6aee1"
+                "reference": "a9bd68be9a4e39724ea555f8040114759a8faf7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/6c9ba6b6314550e7efb8f5f4e2a40f54cfd6aee1",
-                "reference": "6c9ba6b6314550e7efb8f5f4e2a40f54cfd6aee1",
+                "url": "https://api.github.com/repos/drupal/core/zipball/a9bd68be9a4e39724ea555f8040114759a8faf7f",
+                "reference": "a9bd68be9a4e39724ea555f8040114759a8faf7f",
                 "shasum": ""
             },
             "require": {
@@ -1934,13 +1934,13 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/9.3.2"
+                "source": "https://github.com/drupal/core/tree/9.3.3"
             },
-            "time": "2022-01-05T02:55:30+00:00"
+            "time": "2022-01-19T00:13:54+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.3.2",
+            "version": "9.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -1984,22 +1984,22 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.3.2"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.3.3"
             },
             "time": "2021-11-19T09:52:23+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "9.3.2",
+            "version": "9.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "9f570d6bf6e568b8c2deab02349a11fad3d1e272"
+                "reference": "a2fc42cb765874e5393d203ee807ac57abe04b12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/9f570d6bf6e568b8c2deab02349a11fad3d1e272",
-                "reference": "9f570d6bf6e568b8c2deab02349a11fad3d1e272",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/a2fc42cb765874e5393d203ee807ac57abe04b12",
+                "reference": "a2fc42cb765874e5393d203ee807ac57abe04b12",
                 "shasum": ""
             },
             "require": {
@@ -2008,7 +2008,7 @@
                 "doctrine/annotations": "1.13.2",
                 "doctrine/lexer": "1.2.1",
                 "doctrine/reflection": "1.2.2",
-                "drupal/core": "9.3.2",
+                "drupal/core": "9.3.3",
                 "egulias/email-validator": "3.1.2",
                 "guzzlehttp/guzzle": "6.5.5",
                 "guzzlehttp/promises": "1.5.1",
@@ -2070,9 +2070,9 @@
             ],
             "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/9.3.2"
+                "source": "https://github.com/drupal/core-recommended/tree/9.3.3"
             },
-            "time": "2022-01-05T02:55:30+00:00"
+            "time": "2022-01-19T00:13:54+00:00"
         },
         {
             "name": "drupal/crop",
@@ -2226,17 +2226,17 @@
         },
         {
             "name": "drupal/entity_legal",
-            "version": "3.0.0-beta2",
+            "version": "3.0.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entity_legal.git",
-                "reference": "3.0.0-beta2"
+                "reference": "3.0.0-beta3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_legal-3.0.0-beta2.zip",
-                "reference": "3.0.0-beta2",
-                "shasum": "6cd0093f473ca68ff2d42cfcc4328b759ad657a2"
+                "url": "https://ftp.drupal.org/files/projects/entity_legal-3.0.0-beta3.zip",
+                "reference": "3.0.0-beta3",
+                "shasum": "9df7702a62f69666d496de68c8464c062560461b"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -2245,8 +2245,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.0.0-beta2",
-                    "datestamp": "1616108598",
+                    "version": "3.0.0-beta3",
+                    "datestamp": "1639745474",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -3404,17 +3404,17 @@
         },
         {
             "name": "drupal/transliterate_filenames",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/transliterate_filenames.git",
-                "reference": "8.x-1.5"
+                "reference": "8.x-1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/transliterate_filenames-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "c2f103a188b8ea19f380fae29434e1064c40dd55"
+                "url": "https://ftp.drupal.org/files/projects/transliterate_filenames-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "5841c091016a1e34b7b7b72f52de7a1645933194"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -3422,8 +3422,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1606460881",
+                    "version": "8.x-1.6",
+                    "datestamp": "1642662297",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3459,17 +3459,17 @@
         },
         {
             "name": "drupal/webp",
-            "version": "1.0.0-beta5",
+            "version": "1.0.0-beta6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/webp.git",
-                "reference": "8.x-1.0-beta5"
+                "reference": "8.x-1.0-beta6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/webp-8.x-1.0-beta5.zip",
-                "reference": "8.x-1.0-beta5",
-                "shasum": "afadbc917dfa064a8e9c2f48afc606451568d3ab"
+                "url": "https://ftp.drupal.org/files/projects/webp-8.x-1.0-beta6.zip",
+                "reference": "8.x-1.0-beta6",
+                "shasum": "8e8edd2f4a407c41724046a09b612c5b9a20f637"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -3478,8 +3478,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta5",
-                    "datestamp": "1605881578",
+                    "version": "8.x-1.0-beta6",
+                    "datestamp": "1642191512",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -11518,7 +11518,7 @@
             "extra": {
                 "drupal": {
                     "version": "8.x-5.2",
-                    "datestamp": "1640379296",
+                    "datestamp": "1641478565",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -11544,10 +11544,6 @@
                     "name": "Lucas Hedding",
                     "homepage": "https://www.drupal.org/u/heddn",
                     "role": "Maintainer"
-                },
-                {
-                    "name": "mikeryan",
-                    "homepage": "https://www.drupal.org/user/4420"
                 }
             ],
             "description": "Enhancements to core migration support.",
@@ -15227,12 +15223,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/utils.git",
-                "reference": "4a5232bb703b3d0f7734016e2a56badd82570e51"
+                "reference": "a0be5b92b960cbc94454e4569b655f2ad575d139"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/4a5232bb703b3d0f7734016e2a56badd82570e51",
-                "reference": "4a5232bb703b3d0f7734016e2a56badd82570e51",
+                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/a0be5b92b960cbc94454e4569b655f2ad575d139",
+                "reference": "a0be5b92b960cbc94454e4569b655f2ad575d139",
                 "shasum": ""
             },
             "require": {
@@ -15287,7 +15283,7 @@
                 "issues": "https://github.com/Sweetchuck/utils/issues",
                 "source": "https://github.com/Sweetchuck/utils"
             },
-            "time": "2022-01-02T16:19:52+00:00"
+            "time": "2022-01-18T12:40:07+00:00"
         },
         {
             "name": "symfony/browser-kit",
