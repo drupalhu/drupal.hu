@@ -11,7 +11,7 @@ use Drush\Commands\marvin\CommandsBase;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
 use Robo\Collection\CollectionBuilder;
-use Robo\Collection\loadTasks as ForEachTaskLoader;
+use Robo\Collection\Tasks as ForEachTaskLoader;
 use Robo\Common\OutputAwareTrait;
 use Robo\State\Data as RoboStateData;
 use Sweetchuck\Robo\Git\GitTaskLoader;
