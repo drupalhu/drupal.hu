@@ -10,10 +10,8 @@ dependencies:
     - text
 third_party_settings:
   allowed_formats:
-    html_teaser: html_teaser
-    html_body: '0'
-    html_full: '0'
-    plain_text: '0'
+    allowed_formats:
+      - html_teaser
 id: node.news.app_teaser
 field_name: app_teaser
 entity_type: node

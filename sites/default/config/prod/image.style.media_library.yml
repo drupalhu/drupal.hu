@@ -28,4 +28,5 @@ effects:
     weight: -10
     data:
       crop_type: sqr
+      automatic_crop_provider: null
 pipeline: webp

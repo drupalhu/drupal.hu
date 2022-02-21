@@ -15,6 +15,7 @@ effects:
     weight: 1
     data:
       crop_type: sqr
+      automatic_crop_provider: null
   d3dbd672-c406-4e53-91a6-8586beaa4baf:
     uuid: d3dbd672-c406-4e53-91a6-8586beaa4baf
     id: image_scale

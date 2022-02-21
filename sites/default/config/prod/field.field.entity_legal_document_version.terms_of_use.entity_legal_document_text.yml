@@ -10,10 +10,8 @@ dependencies:
     - text
 third_party_settings:
   allowed_formats:
-    html_body: html_body
-    html_teaser: '0'
-    html_full: '0'
-    plain_text: '0'
+    allowed_formats:
+      - html_body
 id: entity_legal_document_version.terms_of_use.entity_legal_document_text
 field_name: entity_legal_document_text
 entity_type: entity_legal_document_version

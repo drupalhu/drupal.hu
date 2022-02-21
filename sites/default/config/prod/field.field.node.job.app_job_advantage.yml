@@ -10,10 +10,8 @@ dependencies:
     - text
 third_party_settings:
   allowed_formats:
-    html_body: html_body
-    html_teaser: '0'
-    html_full: '0'
-    plain_text: '0'
+    allowed_formats:
+      - html_body
 id: node.job.app_job_advantage
 field_name: app_job_advantage
 entity_type: node
