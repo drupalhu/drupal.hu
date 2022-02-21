@@ -15,6 +15,7 @@ effects:
     weight: 1
     data:
       crop_type: l10
+      automatic_crop_provider: null
   1ff5209b-acd1-429b-9663-0ccb922427f7:
     uuid: 1ff5209b-acd1-429b-9663-0ccb922427f7
     id: image_scale
