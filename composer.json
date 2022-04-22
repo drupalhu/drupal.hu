@@ -81,7 +81,7 @@
         "drupal/shield": "^1.4",
         "drupal/string_field_formatter": "^2.0",
         "drupal/svg_image": "^1.15",
-        "drupal/transliterate_filenames": "^1.5",
+        "drupal/transliterate_filenames": "^2.0",
         "drupal/webp": "^1.0@beta",
         "drush/drush": "^11.0",
         "oomphinc/composer-installers-extender": "^2.0"
