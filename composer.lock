@@ -14679,7 +14679,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/dtt-core.git",
-                "reference": "9d40dff29a4f30a73f59cb6607d154d163107de5"
+                "reference": "252744929b2e9d81628ef920190fee4e1b67c2ef"
             },
             "require": {
                 "php": ">=7.4",
@@ -14717,7 +14717,7 @@
                 "source": "https://github.com/Sweetchuck/dtt-core",
                 "issues": "https://github.com/Sweetchuck/dtt-core/issues"
             },
-            "time": "2021-11-19T14:28:23+00:00"
+            "time": "2022-04-22T14:15:48+00:00"
         },
         {
             "name": "sweetchuck/dtt-entity_legal",

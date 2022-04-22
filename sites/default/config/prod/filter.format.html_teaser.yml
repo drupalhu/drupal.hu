@@ -14,7 +14,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<a href hreflang> <abbr> <acronym> <br> <cite> <code> <del> <em> <ins> <kbd> <mark> <meter value min max> <p> <q> <s> <samp> <small> <strong> <sub> <sup> <time datetime> <wbr> <blockquote> <ul> <li> <ol> <img src alt data-entity-type data-entity-uuid>'
+      allowed_html: '<abbr> <acronym> <cite> <del> <ins> <kbd> <mark> <q> <samp> <small> <wbr> <a hreflang href> <meter value min max> <time datetime> <br> <p> <strong> <em> <u> <code> <s> <sub> <sup>'
       filter_html_help: true
       filter_html_nofollow: true
   editor_file_reference:
