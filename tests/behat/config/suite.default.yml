@@ -22,6 +22,7 @@ default:
         - '\Sweetchuck\DrupalTestTraits\Core\Behat\Context\User'
         - '\Sweetchuck\DrupalTestTraits\EntityLegal\Behat\Context\EntityLegal'
         - '\DrupalHu\DrupalHu\Tests\Behat\Context\ExternalTranslations'
+        - '\DrupalHu\DrupalHu\Tests\Behat\Context\Browser'
 #        - '\Cheppers\DrupalExtension\Context\Drupal\Core'
 #        - '\Cheppers\DrupalExtension\Context\Drupal\CoreAjax'
 #        - '\Cheppers\DrupalExtension\Context\Drupal\CoreCache'
