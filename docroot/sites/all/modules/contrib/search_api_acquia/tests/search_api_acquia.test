@@ -30,6 +30,10 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     parent::setUp();
     require_once dirname(dirname(__FILE__)) . '/search_api_acquia.module';
 
+    if (!function_exists('acquia_agent_settings')) {
+      module_load_include('module', 'acquia_agent');
+    }
+
     // Generate and store a random set of credentials.
     // Make them as close to the production values as possible
     // Something like AAAA-1234
@@ -187,6 +191,52 @@ class SearchApiAcquiaUnitTestCase extends DrupalUnitTestCase {
     $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['path'], "/solr/{$acquia_identifier}.dev.{$site_folder}");
 
   }
+
+  /**
+     * Tests that Search API Acquia properly overrides the connection
+     * details to avoid unintended writing to a wrong search index and db.
+     */
+    public function testApacheSolrOverrideWithUnderscoreInDb() {
+
+      global $conf;
+
+      $acquia_identifier = $this->id;
+      $site_folder = $this->randomName(32);
+      $solr_hostname = $this->randomName(10) . '.acquia-search.com';
+      $available_cores = array(
+        array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.{$site_folder}"),
+        array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.test_db_name"),
+        array('balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}"),
+      );
+      $server_id = 'ACQUIA';
+
+      // Acquia dev environment and a DB name with '_'.
+      unset($conf['search_api_acquia_overrides']);
+      $ah_env = 'dev';
+      $ah_db_name = 'test_db_name';
+
+      $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
+      search_api_acquia_override_server($core_service, $server_id);
+
+      $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
+      $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
+      $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['host'], $solr_hostname);
+      $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['path'], "/solr/{$acquia_identifier}.dev.{$ah_db_name}");
+
+      // Acquia dev environment and a DB name with '-' .
+      unset($conf['search_api_acquia_overrides']);
+      $ah_env = 'dev';
+      $ah_db_name = 'test-db-name';
+
+      $core_service = new SAPIPreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
+      search_api_acquia_override_server($core_service, $server_id);
+
+      $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['overridden_by_acquia_search'], SEARCH_API_ACQUIA_OVERRIDE_AUTO_SET);
+      $this->assertTrue(!empty($conf['search_api_acquia_overrides']['ACQUIA']['derived_key']));
+      $this->assertIdentical($conf['search_api_acquia_overrides']['ACQUIA']['host'], $solr_hostname);
+      $this->assertTrue($conf['search_api_acquia_overrides']['ACQUIA']['path'], "A database with a dash(-) is an invalid database");
+
+    }
 
 }
 

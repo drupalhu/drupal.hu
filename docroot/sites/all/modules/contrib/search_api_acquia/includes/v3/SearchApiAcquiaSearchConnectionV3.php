@@ -103,12 +103,9 @@ class SearchApiAcquiaSearchConnectionV3 extends SearchApiSolrConnection {
     if (!isset($url_components['query'])) {
       $url_components['query'] = '';
     }
-
-    $query_pieces = drupal_get_query_array($url_components['query']);
-    $query_pieces['request_id'] = uniqid();
-    $query_string = drupal_http_build_query($query_pieces);
-
-    $url_components['query'] = sprintf('?%s', $query_string);
+    // $url has multiple qf parameters, do not use drupal_get_query_array()
+    // function as it will return single qf param.
+    $url_components['query'] = "?" . $url_components['query'] . "&request_id=" . uniqid();
 
     $url = implode('', $url_components);
 

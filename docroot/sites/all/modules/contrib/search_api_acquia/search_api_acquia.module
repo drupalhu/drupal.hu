@@ -189,7 +189,7 @@ function search_api_acquia_search_api_index_load($indexes) {
  */
 function search_api_acquia_get_derived_key_for_core($core_id) {
   $subscription = acquia_agent_settings('acquia_subscription_data');
-  $derived_key_salt = $subscription['derived_key_salt'];
+  $derived_key_salt = $subscription['derived_key_salt'] ?? '';
   $key = acquia_agent_settings('acquia_key');
   $derivation_string = $core_id . 'solr' . $derived_key_salt;
   return hash_hmac('sha1', str_pad($derivation_string, 80, $derivation_string), $key);
