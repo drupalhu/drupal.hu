@@ -1,0 +1,20 @@
+{
+    "name": "drupal/acquia_connector",
+    "type": "drupal-module",
+    "description": "Allows Drupal websites to connect with Acquia.",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "drupal/coder": "8.3.9"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-3.x": "3.x-dev"
+        },
+        "phpcodesniffer-search-depth": 4
+    }
+}

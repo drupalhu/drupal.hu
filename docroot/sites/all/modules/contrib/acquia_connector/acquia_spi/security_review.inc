@@ -8,12 +8,17 @@
 /**
  * Public function for running Security Review checklist and returning results.
  *
- * @param array $checklist Array of checks to run, indexed by module namespace.
- * @param boolean $log Whether to log check processing using security_review_log.
- * @param boolean $help Whether to load the help file and include in results.
- * @return array Results from running checklist, indexed by module namespace.
+ * @param array $checklist
+ *   Array of checks to run, indexed by module namespace.
+ * @param bool $log
+ *   Whether to log check processing using security_review_log.
+ * @param bool $help
+ *   Whether to load the help file and include in results.
+ *
+ * @return array
+ *   Results from running checklist, indexed by module namespace.
  */
-function acquia_spi_security_review_run($checklist = NULL, $log = FALSE, $help = FALSE) {
+function acquia_spi_security_review_run(array $checklist = NULL, $log = FALSE, $help = FALSE) {
   // Use Security Review module if available.
   if (module_exists('security_review') && function_exists('security_review_run')) {
     if (!$checklist) {
@@ -64,7 +69,8 @@ function _acquia_spi_security_review_run_check($module, $check_name, $check, $lo
   $check_result = array_merge($check, $return);
   $check_result['lastrun'] = REQUEST_TIME;
 
-  if ($log && !is_null($return['result'])) { // Do not log if result is NULL.
+  // Do not log if result is NULL.
+  if ($log && !is_null($return['result'])) {
     $variables = array('!name' => $check_result['title']);
     if ($check_result['result']) {
       _acquia_spi_security_review_log($module, $check_name, '!name check passed', $variables, WATCHDOG_INFO);
@@ -200,14 +206,14 @@ function acquia_spi_security_review_check_file_perms() {
   $create_status = $append_status = FALSE;
 
   $directory = drupal_get_path('module', 'security_review');
-  // Write a file with the timestamp
+  // Write a file with the timestamp.
   $file = './' . $directory . '/file_write_test.' . date('Ymdhis');
   if ($file_create = @fopen($file, 'w')) {
     $create_status = fwrite($file_create, t("This is a vulnerable directory.\n"));
     fclose($file_create);
   }
   // Try to append to our IGNOREME file.
-  $file = './'. $directory . '/IGNOREME.txt';
+  $file = './' . $directory . '/IGNOREME.txt';
   if ($file_append = @fopen($file, 'a')) {
     $append_status = fwrite($file_append, date('Ymdhis') . "\n");
     fclose($file_append);
@@ -219,6 +225,9 @@ function acquia_spi_security_review_check_file_perms() {
   return array('result' => $result, 'value' => $files);
 }
 
+/**
+ * Needs comment.
+ */
 function _acquia_spi_security_review_check_file_perms_scan($directory, $ignore) {
   $items = array();
   if ($handle = opendir($directory)) {
@@ -243,6 +252,8 @@ function _acquia_spi_security_review_check_file_perms_scan($directory, $ignore) 
 }
 
 /**
+ * Check input formats.
+ *
  * Check for formats that either do not have HTML filter that can be used by
  * untrusted users, or if they do check if unsafe tags are allowed.
  */
@@ -267,13 +278,14 @@ function acquia_spi_security_review_check_input_formats() {
         $unsafe_tags = acquia_spi_security_review_unsafe_tags();
         foreach ($unsafe_tags as $tag) {
           if (strpos($allowed_tags, '<' . $tag . '>') !== FALSE) {
-            // Found an unsafe tag
+            // Found an unsafe tag.
             $check_result_value['tags'][$id] = $tag;
           }
         }
       }
       elseif (!in_array('filter_html_escape', array_keys($filters)) || !$filters['filter_html_escape']->status) {
-        // Format is usable by untrusted users but does not contain the HTML Filter or the HTML escape.
+        // Format is usable by untrusted users but does not contain the HTML
+        // Filter or the HTML escape.
         $check_result_value['formats'][$id] = $format;
       }
     }
@@ -285,6 +297,9 @@ function acquia_spi_security_review_check_input_formats() {
   return array('result' => $result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_php_filter() {
   $result = TRUE;
   $formats = filter_formats();
@@ -309,10 +324,14 @@ function acquia_spi_security_review_check_php_filter() {
   return array('result' => $result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_error_reporting() {
   $error_level = variable_get('error_level', NULL);
   if (is_null($error_level) || intval($error_level) >= 1) {
-    // When the variable isn't set, or its set to 1 or 2 errors are printed to the screen.
+    // When the variable isn't set, or its set to 1 or 2 errors are printed to
+    // the screen.
     $result = FALSE;
   }
   else {
@@ -322,14 +341,17 @@ function acquia_spi_security_review_check_error_reporting() {
 }
 
 /**
- * If private files is enabled check that the directory is not under the web root.
+ * If private files is enabled check that the directory is not under web root.
  *
- * There is ample room for the user to get around this check. @TODO get more sophisticated?
+ * There is ample room for the user to get around this check.
+ *
+ * @TODO get more sophisticated?
  */
 function acquia_spi_security_review_check_private_files() {
   $file_directory_path = variable_get('file_private_path', '');
   if (empty($file_directory_path)) {
-    $result = NULL; // Ignore this check.
+    // Ignore this check.
+    $result = NULL;
   }
   elseif (strpos(realpath($file_directory_path), DRUPAL_ROOT) === 0) {
     // Path begins at root.
@@ -341,6 +363,9 @@ function acquia_spi_security_review_check_private_files() {
   return array('result' => $result, 'value' => $file_directory_path);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_query_errors($last_check = NULL) {
   $timestamp = NULL;
   $check_result_value = array();
@@ -368,12 +393,16 @@ function acquia_spi_security_review_check_query_errors($last_check = NULL) {
     $result = FALSE;
   }
   else {
-    // Rather than worrying the user about the idea of query errors we skip reporting a pass.
+    // Rather than worrying the user about the idea of query errors we skip
+    // reporting a pass.
     $result = NULL;
   }
   return array('result' => $result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_failed_logins($last_check = NULL) {
   $result = TRUE;
   $timestamp = NULL;
@@ -401,7 +430,8 @@ function acquia_spi_security_review_check_failed_logins($last_check = NULL) {
     $result = FALSE;
   }
   else {
-    // Rather than worrying the user about the idea of failed logins we skip reporting a pass.
+    // Rather than worrying the user about the idea of failed logins we skip
+    // reporting a pass.
     $result = NULL;
   }
   return array('result' => $result, 'value' => $check_result_value);
@@ -434,6 +464,9 @@ function acquia_spi_security_review_check_admin_permissions() {
   return array('result' => $result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_field($last_check = NULL) {
   $check_result = TRUE;
   $check_result_value = $tables = $found = array();
@@ -467,7 +500,8 @@ function acquia_spi_security_review_check_field($last_check = NULL) {
     $sql = "SELECT DISTINCT entity_id, entity_type FROM {" . $table . "} WHERE " . $column . " LIKE :text";
     // Handle changed? @todo
     foreach (array('Javascript' => '%<script%', 'PHP' => '%<?php%') as $description => $comparison) {
-      $results = db_query($sql, array(':text' => $comparison)); // @pager query?
+      // @pager query?
+      $results = db_query($sql, array(':text' => $comparison));
       foreach ($results as $result) {
         $check_result = FALSE;
         if (!isset($check_result_value[$result->entity_type]) || !array_key_exists($result->entity_id, $check_result_value[$result->entity_type])) {
@@ -480,6 +514,9 @@ function acquia_spi_security_review_check_field($last_check = NULL) {
   return array('result' => $check_result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_upload_extensions($last_check = NULL) {
   $check_result = TRUE;
   $check_result_value = array();
@@ -556,8 +593,12 @@ function acquia_spi_security_review_check_executable_php($last_check = NULL) {
 
 /**
  * Helper function to analyze .htaccess in specified directory.
- * @param $directory string
+ *
+ * @param string $directory
+ *   Directory to analyze.
+ *
  * @return bool
+ *   True or false.
  */
 function _acquia_spi_security_review_htaccess_analyze($directory) {
   $contents = file_get_contents($directory . '/.htaccess');
@@ -594,15 +635,17 @@ function _acquia_spi_security_review_htaccess_analyze($directory) {
 
 /**
  * Helper function to parse .htaccess data into nested array.
- * @param $htaccess string
- *  .htaccess file content
+ *
+ * @param string $htaccess
+ *   Contents of .htaccess file.
+ *
  * @return array
- *  Array of parsed data. Nested sections converted into two-dimensional array.
+ *   Array of parsed data. Nested sections converted into two-dimensional array.
  */
 function _acquia_spi_security_review_htaccess_parse($htaccess) {
   $result = array();
 
-  // Remove full-line comments
+  // Remove full-line comments.
   $htaccess = preg_replace('/^\s*#.*$/mui', '', $htaccess);
   $htaccess = explode("\n", $htaccess);
 
@@ -621,7 +664,7 @@ function _acquia_spi_security_review_htaccess_parse($htaccess) {
         array_pop($section);
         array_pop($section_key);
       }
-      // Regular value
+      // Regular value.
       else {
         $value = preg_replace(array('/\s*#.+/ui', '/\s+/ui'), array('', ' '), $value);
         if (count($section)) {
@@ -696,6 +739,9 @@ function acquia_spi_security_review_check_temporary_files($last_check = NULL) {
   return array('result' => $result, 'value' => $check_result_value);
 }
 
+/**
+ * Needs comment.
+ */
 function acquia_spi_security_review_check_views_access($last_check = NULL) {
   $result = TRUE;
   $check_result_value = array();
@@ -703,7 +749,7 @@ function acquia_spi_security_review_check_views_access($last_check = NULL) {
   // Load and loop through every view, checking the access type in displays.
   $views = views_get_all_views();
   foreach ($views as $view) {
-    if (empty($view->disabled)) {
+    if ($view->disabled !== TRUE) {
       // Access is set in display options of a display.
       foreach ($view->display as $display_name => $display) {
         if (isset($display->display_options['access']) && $display->display_options['access']['type'] == 'none') {
@@ -817,7 +863,9 @@ function _acquia_spi_security_review_default_untrusted_roles() {
 /**
  * Helper function for user-defined or default unstrusted Drupal roles.
  *
- * @return An associative array with the role id as the key and the role name as value.
+ * @return array
+ *   An associative array with the role id as the key and the role name as
+ *   value.
  */
 function acquia_spi_security_review_untrusted_roles() {
   $defaults = _acquia_spi_security_review_default_untrusted_roles();
@@ -873,6 +921,9 @@ function acquia_spi_security_review_role_permission($rid, $permission) {
   return $return;
 }
 
+/**
+ * Needs comment.
+ */
 function _acquia_spi_security_review_log($module, $check_name, $message, $variables, $type) {
   module_invoke_all('acquia_spi_security_review_log', $module, $check_name, $message, $variables, $type);
 }

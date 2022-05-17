@@ -2,18 +2,15 @@
 
 /**
  * @file
- *   drush integration for acquia_search.
+ * Drush integration for acquia_search.
  */
 
 /**
  * Implements hook_drush_command().
- *
- * @return array
- *   An associative array describing your command(s).
  */
 function acquia_search_drush_command() {
   $items = array();
-  
+
   $items['solr-set-derived-key'] = array(
     'callback' => 'acquia_search_set_derived_key_for_env',
     'description' => dt('Sets an environment to be active for Acquia search using a specific derived key.
@@ -41,12 +38,6 @@ function acquia_search_drush_command() {
  *
  * This function is called whenever a drush user calls
  * 'drush help <name-of-your-command>'
- *
- * @param string $section
- *   A string with the help section (prepend with 'drush:')
- *
- * @return string
- *   A string with the help text for your command.
  */
 function acquia_search_drush_help($section) {
   switch ($section) {
@@ -57,15 +48,17 @@ function acquia_search_drush_help($section) {
 }
 
 /**
- * Drush callback
+ * Drush callback.
+ *
  * Set the derived key for a specific environment, using an id and key.
- * Also set the url to point to the acquia service to make it easier for customers
- * to set any environment as an acquia environment
+ *
+ * Also set the url to point to the acquia service to make it easier for
+ * customers to set any environment as an acquia environment.
  */
 function acquia_search_set_derived_key_for_env() {
-  // environment id
+  // Environment id.
   $env_id = drush_get_option('env-id');
-  // check on bool, because drush sets the var as true if no value is given.
+  // Check on bool, because drush sets the var as true if no value is given.
   if (empty($env_id) || is_bool($env_id)) {
     return drush_set_error('DRUSH_VARIABLE_ERROR', dt('No apachesolr environment id specified'));
   }
@@ -73,30 +66,31 @@ function acquia_search_set_derived_key_for_env() {
     return drush_set_error('DRUSH_VARIABLE_ERROR', dt('Modifying the original Acquia Search subscription is not allowed. Please use another environment'));
   }
   $environment = apachesolr_environment_load($env_id);
-  // Check if the environment is valid
+  // Check if the environment is valid.
   if (empty($environment)) {
     return drush_set_error('DRUSH_ACQUIA_ERROR', dt('The specified environment does not exist'));
   }
-  // acquia network subscription id
+  // Acquia network subscription id.
   $acquia_id = drush_get_option('acquia-id');
-  // check on bool, because drush sets the var as true if no value is given.
+  // Check on bool, because drush sets the var as true if no value is given.
   if (empty($acquia_id) || is_bool($acquia_id)) {
     return drush_set_error('DRUSH_VARIABLE_ERROR', dt('No Acquia network subscription id specified'));
   }
-  // acquia network subscription key
+  // Acquia network subscription key.
   $acquia_key = drush_get_option('acquia-key');
-  // check on bool, because drush sets the var as true if no value is given.
+  // Check on bool, because drush sets the var as true if no value is given.
   if (empty($acquia_key) || !is_string($acquia_key)) {
     return drush_set_error('DRUSH_VARIABLE_ERROR', dt('No Acquia network subscription key specified'));
   }
 
-  // We do not want to send a heartbeat to the server, we only need subscription data
+  // We do not want to send a heartbeat to the server, we only need subscription
+  // data.
   $params = array(
     'active' => FALSE,
     'no_heartbeat' => 1,
   );
   $subscription = acquia_agent_get_subscription($params, $acquia_id, $acquia_key);
-  // Check if the subscription was valid
+  // Check if the subscription was valid.
   if (!is_array($subscription)) {
     return drush_set_error('DRUSH_ACQUIA_ERROR', dt('Could not fetch data for specified subscription.'));
   }

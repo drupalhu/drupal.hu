@@ -3,14 +3,12 @@
 /**
  * @file
  * Install, update and uninstall functions for the acquia_agent module.
- *
  */
-
 
 /**
  * The minimum PHP memory recommended to install Acquia Drupal.
  */
-define('ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY', '32M');
+define('ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY', '32M');
 
 // When update.php is being run, alter the list of updates according to
 // Acquia's preferences.
@@ -19,7 +17,7 @@ if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update' && isset($_POST[
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function acquia_agent_uninstall() {
   variable_del('acquia_identifier');
@@ -32,17 +30,18 @@ function acquia_agent_uninstall() {
   variable_del('acquia_agent_verify_peer');
   variable_del('acquia_dynamic_banner');
   variable_del('acquia_migrate_files');
+  variable_del('acquia_migrate_max_time');
   variable_del('acquia_banner_service');
   variable_del('acquia_agent_hide_signup_messages');
 }
 
 /**
- * Implementation of hook_disable().
+ * Implements hook_disable().
  */
 function acquia_agent_disable() {
   $mlid = db_query("SELECT mlid FROM {menu_links} WHERE link_title = 'acquia_subscription_status' AND menu_name = 'admin_menu'")->fetchField();
   if ($mlid) {
-     menu_link_delete($mlid);
+    menu_link_delete($mlid);
   }
 }
 
@@ -71,10 +70,11 @@ function _acquia_agent_alter_module_updates_cmp($a, $b) {
 }
 
 /**
- * Implementation of hook_requirements()
+ * Implements hook_requirements().
  */
 function acquia_agent_requirements($phase) {
   include_once 'acquia_agent.module';
+  require_once DRUPAL_ROOT . '/includes/install.inc';
   acquia_agent_load_versions();
 
   $requirements = array();
@@ -84,6 +84,8 @@ function acquia_agent_requirements($phase) {
 
   switch ($phase) {
     case 'runtime':
+      $token = ['token' => drupal_get_token('admin/config/system/acquia-agent/refresh-status')];
+
       // Inform users on subscription status. Either we know they are active,
       // or we know they have credentials but not active (not set up yet) or
       // we have credentials but an inactive subscription (either bad
@@ -93,7 +95,9 @@ function acquia_agent_requirements($phase) {
           'title' => t('Acquia subscription status'),
           'severity' => REQUIREMENT_OK,
           'value' => t('Active'),
-          'description' => t('You can <a href="@refresh-status">manually refresh the subscription status</a>.', array('@refresh-status' => url('admin/config/system/acquia-agent/refresh-status', array('query' => drupal_get_destination())))),
+          'description' => t('You can <a href="@refresh-status">manually refresh the subscription status</a>.', array(
+            '@refresh-status' => url('admin/config/system/acquia-agent/refresh-status', array('query' => array_merge(drupal_get_destination(), $token))),
+          )),
         );
       }
       elseif (!$has_credentials) {
@@ -101,12 +105,15 @@ function acquia_agent_requirements($phase) {
           'title' => t('Acquia subscription status'),
           'severity' => REQUIREMENT_WARNING,
           'value' => t('Unknown'),
-          'description' => t('You did not complete your Acquia subscription signup. You can provide the subscription identifier and the subscription key at the <a href="@settings">Acquia settings</a> page or try to <a href="@refresh-status">manually refresh the subscription status</a>.', array('@settings' => url('admin/config/system/acquia-agent'), '@refresh-status' => url('admin/config/system/acquia-agent/refresh-status', array('query' => drupal_get_destination()))))
+          'description' => t('You did not complete your Acquia subscription signup. You can provide the subscription identifier and the subscription key at the <a href="@settings">Acquia settings</a> page or try to <a href="@refresh-status">manually refresh the subscription status</a>.', array(
+            '@settings' => url('admin/config/system/acquia-agent'),
+            '@refresh-status' => url('admin/config/system/acquia-agent/refresh-status', array('query' => array_merge(drupal_get_destination(), $token))),
+          )),
         );
       }
       else {
         $subscription = variable_get('acquia_subscription_data', array('active' => FALSE));
-        $href = isset($subscription['href']) ? $subscription['href'] . '/health' : 'http://acquia.com/network';
+        $href = isset($subscription['uuid']) ? 'https://cloud.acquia.com/app/develop/applications/' . $subscription['uuid'] : 'https://cloud.acquia.com';
         $requirements['acquia_subscription_status'] = array(
           'title' => t('Acquia subscription status'),
           'severity' => REQUIREMENT_WARNING,
@@ -118,8 +125,8 @@ function acquia_agent_requirements($phase) {
       // During runtime, we can't override the PHP memory limit provided by
       // Drupal core, so we supplement it with our own warning instead (but
       // only when necessary to do so).
-      if (IS_ACQUIA_DRUPAL && $memory_limit && parse_size($memory_limit) < parse_size(ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY)) {
-        $description = t('Drupal core requires @drupal_php_memory_limit, but to take advantage of all the features of Acquia Drupal, we recommend @acquia_php_memory_limit (or more).', array('@drupal_php_memory_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT, '@acquia_php_memory_limit' => ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY));
+      if (IS_ACQUIA_DRUPAL && $memory_limit && parse_size($memory_limit) < parse_size(ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY)) {
+        $description = t('Drupal core requires @drupal_php_memory_limit, but to take advantage of all the features of Acquia Drupal, we recommend @acquia_php_memory_limit (or more).', array('@drupal_php_memory_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT, '@acquia_php_memory_limit' => ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY));
         // Only append our instructions if they don't already have the ones
         // from Drupal core appearing on the screen.
         if (parse_size($memory_limit) >= parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
@@ -134,15 +141,31 @@ function acquia_agent_requirements($phase) {
           'title' => t('PHP memory limit (Acquia Drupal)'),
           'description' => $description,
           'severity' => REQUIREMENT_WARNING,
-          'value' => t('@memory_minimum_limit (or more) is recommended', array('@memory_minimum_limit' => ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY)),
+          'value' => t('@memory_minimum_limit (or more) is recommended', array('@memory_minimum_limit' => ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY)),
         );
       }
+
+      $msg = t('Drupal 7 will be end of life on November 28, 2022. Acquia offers <a href="@support_url" target = "blank">extended support</a>,
+      included with your cloud subscription, until November 2025. You are also encouraged to look at @name <a href="@migrate_url" target = "blank">Migrate Accelerator</a> to help migrate to the latest major version of Drupal.',
+        array(
+          '@support_url' => url("https://docs.acquia.com/support/guide/#acquia-drupal-7-extended-support-program"),
+          '@migrate_url' => url("https://www.acquia.com/products/drupal-cloud/migrate"),
+          '@name' => "Acquia's",
+        ));
+
+      $requirements['acquia_agent_eol'] = [
+        'title' => t('Acquia Agent module'),
+        'value' => t('The 7.x version is EOL!'),
+        'description' => $msg,
+        'severity' => REQUIREMENT_WARNING,
+      ];
       break;
+
     case 'install':
       $t = get_t();
-      if (IS_ACQUIA_DRUPAL && $memory_limit && parse_size($memory_limit) < parse_size(ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY)) {
+      if (IS_ACQUIA_DRUPAL && $memory_limit && parse_size($memory_limit) < parse_size(ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY)) {
         // Override the PHP memory limit warning provided by Drupal core.
-        $description = $t('Your PHP memory limit is currently set at %current_memory_limit. Increasing this to %memory_minimum_limit (or more) is recommended to help prevent errors in the installation process and later during operation of the site.', array('%current_memory_limit' => $memory_limit, '%memory_minimum_limit' => ACQUIA_DRUPAL_MINIMUM_PHP_MEMORY));
+        $description = $t('Your PHP memory limit is currently set at %current_memory_limit. Increasing this to %memory_minimum_limit (or more) is recommended to help prevent errors in the installation process and later during operation of the site.', array('%current_memory_limit' => $memory_limit, '%memory_minimum_limit' => ACQUIA_AGENT_DRUPAL_MINIMUM_PHP_MEMORY));
         if ($php_ini_path = get_cfg_var('cfg_file_path')) {
           $description .= ' ' . $t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
         }
@@ -154,7 +177,8 @@ function acquia_agent_requirements($phase) {
           'severity' => REQUIREMENT_WARNING,
         );
       }
-      // Ensure this module is compatible with the currently installed version of PHP.
+      // Ensure this module is compatible with the currently installed version
+      // of PHP.
       if (version_compare(phpversion(), 5.0) < 0) {
         $requirements['acquia_php_version'] = array(
           'description' => $t('The Acquia Connector modules require a PHP version of at least 5.0.'),
@@ -165,4 +189,14 @@ function acquia_agent_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Remove migrate variables.
+ */
+function acquia_agent_update_7001() {
+
+  variable_del('acquia_migrate_files');
+  variable_del('acquia_migrate_max_time');
+  variable_del('acquia_agent_cloud_migration');
 }
