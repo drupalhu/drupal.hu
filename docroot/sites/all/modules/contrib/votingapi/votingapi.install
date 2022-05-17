@@ -5,6 +5,9 @@
  * Installation file for VotingAPI module.
  */
 
+/**
+ * Implements hook_schema().
+ */
 function votingapi_schema() {
   $schema['votingapi_vote'] = array(
     'fields' => array(
@@ -25,7 +28,11 @@ function votingapi_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'value' => array('type' => 'float', 'not null' => TRUE, 'default' => 0),
+      'value' => array(
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'value_type' => array(
         'type' => 'varchar',
         'length' => 64,
@@ -84,7 +91,11 @@ function votingapi_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'value' => array('type' => 'float', 'not null' => TRUE, 'default' => 0),
+      'value' => array(
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'value_type' => array(
         'type' => 'varchar',
         'length' => 64,
@@ -146,7 +157,7 @@ function votingapi_update_last_removed() {
 }
 
 /**
- * Fix default values for entity_type columns
+ * Fix default values for entity_type columns.
  */
 function votingapi_update_7203() {
   db_change_field('votingapi_vote', 'entity_type', 'entity_type', array(
@@ -164,7 +175,7 @@ function votingapi_update_7203() {
 }
 
 /**
- * Queue orphaned votes for deletion (nodes and comments)
+ * Queue orphaned votes for deletion (nodes and comments).
  */
 function votingapi_update_7202() {
   $tables[] = 'votingapi_vote';
@@ -194,8 +205,11 @@ function votingapi_update_7202() {
 }
 
 /**
- * Renaming the 'content_type' and 'content_id' columns to entity_type and
- * entity_id. Reduces confusion about 'content types' versus 'node types'.
+ * Rename the 'content_type' and 'content_id' columns.
+ *
+ * This update renames the 'content_type' and 'content_id' columns to
+ * entity_type and entity_id in order to reduce confusion about 'content types'
+ * versus 'node types'.
  */
 function votingapi_update_7201() {
   $index['votingapi_vote'] = array(
@@ -236,7 +250,7 @@ function votingapi_update_7201() {
     }
   }
 
-  // Change fields
+  // Change fields.
   foreach (array('votingapi_vote', 'votingapi_cache') as $table) {
     db_change_field($table, 'content_type', 'entity_type', array(
       'type' => 'varchar',
@@ -274,6 +288,25 @@ function votingapi_update_7201() {
   return t('Updated VotingAPI table structure.');
 }
 
+/**
+ * Update the structure of data storage.
+ */
+function votingapi_update_7205() {
+  $query = db_select('votingapi_vote', 'v');
+  $query->fields('v', array('vote_source', 'vote_id'));
+  $results = $query->execute()->fetchAll();
+  if (!empty($results)) {
+    foreach ($results as $result) {
+      if (!empty($result) && !empty($result->vote_source)) {
+        $data = hash('sha256', serialize($result->vote_source));
+        $query = db_update('votingapi_vote');
+        $query->fields(array('vote_source' => $data));
+        $query->condition('vote_id', $result->vote_id);
+        $query->execute();
+      }
+    }
+  }
+}
 
 /**
  * Implements hook_uninstall().

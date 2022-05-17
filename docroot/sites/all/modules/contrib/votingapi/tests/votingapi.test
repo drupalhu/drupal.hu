@@ -125,7 +125,7 @@ class VotingAPITestCase extends DrupalWebTestCase {
                         $uid = NULL, $value_type = 'percent', $tag = 'vote', $vote_source = NULL) {
     global $user;
     if ($vote_source == NULL) {
-      $vote_source = ip_address();
+      $vote_source = hash('sha256', serialize(ip_address()));
     }
     $prefix_array = array('@prefix' => $prefix);
     for ($index = 0; $index < count($vote); $index++) {
@@ -134,7 +134,7 @@ class VotingAPITestCase extends DrupalWebTestCase {
       $this->assertTrue($vote[$index]['entity_type'] == $entity_type, t('@prefix: entity_type should match, default = "node".', $prefix_array));
       $this->assertTrue($vote[$index]['value_type'] == $value_type, t('@prefix: value_type should match, default= "percent".', $prefix_array));
       $this->assertTrue($vote[$index]['tag'] == $tag, t('@prefix: tag should match, default =  "vote".', $prefix_array));
-      $this->assertTrue($vote[$index]['vote_source'] == $vote_source, t('@prefix: vote_source should match, default = ip address.', $prefix_array));
+      $this->assertTrue($vote[$index]['vote_source'] == $vote_source, t('@prefix: vote_source should match, default = ip address hash.', $prefix_array));
       if ($uid != NULL) {
         $this->assertTrue($vote[0]['uid'] == $uid, t('@prefix: uid should match.', $prefix_array));
       }

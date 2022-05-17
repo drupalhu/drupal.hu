@@ -151,7 +151,7 @@ function votingapi_views_data() {
   $data['votingapi_vote']['vote_source'] = array(
     'title' => t('IP Address'),
     // The item it appears as on the UI,
-    'help' => t('The IP address of the user who cast the vote.'),
+    'help' => t('The IP address hash of the user who cast the vote.'),
     // The help that appears on the UI,
     // Information for displaying a title as a field
     'field' => array(

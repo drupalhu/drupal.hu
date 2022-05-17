@@ -6,8 +6,8 @@
  *
  * Maintains and provides an interface for a shared bin of vote and rating
  * data. Modules can cast votes with arbitrary properties and VotingAPI will
- * total them automatically. Support for basic anonymous voting by IP address,
- * multi-criteria voting, arbitrary aggregation functions, etc.
+ * total them automatically. Support for basic anonymous voting by
+ * IP address hash, multi-criteria voting, arbitrary aggregation functions, etc.
  *
  * /**
  * Implementation of hook_help().
@@ -160,7 +160,7 @@ function votingapi_cron() {
  *   ones.
  *   $criteria['vote_id']     (If this is set, all other keys are skipped)
  *   $criteria['entity_type']
- *   $criteria['entity_type']
+ *   $criteria['entity_id']
  *   $criteria['value_type']
  *   $criteria['tag']
  *   $criteria['uid']
@@ -236,13 +236,13 @@ function votingapi_set_votes(&$votes, $criteria = NULL) {
 
 /**
  * Generate a proper identifier for the current user: if they have an account,
- * return their UID. Otherwise, return their IP address.
+ * return their UID. Otherwise, return their IP address hash.
  */
 function votingapi_current_user_identifier() {
   global $user;
   $criteria = array('uid' => $user->uid);
   if (!$user->uid) {
-    $criteria['vote_source'] = ip_address();
+    $criteria['vote_source'] = hash('sha256', serialize(ip_address()));
   }
   return $criteria;
 }
@@ -438,6 +438,7 @@ function votingapi_select_votes($criteria = array(), $limit = 0) {
  *   $criteria['vote_cache_id']     (If this is set, all other keys are skipped)
  *   $criteria['entity_id']
  *   $criteria['entity_type']
+ *   $criteria['value']
  *   $criteria['value_type']
  *   $criteria['tag']
  *   $criteria['function']
@@ -668,7 +669,7 @@ function _votingapi_prep_vote(&$vote) {
       'tag' => 'vote',
       'uid' => $user->uid,
       'timestamp' => REQUEST_TIME,
-      'vote_source' => ip_address(),
+      'vote_source' => hash('sha256', serialize(ip_address())),
       'prepped' => TRUE,
     );
   }
@@ -681,7 +682,13 @@ function _votingapi_prep_vote(&$vote) {
  */
 function votingapi_entity_delete($entity, $type) {
   $ids = entity_extract_ids($type, $entity);
-  $id = array($ids[0]);
+  // We will use "Primary/Revision ID of the entity" only.
+  if (count($ids) > 1) {
+    $id = array($ids[0], $ids[1]);
+  }
+  else {
+    $id = array($ids[0]);
+  }
   _votingapi_delete_cache_by_entity($id, $type);
   _votingapi_delete_votes_by_entity($id, $type);
 }
