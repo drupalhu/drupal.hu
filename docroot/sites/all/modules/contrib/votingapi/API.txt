@@ -27,7 +27,7 @@ value_type   -- This determines how vote results are totaled. VotingAPI supports
 tag          -- Modules can use different tags to store votes on specific aspects of a piece of content, like 'accuracy' and 'timeliness' of a news story. If you don't need to vote on multiple criteria, you should use the default value of 'vote'. If you use multiple tags, it is STRONGLY recommended that you provide an average or 'overall' value filed under the default 'vote' tag. This gives other modules that display voting data a single value to key on for sorting, etc.
 uid          -- The user ID of the person who voted.
 timestamp    -- The time the vote was cast.
-vote_source  -- A unique identifier used to distinguish votes cast by anonymous users. By default, this is the IP address of the remote machine.
+vote_source  -- A unique identifier used to distinguish votes cast by anonymous users. By default, this is the IP address hash of the remote machine.
 
 Whenever a vote is cast, VotingAPI gathers up all the votes for the entity_type/entity_id combination, and creates a collection of cached 'result' records. Each voting result recorded stores the following information:
 
@@ -88,11 +88,9 @@ function mymodule_votingapi_results_alter(&$results, $entity_type, $entity_id) {
   $sql .= "WHERE v.entity_type = '%s' AND v.entity_id = %d AND v.value_type = 'percent' ";
   $sql .= "GROUP BY v.tag";
 
-  $results = db_query($sql, $entity_type, $entity_id);
-
   // VotingAPI wants the data in the following format:
   // $cache[$tag][$value_type][$math_function] = $value;
-  while ($result = db_fetch_array($results)) {
+  while ($result = db_query($sql, $entity_type, $entity_id)->fetchAssoc()) {
     $cache[$result['tag']]['percent']['standard_deviation'] = $result['standard_deviation'];
   }
 }

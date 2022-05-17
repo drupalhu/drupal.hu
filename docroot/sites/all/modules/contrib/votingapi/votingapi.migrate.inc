@@ -46,7 +46,7 @@ class MigrateDestinationVotingApiVote extends MigrateDestination {
       'tag' => "Tag (defaults to 'vote')",
       'uid' => 'User ID',
       'timestamp' => 'Timestamp',
-      'vote_source' => 'Vote Source IP Address',
+      'vote_source' => 'Vote Source IP Address hash',
     );
   }
 

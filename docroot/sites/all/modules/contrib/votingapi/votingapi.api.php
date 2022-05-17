@@ -40,13 +40,11 @@ function hook_votingapi_results_alter(&$vote_results, $content_type, $content_id
   $sql .= "WHERE v.content_type = '%s' AND v.content_id = %d AND v.value_type = 'percent' ";
   $sql .= "GROUP BY v.tag";
 
-  $aggregates = db_query($sql, $content_type, $content_id);
-
   // VotingAPI wants the data in the following format:
   // $vote_results[$tag][$value_type][$aggregate_function] = $value;
 
-  while ($aggregate = db_fetch_array($aggregates)) {
-    $vote_results[$result['tag']]['percent']['standard_deviation'] = $result['standard_deviation'];
+  while ($aggregate = db_query($sql, $content_type, $content_id)->fetchAssoc()) {
+    $vote_results[$aggregate['tag']]['percent']['standard_deviation'] = $aggregate['standard_deviation'];
   }
 }
 
