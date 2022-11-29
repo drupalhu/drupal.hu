@@ -5,71 +5,81 @@ dependencies:
   config:
     - filter.format.html_body
   module:
-    - ckeditor
+    - ckeditor5
 format: html_body
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formázás
-          items:
-            - Bold
-            - Italic
-            - Underline
-            - Strike
-            - '-'
-            - Superscript
-            - Subscript
-            - '-'
-            - RemoveFormat
-        -
-          name: Hivatkozások
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Listák
-          items:
-            - BulletedList
-            - NumberedList
-            - '-'
-            - Indent
-            - Outdent
-        -
-          name: Média
-          items:
-            - SpecialChar
-            - HorizontalRule
-            - Blockquote
-            - DrupalMediaLibrary
-        -
-          name: Eszközök
-          items:
-            - '-'
-            - Source
-            - ShowBlocks
-            - Maximize
-        -
-          name: Igazítás
-          items:
-            - JustifyLeft
-            - JustifyCenter
-            - JustifyRight
-            - '-'
-            - JustifyBlock
-        -
-          name: Formázás
-          items:
-            - Format
-            - '-'
-            - Styles
+    items:
+      - undo
+      - redo
+      - '|'
+      - heading
+      - horizontalLine
+      - '|'
+      - bulletedList
+      - numberedList
+      - indent
+      - outdent
+      - '|'
+      - codeBlock
+      - blockQuote
+      - drupalMedia
+      - '|'
+      - alignment
+      - '|'
+      - '-'
+      - bold
+      - italic
+      - underline
+      - strikethrough
+      - '|'
+      - link
+      - code
+      - subscript
+      - superscript
+      - specialCharacters
+      - '|'
+      - removeFormat
+      - '|'
+      - sourceEditing
   plugins:
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<abbr>'
+        - '<acronym>'
+        - '<cite>'
+        - '<del>'
+        - '<dd>'
+        - '<dl>'
+        - '<dt>'
+        - '<ins>'
+        - '<kbd>'
+        - '<mark>'
+        - '<q>'
+        - '<samp>'
+        - '<small>'
+        - '<wbr>'
+        - '<a hreflang>'
+        - '<blockquote cite>'
+        - '<h2 id>'
+        - '<h3 id>'
+        - '<h4 id>'
+        - '<h5 id>'
+        - '<h6 id>'
+        - '<meter value min max>'
+        - '<time datetime>'
+        - '<ul type>'
+        - '<ol start type>'
+        - '<img src title alt data-entity-type data-entity-uuid>'
+        - '<drupal-media data-view-mode data-align data-caption title>'
 image_upload:
   status: false
   scheme: public

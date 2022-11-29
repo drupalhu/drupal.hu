@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.full
+    - core.entity_view_mode.media.hero
   module:
     - editor
     - media
@@ -41,7 +42,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<a href hreflang> <abbr> <acronym> <blockquote cite> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <ins> <kbd> <li> <mark> <meter value min max> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time datetime> <ul type> <ol start type> <wbr> <img src title alt data-entity-type data-entity-uuid> <u> <hr> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
+      allowed_html: '<abbr> <acronym> <cite> <del> <dd> <dl> <dt> <ins> <kbd> <mark> <q> <samp> <small> <wbr> <a hreflang href> <blockquote cite> <h2 id class="text-align-left text-align-center text-align-right text-align-justify"> <h3 id class="text-align-left text-align-center text-align-right text-align-justify"> <h4 id class="text-align-left text-align-center text-align-right text-align-justify"> <h5 id class="text-align-left text-align-center text-align-right text-align-justify"> <h6 id class="text-align-left text-align-center text-align-right text-align-justify"> <meter value min max> <time datetime> <ul type> <ol start type> <img src title alt data-entity-type data-entity-uuid> <drupal-media data-view-mode data-align data-caption title data-entity-type data-entity-uuid alt> <br> <p class="text-align-left text-align-center text-align-right text-align-justify"> <strong> <em> <u> <code class="language-*"> <pre class="text-align-left text-align-center text-align-right text-align-justify"> <s> <sub> <sup> <li class="text-align-left text-align-center text-align-right text-align-justify"> <hr>'
       filter_html_help: true
       filter_html_nofollow: true
   filter_htmlcorrector:
@@ -78,5 +79,5 @@ filters:
       default_view_mode: full
       allowed_view_modes:
         full: full
-      allowed_media_types:
-        image: image
+        hero: hero
+      allowed_media_types: {  }
