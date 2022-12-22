@@ -8,7 +8,7 @@ class SearchApiAcquiaApi {
   /**
    * Request timeout in seconds.
    */
-  const REQUEST_TIMEOUT = 5;
+  const REQUEST_TIMEOUT = 10;
 
   /**
    * Subscription name.
@@ -122,6 +122,12 @@ class SearchApiAcquiaApi {
    *   Search indexes list.
    */
   public function getIndexes() {
+    // Get data from cache.
+    $cid = 'search_api_acquia.cores.' . $this->subscription;
+
+    if (($cache = cache_get($cid, 'cache')) && $cache->expire > REQUEST_TIME) {
+      return $cache->data;
+    }
     $query = ['network_id' => $this->subscription];
     $nonce = SearchApiAcquiaCrypt::randomBytes(24);
     $config_path = '/v2/index/configure';
@@ -147,17 +153,28 @@ class SearchApiAcquiaApi {
     $response = drupal_http_request($url, $options);
 
     if ($response->code > 300 || !isset($response->data)) {
-      $error_message = t("Couldn't connect to Solr. Reason: @reason. Status code: @code. Request: @request", [
+      $error_message = t("Couldn't connect to Acquia Search v3 to get list of cores. Reason: @reason. Status code: @code. Request: @request", [
         '@reason' => $response->status_message,
         '@code' => $response->code,
         '@request' => $response->request,
       ]);
       watchdog('acquia_search_solr', $error_message, [], WATCHDOG_ERROR);
 
+      // When API is not reachable, cache results for 1 minute.
+      $expire = REQUEST_TIME + 60;
+      cache_set($cid, [], 'cache', $expire);
+
       return [];
     }
 
-    return $this->processResponse($response->data);
+    $result = $this->processResponse($response->data);
+
+    // Cache will be set in both cases, 1. when search v3 cores are found and
+    // 2. when there are no search v3 cores but api is reachable.
+    $expire = REQUEST_TIME + (60 * 60 * 24);
+    cache_set($cid, $result, 'cache', $expire);
+
+    return $result;
   }
 
   /**
@@ -283,7 +300,7 @@ class SearchApiAcquiaApi {
    */
   protected function sanitizeDatabaseRoleName(string $database_role) {
     // In database role naming, we only accept alphanumeric chars.
-    $pattern = '/[^a-zA-Z0-9]+/';
+    $pattern = '/[^a-zA-Z0-9_]+/';
     $database_role = preg_replace($pattern, '', $database_role);
     return $database_role;
   }

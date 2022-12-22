@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.89');
+define('VERSION', '7.94');
 
 /**
  * Core API compatibility.
@@ -18,7 +18,7 @@ define('DRUPAL_CORE_COMPATIBILITY', '7.x');
 /**
  * Minimum supported version of PHP.
  */
-define('DRUPAL_MINIMUM_PHP', '5.2.4');
+define('DRUPAL_MINIMUM_PHP', '5.3.3');
 
 /**
  * Minimum recommended value of PHP memory_limit.
@@ -1602,7 +1602,7 @@ function drupal_page_header() {
  */
 function drupal_serve_page_from_cache(stdClass $cache) {
   // Negotiate whether to use compression.
-  $page_compression = !empty($cache->data['page_compressed']);
+  $page_compression = !empty($cache->data['page_compressed']) && !empty($cache->data['body']);
   $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
 
   // Get headers set in hook_boot(). Keys are lower-case.
@@ -1933,7 +1933,7 @@ function check_plain($text) {
  *   TRUE if the text is valid UTF-8, FALSE if not.
  */
 function drupal_validate_utf8($text) {
-  if (strlen($text) == 0) {
+  if (strlen((string) $text) == 0) {
     return TRUE;
   }
   // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings
@@ -2348,7 +2348,7 @@ function drupal_random_bytes($count)  {
     // the microtime() - is prepended rather than appended. This is to avoid
     // directly leaking $random_state via the $output stream, which could
     // allow for trivial prediction of further "random" numbers.
-    if (strlen($bytes) < $count) {
+    if (strlen((string) $bytes) < $count) {
       // Initialize on the first call. The contents of $_SERVER includes a mix of
       // user-specific and system information that varies a little with each page.
       if (!isset($random_state)) {
@@ -3949,6 +3949,14 @@ function drupal_setcookie($name, $value, $options) {
     setcookie($name, $value, $options);
   }
   else {
+    $defaults = array(
+      'expires' => 0,
+      'path' => '',
+      'domain' => '',
+      'secure' => FALSE,
+      'httponly' => FALSE,
+    );
+    $options += $defaults;
     setcookie($name, $value, $options['expires'], $options['path'], $options['domain'], $options['secure'], $options['httponly']);
   }
 }

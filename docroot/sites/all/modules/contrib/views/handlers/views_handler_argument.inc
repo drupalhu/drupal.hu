@@ -33,6 +33,7 @@
  *
  * @ingroup views_argument_handlers
  */
+#[\AllowDynamicProperties]
 class views_handler_argument extends views_handler {
 
   /**
@@ -282,7 +283,7 @@ class views_handler_argument extends views_handler {
       '#type' => 'fieldset',
       '#title' => t('Exceptions'),
       '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#collapsed' => FALSE,
       '#fieldset' => 'no_argument',
     );
     $form['exception']['value'] = array(
@@ -290,7 +291,7 @@ class views_handler_argument extends views_handler {
       '#title' => t('Exception value'),
       '#size' => 20,
       '#default_value' => $this->options['exception']['value'],
-      '#description' => t('If this value is received, the filter will be ignored; i.e, "all values"'),
+      '#description' => t('If this value is received, the filter will be ignored; i.e, "all values". This will bypass any validation criterion provided below.'),
     );
     $form['exception']['title_enable'] = array(
       '#type' => 'checkbox',

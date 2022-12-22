@@ -17,3 +17,19 @@ function l10n_client_update_7001() {
     variable_del('l10n_client_server');
   }
 }
+
+/**
+ * Clear the menu cache.
+ */
+function l10n_client_update_7002() {
+  // Clear the menu cache
+  menu_cache_clear_all();
+}
+
+  /**
+ * Implements hook_uninstall().
+ */
+function l10n_client_uninstall() {
+  variable_del('l10n_client_server');
+  variable_del('l10n_client_use_server');
+}

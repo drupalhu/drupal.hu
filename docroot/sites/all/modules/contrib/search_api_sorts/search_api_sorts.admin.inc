@@ -1,8 +1,12 @@
 <?php
 
 /**
- * Displays a form for selecting the indexed fields for which sorts should be
- * created.
+ * @file
+ * Administration page callbacks for the Search API sorts module.
+ */
+
+/**
+ * Displays a form for selecting the indexed fields for which to create sorts.
  *
  * @param SearchApiIndex $index
  *   The index for which to display the settings.
@@ -14,97 +18,129 @@ function search_api_sorts_index_select(array $form, array &$form_state, SearchAp
 
   if (!$index->server() || !$index->server()->supportsFeature('search_api_facets')) {
     // We can't offer any sorts, but maybe the user can delete old sort data.
-    drupal_set_message(t("The server this index currently lies on doesn't support sorts. " .
-        'To use sorts, you will have to move this index to a server supporting this feature.'), 'error');
+    drupal_set_message(t("The server this index currently lies on doesn't support sorts. To use sorts, you will have to move this index to a server supporting this feature."), 'error');
     return $form;
   }
-  
-  $sort_options = array('' => t('None'));
-  foreach (search_api_sorts_load_multiple(FALSE, array('index_id' => $index->machine_name)) as $sort) {
-    if ($sort->enabled == 1) {
-      $sort_options[$sort->field] = $sort->name; 
+
+  // Get the sorts ordered by weight using EntityFieldQuery.
+  $query = new EntityFieldQuery();
+  $results = $query
+    ->entityCondition('entity_type', 'search_api_sort')
+    ->propertyCondition('index_id', $index->machine_name)
+    ->propertyOrderBy('weight', 'ASC')
+    ->execute();
+
+  $sort_ids = array();
+  if (isset($results['search_api_sort'])) {
+    foreach ($results['search_api_sort'] as $result) {
+      $sort_ids[] = $result->id;
     }
   }
-  $form['sort'] = array(
-    '#type' => 'select',
-    '#title' => t('Default sort field'),
-    '#default_value' => variable_get('search_api_sorts_default_sort', ''),
-    '#options' => $sort_options,
-    '#description' => t('Set the initial (default) sort field. Choose additional fields below'),
-  );
-  
-  $form['order'] = array(
-    '#type' => 'select',
-    '#title' => t('Default sort order'),
-    '#default_value' => variable_get('search_api_sorts_default_order', 'asc'),
-    '#options' => array(
-      'asc' => t('Ascending'),
-      'desc' => t('Descending'),
-    ),
-    '#description' => t('Set the initial (default) sort order'),
-  );
-  
+  $sorts = search_api_sorts_load_multiple($sort_ids);
+
   $form['description'] = array(
     '#type' => 'item',
     '#title' => t('Select the available sorts'),
     '#description' => t('<p>Only index single-value strings or numbers can be used as sorts. See the Fields tab to change indexes (tick the "Indexed" checkboxes).</p>'),
   );
-  
   $form['sorts'] = array(
     '#tree' => TRUE,
     '#theme' => 'search_api_sorts_form_table',
     '#table_header' => array(
       t('Enabled'),
+      t('Default'),
+      t('Default (no terms)'),
+      t('Sort'),
       t('Field'),
       t('Type'),
       t('Name'),
+      t('Weight'),
     ),
     '#table_empty' => t('There are currently no fields for which sorts can be displayed.'),
   );
 
-  if (!empty($index->options['fields'])) {
-    $sorts = array();
+  // Add our dummy relevance field.
+  $fields = array(
+    'search_api_relevance' => array(
+      'name' => 'Relevance',
+      'type' => 'decimal',
+      'indexed' => TRUE,
+    ),
+  ) + $index->getFields();
+
+  if (!empty($fields)) {
     if ($disabled = empty($index->enabled)) {
-      drupal_set_message('Since this index is at the moment disabled, no sorts can be activated.', 'warning');
+      drupal_set_message(t('Since this index is at the moment disabled, no sorts can be activated.'), 'warning');
     }
     $show_status = FALSE;
-    foreach (search_api_sorts_load_multiple(FALSE, array('index_id' => $index->machine_name)) as $sort) {
+    foreach ($sorts as $sort) {
       $sorts[$sort->field][] = $sort;
-      if ($sort->status & ENTITY_IN_CODE) {
+      if (isset($sort->status) & ENTITY_IN_CODE) {
         $show_status = TRUE;
       }
     }
     if ($show_status) {
       $form['sorts']['#table_header'] = array(
         t('Enabled'),
+        t('Default'),
+        t('Default (no terms)'),
+        t('Sort'),
         t('Status'),
         t('Field'),
         t('Type'),
         t('Name'),
+        t('Weight'),
       );
       $empty_status = ' ';
     }
+
     $types = search_api_field_types();
-    foreach ($index->options['fields'] as $key => $field) {
+
+    // Need to get the index fields ordered by sort's weight.
+    foreach ($sorts as $key => $sort) {
+      if (isset($fields[$key])) {
+        $fields[$key]['weight'] = isset($sorts[$key][0]->weight) ? $sorts[$key][0]->weight : 0;
+      }
+    }
+
+    // Order fields according to sorts weight.
+    $new_fields = array();
+    foreach ($sorts as $key => $sort) {
+      if (!empty($fields[$key])) {
+        $new_fields[$key] = $fields[$key];
+        unset($fields[$key]);
+      }
+    }
+    $fields = $new_fields + $fields;
+
+    foreach ($fields as $key => $field) {
       if (!$field['indexed']) {
         continue;
       }
-      // skip fulltext or multi-value, you cannot sort them
+      // Skip fulltext or multi-value, you cannot sort them.
       if ($field['type'] == 'text' || strpos($field['type'], 'list<') !== FALSE) {
         continue;
       }
       $type = search_api_extract_inner_type($field['type']);
       $type = isset($types[$type]) ? $types[$type] : $type;
       if (empty($sorts[$key])) {
+        $weight = 0;
         $sorts[$key][] = new SearchApiSort(array(
           'index_id' => $index->machine_name,
           'field' => $key,
-          'name' => t('!field', array('!field' => $field['name'])),
+          'identifier' => $index->machine_name . '__' . $key,
+          'default_sort' => 0,
+          'default_sort_no_terms' => 0,
+          'default_order' => 'desc',
+          'name' => t('@field', array('@field' => $field['name'])),
           'enabled' => 0,
           'options' => array(),
           'status' => 0,
+          'weight' => $weight,
         ));
+        ++$weight;
       }
+
       foreach ($sorts[$key] as $i => $sort) {
         $k = $i ? "$key-$i" : $key;
         $form['sorts'][$k]['sort'] = array(
@@ -116,11 +152,46 @@ function search_api_sorts_index_select(array $form, array &$form_state, SearchAp
           '#default_value' => $sort->enabled,
           '#disabled' => $disabled,
         );
+        $form['sorts'][$k]['default_sort'] = array(
+          '#type' => 'radio',
+          '#return_value' => $k,
+          '#tree' => FALSE,
+          '#default_value' => $sort->default_sort ? $k : NULL,
+          '#states' => array(
+            'enabled' => array(
+              ':input[name="sorts[' . $k . '][enabled]"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
+        $form['sorts'][$k]['default_sort_no_terms'] = array(
+          '#type' => 'radio',
+          '#return_value' => $k,
+          '#tree' => FALSE,
+          '#default_value' => $sort->default_sort_no_terms ? $k : NULL,
+          '#states' => array(
+            'enabled' => array(
+              ':input[name="sorts[' . $k . '][enabled]"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
+        $form['sorts'][$k]['default_order'] = array(
+          '#type' => 'select',
+          '#default_value' => $sort->default_order,
+          '#options' => array(
+            'asc' => t('Ascending'),
+            'desc' => t('Descending'),
+          ),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="sorts[' . $k . '][enabled]"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
         if ($show_status) {
           $form['sorts'][$k]['status']['#markup'] = $sort->status ? theme('entity_status', array('status' => $sort->status)) : $empty_status;
         }
         $form['sorts'][$k]['field'] = array(
-          '#markup' => $field['name'],
+          '#markup' => check_plain($field['name']),
         );
         $form['sorts'][$k]['type'] = array(
           '#markup' => $type,
@@ -130,6 +201,14 @@ function search_api_sorts_index_select(array $form, array &$form_state, SearchAp
           '#maxlength' => max(strlen($sort->name), 80),
           '#default_value' => $sort->name,
         );
+        $form['sorts'][$k]['weight'] = array(
+          '#type' => 'weight',
+          '#default_value' => isset($sort->weight) ? (int) $sort->weight : 0,
+          '#delta' => 100,
+          '#attributes' => array(
+            'class' => array('search-api-sorts-weight'),
+          ),
+        );
       }
     }
   }
@@ -138,7 +217,6 @@ function search_api_sorts_index_select(array $form, array &$form_state, SearchAp
     '#type' => 'submit',
     '#value' => t('Save settings'),
   );
-
   return $form;
 }
 
@@ -171,19 +249,12 @@ function search_api_sorts_index_select_validate(array $form, array &$form_state)
  * Submit callback for search_api_sorts_index_select().
  */
 function search_api_sorts_index_select_submit(array $form, array &$form_state) {
-  $index = $form_state['index'];
   $count = 0;
   $delete_count = 0;
   $reset_count = 0;
 
-  variable_set('search_api_sorts_default_sort', $form_state['values']['sort']);
-  variable_set('search_api_sorts_default_order', $form_state['values']['order']);
-  
-  $counts = array();
   foreach ($form_state['values']['sorts'] as $key => $v) {
-    $field = $v['sort']->field;
-    $c = $counts[$field] = (isset($counts[$field]) ? $counts[$field] + 1 : 1);
-    if (empty($v['enabled']) || $v['sort']->status == ENTITY_OVERRIDDEN) {
+    if (empty($v['enabled']) || (isset($v['sort']->status) && $v['sort']->status == ENTITY_OVERRIDDEN)) {
       // This is the only case in which a "delete" makes sense.
       if (!empty($v['delete'])) {
         $v['sort']->delete();
@@ -192,11 +263,17 @@ function search_api_sorts_index_select_submit(array $form, array &$form_state) {
       }
     }
     $f = $v['sort'];
-    $update = $f->enabled != $v['enabled'] || $f->name != $v['name'];
+    $default_sort = $form_state['values']['default_sort'] == $key;
+    $default_sort_no_terms = $form_state['values']['default_sort_no_terms'] == $key;
+    $update = $f->enabled != $v['enabled'] || $f->name != $v['name'] || $f->weight != $v['weight'] || $f->default_sort != $default_sort || $f->default_sort_no_terms != $default_sort_no_terms || $f->default_order != $v['default_order'];
     if ($update) {
       $f = clone $f;
       $f->enabled = $v['enabled'];
       $f->name = $v['name'];
+      $f->default_sort = $default_sort;
+      $f->default_sort_no_terms = $default_sort_no_terms;
+      $f->default_order = $v['default_order'];
+      $f->weight = $v['weight'];
       $f->save();
       ++$count;
     }
@@ -237,7 +314,10 @@ function theme_search_api_sorts_form_table(array $variables) {
         $row[] = $cell;
       }
     }
-    $rows[] = $row;
+    $rows[] = array(
+      'data' => $row,
+      'class' => array('draggable'),
+    );
   }
 
   $vars['rows'] = $rows;
@@ -247,5 +327,8 @@ function theme_search_api_sorts_form_table(array $variables) {
   if (isset($form['#table_empty'])) {
     $vars['empty'] = $form['#table_empty'];
   }
+  $vars['attributes']['id'] = 'search-api-sorts-table';
+
+  drupal_add_tabledrag('search-api-sorts-table', 'order', 'sibling', 'search-api-sorts-weight');
   return theme('table', $vars);
 }

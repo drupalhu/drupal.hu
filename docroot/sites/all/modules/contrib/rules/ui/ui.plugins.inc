@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains UI for diverse plugins provided by Rules.
+ * @file
+ * Contains UI for diverse plugins provided by Rules.
  */
 
 /**
@@ -9,15 +10,21 @@
  */
 class RulesRuleUI extends RulesActionContainerUI {
 
-  protected $rule, $conditions;
+  protected $rule;
+  protected $conditions;
 
+  /**
+   * Constructs a RulesRuleUI object.
+   *
+   * @param FacesExtendable $object
+   */
   public function __construct(FacesExtendable $object) {
     parent::__construct($object);
     $this->rule = $object;
     $this->conditions = $this->rule->conditionContainer();
   }
 
-  public function form(&$form, &$form_state, $options = array()) {
+  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
     $form_state['rules_element'] = $this->rule;
     $label = $this->element->label();
     // Automatically add a counter to unlabelled rules.
@@ -58,17 +65,17 @@ class RulesRuleUI extends RulesActionContainerUI {
   /**
    * Applies the values of the form to the rule configuration.
    */
-  function form_extract_values($form, &$form_state) {
+  public function form_extract_values($form, &$form_state) {
+    $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
     // Run condition and action container value extraction.
     if (isset($form['conditions'])) {
       $this->conditions->extender('RulesConditionContainerUI')->form_extract_values($form['conditions'], $form_state);
     }
-    if (!empty($form_state['values']['label'])) {
-      $this->element->label = $form_state['values']['label'];
+    if (!empty($form_values['label'])) {
+      $this->element->label = $form_values['label'];
     }
     parent::form_extract_values($form, $form_state);
   }
-
 
   public function operations() {
     // When rules are listed only show the edit and delete operations.
@@ -76,6 +83,7 @@ class RulesRuleUI extends RulesActionContainerUI {
     $ops['#links'] = array_intersect_key($ops['#links'], array_flip(array('edit', 'delete')));
     return $ops;
   }
+
 }
 
 /**
@@ -83,25 +91,46 @@ class RulesRuleUI extends RulesActionContainerUI {
  */
 class RulesReactionRuleUI extends RulesRuleUI {
 
-  public function form(&$form, &$form_state, $options = array()) {
+  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
     $form['events'] = array(
       '#type' => 'container',
       '#weight' => -10,
       '#access' => empty($options['init']),
     );
 
-    $event_info = rules_fetch_data('event_info');
     $form['events']['table'] = array(
       '#theme' => 'table',
       '#caption' => 'Events',
-      '#header' => array('Event', 'Operations'),
+      '#header' => array(t('Event'), t('Operations')),
       '#empty' => t('None'),
     );
     $form['events']['table']['#attributes']['class'][] = 'rules-elements-table';
     foreach ($this->rule->events() as $event_name) {
+      $event_handler = rules_get_event_handler($event_name, $this->rule->getEventSettings($event_name));
+
+      $event_operations = array(
+        '#theme' => 'links__rules',
+        '#attributes' => array(
+          'class' => array(
+            'rules-operations',
+            'action-links',
+            'rules_rule_event',
+          ),
+        ),
+        '#links' => array(
+          'delete_event' => array(
+            'title' => t('delete'),
+            'href' => RulesPluginUI::path($this->rule->name, 'delete/event/' . $event_name),
+            'query' => drupal_get_destination(),
+          ),
+        ),
+      );
+
       $form['events']['table']['#rows'][$event_name] = array(
-        check_plain($event_info[$event_name]['label']),
-        '<span class="rules_rule_event">' . l(t('delete'), RulesPluginUI::path($this->rule->name, 'delete/event/' . $event_name)) . '</span>',
+        'data' => array(
+          $event_handler->summary(),
+          array('data' => $event_operations),
+        ),
       );
     }
 
@@ -143,10 +172,12 @@ class RulesReactionRuleUI extends RulesRuleUI {
   }
 
   public function settingsFormExtractValues($form, &$form_state) {
+    $form_values = RulesPluginUI::getFormStateValues($form['settings'], $form_state);
     parent::settingsFormExtractValues($form, $form_state);
-    $this->rule->active = $form_state['values']['active'];
-    $this->rule->weight = $form_state['values']['weight'];
+    $this->rule->active = $form_values['active'];
+    $this->rule->weight = $form_values['weight'];
   }
+
 }
 
 /**
@@ -163,6 +194,7 @@ class RulesRuleSetUI extends RulesActionContainerUI {
     $form['elements']['#attributes']['class'][] = 'rules-rule-set';
     $form['elements']['#caption'] = t('Rules');
   }
+
 }
 
 /**
@@ -170,14 +202,14 @@ class RulesRuleSetUI extends RulesActionContainerUI {
  */
 class RulesLoopUI extends RulesActionContainerUI {
 
-  public function form(&$form, &$form_state, $options = array()) {
+  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
     parent::form($form, $form_state, $options);
     $settings = $this->element->settings;
 
     $form['item'] = array(
       '#type' => 'fieldset',
       '#title' => t('Current list item'),
-      '#description' => t('A variable which holds the current list item.'),
+      '#description' => t('The variable used for holding each list item in the loop. This variable will be available inside the loop only.'),
       '#tree' => TRUE,
     );
     $form['item']['label'] = array(
@@ -196,11 +228,12 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
   }
 
-  function form_extract_values($form, &$form_state) {
+  public function form_extract_values($form, &$form_state) {
     parent::form_extract_values($form, $form_state);
+    $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
 
-    $this->element->settings['item:var'] = $form_state['values']['item']['var'];
-    $this->element->settings['item:label'] = $form_state['values']['item']['label'];
+    $this->element->settings['item:var'] = $form_values['item']['var'];
+    $this->element->settings['item:label'] = $form_values['item']['label'];
   }
 
   public function form_validate($form, &$form_state) {
@@ -227,4 +260,5 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
     return $content;
   }
+
 }

@@ -1,0 +1,41 @@
+{
+  "name": "drupal-composer/preserve-paths",
+  "description": "Composer plugin for preserving custom paths and supporting nested packages",
+  "type": "composer-plugin",
+  "keywords": [
+    "composer-plugin",
+    "installer",
+    "custom path",
+    "nested package"
+  ],
+  "homepage": "https://github.com/drupal-composer/preserve-paths",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Johannes Haseitl",
+      "email": "johannes@undpaul.de",
+      "homepage": "http://www.undpaul.de"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/drupal-composer/preserve-paths/issues"
+  },
+  "require": {
+    "composer-plugin-api": "^1.0 || ^2.0"
+  },
+  "require-dev": {
+    "composer/composer": "^2.0",
+    "phpunit/phpunit": "4.*",
+    "derhasi/tempdirectory": "0.1.*",
+    "squizlabs/php_codesniffer": "2.*",
+    "escapestudios/symfony2-coding-standard": "2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "DrupalComposer\\PreservePaths\\": "src/"
+    }
+  },
+  "extra": {
+    "class": "DrupalComposer\\PreservePaths\\Plugin"
+  }
+}

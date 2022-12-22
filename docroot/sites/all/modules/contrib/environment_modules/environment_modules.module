@@ -1,19 +1,19 @@
 <?php
-
 /**
+ * @file
  * Allows additional modules to be enabled via $conf.
  */
 
-/**
- * If there was ever a reason to have a love hate relationship with drupal_static().
- * @implements hook_boot().
- */
-function environment_modules_boot() {
-  // Never, ever set $conf['environment_modules'] in the settings.php on your
-  // production site. This should only be used in a staging.settings.php or
-  // dev.settings.php (or equivalent) to enable modules needed there.
-  // If you have modules only enabled in production ur doin' it wrong.
-  if (variable_get('environment_modules')) {
+// Never, ever set $conf['environment_modules'] in the settings.php on your
+// production site. This should only be used in a staging.settings.php or
+// dev.settings.php (or equivalent) to enable modules needed there.
+// If you have modules only enabled in production ur doin' it wrong.
+if (!empty($GLOBALS['conf']['environment_modules'])) {
+
+  /**
+   * Implements hook_boot().
+   */
+  function environment_modules_boot() {
     // During hook_boot(), system_list('module_enabled'); has not run yet.
     // It can only run once, so do that here.
     system_list('module_enabled');
@@ -44,22 +44,30 @@ function environment_modules_boot() {
 }
 
 /**
- * @implements hook_init().
+ * Implements hook_init().
  */
 function environment_modules_init() {
 
-  // Check that we have environment modules to enable
-  if($envmodules = variable_get('environment_modules')){
+  // Check that we have environment modules to enable.
+  if ($envmodules = variable_get('environment_modules')) {
 
-    // Crosscheck w/already enabled modules
+    // Crosscheck w/already enabled modules.
     $modules = module_list();
-    foreach($modules as $id => $module){
+    foreach ($modules as $id => $module) {
       unset($envmodules[$id]);
     }
 
-    // If the module is not installed/enabled yet enable it
-    if(!empty($envmodules)){
+    // If the module is not installed/enabled yet enable it.
+    if (!empty($envmodules)) {
       module_enable(array_keys($envmodules));
+      menu_rebuild();
+    }
+  }
+
+  // Check that we have environment modules to disable.
+  if ($envmodules_disable = variable_get('environment_modules_disable')) {
+    if (!empty($envmodules_disable)) {
+      module_disable(array_keys($envmodules_disable));
       menu_rebuild();
     }
   }

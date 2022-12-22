@@ -1,14 +1,17 @@
 <?php
 
 /**
- * @file General entity related rules integration
+ * @file
+ * General entity related rules integration.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
 /**
  * Implements hook_rules_file_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_file_info() {
@@ -16,7 +19,21 @@ function rules_entity_file_info() {
 }
 
 /**
+ * Implements hook_rules_category_info() on behalf of the pseudo entity module.
+ */
+function rules_entity_category_info() {
+  return array(
+    'rules_entity' => array(
+      'label' => t('Entities'),
+      'equals group' => t('Entities'),
+      'weight' => -50,
+    ),
+  );
+}
+
+/**
  * Implements hook_rules_action_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_action_info() {
@@ -174,27 +191,6 @@ function rules_action_entity_createfetch_access(RulesAbstractPlugin $element) {
 }
 
 /**
- * Custom validate callback for data fetch action.
- */
-function rules_action_entity_fetch_validate($element) {
-  if (!isset($element->settings['type'])) {
-    throw new RulesException('Invalid type specified.', array(), array($element, 'parameter', 'type'));
-  }
-}
-
-/**
- * Custom validate callback for data query action.
- */
-function rules_action_entity_query_validate($element) {
-  if (!isset($element->settings['type'])) {
-    throw new RulesException('Invalid type specified.', array(), array($element, 'parameter', 'type'));
-  }
-  if (!isset($element->settings['property'])) {
-    throw new RulesException('Invalid property specified.', array(), array($element, 'parameter', 'property'));
-  }
-}
-
-/**
  * Custom access callback for the data query action.
  */
 function rules_action_entity_query_access(RulesAbstractPlugin $element) {
@@ -242,13 +238,13 @@ function rules_action_entity_query_property_options_list(RulesAbstractPlugin $el
 }
 
 /**
- * Returns the options list specified for the choosen property.
+ * Returns the options list specified for the chosen property.
  */
 function rules_action_entity_query_value_options_list(RulesAbstractPlugin $element) {
   // Get the possible values for the selected property.
   $element->settings += array('type' => NULL, 'property' => NULL);
   if ($element->settings['type'] && $element->settings['property']) {
-    $wrapper = entity_metadata_wrapper($element->settings['type']);
+    $wrapper = rules_get_entity_metadata_wrapper_all_properties($element);
 
     if (isset($wrapper->{$element->settings['property']}) && $property = $wrapper->{$element->settings['property']}) {
       return $property->optionsList('view');
@@ -273,16 +269,37 @@ function rules_entity_action_type_options($element, $name = NULL) {
 
 /**
  * Returns options containing entity types having the given key set in the info.
+ *
+ * Additionally, we exclude all entity types that are marked as configuration.
  */
 function rules_entity_type_options($key = NULL) {
   $info = entity_get_info();
   $types = array();
   foreach ($info as $type => $entity_info) {
-    if (!isset($key) || entity_type_supports($type, $key)) {
-      $types[$type] = $entity_info['label'];
+    if (empty($entity_info['configuration']) && empty($entity_info['exportable'])) {
+      if (!isset($key) || entity_type_supports($type, $key)) {
+        $types[$type] = $entity_info['label'];
+      }
     }
   }
   return $types;
+}
+
+/**
+ * Options list callback for getting a list of possible entity bundles.
+ *
+ * @param $element
+ *   The element to return options for.
+ */
+function rules_entity_bundle_options(RulesAbstractPlugin $element) {
+  $bundles = array();
+  if (isset($element->settings['type'])) {
+    $entity_info = entity_get_info($element->settings['type']);
+    foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
+      $bundles[$bundle_name] = $bundle_info['label'];
+    }
+  }
+  return $bundles;
 }
 
 /**
@@ -309,6 +326,7 @@ function rules_entity_action_access($type, $name) {
 
 /**
  * Implements hook_rules_condition_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_condition_info() {
@@ -365,6 +383,69 @@ function rules_entity_condition_info() {
       'group' => t('Entities'),
       'base' => 'rules_condition_entity_is_of_type',
     ),
+    'entity_is_of_bundle' => array(
+      'label' => t('Entity is of bundle'),
+      'parameter' => array(
+        'entity' => array(
+          'type' => 'entity',
+          'label' => t('Entity'),
+          'description' => t('Specifies the entity for which to evaluate the condition.'),
+        ),
+        'type' => array(
+          'type' => 'token',
+          'label' => t('Entity type'),
+          'description' => t('The type of the checked entity.'),
+          'options list' => 'rules_entity_action_type_options',
+          'restriction' => 'input',
+        ),
+        'bundle' => array(
+          'type' => 'list<text>',
+          'label' => t('Entity bundle'),
+          'description' => t('The condition is met if the entity is of one of the selected bundles.'),
+          'options list' => 'rules_entity_bundle_options',
+          'restriction' => 'input',
+        ),
+      ),
+      'group' => t('Entities'),
+      'base' => 'rules_condition_entity_is_of_bundle',
+    ),
+    'entity_field_access' => array(
+      'label' => t('User has field access'),
+      'parameter' => array(
+        'entity' => array(
+          'type' => 'entity',
+          'label' => t('Entity'),
+          'description' => t('Specifies the entity for which to evaluate the condition.'),
+          'restriction' => 'selector',
+          'wrapped' => TRUE,
+        ),
+        'field' => array(
+          'type' => 'token',
+          'label' => t('Field name'),
+          'description' => t('The name of the field to check for.'),
+          'options list' => 'rules_condition_entity_has_field_options',
+          'restriction' => 'input',
+        ),
+        'op' => array(
+          'type' => 'text',
+          'label' => t('Access operation'),
+          'options list' => 'rules_condition_entity_field_access_op_options',
+          'restriction' => 'input',
+          'optional' => TRUE,
+          'default value' => 'view',
+        ),
+        'account' => array(
+          'type' => 'user',
+          'label' => t('User account'),
+          'description' => t('Specifies the user account for which to check access. If left empty, the currently logged in user will be used.'),
+          'restriction' => 'selector',
+          'optional' => TRUE,
+          'default value' => NULL,
+        ),
+      ),
+      'group' => t('Entities'),
+      'base' => 'rules_condition_entity_field_access',
+    ),
   );
 }
 
@@ -379,11 +460,27 @@ function rules_condition_entity_is_new_help() {
  * Returns options for choosing a field for the selected entity.
  */
 function rules_condition_entity_has_field_options(RulesAbstractPlugin $element) {
-  $options = array();
-  foreach (field_info_fields() as $field_name => $field) {
-    $options[$field_name] = $field_name;
+  // The field_info_field_map() function was introduced in Drupal 7.22. See
+  // https://www.drupal.org/node/1915646.
+  if (function_exists('field_info_field_map')) {
+    $fields = field_info_field_map();
   }
-  return $options;
+  else {
+    $fields = field_info_fields();
+  }
+  $field_list = drupal_map_assoc(array_keys($fields));
+  ksort($field_list);
+  return $field_list;
+}
+
+/**
+ * Returns options for choosing a field_access() operation.
+ */
+function rules_condition_entity_field_access_op_options(RulesAbstractPlugin $element) {
+  return array(
+    'view' => t('View'),
+    'edit' => t('Edit'),
+  );
 }
 
 /**
@@ -414,19 +511,81 @@ function rules_condition_entity_is_of_type_assertions($element) {
 }
 
 /**
- * Gets all view modes of an entity for an entity_view event.
+ * Assert the selected entity type and bundle.
  */
-function rules_get_entity_view_modes($type, $name) {
-  if ($type == 'event') {
-    $entity_type = substr($name, 0, -5);
-    $info = entity_get_info($entity_type);
-    foreach ($info['view modes'] as $mode => $mode_info) {
-      $modes[$mode] = $mode_info['label'];
-    }
-    return $modes;
+function rules_condition_entity_is_of_bundle_assertions($element) {
+  if ($bundle = $element->settings['bundle']) {
+    $assertions = array();
+    $assertions['entity']['type'] = $element->settings['type'];
+    $assertions['entity']['bundle'] = $bundle;
+    return $assertions;
   }
 }
 
 /**
- * @}
+ * Process callback for the condition entity_is_of_bundle.
+ */
+function rules_condition_entity_is_of_bundle_process(RulesAbstractPlugin $element) {
+  // If we know the entity type, auto-populate it.
+  if (($info = $element->getArgumentInfo('entity')) && $info['type'] != 'entity') {
+    $element->settings['type'] = $info['type'];
+  }
+}
+
+/**
+ * Form alter callback for the condition entity_is_of_bundle.
+ *
+ * Use multiple steps to configure the condition as the needed bundle field list
+ * depends on the selected entity type.
+ */
+function rules_condition_entity_is_of_bundle_form_alter(&$form, &$form_state, $options, RulesAbstractPlugin $element) {
+  if (empty($element->settings['entity:select'])) {
+    $step = 1;
+  }
+  elseif (empty($element->settings['type'])) {
+    $step = 2;
+  }
+  else {
+    $step = 3;
+  }
+
+  $form['reload'] = array(
+    '#weight' => $form['submit']['#weight'] + 1,
+    '#type' => 'submit',
+    '#name' => 'reload',
+    '#value' => $step != 3 ? t('Continue') : t('Reload form'),
+    '#limit_validation_errors' => array(array('parameter', 'entity'), array('parameter', 'type')),
+    '#submit' => array('rules_form_submit_rebuild'),
+    '#ajax' => rules_ui_form_default_ajax('fade'),
+    '#attributes' => array('class' => array('rules-hide-js')),
+  );
+  // Use ajax and trigger as the reload button.
+  $form['parameter']['type']['settings']['type']['#ajax'] = $form['reload']['#ajax'] + array(
+    'event' => 'change',
+    'trigger_as' => array('name' => 'reload'),
+  );
+
+  switch ($step) {
+    case 1:
+      $form['reload']['#limit_validation_errors'] = array(array('parameter', 'entity'));
+      unset($form['parameter']['type']);
+      unset($form['reload']['#attributes']['class']);
+      // NO break.
+    case 2:
+      $form['negate']['#access'] = FALSE;
+      unset($form['parameter']['bundle']);
+      unset($form['submit']);
+      break;
+
+    case 3:
+      if (($info = $element->getArgumentInfo('entity')) && $info['type'] != 'entity') {
+        // Hide the entity type parameter if not needed.
+        unset($form['parameter']['type']);
+      }
+      break;
+  }
+}
+
+/**
+ * @} End of "addtogroup rules"
  */

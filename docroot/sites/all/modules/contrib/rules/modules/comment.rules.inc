@@ -1,20 +1,23 @@
 <?php
 
 /**
- * @file rules integration for the comment module
+ * @file
+ * Rules integration for the comment module.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
 /**
- * Implementation of hook_rules_event_info().
+ * Implements hook_rules_event_info().
  */
 function rules_comment_event_info() {
   $defaults = array(
     'group' => t('comment'),
     'module' => 'comment',
     'access callback' => 'rules_comment_integration_access',
+    'class' => 'RulesCommentEventHandler',
   );
   return array(
     'comment_insert' => $defaults + array(
@@ -26,15 +29,30 @@ function rules_comment_event_info() {
     'comment_update' => $defaults + array(
       'label' => t('After updating an existing comment'),
       'variables' => array(
-        'comment' => array('type' => 'comment', 'label' => t('updated comment')),
-        'comment_unchanged' => array('type' => 'comment', 'label' => t('unchanged comment'), 'handler' => 'rules_events_entity_unchanged'),
+        'comment' => array(
+          'type' => 'comment',
+          'label' => t('updated comment'),
+        ),
+        'comment_unchanged' => array(
+          'type' => 'comment',
+          'label' => t('unchanged comment'),
+          'handler' => 'rules_events_entity_unchanged',
+        ),
       ),
     ),
     'comment_presave' => $defaults + array(
       'label' => t('Before saving a comment'),
       'variables' => array(
-        'comment' => array('type' => 'comment', 'label' => t('saved comment'), 'skip save' => TRUE),
-        'comment_unchanged' => array('type' => 'comment', 'label' => t('unchanged comment'), 'handler' => 'rules_events_entity_unchanged'),
+        'comment' => array(
+          'type' => 'comment',
+          'label' => t('saved comment'),
+          'skip save' => TRUE,
+        ),
+        'comment_unchanged' => array(
+          'type' => 'comment',
+          'label' => t('unchanged comment'),
+          'handler' => 'rules_events_entity_unchanged',
+        ),
       ),
     ),
     'comment_view' => $defaults + array(
@@ -63,5 +81,22 @@ function rules_comment_integration_access($type, $name) {
 }
 
 /**
- * @}
+ * Event handler support comment bundle event settings.
+ */
+class RulesCommentEventHandler extends RulesEventHandlerEntityBundle {
+
+  /**
+   * Returns the label to use for the bundle property.
+   *
+   * @return string
+   *   Returns the label to use for the bundle property.
+   */
+  protected function getBundlePropertyLabel() {
+    return t('type');
+  }
+
+}
+
+/**
+ * @} End of "addtogroup rules"
  */

@@ -109,7 +109,8 @@ class L10nUpdateCronTest extends L10nUpdateTestBase {
     sleep(1);
     // Test: Execute cron and check if tasks are executed correctly.
     // Run cron to process the tasks in the queue.
-    $this->drupalGet('admin/reports/status/run-cron');
+    $this->drupalGet('admin/reports/status');
+    $this->clickLink(t('run cron manually'));
 
     drupal_static_reset('l10n_update_get_file_history');
     $history = l10n_update_get_file_history();

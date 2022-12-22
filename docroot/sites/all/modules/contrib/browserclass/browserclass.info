@@ -1,10 +1,11 @@
-name = Browser class
-description = Add browser class to body element
+name = Browser Class
+description = Adds a browser class to the body tag.
 core = 7.x
 configure = admin/config/user-interface/browserclass
-; Information added by Drupal.org packaging script on 2013-12-07
-version = "7.x-1.7"
+php = 5.4
+
+; Information added by Drupal.org packaging script on 2020-06-11
+version = "7.x-1.9"
 core = "7.x"
 project = "browserclass"
-datestamp = "1386426509"
-
+datestamp = "1591912676"

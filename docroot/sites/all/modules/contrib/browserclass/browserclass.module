@@ -1,10 +1,8 @@
 <?php
+
 /**
  * @file
- *
- *
- *
- * @author Kálmán Hosszu - http://drupal.org/user/267481
+ * Provides Browser Class settings form, permission, and browser detection.
  */
 
 define('BROWSERCLASS_OPERATION_WITHOUT_JS', 0);
@@ -24,84 +22,81 @@ define('BROWSERCLASS_ALL',
   BROWSERCLASS_OTHER_CLASSES
 );
 
-
 /**
- * Implementation of hook_menu().
- *
- * @return An array of menu items.
+ * Implements hook_menu().
  */
 function browserclass_menu() {
-  $items = array();
+  $items = [];
 
-  $items['admin/config/user-interface/browserclass'] = array(
-    'title' => 'Browser class',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('browserclass_settings_form'),
-    'access arguments' => array('administer browser class'),
-  );
+  $items['admin/config/user-interface/browserclass'] = [
+    'title'            => 'Browser class',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => ['browserclass_settings_form'],
+    'access arguments' => ['administer browser class'],
+  ];
 
   return $items;
 }
 
 /**
- * Implementation of hook_permission().
- *
- * @return array An array of valid permissions for the browserclass module
+ * Implements hook_permission().
  */
 function browserclass_permission() {
-  return array(
-    'administer browser class' => array(
-      'title' => 'Administer browser class',
-      'description' => 'Configure Browser class module, set JavaScript operation.',
+  return [
+    'administer browser class' => [
+      'title'           => 'Administer browser class',
+      'description'     => 'Configure Browser class module, set JavaScript operation.',
       'restrict access' => TRUE,
-    ),
-  );
+    ],
+  ];
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_page_build().
  */
-function browserclass_init() {
-  if (((variable_get('browserclass_operation', BROWSERCLASS_OPERATION_WITHOUT_JS) == BROWSERCLASS_OPERATION_WITH_JS)
-    || variable_get('cache', 0) != 0) && ($browser_classes = browserclass_get_classes())) {
+function browserclass_page_build(&$page) {
 
-    drupal_add_js(drupal_get_path('module', 'browserclass') . '/browserclass.js', array('scope' => 'footer'));
+  if (((variable_get('browserclass_operation', BROWSERCLASS_OPERATION_WITHOUT_JS) == BROWSERCLASS_OPERATION_WITH_JS)
+      || variable_get('cache', 0) != 0) && (browserclass_get_classes())) {
+
+    $page['page_bottom']['#attached']['js'] = [
+      drupal_get_path('module', 'browserclass') . '/js/browserclass.js' => [
+        'type'  => 'file',
+        'scope' => 'footer',
+      ],
+    ];
   }
 }
 
 /**
- * Implementation of hook_preprocess_html().
- *
- * @param array $vars
+ * Implements hook_preprocess_HOOK().
  */
-function browserclass_preprocess_html(&$vars) {
+function browserclass_preprocess_html(&$variables) {
+
   if ((variable_get('browserclass_operation', BROWSERCLASS_OPERATION_WITHOUT_JS) == BROWSERCLASS_OPERATION_WITHOUT_JS) &&
     (variable_get('cache', 0) == 0) && ($browser_classes = browserclass_get_classes())) {
 
-    $vars['classes_array'] = array_merge($vars['classes_array'], $browser_classes);
-    $vars['browser_classes'] = $browser_classes;
-
+    $variables['classes_array'] = array_merge($variables['classes_array'], $browser_classes);
+    $variables['browser_classes'] = $browser_classes;
   }
 }
 
 /**
- * Build browserclass_settings_form form.
- *
- * @param array $form_state
- * @return array The created form.
+ * Provide Browser Class settings form.
  */
-function browserclass_settings_form($form_state) {
-  $form = array();
+function browserclass_settings_form() {
 
-  $form['browserclass_operation'] = array(
-    '#type' => 'radios',
-    '#title' => t('Operation'),
-    '#options' => array(
-      BROWSERCLASS_OPERATION_WITH_JS => t('Always add the class with JavaScript'),
+  $form = [];
+
+  $form['browserclass_operation'] = [
+    '#type'          => 'radios',
+    '#title'         => t('Operation'),
+    '#options'       => [
+      BROWSERCLASS_OPERATION_WITH_JS    => t('Always add the class with JavaScript'),
       BROWSERCLASS_OPERATION_WITHOUT_JS => t('Only use JavaScript if page cache is enabled'),
-    ),
+    ],
     '#default_value' => variable_get('browserclass_operation', BROWSERCLASS_OPERATION_WITHOUT_JS),
-  );
+  ];
 
   return system_settings_form($form);
 }
@@ -109,10 +104,11 @@ function browserclass_settings_form($form_state) {
 /**
  * Get classes.
  *
- * @return array of classes
+ * @return array
+ *   An array of browser classes.
  */
 function browserclass_get_classes($types = BROWSERCLASS_ALL) {
-  $classes = array();
+  $classes = [];
 
   // User agent doesn't set always, for example on rss readers.
   if (isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -127,7 +123,7 @@ function browserclass_get_classes($types = BROWSERCLASS_ALL) {
     }
 
     if ($types & BROWSERCLASS_OTHER_CLASSES) {
-      // Merge other modules classes
+      // Merge other modules classes.
       $classes = array_merge($classes, module_invoke_all('browserclass_classes', $agent));
     }
 
@@ -142,15 +138,18 @@ function browserclass_get_classes($types = BROWSERCLASS_ALL) {
 /**
  * Detect browser.
  *
- * @param string $agent Lowercase version of user agent.
- * @return array of detected platforms
+ * @param string $agent
+ *   Lowercase version of user agent.
+ *
+ * @return array
+ *   An array of detected platforms.
  */
 function browserclass_check_browser($agent) {
-  $classes = array();
+  $classes = [];
 
-  // Add ie extra class with the version number
+  // Add IE extra class with the version number.
   $ie_pattern = '/(?:\b(ms)?ie\s+|\btrident\/7\.0;.*\s+rv:)(\d+)/';
-  $ie_matches = array();
+  $ie_matches = [];
   $ie_m = preg_match($ie_pattern, $agent, $ie_matches);
 
   if ($ie_m === 1) {
@@ -164,7 +163,7 @@ function browserclass_check_browser($agent) {
   if (stristr($agent, 'opera') !== FALSE) {
     $classes[] = 'opera';
     $aresult = explode('/', stristr($agent, 'version'));
-    if(isset($aresult[1])) {
+    if (isset($aresult[1])) {
       $aversion = explode(' ', $aresult[1]);
       $classes[] = 'opera' . _browserclass_clear_version($aversion[0]);
     }
@@ -191,7 +190,7 @@ function browserclass_check_browser($agent) {
     $classes[] = 'safari';
 
     $aresult = explode('/', stristr($agent, 'version'));
-    if(isset($aresult[1])) {
+    if (isset($aresult[1])) {
       $aversion = explode(' ', $aresult[1]);
       $classes[] = 'safari' . _browserclass_clear_version($aversion[0]);
     }
@@ -210,7 +209,7 @@ function browserclass_check_browser($agent) {
   if (stristr($agent, 'firefox') !== FALSE) {
     $classes[] = 'ff';
 
-    if(preg_match("/firefox[\/ \(]([^ ;\)]+)/", $agent, $matches)) {
+    if (preg_match("/firefox[\/ \(]([^ ;\)]+)/", $agent, $matches)) {
       $classes[] = 'ff' . _browserclass_clear_version($matches[1]);
     }
   }
@@ -258,7 +257,7 @@ function browserclass_check_browser($agent) {
     $classes[] = 'operamini';
 
     $resultant = stristr($agent, 'opera mini');
-    if(preg_match('/\//', $resultant)) {
+    if (preg_match('/\//', $resultant)) {
       $aresult = explode('/', $resultant);
       $aversion = explode(' ', $aresult[1]);
       $classes[] = 'operamini' . _browserclass_clear_version($aversion[0]);
@@ -275,11 +274,14 @@ function browserclass_check_browser($agent) {
 /**
  * Detect platform.
  *
- * @param string $agent Lowercase version of user agent.
- * @return array of detected platforms
+ * @param string $agent
+ *   Lowercase version of user agent.
+ *
+ * @return array
+ *   An array of detected platforms.
  */
 function browserclass_check_platform($agent) {
-  $classes = array();
+  $classes = [];
 
   if (stristr($agent, 'windows') !== FALSE) {
     $classes[] = 'win';
@@ -321,8 +323,21 @@ function browserclass_check_platform($agent) {
   return $classes;
 }
 
+/**
+ * Check if device is a mobile device.
+ *
+ * @return bool
+ *   TRUE if mobile device, FALSE otherwise.
+ */
 function browserclass_is_mobile_devide($agent, $classes) {
-  $mobile_devices = array('ipad', 'ipod', 'iphone', 'android', 'blackberry', 'operamini');
+  $mobile_devices = [
+    'ipad',
+    'ipod',
+    'iphone',
+    'android',
+    'blackberry',
+    'operamini',
+  ];
 
   foreach ($mobile_devices as $mobile) {
     if (in_array($mobile, $classes)) {
@@ -330,7 +345,7 @@ function browserclass_is_mobile_devide($agent, $classes) {
     }
   }
 
-  if (isset($_SERVER['HTTP_X_WAP_PROFILE'])||isset($_SERVER['HTTP_PROFILE'])) {
+  if (isset($_SERVER['HTTP_X_WAP_PROFILE']) || isset($_SERVER['HTTP_PROFILE'])) {
     return TRUE;
   }
 
@@ -342,12 +357,15 @@ function browserclass_is_mobile_devide($agent, $classes) {
 }
 
 /**
- * Remove not supported characters from version.
+ * Remove unsupported characters from version.
  *
  * @param string $version
+ *   A version string.
+ *
  * @return string
+ *   Sanitized version string.
  */
 function _browserclass_clear_version($version) {
-  $version = preg_replace('/[^0-9,.,a-z,A-Z-]/','',$version);
+  $version = preg_replace('/[^0-9,.,a-z,A-Z-]/', '', $version);
   return substr($version, 0, strpos($version, '.'));
 }

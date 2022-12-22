@@ -1,9 +1,21 @@
 <?php
 
 /**
- * @file Includes any rules integration provided by the module.
+ * @file
+ * Includes any rules integration provided by the module.
  */
 
+/**
+ * Implements hook_rules_event_info().
+ */
+function rules_test_rules_event_info() {
+  return array(
+    'rules_test_event' => array(
+      'label' => t('Test event'),
+      'class' => 'RulesTestEventHandler',
+    ),
+  );
+}
 
 /**
  * Implements hook_rules_file_info().
@@ -34,17 +46,84 @@ function rules_test_rules_condition_info() {
   $items['rules_condition_content_is_published'] = $defaults + array(
     'label' => t('Content is published'),
   );
+  $items['rules_test_condition_true'] = array(
+    'label' => t('Test condition returning true'),
+    'group' => t('Rules test'),
+  );
+  $items['rules_test_condition_false'] = array(
+    'label' => t('Test condition returning false'),
+    'group' => t('Rules test'),
+  );
+  $items['rules_test_condition_apostrophe'] = array(
+    'label' => t("Test use of an apostrophe (') in a condition label"),
+    'group' => t('Rules test'),
+  );
+  // A condition for testing passing entities wrapped.
+  $items['rules_test_condition_node_wrapped'] = array(
+    'label' => t('Content is published'),
+    'parameter' => array(
+      'node' => array(
+        'type' => 'node',
+        'label' => t('Content'),
+        'wrapped' => TRUE,
+      ),
+    ),
+    'group' => t('Node'),
+  );
   return $items;
 }
 
+/**
+ * Condition implementation returning true.
+ */
+function rules_test_condition_true($settings, $state, $element) {
+  if (!$element instanceof RulesCondition) {
+    throw new Exception('Rules element has not been passed to condition.');
+  }
+  rules_log('condition true called');
+  return TRUE;
+}
+
+/**
+ * Condition implementation returning false.
+ */
+function rules_test_condition_false() {
+  rules_log('condition false called');
+  return FALSE;
+}
+
+/**
+ * Condition testing use of an apostrophe in a condition label.
+ *
+ * Specifically, we want to ensure that special characters do not show up as
+ * HTML-encoded in the user interface.
+ */
+function rules_test_condition_apostrophe($settings, $state, $element) {
+  if (!$element instanceof RulesCondition) {
+    throw new Exception('Rules element has not been passed to condition.');
+  }
+  rules_log('condition apostrophe called');
+  return TRUE;
+}
+
+/**
+ * Condition implementation receiving the node wrapped.
+ */
+function rules_test_condition_node_wrapped($wrapper) {
+  return $wrapper instanceof EntityMetadataWrapper;
+}
 
 /**
  * Implements hook_rules_action_info().
  */
 function rules_test_rules_action_info() {
-  return array(
+  $items['rules_test_action'] = array(
+    'label' => t('Test action'),
+    'group' => t('Rules test'),
+  );
+  return $items + array(
     'rules_node_publish_action' => array(
-      'label' => t('Blabla'),
+      'label' => t('Publish content, but do not save'),
       'parameter' => array(
         'node' => array('type' => 'node', 'label' => t('Content')),
       ),
@@ -54,7 +133,7 @@ function rules_test_rules_action_info() {
       'base' => 'node_publish_action',
     ),
     'rules_node_publish_action_save' => array(
-      'label' => t('Blabla'),
+      'label' => t('Publish content'),
       'parameter' => array(
         'node' => array(
           'type' => 'node',
@@ -65,7 +144,7 @@ function rules_test_rules_action_info() {
       'base' => 'node_publish_action',
     ),
     'rules_node_make_sticky_action' => array(
-      'label' => t('Blabla'),
+      'label' => t('Make content sticky'),
       'parameter' => array(
         'node' => array(
           'type' => 'node',
@@ -75,8 +154,21 @@ function rules_test_rules_action_info() {
       ),
       'base' => 'node_make_sticky_action',
     ),
+    // The same action again requiring a 'page' node.
+    'rules_node_page_make_sticky_action' => array(
+      'label' => t('Mage page content sticky'),
+      'parameter' => array(
+        'node' => array(
+          'type' => 'node',
+          'label' => t('Content'),
+          'save' => TRUE,
+          'bundles' => array('page'),
+        ),
+      ),
+      'base' => 'node_make_sticky_action',
+    ),
     'rules_action_test_reference' => array(
-      'label' => t('Blabla'),
+      'label' => t('Change argument passed by reference'),
       'parameter' => array(
          // For references working right, we need a data type with a wrapper.
         'arg' => array('type' => 'test'),
@@ -103,7 +195,6 @@ function rules_test_rules_action_info() {
       'group' => t('Node'),
       'access callback' => 'rules_node_integration_access',
     ),
-    // TODO: Replace by a generic delete data action.
     'rules_action_delete_node' => array(
       'label' => t('Delete content'),
       'parameter' => array(
@@ -128,11 +219,53 @@ function rules_test_rules_action_info() {
       'base' => 'rules_test_type_save',
       'label' => t('Save test type'),
       'parameter' => array(
-        'node' => array('type' => 'rules_test_type', 'label' => t('Test content'), 'save' => TRUE),
+        'node' => array(
+          'type' => 'rules_test_type',
+          'label' => t('Test content'),
+          'save' => TRUE,
+        ),
       ),
       'group' => t('Node'),
     ),
   );
+}
+
+/**
+ * Test action doing nothing exception logging it has been called.
+ */
+function rules_test_action() {
+  rules_log('action called');
+}
+
+/**
+ * Action for testing writing class-based actions.
+ */
+class RulesTestClassAction extends RulesActionHandlerBase {
+
+  /**
+   * Defines the action.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'rules_test_class_action',
+      'label' => t('Test class based action'),
+      'group' => t('Node'),
+      'parameter' => array(
+        'node' => array(
+          'type' => 'node',
+          'label' => t('Node'),
+        ),
+      ),
+    );
+  }
+
+  /**
+   * Executes the action.
+   */
+  public function execute($node) {
+    rules_log('Action called with node ' . $node->nid);
+  }
+
 }
 
 /**
@@ -162,15 +295,88 @@ function rules_test_rules_data_info_alter(&$data_info) {
  */
 class RulesTestTypeWrapper extends RulesIdentifiableDataWrapper implements RulesDataWrapperSavableInterface {
 
+  /**
+   * Overrides RulesIdentifiableDataWrapper::extractIdentifier().
+   */
   protected function extractIdentifier($data) {
     return $data->nid;
   }
 
+  /**
+   * Overrides RulesIdentifiableDataWrapper::load().
+   */
   protected function load($id) {
     return node_load($id);
   }
 
+  /**
+   * Implements RulesDataWrapperSavableInterface::save().
+   */
   public function save() {
     node_save($this->value());
   }
+
+}
+
+/**
+ * Implements hook_rules_plugin_info().
+ */
+function rules_test_rules_plugin_info() {
+  return array(
+    'rules test container' => array(
+      'label' => t('Test container'),
+      'class' => 'RulesTestContainer',
+      'embeddable' => 'RulesActionContainer',
+    ),
+  );
+}
+
+/**
+ * Test container plugin.
+ */
+class RulesTestContainer extends RulesContainerPlugin {
+  protected $itemName = 'rules test container';
+
+  /**
+   * Evaluate the element on a given rules evaluation state.
+   */
+  public function evaluate(RulesState $state) {
+    // Do nothing.
+  }
+
+}
+
+/**
+ * Test event handler class.
+ */
+class RulesTestEventHandler extends RulesEventDefaultHandler implements RulesEventDispatcherInterface {
+
+  /**
+   * Name of the variable in which to store the state of the event handler.
+   *
+   * @var string
+   */
+  protected $variableName = 'rules_test_event_handler_watch';
+
+  /**
+   * Implements RulesEventDispatcherInterface::startWatching().
+   */
+  public function startWatching() {
+    variable_set($this->variableName, TRUE);
+  }
+
+  /**
+   * Implements RulesEventDispatcherInterface::stopWatching().
+   */
+  public function stopWatching() {
+    variable_set($this->variableName, FALSE);
+  }
+
+  /**
+   * Implements RulesEventDispatcherInterface::isWatching().
+   */
+  public function isWatching() {
+    return (bool) variable_get($this->variableName);
+  }
+
 }

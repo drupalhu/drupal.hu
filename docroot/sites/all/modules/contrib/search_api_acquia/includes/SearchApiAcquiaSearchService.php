@@ -188,7 +188,6 @@ class SearchApiAcquiaSearchService extends SearchApiSolrService {
       '#default_value' => $options['acquia_search_api_version'],
       '#description' => t('Only change this if you are absolutely certain about what you are doing. Any misconfigurations will most likely break your site\'s connection to Acquia Search.'),
       '#weight' => -10,
-      '#disabled' => variable_get('acquia_search_disable_version_select', TRUE  ),
     );
 
     $form['clean_ids_form']['#weight'] = 10;
@@ -206,6 +205,7 @@ class SearchApiAcquiaSearchService extends SearchApiSolrService {
     );
     $form['host']['#states'] = $states;
     $form['path']['#states'] = $states;
+    $form['port']['#states'] = $states;
 
     // We cannot connect directly to the Solr instance, so don't make it a link.
     if (isset($form['server_description'])) {
@@ -236,7 +236,7 @@ class SearchApiAcquiaSearchService extends SearchApiSolrService {
       $this->setConnectionOptions();
 
       form_set_value($form['host'], $this->options['host'], $form_state);
-      form_set_value($form['port'], $this->options['port'], $form_state);
+      form_set_value($form['port'], isset($this->options['port']) ? $this->options['port'] : 443, $form_state);
       form_set_value($form['path'], $this->options['path'], $form_state);
 
     }

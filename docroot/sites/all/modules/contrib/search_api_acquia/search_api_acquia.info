@@ -1,10 +1,12 @@
 name = Acquia Search for Search API
 description = "Provides integration between your Drupal site and Acquia's hosted search service via the Search API Solr module."
-package = Acquia Network Connector
+package = Acquia Connector
 core = 7.x
 
-dependencies[] = acquia_agent
+dependencies[] = acquia_connector:acquia_agent
 dependencies[] = search_api_solr
+
+test_dependencies[] = acquia_connector:acquia_agent
 
 files[] = includes/SearchApiAcquiaSearchHttpTransport.php
 files[] = includes/SearchApiAcquiaSearchService.php
@@ -14,8 +16,8 @@ files[] = includes/v3/SearchApiAcquiaApi.php
 files[] = includes/v3/SearchApiAcquiaPreferredCore.php
 files[] = includes/v3/SearchApiAcquiaCrypt.php
 files[] = tests/search_api_acquia.test
-; Information added by Drupal.org packaging script on 2021-03-16
-version = "7.x-2.6"
+; Information added by Drupal.org packaging script on 2022-01-14
+version = "7.x-2.8"
 core = "7.x"
 project = "search_api_acquia"
-datestamp = "1615927650"
+datestamp = "1642186320"
