@@ -1,0 +1,103 @@
+# https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
+defaults: &defaults
+  working_directory: ~/drush
+  environment:
+    TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+    TERM: dumb
+    PHPUNIT_ARGS: ""
+
+version: 2.1
+
+executors:
+  linux81:
+    docker:
+      - image: wodby/php:8.1
+        environment:
+          - MYSQL_HOST=127.0.0.1
+          - UNISH_DB_URL=mysql://root:@127.0.0.1
+      - image: circleci/mysql:5.7.31
+  linux80:
+    docker:
+      - image: wodby/php:8.0
+        environment:
+          - MYSQL_HOST=127.0.0.1
+          - UNISH_DB_URL=mysql://root:@127.0.0.1
+      - image: circleci/mysql:5.7.31
+  linux74:
+    docker:
+      - image: wodby/php:7.4
+        environment:
+          - MYSQL_HOST=127.0.0.1
+          - UNISH_DB_URL=mysql://root:@127.0.0.1
+      - image: circleci/mysql:5.7.31
+  linux56:
+    docker:
+      - image: wodby/php:5.6
+        environment:
+          - MYSQL_HOST=127.0.0.1
+          - UNISH_DB_URL=mysql://root:@127.0.0.1
+      - image: circleci/mysql:5.6.50
+
+commands:
+  prepare_php:
+    description: Installs the extensions we need and configures PHP to run Drush tests
+    steps:
+      - run: cp .docker/zz-php.ini /usr/local/etc/php/conf.d/
+      - run: php --version
+
+jobs:
+  lint:
+    <<: *defaults
+    docker:
+      - image: circleci/php:7.1-apache-node
+    steps:
+      - checkout
+      - run: composer install --prefer-dist --no-interaction
+      - run: composer lint
+
+  test:
+    parameters:
+      os:
+        type: executor
+      drupal:
+        type: string
+    executor: << parameters.os >>
+    environment:
+      UNISH_NO_TIMEOUTS: y
+      UNISH_DB_URL: mysql://root:@127.0.0.1
+      UNISH_DRUPAL_VERSION: << parameters.drupal >>
+    steps:
+      - checkout
+      - prepare_php
+      - run: composer install --prefer-dist --no-interaction
+      - run: if [[ -n "$(php --version | grep 'PHP 8')" ]] ; then composer config --unset platform.php && composer remove --dev --no-update symfony/var-dumper && composer update symfony/var-dumper phpunit/phpunit --with-dependencies ; fi
+      - run: vendor/bin/phpunit --configuration tests
+
+workflows:
+  build_test:
+    jobs:
+      - lint
+      - test:
+          name: test-drupal-9.3-php-8.1
+          drupal: "9.3.0"
+          os: linux81
+      - test:
+          name: test-drupal-9.3-php-8.0
+          drupal: "9.3.0"
+          os: linux80
+      - test:
+          name: test-drupal-9.3-php-7.4
+          drupal: "9.3.0"
+          os: linux74
+      - test:
+          name: test-drupal-9.1-php-7.4
+          drupal: "9.1.15"
+          os: linux74
+      - test:
+          name: test-drupal-7-php-7.4
+          drupal: "7"
+          os: linux74
+      - test:
+          name: test-drupal-7-php-5.6
+          drupal: "7"
+          os: linux56

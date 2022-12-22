@@ -31,7 +31,7 @@ require_once __DIR__ . '/l10n_update.translation.inc';
  * @param array $context
  *   The batch context.
  */
-function l10n_update_batch_status_check($project, $langcode, $options = array(), &$context) {
+function l10n_update_batch_status_check($project, $langcode, $options = array(), &$context = array()) {
   $failure = $checked = FALSE;
   $options += array(
     'finish_feedback' => TRUE,

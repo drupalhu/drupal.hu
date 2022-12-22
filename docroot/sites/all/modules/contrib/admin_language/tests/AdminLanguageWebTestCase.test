@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Administration Language web tests.
+ */
+class AdminLanguageWebTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Administration Language web tests'),
+      'description' => t('Test Administration Language module.'),
+      'group' => t('Internationalization'),
+    );
+  }
+
+  /**
+   * The tests.
+   */
+  public function test() {
+    // Config page exists.
+    $this->drupalGet('admin/config/regional/language/admin_language');
+  }
+
+}

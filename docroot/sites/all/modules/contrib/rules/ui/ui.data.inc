@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @file Contains data type related forms.
+ * @file
+ * Contains data type related forms.
  */
-
 
 /**
  * Interface for data types providing a direct input form.
@@ -13,18 +13,44 @@ interface RulesDataDirectInputFormInterface {
   /**
    * Constructs the direct input form.
    *
-   * @return Array
-   *  The direct input form.
+   * @return array
+   *   The direct input form.
    */
   public static function inputForm($name, $info, $settings, RulesPlugin $element);
 
   /**
    * Render the configured value.
    *
-   * @return Array
+   * @return array
    *   A renderable array.
    */
   public static function render($value);
+
+}
+
+/**
+ * Interface for data UI classes providing an options list.
+ */
+interface RulesDataInputOptionsListInterface extends RulesDataDirectInputFormInterface {
+
+  /**
+   * Returns the options list for the data type.
+   *
+   * For retrieving information about the used data type and parameter, the
+   * helper RulesDataUI::getTypeInfo() may be used as following:
+   * @code
+   *   list($type, $parameter_info) = RulesDataUI::getTypeInfo($element, $name);
+   * @endcode
+   *
+   * @param RulesPlugin $element
+   *   The rules element to get the options for.
+   * @param string $name
+   *   The name of the parameter for which to get options.
+   *
+   * @return array
+   *   An array of options as used by hook_options_list().
+   */
+  public static function optionsList(RulesPlugin $element, $name);
 
 }
 
@@ -65,7 +91,40 @@ class RulesDataUI {
       // Make the autocomplete textfield big enough so that it can display
       // descriptions without word wraps.
       '#size' => 75,
+      '#description' => t("The data selector helps you drill down into the data available to Rules. <em>To make entity fields appear in the data selector, you may have to use the condition 'Entity has field' (or 'Entity is of bundle').</em> More useful tips about data selection are available in <a href='@url'>the online documentation</a>.",
+        array('@url' => rules_external_help('data-selection'))),
     );
+
+    $cache = rules_get_cache();
+    $form['types_help'] = array(
+      '#theme' => 'rules_settings_help',
+      '#heading' => t('Data types'),
+    );
+    if ($info['type'] == '*') {
+      $type_labels[] = t('any');
+    }
+    else {
+      $types = is_array($info['type']) ? $info['type'] : array($info['type']);
+      $type_labels = array();
+      foreach ($types as $type) {
+        $type_labels[] = drupal_ucfirst(isset($cache['data_info'][$type]['label']) ? $cache['data_info'][$type]['label'] : $type);
+      }
+    }
+    $form['types_help']['#text'] = format_plural(count($type_labels), 'Select data of the type %types.', 'Select data of the types %types.', array('%types' => implode(', ', $type_labels)));
+
+    if (!empty($info['translatable'])) {
+      if (empty($info['custom translation language'])) {
+        $text = t('If a multilingual data source (i.e. a translatable field) is given, the argument is translated to the current interface language.');
+      }
+      else {
+        $text = t('If a multilingual data source (i.e. a translatable field) is given, the argument is translated to the configured language.');
+      }
+      $form['translation'] = array(
+        '#theme' => 'rules_settings_help',
+        '#text' => $text,
+        '#heading' => t('Translation'),
+      );
+    }
     $form['help'] = array(
       '#theme' => 'rules_data_selector_help',
       '#variables' => $element->availableVariables(),
@@ -80,12 +139,12 @@ class RulesDataUI {
   }
 
   /**
-   * Renders the value by making use of the label if an options list is available.
+   * Renders the value with a label if an options list is available.
    *
    * Used for data UI classes implementing the
    * RulesDataDirectInputFormInterface.
    *
-   * In case an options list is available, the the usual render() method won't
+   * In case an options list is available, the usual render() method won't
    * be invoked, instead the selected entry is rendered via this method.
    *
    * @todo for Drupal 8: Refactor to avoid implementations have to care about
@@ -94,7 +153,7 @@ class RulesDataUI {
   public static function renderOptionsLabel($value, $name, $info, RulesPlugin $element) {
     if (!empty($info['options list'])) {
       $element->call('loadBasicInclude');
-      $options = entity_property_options_flatten($info['options list']($element, $name));
+      $options = entity_property_options_flatten(call_user_func($info['options list'], $element, $name));
       if (!is_array($value) && isset($options[$value])) {
         $value = $options[$value];
       }
@@ -112,6 +171,18 @@ class RulesDataUI {
       );
     }
   }
+
+  /**
+   * Returns the data type and parameter information for the given arguments.
+   *
+   * This helper may be used by options list callbacks operation at data-type
+   * level, see RulesDataInputOptionsListInterface.
+   */
+  public static function getTypeInfo(RulesPlugin $element, $name) {
+    $parameters = $element->pluginParameterInfo();
+    return array($parameters[$name]['type'], $parameters[$name]);
+  }
+
 }
 
 /**
@@ -119,10 +190,16 @@ class RulesDataUI {
  */
 class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     if (!empty($info['options list'])) {
       // Make sure the .rules.inc of the providing module is included as the
@@ -130,12 +207,13 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
       $element->call('loadBasicInclude');
       $form[$name] = array(
         '#type' => 'select',
-        '#options' => $info['options list']($element, $name),
+        '#options' => call_user_func($info['options list'], $element, $name),
       );
     }
     else {
       $form[$name] = array(
         '#type' => 'textarea',
+        '#rows' => 3,
       );
       RulesDataInputEvaluator::attachForm($form, $settings, $info, $element->availableVariables());
     }
@@ -145,17 +223,20 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
       '#default_value' => $settings[$name],
       '#required' => empty($info['optional']),
       '#after_build' => array('rules_ui_element_fix_empty_after_build'),
-      '#rows' => 3,
     );
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain($value)),
       '#attributes' => array('class' => array('rules-parameter-text')),
     );
   }
+
 }
 
 /**
@@ -163,13 +244,19 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
  */
 class RulesDataUITextToken extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
-    $form[$name]['#element_validate'][] = 'rules_ui_element_token_validate';
-    $form[$name]['#description'] = t('May only contain lowercase letters, numbers, and underscores and has to start with a letter.');
-    $form[$name]['#rows'] = 1;
+    if ($form[$name]['#type'] == 'textarea') {
+      $form[$name]['#element_validate'][] = 'rules_ui_element_token_validate';
+      $form[$name]['#description'] = t('May only contain lowercase letters, numbers, and underscores and has to start with a letter.');
+      $form[$name]['#rows'] = 1;
+    }
     return $form;
   }
+
 }
 
 /**
@@ -177,6 +264,9 @@ class RulesDataUITextToken extends RulesDataUIText {
  */
 class RulesDataUITextFormatted extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $settings += array($name => isset($info['default value']) ? $info['default value'] : array('value' => NULL, 'format' => NULL));
@@ -188,21 +278,26 @@ class RulesDataUITextFormatted extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain($value['value'])),
       '#attributes' => array('class' => array('rules-parameter-text-formatted')),
     );
   }
+
 }
-
-
 
 /**
  * UI for decimal data.
  */
 class RulesDataUIDecimal extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -212,6 +307,7 @@ class RulesDataUIDecimal extends RulesDataUIText {
     $form[$name]['#rows'] = 1;
     return $form;
   }
+
 }
 
 /**
@@ -219,6 +315,9 @@ class RulesDataUIDecimal extends RulesDataUIText {
  */
 class RulesDataUIInteger extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -227,6 +326,28 @@ class RulesDataUIInteger extends RulesDataUIText {
     $form[$name]['#element_validate'][] = 'rules_ui_element_integer_validate';
     return $form;
   }
+
+}
+
+/**
+ * UI for IP addresses.
+ */
+class RulesDataUIIPAddress extends RulesDataUIText {
+
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
+  public static function inputForm($name, $info, $settings, RulesPlugin $element) {
+    $form = parent::inputForm($name, $info, $settings, $element);
+    if (empty($info['options list'])) {
+      $form[$name]['#type'] = 'textfield';
+      $form[$name]['#description'] = t('If not provided, the IP address of the current user will be used.');
+    }
+    $form[$name]['#element_validate'][] = 'rules_ui_element_ip_address_validate';
+    $form[$name]['#rows'] = 1;
+    return $form;
+  }
+
 }
 
 /**
@@ -234,27 +355,40 @@ class RulesDataUIInteger extends RulesDataUIText {
  */
 class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputFormInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : NULL);
     // Note: Due to the checkbox even optional parameter always receive a value.
     $form[$name] = array(
-      '#type' => 'checkbox',
-      '#title' => check_plain($info['label']),
+      '#type' => 'radios',
       '#default_value' => $settings[$name],
+      '#options' => array(
+        TRUE => t('@label: True.', array('@label' => $info['label'])),
+        FALSE => t('@label: False.', array('@label' => $info['label'])),
+      ),
     );
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => !empty($value) ? t('true') : t('false')),
       '#attributes' => array('class' => array('rules-parameter-boolean')),
     );
   }
+
 }
 
 /**
@@ -262,6 +396,9 @@ class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputForm
  */
 class RulesDataUIDate extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : (empty($info['optional']) ? gmdate('Y-m-d H:i:s', time()) : NULL));
 
@@ -274,13 +411,18 @@ class RulesDataUIDate extends RulesDataUIText {
     $form[$name]['#element_validate'][] = 'rules_ui_element_date_validate';
     // Note that the date input evaluator takes care for parsing dates using
     // strtotime() into a timestamp, which is the internal date format.
-    $form[$name]['#description'] = t('The date in GMT. Format: %format or other values in GMT known by the PHP !strtotime function like "+1 day". Relative dates like "+1 day" or "now" relate to the evaluation time.', array('%format' => gmdate('Y-m-d H:i:s', time() + 86400), '!strtotime' => l('strtotime()', 'http://php.net/strtotime')));
+    $form[$name]['#description'] = t('The date in GMT. You may enter a fixed time (like %format) or any other values in GMT known by the PHP !strtotime function (like "+1 day"). Relative dates like "+1 day" or "now" relate to the evaluation time.',
+      array('%format' => gmdate('Y-m-d H:i:s', time() + 86400),
+            '!strtotime' => l('strtotime()', 'http://php.net/strtotime')));
 
-    //TODO: Leverage the jquery datepicker+timepicker once a module providing
-    //the timpeicker is available.
+    // @todo Leverage the jquery datepicker+timepicker once a module providing
+    // The timepicker is available.
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     $value = is_numeric($value) ? format_date($value, 'short') : check_plain($value);
     return array(
@@ -288,6 +430,7 @@ class RulesDataUIDate extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-date')),
     );
   }
+
 }
 
 /**
@@ -295,6 +438,9 @@ class RulesDataUIDate extends RulesDataUIText {
  */
 class RulesDataUIDuration extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $form[$name]['#type'] = 'rules_duration';
@@ -302,6 +448,9 @@ class RulesDataUIDuration extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     $value = is_numeric($value) ? format_interval($value) : check_plain($value);
     return array(
@@ -309,6 +458,7 @@ class RulesDataUIDuration extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-duration')),
     );
   }
+
 }
 
 /**
@@ -316,12 +466,16 @@ class RulesDataUIDuration extends RulesDataUIText {
  */
 class RulesDataUIURI extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $form[$name]['#rows'] = 1;
-    $form[$name]['#description'] = t('You may enter relative URLs like %url as well as absolute URLs like %absolute-url.', array('%url' => 'user/login?destination=node', '%absolute-url' => 'http://drupal.org'));
+    $form[$name]['#description'] = t('You may enter relative URLs like %url as well as absolute URLs like %absolute-url.', array('%url' => 'user/login?destination=node', '%absolute-url' => 'https://www.drupal.org'));
     return $form;
   }
+
 }
 
 /**
@@ -329,11 +483,16 @@ class RulesDataUIURI extends RulesDataUIText {
  */
 class RulesDataUIListText extends RulesDataUIText {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
   /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   *
    * @todo This does not work for inputting textual values including "\n".
    */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
@@ -342,9 +501,10 @@ class RulesDataUIListText extends RulesDataUIText {
 
     if ($form[$name]['#type'] == 'textarea') {
       // Fix up the value to be an array during after build.
+      $form[$name]['#delimiter'] = "\n";
       $form[$name]['#after_build'][] = 'rules_ui_list_textarea_after_build';
       $form[$name]['#pre_render'][] = 'rules_ui_list_textarea_pre_render';
-      $form[$name]['#default_value'] = implode("\n", $settings[$name]);
+      $form[$name]['#default_value'] = !empty($settings[$name]) ? implode("\n", $settings[$name]) : NULL;
       $form[$name]['#description'] = t('A list of values, one on each line.');
     }
     else {
@@ -353,12 +513,16 @@ class RulesDataUIListText extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain(implode(', ', $value))),
       '#attributes' => array('class' => array('rules-parameter-list')),
     );
   }
+
 }
 
 /**
@@ -366,6 +530,9 @@ class RulesDataUIListText extends RulesDataUIText {
  */
 class RulesDataUIListInteger extends RulesDataUIListText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : NULL);
     $form = parent::inputForm($name, $info, $settings, $element);
@@ -373,12 +540,13 @@ class RulesDataUIListInteger extends RulesDataUIListText {
     if ($form[$name]['#type'] == 'textarea') {
       $form[$name]['#description'] = t('A list of integers, separated by commas. E.g. enter "1, 2, 3".');
       $form[$name]['#delimiter'] = ',';
-      $form[$name]['#default_value'] = implode(", ", $settings[$name]);
+      $form[$name]['#default_value'] = !empty($settings[$name]) ? implode(", ", $settings[$name]) : NULL;
       $form[$name]['#element_validate'][] = 'rules_ui_element_integer_list_validate';
       $form[$name]['#rows'] = 1;
     }
     return $form;
   }
+
 }
 
 /**
@@ -386,6 +554,9 @@ class RulesDataUIListInteger extends RulesDataUIListText {
  */
 class RulesDataUIListToken extends RulesDataUIListInteger {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
 
@@ -395,6 +566,7 @@ class RulesDataUIListToken extends RulesDataUIListInteger {
     }
     return $form;
   }
+
 }
 
 /**
@@ -402,10 +574,16 @@ class RulesDataUIListToken extends RulesDataUIListInteger {
  */
 class RulesDataUIEntity extends RulesDataUIText {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
-    return 'select';
+    return 'selector';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -417,10 +595,11 @@ class RulesDataUIEntity extends RulesDataUIText {
       }
       $form[$name]['#title'] = t('@entity identifier', array('@entity' => $entity_info['label']));
       $entity_label = strtolower($entity_info['label'][0]) . substr($entity_info['label'], 1);
-      $form[$name]['#description'] = t('Specify an identfier of a @entity.', array('@entity' => $entity_label));
+      $form[$name]['#description'] = t('Specify an identifier of a @entity.', array('@entity' => $entity_label));
     }
     return $form;
   }
+
 }
 
 /**
@@ -428,9 +607,73 @@ class RulesDataUIEntity extends RulesDataUIText {
  */
 class RulesDataUIEntityExportable extends RulesDataUIEntity {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
+
+}
+
+/**
+ * Data UI variant displaying a select list of available bundle entities.
+ *
+ * This is used for "bundle entities" implemented via the 'bundle of' feature
+ * of entity.module.
+ */
+class RulesDataUIBundleEntity extends RulesDataUIEntity implements RulesDataInputOptionsListInterface {
+
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
+  public static function getDefaultMode() {
+    return 'input';
+  }
+
+  /**
+   * Implements RulesDataInputOptionsListInterface::optionsList().
+   */
+  public static function optionsList(RulesPlugin $element, $name) {
+    list($data_type, $parameter_info) = RulesDataUI::getTypeInfo($element, $name);
+    $bundles = array();
+    $entity_info = entity_get_info();
+    $bundle_of_type = $entity_info[$data_type]['bundle of'];
+    if (isset($entity_info[$bundle_of_type]['bundles'])) {
+      foreach ($entity_info[$bundle_of_type]['bundles'] as $bundle_name => $bundle_info) {
+        $bundles[$bundle_name] = $bundle_info['label'];
+      }
+    }
+    return $bundles;
+  }
+
+}
+
+/**
+ * UI for taxonomy vocabularies.
+ *
+ * @see RulesTaxonomyVocabularyWrapper
+ */
+class RulesDataUITaxonomyVocabulary extends RulesDataUIEntity implements RulesDataInputOptionsListInterface {
+
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
+  public static function getDefaultMode() {
+    return 'input';
+  }
+
+  /**
+   * Implements RulesDataInputOptionsListInterface::optionsList().
+   */
+  public static function optionsList(RulesPlugin $element, $name) {
+    $options = array();
+    foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocab) {
+      $options[$machine_name] = $vocab->name;
+    }
+    return $options;
+  }
+
 }
 
 /**
@@ -438,6 +681,9 @@ class RulesDataUIEntityExportable extends RulesDataUIEntity {
  */
 class RulesDataUIListEntity extends RulesDataUIListInteger {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -448,9 +694,9 @@ class RulesDataUIListEntity extends RulesDataUIListInteger {
       }
       $form[$name]['#title'] = t('@entity identifiers', array('@entity' => $entity_info['label']));
       $entity_label = strtolower($entity_info['label'][0]) . substr($entity_info['label'], 1);
-      $form[$name]['#description'] = t('Specify a comma-separated list of identfiers of @entity entities.', array('@entity' => $entity_label));
+      $form[$name]['#description'] = t('Specify a comma-separated list of identifiers of @entity entities.', array('@entity' => $entity_label));
     }
     return $form;
   }
-}
 
+}

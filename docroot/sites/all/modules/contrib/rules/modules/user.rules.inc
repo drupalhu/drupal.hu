@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @file rules integration for the user module
+ * @file
+ * Rules integration for the user module.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -15,7 +17,7 @@ function rules_user_file_info() {
 }
 
 /**
- * Implementation of hook_rules_event_info().
+ * Implements hook_rules_event_info().
  */
 function rules_user_event_info() {
   return array(
@@ -54,6 +56,8 @@ function rules_user_event_info() {
           'type' => 'text',
           'label' => t('view mode'),
           'options list' => 'rules_get_entity_view_modes',
+          // Add the entity-type for the options list callback.
+          'options list entity type' => 'user',
         ),
       ),
       'access callback' => 'rules_user_integration_access',
@@ -88,7 +92,8 @@ function rules_user_event_info() {
 
 /**
  * Options list for user cancel methods.
- * @todo: Use for providing a user_cancel action.
+ *
+ * @todo Use for providing a user_cancel action.
  */
 function rules_user_cancel_methods() {
   module_load_include('inc', 'user', 'user.pages');
@@ -171,7 +176,7 @@ function rules_user_condition_operations() {
  */
 function rules_user_action_info() {
   $defaults = array(
-   'parameter' => array(
+    'parameter' => array(
       'account' => array(
         'type' => 'user',
         'label' => t('User'),
@@ -196,7 +201,7 @@ function rules_user_action_info() {
     'base' => 'rules_action_user_remove_role',
   );
   $defaults = array(
-   'parameter' => array(
+    'parameter' => array(
       'account' => array(
         'type' => 'user',
         'label' => t('User'),
@@ -211,8 +216,26 @@ function rules_user_action_info() {
     'base' => 'rules_action_user_block',
   );
   $items['user_unblock'] = $defaults + array(
-    'label' => t('Unblock a use'),
+    'label' => t('Unblock a user'),
     'base' => 'rules_action_user_unblock',
+  );
+  $items['user_send_account_email'] = array(
+    'label' => t('Send account e-mail'),
+    'parameter' => array(
+      'account' => array(
+        'type' => 'user',
+        'label' => t('Account'),
+      ),
+      'email_type' => array(
+        'type' => 'text',
+        'label' => t('E-mail type'),
+        'description' => t("Select the e-mail based on your site's account settings to send to the user."),
+        'options list' => 'rules_user_account_email_options_list',
+      ),
+    ),
+    'group' => t('User'),
+    'base' => 'rules_action_user_send_account_email',
+    'access callback' => 'rules_user_integration_access',
   );
   return $items;
 }
@@ -232,5 +255,23 @@ function rules_user_roles_options_list($element) {
 }
 
 /**
- * @}
+ * Options list callback for user account e-mail types.
+ *
+ * @see _user_mail_notify()
+ */
+function rules_user_account_email_options_list() {
+  return array(
+    'register_admin_created' => t('Welcome (new user created by administrator)'),
+    'register_no_approval_required' => t('Welcome (no approval required)'),
+    'register_pending_approval' => t('Welcome (awaiting approval)'),
+    'password_reset' => t('Password recovery'),
+    'status_activated' => t('Account activation'),
+    'status_blocked' => t('Account blocked'),
+    'cancel_confirm' => t('Account cancellation confirmation'),
+    'status_canceled' => t('Account canceled'),
+  );
+}
+
+/**
+ * @} End of "addtogroup rules"
  */

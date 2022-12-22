@@ -1,12 +1,28 @@
 <?php
 
 /**
- * @file Rules core integration providing data types and conditions and
- * actions to invoke configured components.
+ * @file
+ * Rules integration with Drupal core.
+ *
+ * Provides data types, conditions, and actions to invoke configured components.
  *
  * @addtogroup rules
+ *
  * @{
  */
+
+/**
+ * Implements hook_rules_category_info() on behalf of the rules_core.
+ */
+function rules_rules_core_category_info() {
+  return array(
+    'rules_components' => array(
+      'label' => t('Components'),
+      'equals group' => t('Components'),
+      'weight' => 50,
+    ),
+  );
+}
 
 /**
  * Implements hook_rules_file_info() on behalf of the pseudo rules_core module.
@@ -27,11 +43,13 @@ function rules_rules_core_data_info() {
     'text' => array(
       'label' => t('text'),
       'ui class' => 'RulesDataUIText',
+      'token type' => 'rules_text',
     ),
-   'token' => array(
+    'token' => array(
       'label' => t('text token'),
       'parent' => 'text',
       'ui class' => 'RulesDataUITextToken',
+      'token type' => 'rules_token',
     ),
     // A formatted text as used by entity metadata.
     'text_formatted' => array(
@@ -40,49 +58,55 @@ function rules_rules_core_data_info() {
       'wrap' => TRUE,
       'property info' => entity_property_text_formatted_info(),
     ),
-   'decimal' => array(
+    'decimal' => array(
       'label' => t('decimal number'),
       'parent' => 'text',
       'ui class' => 'RulesDataUIDecimal',
+      'token type' => 'rules_decimal',
     ),
-   'integer' => array(
+    'integer' => array(
       'label' => t('integer'),
       'class' => 'RulesIntegerWrapper',
       'parent' => 'decimal',
       'ui class' => 'RulesDataUIInteger',
+      'token type' => 'rules_integer',
     ),
-   'date' => array(
+    'date' => array(
       'label' => t('date'),
       'ui class' => 'RulesDataUIDate',
+      'token type' => 'rules_date',
     ),
-   'duration' => array(
+    'duration' => array(
       'label' => t('duration'),
       'parent' => 'integer',
       'ui class' => 'RulesDataUIDuration',
+      'token type' => 'rules_duration',
     ),
-   'boolean' => array(
+    'boolean' => array(
       'label' => t('truth value'),
       'ui class' => 'RulesDataUIBoolean',
+      'token type' => 'rules_boolean',
     ),
-   'uri' => array(
+    'uri' => array(
       'label' => t('URI'),
       'parent' => 'text',
       // Clean inserted tokens with "rawurlencode".
       'cleaning callback' => 'rawurlencode',
       'ui class' => 'RulesDataUIURI',
+      'token type' => 'rules_uri',
     ),
-   'list' => array(
+    'list' => array(
       'label' => t('list', array(), array('context' => 'data_types')),
       'wrap' => TRUE,
       'group' => t('List', array(), array('context' => 'data_types')),
     ),
-   'list<text>' => array(
+    'list<text>' => array(
       'label' => t('list of text'),
       'ui class' => 'RulesDataUIListText',
       'wrap' => TRUE,
       'group' => t('List', array(), array('context' => 'data_types')),
     ),
-   'list<integer>' => array(
+    'list<integer>' => array(
       'label' => t('list of integer'),
       'ui class' => 'RulesDataUIListInteger',
       'wrap' => TRUE,
@@ -94,10 +118,16 @@ function rules_rules_core_data_info() {
       'wrap' => TRUE,
       'group' => t('List', array(), array('context' => 'data_types')),
     ),
-   'entity' => array(
+    'entity' => array(
       'label' => t('any entity'),
       'group' => t('Entity'),
       'is wrapped' => TRUE,
+    ),
+    'ip_address' => array(
+      'label' => t('IP Address'),
+      'parent' => 'text',
+      'ui class' => 'RulesDataUIIPAddress',
+      'token type' => 'rules_text',
     ),
   );
   foreach (entity_get_info() as $type => $info) {
@@ -109,11 +139,18 @@ function rules_rules_core_data_info() {
         'group' => t('Entity'),
         'ui class' => empty($info['exportable']) ? 'RulesDataUIEntity' : 'RulesDataUIEntityExportable',
       );
+      // If this entity type serves as bundle for another one, provide an
+      // options list for selecting a bundle entity.
+      if (!empty($info['bundle of'])) {
+        $return[$type]['ui class'] = 'RulesDataUIBundleEntity';
+      }
     }
   }
 
   if (module_exists('taxonomy')) {
+    // For exportability identify vocabularies by name.
     $return['taxonomy_vocabulary']['wrapper class'] = 'RulesTaxonomyVocabularyWrapper';
+    $return['taxonomy_vocabulary']['ui class'] = 'RulesDataUITaxonomyVocabulary';
   }
 
   return $return;
@@ -157,13 +194,13 @@ function rules_rules_core_evaluator_info() {
       'class' => 'RulesDateInputEvaluator',
       'type' => 'date',
       'weight' => -10,
-     ),
+    ),
     // Post-process any input value to absolute URIs.
     'uri' => array(
       'class' => 'RulesURIInputEvaluator',
       'type' => 'uri',
       'weight' => 50,
-     ),
+    ),
   );
 }
 
@@ -179,12 +216,12 @@ function rules_rules_core_data_processor_info() {
       'class' => 'RulesDateOffsetProcessor',
       'type' => 'date',
       'weight' => -2,
-     ),
+    ),
     'num_offset' => array(
       'class' => 'RulesNumericOffsetProcessor',
       'type' => array('integer', 'decimal'),
       'weight' => -2,
-     ),
+    ),
   );
 }
 
@@ -199,6 +236,7 @@ function rules_rules_core_condition_info() {
     'group' => t('Components'),
     'base' => 'rules_element_invoke_component',
     'named parameter' => TRUE,
+    'access callback' => 'rules_element_invoke_component_access_callback',
   );
   $items = array();
   foreach (rules_get_components(FALSE, 'condition') as $name => $config) {
@@ -222,6 +260,7 @@ function rules_rules_core_action_info() {
     'group' => t('Components'),
     'base' => 'rules_element_invoke_component',
     'named parameter' => TRUE,
+    'access callback' => 'rules_element_invoke_component_access_callback',
   );
   $items = array();
   foreach (rules_get_components(FALSE, 'action') as $name => $config) {
@@ -251,14 +290,52 @@ function rules_element_invoke_component_operations(RulesPlugin $element) {
 }
 
 /**
- * Implements the features export callback of the RulesPluginFeaturesIntegrationInterace.
+ * Validate callback to make sure the invoked component exists and is not dirty.
+ *
+ * @see rules_scheduler_action_schedule_validate()
  */
-function rules_element_invoke_component_features_export(&$export, &$pipe, $module_name = '', $element) {
+function rules_element_invoke_component_validate(RulesPlugin $element) {
+  $info = $element->info();
+  $component = rules_config_load($info['#config_name']);
+  // Check if a component exists.
+  if (!$component) {
+    throw new RulesIntegrityException(t('The component %config does not exist.', array('%config' => $info['#config_name'])), $element);
+  }
+  // Check if a component is marked as dirty.
+  rules_config_update_dirty_flag($component);
+  if (!empty($component->dirty)) {
+    throw new RulesIntegrityException(t('The utilized component %config fails the integrity check.', array('%config' => $info['#config_name'])), $element);
+  }
+}
+
+/**
+ * Implements the features export callback of the RulesPluginFeaturesIntegrationInterface.
+ */
+function rules_element_invoke_component_features_export(&$export, &$pipe, $module_name, $element) {
   // Add the used component to the pipe.
   $info = $element->info();
   $pipe['rules_config'][] = $info['#config_name'];
 }
 
 /**
- * @}
+ * Access callback for the invoke component condition/action.
+ */
+function rules_element_invoke_component_access_callback($type, $name) {
+  // Cut of the leading 'component_' from the action name.
+  $component = rules_config_load(substr($name, 10));
+
+  if (!$component) {
+    // Missing component.
+    return FALSE;
+  }
+  // If access is not exposed for this component, default to component access.
+  if (empty($component->access_exposed)) {
+    return $component->access();
+  }
+  // Apply the permissions.
+  return user_access('bypass rules access') || user_access("use Rules component $component->name");
+}
+
+/**
+ * @} End of "addtogroup rules"
  */

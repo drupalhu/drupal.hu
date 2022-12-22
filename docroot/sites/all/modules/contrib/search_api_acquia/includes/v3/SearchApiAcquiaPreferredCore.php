@@ -152,7 +152,7 @@ class SearchApiAcquiaPreferredCore {
     $cores = [];
 
     // In core naming, we only accept alphanumeric chars.
-    $pattern = '/[^a-zA-Z0-9]+/';
+    $pattern = '/[^a-zA-Z0-9_]+/';
     $sitesFolder = preg_replace($pattern, '', $this->sitesFolderName);
     $ahEnv = preg_replace($pattern, '', $this->ahEnv);
 

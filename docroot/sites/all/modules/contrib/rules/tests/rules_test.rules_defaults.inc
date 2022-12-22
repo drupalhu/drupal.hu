@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @file Includes any rules integration provided by the module.
+ * @file
+ * Includes any Rules integration provided by the module.
  */
-
 
 /**
  * Implements hook_default_rules_configuration().
@@ -11,11 +11,13 @@
 function rules_test_default_rules_configuration() {
   $rule = rules_reaction_rule();
   $rule->label = 'example default rule';
+  // Add rules tags.
+  $rule->tags = array('Admin', 'Tag2');
   $rule->active = FALSE;
   $rule->event('node_update')
-       ->condition(rules_condition('data_is', array('data:select' => 'node:status', 'value' => TRUE))->negate())
-       ->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
-       ->action('drupal_message', array('message' => 'A node has been updated.'));
+    ->condition(rules_condition('data_is', array('data:select' => 'node:status', 'value' => TRUE))->negate())
+    ->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
+    ->action('drupal_message', array('message' => 'A node has been updated.'));
 
   $configs['rules_test_default_1'] = $rule;
 
@@ -77,8 +79,10 @@ function _rules_export_get_test_export() {
     "PLUGIN" : "reaction rule",
     "WEIGHT" : "-1",
     "ACTIVE" : false,
+    "OWNER" : "rules",
+    "TAGS" : [ "bar", "baz", "foo" ],
     "REQUIRES" : [ "rules", "comment" ],
-    "ON" : [ "comment_insert" ],
+    "ON" : { "comment_insert" : [] },
     "IF" : [
       { "OR" : [
           { "NOT node_is_sticky" : { "node" : [ "comment:node" ] } },

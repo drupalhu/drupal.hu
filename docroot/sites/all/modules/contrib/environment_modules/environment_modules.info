@@ -1,11 +1,10 @@
 name = Environment modules
-description = allows modules to be enabled via a variable.
-
+description = Allows modules to be enabled via a variable.
 core = 7.x
 
-; Information added by drupal.org packaging script on 2012-07-31
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2014-01-03
+version = "7.x-1.4"
 core = "7.x"
 project = "environment_modules"
-datestamp = "1343716342"
+datestamp = "1388739505"
 

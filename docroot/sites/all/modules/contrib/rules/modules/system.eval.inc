@@ -5,6 +5,7 @@
  * Contains rules integration for the system module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -16,12 +17,37 @@ function rules_action_drupal_message($message, $status, $repeat) {
 }
 
 /**
+ * Action: Write a watchdog db log message.
+ */
+function rules_action_drupal_watchdog($type, $message, $severity, $link_text, $link_path) {
+  if (!empty($link_path)) {
+    // Use $link_path for the text if no specific text was supplied.
+    $link = l(!empty($link_text) ? $link_text : $link_path, url($link_path));
+  }
+  else {
+    $link = NULL;
+  }
+  watchdog($type, $message, array(), $severity, $link);
+}
+
+/**
  * Action: Page redirect.
  *
  * @see rules_page_build()
  * @see rules_drupal_goto_alter()
  */
 function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
+  // Don't let administrators lock them out from Rules administration pages.
+  if (isset($_GET['q']) && strpos($_GET['q'], 'admin/config/workflow/rules') === 0) {
+    rules_log('Skipped page redirect on Rules administration page.', array(), RulesLog::WARN);
+    return;
+  }
+  // Do not redirect during batch processing.
+  if (($batch = batch_get()) && isset($batch['current_set'])) {
+    rules_log('Skipped page redirect during batch processing.');
+    return;
+  }
+
   // Keep the current destination parameter if there is one set.
   if ($destination) {
     $url .= strpos($url, '?') === FALSE ? '?' : '&';
@@ -31,8 +57,8 @@ function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
   if ($force && isset($_GET['destination'])) {
     unset($_GET['destination']);
   }
-  // We don't invoke drupal_goto() right now, as this would end the the current
-  // page execution unpredictly for modules. So we'll take over drupal_goto()
+  // We don't invoke drupal_goto() right now, as this would end the current
+  // page execution unpredictably for modules. So we'll take over drupal_goto()
   // calls from somewhere else via hook_drupal_goto_alter() and make sure
   // a drupal_goto() is invoked before the page is output with
   // rules_page_build().
@@ -47,8 +73,7 @@ function rules_action_breadcrumb_set(array $titles, array $paths) {
   foreach ($titles as $i => $title) {
     // Skip empty titles.
     if ($title = trim($title)) {
-      // Output plaintext instead of a link if there is a title
-      // without a path.
+      // Output plaintext instead of a link if there is a title without a path.
       $path = trim($paths[$i]);
       if (!empty($paths[$i]) && $paths[$i] != '<none>') {
         $trail[] = l($title, trim($paths[$i]));
@@ -64,20 +89,21 @@ function rules_action_breadcrumb_set(array $titles, array $paths) {
 /**
  * Action Implementation: Send mail.
  */
-function rules_action_mail($to, $subject, $message, $from = NULL, $settings, RulesState $state, RulesPlugin $element) {
+function rules_action_mail($to, $subject, $message, $from, $langcode, $settings, RulesState $state, RulesPlugin $element) {
   $to = str_replace(array("\r", "\n"), '', $to);
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
   $params = array(
     'subject' => $subject,
     'message' => $message,
-    'action' => $element,
-    'state' => $state,
+    'langcode' => $langcode,
   );
   // Set a unique key for this mail.
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
   $key = 'rules_action_mail_' . $name . '_' . $element->elementId();
+  $languages = language_list();
+  $language = isset($languages[$langcode]) ? $languages[$langcode] : language_default();
 
-  $message = drupal_mail('rules', $key, $to, language_default(), $params, $from);
+  $message = drupal_mail('rules', $key, $to, $language, $params, $from);
   if ($message['result']) {
     watchdog('rules', 'Successfully sent email to %recipient', array('%recipient' => $to));
   }
@@ -86,7 +112,7 @@ function rules_action_mail($to, $subject, $message, $from = NULL, $settings, Rul
 /**
  * Action: Send mail to all users of a specific role group(s).
  */
-function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = NULL, $settings, RulesState $state, RulesPlugin $element) {
+function rules_action_mail_to_users_of_role($roles, $subject, $message, $from, $settings, RulesState $state, RulesPlugin $element) {
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
 
   // All authenticated users, which is everybody.
@@ -94,30 +120,34 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
     $result = db_query('SELECT mail FROM {users} WHERE uid > 0');
   }
   else {
-    $rids = implode(',', $roles);
     // Avoid sending emails to members of two or more target role groups.
-    $result = db_query('SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.rid IN ('. $rids .')');
+    $result = db_query('SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.rid IN (:rids)', array(':rids' => $roles));
   }
 
   // Now, actually send the mails.
   $params = array(
     'subject' => $subject,
     'message' => $message,
-    'action' => $element,
-    'state' => $state,
   );
   // Set a unique key for this mail.
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
   $key = 'rules_action_mail_to_users_of_role_' . $name . '_' . $element->elementId();
+  $languages = language_list();
 
   $message = array('result' => TRUE);
   foreach ($result as $row) {
     $message = drupal_mail('rules', $key, $row->mail, language_default(), $params, $from);
-    if (!$message['result']) {
+    // If $message['result'] is FALSE, then it's likely that email sending is
+    // failing at the moment, and we should just abort sending any more. If
+    // however, $message['result'] is NULL, then it's likely that a module has
+    // aborted sending this particular email to this particular user, and we
+    // should just keep on sending emails to the other users.
+    // For more information on the result value, see drupal_mail().
+    if ($message['result'] === FALSE) {
       break;
     }
   }
-  if ($message['result']) {
+  if ($message['result'] !== FALSE) {
     $role_names = array_intersect_key(user_roles(TRUE), array_flip($roles));
     watchdog('rules', 'Successfully sent email to the role(s) %roles.', array('%roles' => implode(', ', $role_names)));
   }
@@ -126,7 +156,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
 /**
  * Implements hook_mail().
  *
- * Set's the message subject and body as configured.
+ * Sets the message subject and body as configured.
  */
 function rules_mail($key, &$message, $params) {
 
@@ -135,16 +165,33 @@ function rules_mail($key, &$message, $params) {
 }
 
 /**
+ * Action: Block an IP address.
+ */
+function rules_action_block_ip($ip_address = NULL) {
+  if (empty($ip_address)) {
+    $ip_address = ip_address();
+  }
+  db_insert('blocked_ips')->fields(array('ip' => $ip_address))->execute();
+  watchdog('rules', 'Banned IP address %ip', array('%ip' => $ip_address));
+}
+
+/**
  * A class implementing a rules input evaluator processing tokens.
  */
 class RulesTokenEvaluator extends RulesDataInputEvaluator {
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($text, $var_info) {
+    $text = is_array($text) ? implode('', $text) : $text;
     // Skip this evaluator if there are no tokens.
     $this->setting = token_scan($text) ? TRUE : NULL;
   }
 
   /**
+   * Evaluate tokens.
+   *
    * We replace the tokens on our own as we cannot use token_replace(), because
    * token usually assumes that $data['node'] is a of type node, which doesn't
    * hold in general in our case.
@@ -157,7 +204,9 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
 
     $replacements = array();
     $data = array();
-    foreach (token_scan($text) as $var_name => $tokens) {
+    // We also support replacing tokens in a list of textual values.
+    $whole_text = is_array($text) ? implode('', $text) : $text;
+    foreach (token_scan($whole_text) as $var_name => $tokens) {
       $var_name = str_replace('-', '_', $var_name);
       if (isset($var_info[$var_name]) && ($token_type = _rules_system_token_map_type($var_info[$var_name]['type']))) {
         // We have to key $data with the type token uses for the variable.
@@ -167,6 +216,9 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
       else {
         $replacements += token_generate($var_name, $tokens, array(), $options);
       }
+      // Remove tokens if no replacement value is found. As token_replace() does
+      // if 'clear' is set.
+      $replacements += array_fill_keys($tokens, '');
     }
 
     // Optionally clean the list of replacement values.
@@ -175,18 +227,37 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
       $function($replacements, $data, $options);
     }
 
+    // Actually apply the replacements.
     $tokens = array_keys($replacements);
     $values = array_values($replacements);
+    if (is_array($text)) {
+      foreach ($text as $i => $text_item) {
+        $text[$i] = str_replace($tokens, $values, $text_item);
+      }
+      return $text;
+    }
     return str_replace($tokens, $values, $text);
   }
 
+  /**
+   * Create documentation about the available replacement patterns.
+   *
+   * @param array $var_info
+   *   Array with the available variables.
+   *
+   * @return array
+   *   Renderable array with the replacement pattern documentation.
+   */
   public static function help($var_info) {
     $render = array(
       '#type' => 'fieldset',
       '#title' => t('Replacement patterns'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
+      '#description' => t('Note that token replacements containing chained objects – such as [node:author:uid] – are not listed here, but are still available. The <em>data selection</em> input mode may help you find more complex replacement patterns. See <a href="@url">the online documentation</a> for more information about complex replacement patterns.',
+        array('@url' => rules_external_help('chained-tokens'))),
     );
+
     $token_info = token_info();
     foreach ($var_info as $name => $info) {
       $token_types[$name] = _rules_system_token_map_type($info['type']);
@@ -201,12 +272,17 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
         );
         foreach ($token_info['tokens'][$token_type] as $token => $info) {
           $token = '[' . str_replace('_', '-', $name) . ':' . $token . ']';
-          $render[$name]['#rows'][$token] = array(check_plain($token), check_plain($info['name']), check_plain($info['description']));
+          $render[$name]['#rows'][$token] = array(
+            check_plain($token),
+            check_plain($info['name']),
+            check_plain($info['description']),
+          );
         }
       }
     }
     return $render;
   }
+
 }
 
 /**
@@ -225,5 +301,5 @@ function _rules_system_token_map_type($type) {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

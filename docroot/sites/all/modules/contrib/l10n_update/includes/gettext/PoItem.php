@@ -216,7 +216,7 @@ class PoItem {
     if (isset($values['comment'])) {
       $this->setComment($values['comment']);
     }
-    if (isset($this->_source) && count($this->_source) > 1) {
+    if (isset($this->_source) && is_array($this->_source) && count($this->_source) > 1) {
       $this->setPlural(count($this->_translation) > 1);
     }
   }

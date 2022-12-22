@@ -1,0 +1,171 @@
+{
+    "_comment": [
+        "require.drupal/ftools - In 7.x-1.6 the module 'features_tools' is renamed to 'ftools'.",
+        "require.drupal/ftools - Module 'features_tools' is not enabled on the production site."
+    ],
+    "name": "drupalhu/drupal-hu",
+    "description": "Code base for drupal.hu website",
+    "keywords": [
+        "community website"
+    ],
+    "homepage": "https://www.drupal.hu",
+    "support": {
+        "source": "https://github.com/drupalhu/drupal.hu",
+        "issues": "https://github.com/drupalhu/drupal.hu/issues"
+    },
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "drupal-composer/preserve-paths": true,
+            "topfloor/composer-cleanup-vcs-dirs": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/7"
+        },
+        "assets": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    },
+    "conflict": {
+        "drupal/core": ">=8.0"
+    },
+    "require": {
+        "php": ">=7.4",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-xml": "*",
+        "composer/installers": "^1.9",
+        "composer/semver": "^1.4",
+        "cweagans/composer-patches": "^1.7",
+        "drupal-composer/preserve-paths": "^0.1",
+        "drupal/acquia_connector": "^2.0",
+        "drupal/admin_language": "^1.0",
+        "drupal/admin_menu": "^3.0",
+        "drupal/admin_views": "^1.0",
+        "drupal/browserclass": "^1.0",
+        "drupal/bueditor": "^1.0",
+        "drupal/colorbox": "^1.0",
+        "drupal/ctools": "^1.0",
+        "drupal/date": "^2.0",
+        "drupal/devel": "^1.7",
+        "drupal/diff": "^3.4",
+        "drupal/email": "^1.0",
+        "drupal/entity": "^1.0",
+        "drupal/environment_indicator": "^2.9",
+        "drupal/environment_modules": "^1.0",
+        "drupal/facetapi": "^1.0",
+        "drupal/features": "^2.0",
+        "drupal/feeds": "^2.0",
+        "drupal/field_group": "^1.0",
+        "drupal/flag": "^3.0",
+        "drupal/ftools": "1.5",
+        "drupal/geofield": "^2.0",
+        "drupal/geophp": "^1.0",
+        "drupal/geshifilter": "^1.0",
+        "drupal/globalredirect": "^1.0",
+        "drupal/google_analytics": "^2.0",
+        "drupal/job_scheduler": "^2.0",
+        "drupal/jquery_update": "^2.0",
+        "drupal/l10n_client": "^1.0",
+        "drupal/l10n_update": "^2.0",
+        "drupal/libraries": "^2.0",
+        "drupal/link": "^1.0",
+        "drupal/masquerade": "^1.0",
+        "drupal/memcache": "^1.0",
+        "drupal/module_filter": "^2.0",
+        "drupal/mollom": "^2.0",
+        "drupal/opengraph_meta": "^1.0",
+        "drupal/openlayers": "^2.0",
+        "drupal/panels": "^3.0",
+        "drupal/pathauto": "^1.0",
+        "drupal/proj4js": "^1.0",
+        "drupal/rules": "^2.0",
+        "drupal/search_api": "^1.0",
+        "drupal/search_api_acquia": "^2.0",
+        "drupal/search_api_multi": "^1.0",
+        "drupal/search_api_solr": "^1.0",
+        "drupal/search_api_sorts": "^1.0",
+        "drupal/shield": "^1.0",
+        "drupal/stage_file_proxy": "^1.10",
+        "drupal/strongarm": "^2.0",
+        "drupal/token": "^1.0",
+        "drupal/transliteration": "^3.0",
+        "drupal/unique_field": "^1.0",
+        "drupal/views": "^3.0",
+        "drupal/views_bulk_operations": "^3.0",
+        "drupal/views_slideshow": "^3.0",
+        "drupal/votingapi": "^2.0",
+        "drupal/webform": "^3.0",
+        "drush/drush": "^8.0",
+        "raveren/kint": "^1.0",
+        "symfony/filesystem": "~2.7 || ^3",
+        "topfloor/composer-cleanup-vcs-dirs": "^1.1",
+        "webflo/drupal-finder": "^1.2.1"
+    },
+    "scripts": {
+
+    },
+    "scripts-descriptions": {
+
+    },
+    "extra": {
+        "patches-install-hooks": true,
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+            "drupal/geofield": {
+                "https://www.drupal.org/node/1350320": "https://www.drupal.org/files/issues/geofield-delete_feature_fix-1350320-20.patch"
+            },
+            "drupal/openlayers": {
+                "https://www.drupal.org/node/2355321": "https://www.drupal.org/files/issues/openlayers-schema_mismatch-2355321-1.patch"
+            }
+        },
+        "installer-paths": {
+            "docroot/": [
+                "type:drupal-core"
+            ],
+            "docroot/profiles/{$name}/": [
+                "type:drupal-profile"
+            ],
+            "docroot/sites/all/drush/{$name}/": [
+                "type:drupal-drush"
+            ],
+            "docroot/sites/all/libraries/{$name}/": [
+                "type:drupal-library"
+            ],
+            "docroot/sites/all/modules/contrib/{$name}/": [
+                "type:drupal-module"
+            ],
+            "docroot/sites/all/themes/contrib/{$name}/": [
+                "type:drupal-theme"
+            ]
+        },
+        "preserve-paths": [
+            "docroot/files/",
+            "docroot/sites/all/libraries/",
+            "docroot/sites/all/modules/custom/",
+            "docroot/sites/all/modules/features/",
+            "docroot/sites/all/themes/",
+            "docroot/sites/default/",
+            "docroot/.well-known/pki-validation/godaddy.html",
+            "docroot/analytics.txt",
+            "docroot/googleaa26e4a3321941f4.html"
+        ]
+    }
+}
