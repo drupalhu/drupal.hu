@@ -1,0 +1,14 @@
+# Adapted from TravisCI example: https://docs.travis-ci.com/user/languages/php/#apache--php
+<VirtualHost *:80>
+  # [...]
+
+  DocumentRoot %DOCROOT%
+
+  <Directory "%DOCROOT%">
+    Options FollowSymLinks MultiViews ExecCGI
+    AllowOverride All
+    Require all granted
+  </Directory>
+
+  # [...]
+</VirtualHost>

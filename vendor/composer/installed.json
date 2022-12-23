@@ -647,97 +647,31 @@
             "install-path": "../drupal-composer/preserve-paths"
         },
         {
-            "name": "drupal/acquia_agent",
-            "version": "2.17.0",
-            "version_normalized": "2.17.0.0",
-            "require": {
-                "drupal/acquia_connector": "^2",
-                "drupal/drupal": "~7.0"
-            },
-            "type": "metapackage",
-            "extra": {
-                "drupal": {
-                    "version": "7.x-2.17",
-                    "datestamp": "1502724482",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "acquia",
-                    "homepage": "https://www.drupal.org/user/1231722"
-                },
-                {
-                    "name": "Dane Powell",
-                    "homepage": "https://www.drupal.org/user/339326"
-                },
-                {
-                    "name": "irek02",
-                    "homepage": "https://www.drupal.org/user/736644"
-                },
-                {
-                    "name": "japerry",
-                    "homepage": "https://www.drupal.org/user/45640"
-                },
-                {
-                    "name": "kolafson",
-                    "homepage": "https://www.drupal.org/user/822402"
-                },
-                {
-                    "name": "Mark Trapp",
-                    "homepage": "https://www.drupal.org/user/212019"
-                },
-                {
-                    "name": "mglaman",
-                    "homepage": "https://www.drupal.org/user/2416470"
-                },
-                {
-                    "name": "vlad.pavlovic",
-                    "homepage": "https://www.drupal.org/user/92673"
-                }
-            ],
-            "description": "Allows Drupal to securely communicate with Acquia Insight, and checks for updates to Acquia Drupal.",
-            "homepage": "https://www.drupal.org/project/acquia_connector",
-            "support": {
-                "source": "https://git.drupalcode.org/project/acquia_connector"
-            },
-            "install-path": null
-        },
-        {
             "name": "drupal/acquia_connector",
-            "version": "2.17.0",
-            "version_normalized": "2.17.0.0",
+            "version": "4.1.0",
+            "version_normalized": "4.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/acquia_connector.git",
-                "reference": "7.x-2.17"
+                "reference": "7.x-4.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-2.17.zip",
-                "reference": "7.x-2.17",
-                "shasum": "cbdc78d2d17abe8acabadbad93b8eb8654d36387"
+                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-4.1.zip",
+                "reference": "7.x-4.1",
+                "shasum": "a4d8c4b175390cd7c0b56044359408af3011c976"
             },
             "require": {
                 "drupal/drupal": "~7.0"
             },
             "require-dev": {
-                "drupal/acquia_agent": "*",
-                "drupal/apachesolr": "*",
-                "drupal/apachesolr_search": "*"
+                "drupal/acquia_agent": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "7.x-2.17",
-                    "datestamp": "1502724482",
+                    "version": "7.x-4.1",
+                    "datestamp": "1671471056",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -1008,6 +942,101 @@
                 "source": "https://git.drupalcode.org/project/admin_views"
             },
             "install-path": null
+        },
+        {
+            "name": "drupal/apachesolr",
+            "version": "1.13.0",
+            "version_normalized": "1.13.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/apachesolr.git",
+                "reference": "7.x-1.13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/apachesolr-7.x-1.13.zip",
+                "reference": "7.x-1.13",
+                "shasum": "b60114bdcae90c3736095fef8d9d537142dba479"
+            },
+            "require": {
+                "drupal/drupal": "~7.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "7.x-1.13",
+                    "datestamp": "1667977849",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/7/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "cpliakas",
+                    "homepage": "https://www.drupal.org/user/266779"
+                },
+                {
+                    "name": "drunken monkey",
+                    "homepage": "https://www.drupal.org/user/205582"
+                },
+                {
+                    "name": "febbraro",
+                    "homepage": "https://www.drupal.org/user/43670"
+                },
+                {
+                    "name": "JacobSingh",
+                    "homepage": "https://www.drupal.org/user/68912"
+                },
+                {
+                    "name": "janusman",
+                    "homepage": "https://www.drupal.org/user/153120"
+                },
+                {
+                    "name": "japerry",
+                    "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "jgrubb",
+                    "homepage": "https://www.drupal.org/user/606908"
+                },
+                {
+                    "name": "jpmckinney",
+                    "homepage": "https://www.drupal.org/user/472460"
+                },
+                {
+                    "name": "mkalkbrenner",
+                    "homepage": "https://www.drupal.org/user/124705"
+                },
+                {
+                    "name": "Nick_vh",
+                    "homepage": "https://www.drupal.org/user/122682"
+                },
+                {
+                    "name": "pwolanin",
+                    "homepage": "https://www.drupal.org/user/49851"
+                },
+                {
+                    "name": "robertDouglass",
+                    "homepage": "https://www.drupal.org/user/5449"
+                },
+                {
+                    "name": "wonder95",
+                    "homepage": "https://www.drupal.org/user/87591"
+                }
+            ],
+            "description": "Framework for searching with Solr",
+            "homepage": "https://www.drupal.org/project/apachesolr",
+            "support": {
+                "source": "https://git.drupalcode.org/project/apachesolr"
+            },
+            "install-path": "../../docroot/sites/all/modules/contrib/apachesolr"
         },
         {
             "name": "drupal/browserclass",
@@ -3936,84 +3965,6 @@
                 "source": "https://git.drupalcode.org/project/search_api"
             },
             "install-path": "../../docroot/sites/all/modules/contrib/search_api"
-        },
-        {
-            "name": "drupal/search_api_acquia",
-            "version": "2.8.0",
-            "version_normalized": "2.8.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/search_api_acquia.git",
-                "reference": "7.x-2.8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/search_api_acquia-7.x-2.8.zip",
-                "reference": "7.x-2.8",
-                "shasum": "af9f9d411666fd6cd50720184c6463cb6fe8140f"
-            },
-            "require": {
-                "drupal/acquia_agent": "*",
-                "drupal/drupal": "~7.0",
-                "drupal/search_api_solr": "*",
-                "ext-json": "*",
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "drupal/acquia_agent": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "7.x-2.8",
-                    "datestamp": "1642186318",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "branch-alias": {
-                    "dev-2.x": "2.x-dev"
-                },
-                "phpcodesniffer-search-depth": 4
-            },
-            "installation-source": "dist",
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "acquia",
-                    "homepage": "https://www.drupal.org/user/1231722"
-                },
-                {
-                    "name": "cpliakas",
-                    "homepage": "https://www.drupal.org/user/266779"
-                },
-                {
-                    "name": "janusman",
-                    "homepage": "https://www.drupal.org/user/153120"
-                },
-                {
-                    "name": "japerry",
-                    "homepage": "https://www.drupal.org/user/45640"
-                },
-                {
-                    "name": "nielsvm",
-                    "homepage": "https://www.drupal.org/user/163285"
-                }
-            ],
-            "description": "Allows Drupal Sites to use Acquia Search with Search API.",
-            "homepage": "https://www.drupal.org/project/search_api_acquia",
-            "support": {
-                "source": "https://git.drupalcode.org/project/search_api_acquia"
-            },
-            "install-path": "../../docroot/sites/all/modules/contrib/search_api_acquia"
         },
         {
             "name": "drupal/search_api_multi",
