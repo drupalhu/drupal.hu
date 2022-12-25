@@ -4,11 +4,10 @@ package = Acquia Connector
 core = 7.x
 configure = admin/config/system/acquia-agent
 files[] = tests/acquia_agent.test
-php = 5.2
-
-; Information added by Drupal.org packaging script on 2016-05-06
-version = "7.x-2.17"
+files[] = src/AcquiaSubscription.php
+files[] = src/AcquiaSettings.php
+; Information added by Drupal.org packaging script on 2022-12-19
+version = "7.x-4.1"
 core = "7.x"
 project = "acquia_connector"
-datestamp = "1462555141"
-
+datestamp = "1671471058"

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * drupalhu_multi_index_search.views_default.inc
@@ -42,33 +43,31 @@ function drupalhu_multi_index_search_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['next'] = 'következő ›';
   $handler->display->display_options['pager']['options']['tags']['last'] = 'utolsó »';
   $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Search: Tartalom results */
+  $handler->display->display_options['row_plugin'] = 'search_api_multi';
+  $handler->display->display_options['row_options']['view_mode'] = array(
+    'comment' => 'full',
+    'node' => 'teaser',
+  );
+  /* Mező: Keresés: Tartalom results */
   $handler->display->display_options['fields']['tartalom']['id'] = 'tartalom';
   $handler->display->display_options['fields']['tartalom']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['tartalom']['field'] = 'tartalom';
   $handler->display->display_options['fields']['tartalom']['label'] = '';
   $handler->display->display_options['fields']['tartalom']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tartalom']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['tartalom']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['tartalom']['display'] = 'view';
-  $handler->display->display_options['fields']['tartalom']['view_mode'] = 'teaser';
-  /* Field: Search: Hozzászólás results */
+  /* Mező: Keresés: Hozzászólás results */
   $handler->display->display_options['fields']['hozzaszolas']['id'] = 'hozzaszolas';
   $handler->display->display_options['fields']['hozzaszolas']['table'] = 'search_api_multi';
   $handler->display->display_options['fields']['hozzaszolas']['field'] = 'hozzaszolas';
   $handler->display->display_options['fields']['hozzaszolas']['label'] = '';
   $handler->display->display_options['fields']['hozzaszolas']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['hozzaszolas']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['hozzaszolas']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['hozzaszolas']['display'] = 'view';
-  $handler->display->display_options['fields']['hozzaszolas']['view_mode'] = 'full';
-  /* Sort criterion: Search: Relevance */
+  /* Rendezési szempont: Keresés: Relevancia */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_multi';
   $handler->display->display_options['sorts']['search_api_relevance']['field'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
-  /* Filter criterion: Search: Fulltext search */
+  /* Szűrési feltétel: Keresés: Fulltext search */
   $handler->display->display_options['filters']['search_api_multi_fulltext']['id'] = 'search_api_multi_fulltext';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['table'] = 'search_api_multi';
   $handler->display->display_options['filters']['search_api_multi_fulltext']['field'] = 'search_api_multi_fulltext';
@@ -111,7 +110,6 @@ function drupalhu_multi_index_search_views_default_views() {
     t('következő ›'),
     t('utolsó »'),
     t('Oldal'),
-    t('more'),
   );
   $export['multi_index_kereso'] = $view;
 

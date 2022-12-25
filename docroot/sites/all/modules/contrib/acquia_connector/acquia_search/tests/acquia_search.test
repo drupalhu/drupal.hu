@@ -1,24 +1,95 @@
 <?php
+
 /**
  * @file
  * Tests for the Acquia Search module.
  */
 
+use Drupal\acquia_search\ApacheSolrEnvironment;
+use Drupal\acquia_search\PreferredSearchCoreService;
+use Drupal\acquia_search\v3\AcquiaSearchSolrApi as AcquiaSearch3;
+
 /**
- * Unit tests of the functionality of the Acquia Search module.
+ * Unit tests of the functionality of the Acquia Search module with ApacheSolr.
  */
-class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
+class AcquiaSearchV3ApacheSolrUnitTestCase extends DrupalUnitTestCase {
+
+  const ACQUIA_SEARCH_ENVIRONMENT_ID = 'apachesolr_acquia_search_server_3';
+
+  /**
+   * Id.
+   *
+   * @var string
+   */
   protected $id;
+
+  /**
+   * Key.
+   *
+   * @var string
+   */
   protected $key;
+
+  /**
+   * Salt.
+   *
+   * @var string
+   */
   protected $salt;
+
+  /**
+   * Derived key.
+   *
+   * @var string
+   */
   protected $derivedKey;
 
+  /**
+   * Search v2 Apache Solr Service.
+   *
+   * @var \AcquiaSearchV2ApacheSolr
+   */
+  protected $service;
+
+  /**
+   * Search v2 API.
+   *
+   * @var \Drupal\acquia_search\v2\AcquiaSearchSolrApi
+   */
+  protected $api;
+
+  /**
+   * ApacheSolr Environments.
+   *
+   * @var array
+   */
+  protected $environment;
+
+  /**
+   * Needs comment.
+   */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Acquia Search unit tests',
       'description' => 'Tests the low level Acquia Search functions.',
-      'group' => 'Acquia',
-    );
+      'group' => 'AcquiaSearch',
+    ];
+  }
+
+  /**
+   * Returns if the selected ecosystem is enabled or not.
+   *
+   * @param $ecosystem
+   *   Search ecosystem.
+   *
+   * @return bool
+   *   If Ecosystem is enabled.
+   */
+  protected function checkSearchEcosystem($ecosystem) {
+    if (module_exists($ecosystem)) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -27,16 +98,47 @@ class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
   public function setUp() {
     parent::setUp();
     require_once dirname(dirname(__FILE__)) . '/acquia_search.module';
+    require_once dirname(dirname(__FILE__)) . '/src/PreferredSearchCoreService.php';
+    require_once dirname(dirname(__FILE__)) . '/src/AcquiaSearchAuth.php';
+
+    if (!function_exists('acquia_agent_settings')) {
+      module_load_include('module', 'acquia_agent');
+    }
 
     // Generate and store a random set of credentials.
     // Make them as close to the production values as possible
-    // Something like AAAA-1234
+    // Something like AAAA-1234.
     $this->id = $this->randomName(10);
-    // Most of the keys and salts have a 32char lenght
+    // Most of the keys and salts have a 32char length.
     $this->key = $this->randomName(32);
     $this->salt = $this->randomName(32);
-    // Create a derived key from these values
-    $this->derivedKey = _acquia_search_create_derived_key($this->salt, $this->id, $this->key);
+
+    // Hostname for test.
+    $hostname = $this->randomName(10) . '.acquia-search.com';
+
+    // Mock UUID.
+    $uuid = "123e4567-e89b-12d3-a456-426614174000";
+
+    // Setup Mock cores.
+    $site_folder = $this->randomName(32);
+
+    $subscription_data['heartbeat_data']['search_cores'] = [
+      ['balancer' => $hostname, 'core_id' => "{$this->id}.dev.{$site_folder}"],
+      ['balancer' => $hostname, 'core_id' => "{$this->id}.dev.testdbname"],
+      ['balancer' => $hostname, 'core_id' => "{$this->id}"],
+    ];
+    // Setup Search v3 Service.
+    $this->api = AcquiaSearch3::get($this->id, $this->key, $hostname, $uuid, $subscription_data);
+
+    // Create a derived key from these values.
+    $this->derivedKey = AcquiaSearchAuth::createDerivedKey($this->salt, $this->id, $this->key);
+
+    if ($this->checkSearchEcosystem('apachesolr_search')) {
+      // Setup v3 ApacheSolr environments.
+      $environments = $this->getMockedEnvironments();
+      $this->environment = $environments;
+      $this->service = new AcquiaSearchV3ApacheSolr($hostname, self::ACQUIA_SEARCH_ENVIRONMENT_ID);
+    }
   }
 
   /**
@@ -44,7 +146,7 @@ class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
    */
   public function testDerivedKey() {
     // Mimic the hashing code in the API function.
-    $derivation_string =  $this->id . 'solr' . $this->salt;
+    $derivation_string = $this->id . 'solr' . $this->salt;
     // str_pad extends the string with the same string in this case
     // until it has filled 80 chars.
     $derived_key = hash_hmac('sha1', str_pad($derivation_string, 80, $derivation_string), $this->key);
@@ -57,7 +159,7 @@ class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
   /**
    * Tests HMAC generation.
    */
-  public function testHMACCookie() {
+  public function testHmacCookie() {
     // Generate the expected hash.
     $time = time();
     $nonce = $this->randomName(32);
@@ -65,7 +167,11 @@ class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
     $hmac = hash_hmac('sha1', $time . $nonce . $string, $this->derivedKey);
 
     // @todo Make the API function more testable.
-    $authenticator = acquia_search_authenticator($string, $nonce, $this->derivedKey, $time);
+    $class = new ReflectionClass($this->service);
+    $authMethod = $class->getMethod('buildAuthString');
+    $authMethod->setAccessible(TRUE);
+    $authenticator = $authMethod->invokeArgs($this->service, [$string, $nonce, $time]);
+    // $authenticator = $this->service->buildAuthString($string, $nonce, $time);
     preg_match('/acquia_solr_hmac=([a-zA-Z0-9]{40});/', $authenticator, $matches);
     $this->assertEqual($hmac, $matches[1], t('HMAC API function generates the expected hmac hash.'), 'Acquia Search');
     preg_match('/acquia_solr_time=([0-9]{10});/', $authenticator, $matches);
@@ -85,126 +191,440 @@ class AcquiaSearchUnitTestCase extends DrupalUnitTestCase {
     $hmac = hash_hmac('sha1', $nonce . $string, $this->derivedKey);
 
     // Pass the expected hmac digest, API function should return TRUE.
-    $valid = acquia_search_valid_response($hmac, $nonce, $string, $this->derivedKey);
+    $class = new ReflectionClass($this->service);
+    $authMethod = $class->getMethod('isValidResponse');
+    $authMethod->setAccessible(TRUE);
+    $valid = $authMethod->invokeArgs($this->service, [$hmac, $nonce, $string]);
+
     $this->assertTrue($valid, t('Response flagged as valid when the expected hash is passed.'), 'Acquia Search');
 
     // Invalidate the hmac digest, API function should return FALSE.
     $bad_hmac = $hmac . 'invalidateHash';
-    $invalid_hmac = acquia_search_valid_response($bad_hmac, $nonce, $string, $this->derivedKey);
+    $invalid_hmac = $authMethod->invokeArgs($this->service, [$bad_hmac, $nonce, $string]);
     $this->assertFalse($invalid_hmac, t('Response flagged as invalid when a malformed hash is passed.'), 'Acquia Search');
 
     // Invalidate the nonce, API function should return FALSE.
     $bad_nonce = $nonce . 'invalidateString';
-    $invalid_nonce = acquia_search_valid_response($hmac, $bad_nonce, $bad_nonce, $this->derivedKey);
+    $invalid_nonce = $authMethod->invokeArgs($this->service, [$hmac, $bad_nonce, $string]);
     $this->assertFalse($invalid_nonce, t('Response flagged as invalid when a malformed nonce is passed.'), 'Acquia Search');
 
     // Invalidate the string, API function should return FALSE.
     $bad_string = $string . 'invalidateString';
-    $invalid_string = acquia_search_valid_response($hmac, $nonce, $bad_string, $this->derivedKey);
+    $invalid_string = $authMethod->invokeArgs($this->service, [$hmac, $nonce, $bad_string]);
     $this->assertFalse($invalid_string, t('Response flagged as invalid when a malformed string is passed.'), 'Acquia Search');
 
     // Invalidate the derived key, API function should return FALSE.
     $bad_key = $this->derivedKey . 'invalidateKey';
-    $invalid_key = acquia_search_valid_response($hmac, $nonce, $string, $bad_key);
+    $invalid_key = $authMethod->invokeArgs($this->service, [$hmac, $nonce, $string, $bad_key]);
     $this->assertFalse($invalid_key, t('Response flagged as invalid when a malformed derived key is passed.'), 'Acquia Search');
   }
 
   /**
    * Tests extracting the hmac digest from the response header.
    */
-  public function testExtractHMACHeader() {
+  public function testExtractHmacHeader() {
     // Generate the expected hash.
     $nonce = $this->randomName(32);
     $string = $this->randomName(32);
     $hmac = hash_hmac('sha1', $nonce . $string, $this->derivedKey);
 
     // Pass header with an expected pragma.
-    $header = array('pragma' => 'hmac_digest=' . $hmac . ';');
-    $extracted = acquia_search_extract_hmac($header);
+    $header = ['pragma' => 'hmac_digest=' . $hmac . ';'];
+    $extracted = AcquiaSearchAuth::extractHmac($header);
     $this->assertEqual($hmac, $extracted, t('The HMAC digest was extracted from the response header.'), 'Acquia Search');
 
     // Pass header with a bad pragma.
-    $bad_header1 = array('pragma' => $this->randomName());
-    $bad_extracted1 = acquia_search_extract_hmac($bad_header1);
+    $bad_header1 = ['pragma' => $this->randomName()];
+    $bad_extracted1 = AcquiaSearchAuth::extractHmac($bad_header1);
     $this->assertEqual('', $bad_extracted1, t('Empty string returned by HMAC extraction function when an invalid pragma is passed.'), 'Acquia Search');
 
     // Pass in junk as the header.
-    $bad_extracted2 = acquia_search_extract_hmac($this->randomName());
+    $bad_extracted2 = AcquiaSearchAuth::extractHmac([$this->randomName()]);
     $this->assertEqual('', $bad_extracted2, t('Empty string returned by HMAC extraction function when an invalid header is passed.'), 'Acquia Search');
   }
+
+  /**
+   * Tests that Acquia Search properly overrides the Apachesolr connection.
+   *
+   * This avoids unintended writing to a wrong search index.
+   */
+  public function testApacheSolrOverride() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+
+    global $conf;
+    $site_folder = $this->randomName(32);
+    // Work with the first mock environment.
+    $environment = $this->environment[0];
+
+    // No Acquia hosting and DB detected - should override into Readonly.
+    unset($conf['apachesolr_environments']);
+    $ah_env = NULL;
+    $ah_db_name = '';
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']);
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['acquia_search_key']));
+
+    // Acquia Dev hosting environment detected - configs point to the index on
+    // the Dev environment.
+    unset($conf['apachesolr_environments']);
+    $ah_env = 'dev';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    // Acquia dev environment and a DB name.
+    unset($conf['apachesolr_environments']);
+    $ah_env = 'dev';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    // Acquia Test environment and a DB name. According to the mock, no cores
+    // available for the Test environment so it is read only.
+    unset($conf['apachesolr_environments']);
+    $ah_env = 'test';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']);
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['acquia_search_key']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    // Acquia Prod environment and a DB name but AH_PRODUCTION isn't set - so
+    // read only.
+    unset($conf['apachesolr_environments']);
+    $ah_env = 'prod';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']);
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['acquia_search_key']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    // Acquia Prod environment and a DB name and AH_PRODUCTION is set - so it
+    // should override to connect to the prod index.
+    unset($conf['apachesolr_environments']);
+    $_SERVER['AH_PRODUCTION'] = 1;
+    $ah_env = 'prod';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    // Trying to override already overridden settings should not succeed.
+    unset($_SERVER['AH_PRODUCTION']);
+    $ah_env = 'dev';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($this->api, $ah_env, $site_folder, $ah_db_name);
+    $this->environment->override($core_service);
+
+    $this->assertTrue(empty($conf['apachesolr_environments']['ACQUIA']['conf']['apachesolr_read_only']));
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+  }
+
+  /**
+   * Test override.
+   *
+   * Tests that it selects the correct preferred search core ID for the
+   * override URL when limited number of core ID is available.
+   */
+  public function testApacheSolrOverrideWhenCoreWithDbNameNotAvailable() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+    // When the core ID with the DB name in it is not available, it should
+    // override the URL value with the core ID that has the site folder name
+    // in it.
+    global $conf;
+    unset($conf['apachesolr_environments']);
+
+    $acquia_identifier = $this->id;
+    $site_folder = $this->randomName(32);
+    $solr_hostname = $this->randomName(10) . '.acquia-search.com';
+
+    $available_cores = [
+      ['balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.{$site_folder}"],
+      ['balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}"],
+    ];
+    $environments = $this->getMockedEnvironments();
+
+    $ah_env = 'dev';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
+    acquia_search_add_apachesolr_overrides($core_service, $environments);
+
+    $environment = acquia_search_get_environment();
+
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+  }
+
+  /**
+   * Tests that existing apachesolr Acquia Search environments get overridden.
+   */
+  public function testApacheSolrOverrideAllAcquiaEnvironments() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+    global $conf;
+    unset($conf['apachesolr_environments']);
+
+    $acquia_identifier = $this->id;
+    $site_folder = $this->randomName(32);
+    $solr_hostname = $this->randomName(10) . '.acquia-search.com';
+
+    $available_cores = [
+      ['balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.{$site_folder}"],
+      ['balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}.dev.testdbname"],
+      ['balancer' => $solr_hostname, 'core_id' => "{$acquia_identifier}"],
+    ];
+    $environments = $this->getMockedEnvironments();
+
+    $ah_env = 'dev';
+    $ah_db_name = 'testdbname';
+
+    $core_service = new PreferredSearchCoreService($acquia_identifier, $ah_env, $site_folder, $ah_db_name, $available_cores);
+    acquia_search_add_apachesolr_overrides($core_service, $environments);
+
+    $environment = acquia_search_get_environment();
+
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA']['url'], $environment->id);
+
+    $this->assertIdentical($conf['apachesolr_environments']['ACQUIA_2']['url'], $environment->id);
+
+    $this->assertTrue(empty($conf['apachesolr_environments']['NON-ACQUIA']['url']));
+
+  }
+
+  /**
+   * Returns mocked apachesolr environments.
+   */
+  protected function getMockedEnvironments() {
+    return [
+      'ACQUIA' => new ApacheSolrEnvironment('apachesolr_acquia_search_server_3', $this->api, [
+        'env_id' => 'apachesolr_acquia_search_server_3',
+        'name' => 'Acquia Search',
+        'url' => 'http://mock.acquia-search.com/solr/ABCD-12345',
+        'service_class' => 'AcquiaSearchV3ApacheSolr',
+        'table' => 'apachesolr_environment',
+        'type' => 'Normal',
+        'export_type' => 1,
+        'index_bundles' => [
+          'node' => [
+            0 => 'article',
+            1 => 'page',
+          ],
+        ],
+      ]),
+      'ACQUIA_2' => new ApacheSolrEnvironment('apachesolr_acquia_search_server_2', $this->api, [
+        'env_id' => 'apachesolr_acquia_search_server_2',
+        'name' => 'Acquia Search 2',
+        'url' => 'http://mock.acquia-search.com/solr/XYZW-12345',
+        'service_class' => 'AcquiaSearchV3ApacheSolr',
+        'table' => 'apachesolr_environment',
+        'type' => 'Normal',
+        'export_type' => 1,
+        'index_bundles' => [
+          'node' => [
+            0 => 'article',
+            1 => 'page',
+          ],
+        ],
+      ]),
+      'NON-ACQUIA' => new ApacheSolrEnvironment('solr', $this->api, [
+        'env_id' => 'solr',
+        'name' => 'localhost server',
+        'url' => 'http://localhost:8983/solr',
+        'service_class' => '',
+        'table' => 'apachesolr_environment',
+        'type' => 'Normal',
+        'export_type' => 1,
+        'index_bundles' => [
+          'node' => [
+            0 => 'article',
+            1 => 'page',
+          ],
+        ],
+        'conf' => [
+          'apachesolr_index_last' => [],
+        ],
+      ]),
+    ];
+  }
+
 }
 
 /**
  * Tests the functionality of the Acquia Search module.
  */
-class AcquiaSearchWebTestCase extends DrupalWebTestCase {
+class AcquiaSearchApacheSolrWebTestCase extends DrupalWebTestCase {
+
+  const ACQUIA_SEARCH_ENVIRONMENT_ID = 'apachesolr_acquia_search_server_3';
+
+  /**
+   * Id.
+   *
+   * @var string
+   */
   protected $id;
+
+  /**
+   * Key.
+   *
+   * @var string
+   */
   protected $key;
+
+  /**
+   * Salt.
+   *
+   * @var string
+   */
   protected $salt;
+
+  /**
+   * Derived key.
+   *
+   * @var string
+   */
   protected $derivedKey;
+
+  /**
+   * Url.
+   *
+   * @var string
+   */
   protected $url;
 
+  /**
+   * Search v3 API.
+   *
+   * @var \Drupal\acquia_search\v3\AcquiaSearchSolrApi
+   */
+  protected $api;
+
+  /**
+   * ApacheSolr Acquia Search Environment.
+   *
+   * @var \Drupal\acquia_search\ApacheSolrEnvironment
+   */
+  protected $environment;
+
+  /**
+   * Needs comment.
+   */
   public static function getInfo() {
-    return array(
-      'name' => 'Acquia Search UI tests',
+    return [
+      'name' => 'Acquia Search ApacheSolr UI tests',
       'description' => 'Tests the Acquia Search user interface and functionality.',
       'group' => 'Acquia',
-    );
+    ];
+  }
+
+  /**
+   * Returns if the selected ecosystem is enabled or not.
+   *
+   * @param $ecosystem
+   *   Search ecosystem.
+   *
+   * @return bool
+   *   If Ecosystem is enabled.
+   */
+  protected function checkSearchEcosystem($ecosystem) {
+    if (module_exists($ecosystem)) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
    * Overrides DrupalTestCase::setUp().
    */
   public function setUp() {
-    parent::setUp('acquia_agent', 'acquia_connector_test', 'search', 'apachesolr', 'apachesolr_search', 'acquia_search');
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+    parent::setUp('acquia_agent', 'acquia_connector_test', 'apachesolr', 'apachesolr_search', 'acquia_search');
 
     // Generate and store a random set of credentials.
     $this->id = $this->randomName(10);
     $this->key = $this->randomName(32);
     $this->salt = $this->randomName(32);
-    $this->derivedKey = _acquia_search_create_derived_key($this->salt, $this->id, $this->key);
-    $subscription = array(
+    $this->derivedKey = AcquiaSearchAuth::createDerivedKey($this->salt, $this->id, $this->key);
+
+    $subscription = [
+      'uuid' => '123e4567-e89b-12d3-a456-426614174000',
       'timestamp' => REQUEST_TIME - 60,
       'active' => '1',
-    );
+    ];
 
     variable_set('acquia_identifier', $this->id);
     variable_set('acquia_key', $this->key);
     variable_set('acquia_subscription_data', $subscription);
 
-    $environment = acquia_search_get_environment();
-    $this->url = $environment['url'];
+    // Setup Search v3 ApacheSolr Service.
+    $this->api = AcquiaSearch3::getFromSettings();
+
+    $this->environment = new ApacheSolrEnvironment(self::ACQUIA_SEARCH_ENVIRONMENT_ID, $this->api);
+    $this->url = $this->environment->id;
   }
 
   /**
    * Creates an admin user.
    */
   public function createAdminUser() {
-    $permissions = array(
+    $permissions = [
       'access content',
       'search content',
       'administer nodes',
       'administer search',
-    );
+    ];
     return $this->drupalCreateUser($permissions);
   }
 
   /**
    * Creates an authenticated user that has access to search content.
    *
-   * @return stdClass
+   * @return object
    *   The user object of the authenticated user.
    *
    * @see DrupalWebTestCase::drupalCreateUser()
    */
   public function createAuthenticatedUser() {
-    $permissions = array(
+    $permissions = [
       'search content',
-    );
+    ];
     return $this->drupalCreateUser($permissions);
   }
 
   /**
+   * Clear static cache.
+   *
    * Method to clear static caches that could interrupt with the
    * simpletest procedures for Acquia Search.
    */
@@ -217,12 +637,14 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Enable Acquia Search env.
+   *
    * Enables the environment of Acquia Search and clears the static caches so
    * that the change is reflected in the API functions.
    */
-  public function enableAcquiaSearchEnvironment() {
-    // API function that creates the environemnt if it doesn't exist yet.
-    acquia_search_enable_acquia_solr_environment();
+  protected function enableAcquiaSearchEnvironment() {
+    // API function that creates the environment if it doesn't exist yet.
+    $this->environment->create();
     $this->clearStaticCache();
   }
 
@@ -232,30 +654,36 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
    * Tests executed:
    * - Acquia Search environment is saved and loaded.
    * - Acquia Search environment is set as the default environment when created.
-   * - The service class is set to AcquiaSearchService.
+   * - The service class is set to AcquiaSearchV2ApacheSolr.
    * - The environment's URL is built as expected.
    */
   public function testEnvironment() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
     $this->enableAcquiaSearchEnvironment();
 
-    // Load the newly enabled environment
-    $environment = apachesolr_environment_load(ACQUIA_SEARCH_ENVIRONMENT_ID);
-    // Load the default environment variable
+    // Load the newly enabled environment.
+    $environment = apachesolr_environment_load(self::ACQUIA_SEARCH_ENVIRONMENT_ID);
+    // Load the default environment variable.
     $default_environment = apachesolr_default_environment();
 
     // Test all the things!
-    // Check if the environment is a valid variable
+    // Check if the environment is a valid variable.
     $this->assertTrue($environment, t('Acquia Search environment saved.'), 'Acquia Search');
-    // Check if the default environment is Acquia Search
-    $this->assertEqual(ACQUIA_SEARCH_ENVIRONMENT_ID, $default_environment, t('Acquia Search is set to the default environment.'), 'Acquia Search');
-    // Check if the service class is actually the Acquia Search Service Class
-    $class = isset($environment['service_class']) ? $environment['service_class'] : '';
-    $this->assertEqual('AcquiaSearchService', $class, t('Acquia Search is using the AcquiaSearchService service class.'), 'Acquia Search');
+    // Check if the default environment is Acquia Search.
+    $this->assertEqual(self::ACQUIA_SEARCH_ENVIRONMENT_ID, $default_environment, t('Acquia Search is set to the default environment.'), 'Acquia Search');
+    // Check if the service class is actually the Acquia Search Service Class.
+    $class = $environment['service_class'] ?? '';
+    $this->assertEqual('AcquiaSearchV3ApacheSolr', $class, t('Acquia Search is using the AcquiaSearchV3ApacheSolr service class.'), 'Acquia Search');
     // Check if the url is the same as the one we wanted to save.
-    $this->assertEqual($this->url, $environment['url'], t('Acquia Search is connected to the expected URL.'), 'Acquia Search');
+    $this->assertEqual($this->url, $environment->id, t('Acquia Search is connected to the expected URL.'), 'Acquia Search');
   }
 
   /**
+   * Test Environment UI.
+   *
    * Tests that the Acquia Search environment shows up in the interface and that
    * administrators cannot delete it.
    *
@@ -264,7 +692,11 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
    * - Acquia Search is reflected as the default environment in the UI.
    * - Admin user receives 403 when attempting to delete the environment.
    */
-  public function testEnvironmentUI() {
+  public function testEnvironmentUi() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
     $this->enableAcquiaSearchEnvironment();
 
     $admin_user = $this->createAdminUser();
@@ -272,19 +704,21 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
 
     $settings_path = 'admin/config/search/apachesolr/settings';
     $this->drupalGet($settings_path);
-    $this->assertText('Acquia Search', t('The Acquia Search environment is displayed in the UI.'), 'Acquia Search');
+    $this->assertText('Acquia Search v3', t('The Acquia Search environment is displayed in the UI.'), 'Acquia Search');
 
-    $path = 'admin/config/search/apachesolr/settings/' . ACQUIA_SEARCH_ENVIRONMENT_ID . '/edit';
-    $options = array('query' => array('destination' => $settings_path));
-    $link = l('Acquia Search', $path, $options);
-    $raw = t('!environment <em>(Default)</em>', array('!environment' => $link));
-    $this->assertRaw($raw, t('The Acquia Search environment is reflected as the default in the UI.'), 'Acquia Search');
+    $path = 'admin/config/search/apachesolr/settings/' . self::ACQUIA_SEARCH_ENVIRONMENT_ID . '/edit';
+    #$options = ['query' => ['destination' => $settings_path]];
+    #$link = l(t('Acquia Search'), $path, $options);
+    #$raw = t('!environment <em>(Default)</em>', ['!environment' => $link]);
+    #$this->assertRaw($raw, t('The Acquia Search environment is reflected as the default in the UI.'), 'Acquia Search');
 
-    $this->drupalGet('admin/config/search/apachesolr/settings/' . ACQUIA_SEARCH_ENVIRONMENT_ID . '/delete');
+    $this->drupalGet('admin/config/search/apachesolr/settings/' . self::ACQUIA_SEARCH_ENVIRONMENT_ID . '/delete');
     $this->assertResponse(403, t('The Acquia Search environment cannot be deleted via the UI.'));
   }
 
   /**
+   * Test default search.
+   *
    * Tests that Apache Solr search is set as the default search when the Acquia
    * Search environment is enabled.
    *
@@ -293,6 +727,10 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
    * - Executing a search via the core search block redirects to search/site.
    */
   public function testDefaultSearch() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
     $this->enableAcquiaSearchEnvironment();
 
     // Test that the default search variable is set to the expected value.
@@ -303,8 +741,40 @@ class AcquiaSearchWebTestCase extends DrupalWebTestCase {
     // should redirect to "search/site/test" if working properly.
     $authenticated_user = $this->createAuthenticatedUser();
     $this->drupalLogin($authenticated_user);
-    $edit = array('search_block_form' => 'test');
+    $edit = ['search_block_form' => 'test'];
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertUrl('search/site/test', array(), t('The core search block redirects to the Apache Solr search page.'), 'Acquia Search');
+    $this->assertUrl('search/site/test', [], t('The core search block redirects to the Apache Solr search page.'), 'Acquia Search');
   }
+
+  /**
+   * Tests that global settings form contains EdisMax radio buttons.
+   */
+  public function testSearchEnvironmentsSettingsForm() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+    $permissions = ['administer site configuration', 'administer search'];
+    $this->privilegedUser = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->privilegedUser);
+
+    $this->drupalGet('admin/config/search/apachesolr/settings');
+    $this->assertResponse(200);
+    $this->assertText('Always allow advanced syntax for Acquia Search');
+  }
+
+  /**
+   * Tests that user have no access to delete search environment.
+   */
+  public function testDeleteSearchEnvironmentAccess() {
+    // Skip Test if we aren't using apachesolr.
+    if (!$this->checkSearchEcosystem('apachesolr_search')) {
+      return;
+    }
+    $this->assertFalse(acquia_search_environment_delete_access([]));
+
+    $environment = ['service_class' => 'AcquiaSearchV3ApacheSolr'];
+    $this->assertFalse(acquia_search_environment_delete_access($environment));
+  }
+
 }

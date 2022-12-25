@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * drupalhu_multi_index_search.features.inc
@@ -23,6 +24,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
     "server" : "acquia_solr",
     "item_type" : "comment",
     "options" : {
+      "datasource" : { "bundles" : [] },
       "index_directly" : 1,
       "cron_limit" : "50",
       "fields" : {
@@ -101,6 +103,7 @@ function drupalhu_multi_index_search_default_search_api_index() {
     "server" : "acquia_solr",
     "item_type" : "node",
     "options" : {
+      "datasource" : { "bundles" : [] },
       "index_directly" : 0,
       "cron_limit" : "50",
       "fields" : {
@@ -225,21 +228,28 @@ function drupalhu_multi_index_search_default_search_api_server() {
     "name" : "Acquia Solr",
     "machine_name" : "acquia_solr",
     "description" : "",
-    "class" : "acquia_search_service",
+    "class" : "AcquiaSearchApiService",
     "options" : {
       "clean_ids" : true,
-      "scheme" : "http",
-      "host" : "useast1-c1.acquia-search.com",
-      "port" : "80",
-      "path" : "\\/solr\\/CDKV-36627",
+      "site_hash" : true,
+      "scheme" : "https",
+      "host" : "localhost",
+      "port" : 443,
+      "path" : "\\/solr",
       "edismax" : 0,
       "modify_acquia_connection" : 0,
+      "acquia_search_api_version" : "3",
       "http_user" : "",
       "http_pass" : "",
       "excerpt" : 0,
       "retrieve_data" : 0,
       "highlight_data" : 0,
-      "http_method" : "POST"
+      "skip_schema_check" : 0,
+      "solr_version" : "",
+      "http_method" : "AUTO",
+      "log_query" : 0,
+      "log_response" : 0,
+      "commits_disabled" : 0
     },
     "enabled" : "1"
   }');
