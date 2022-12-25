@@ -132,16 +132,33 @@ function drupalorg_scraper_block_view($delta = '') {
   $block = array();
   switch ($delta) {
     case 'releases':
-      // @todo Translatable.
       $block['subject'] = '+ Letöltés';
       $block['content'] = array(
         '#theme' => 'drupalorg_scraper_releases',
         '#releases' => array(),
         '#highlight' => NULL,
       );
-      $config = variable_get('drupalorg_scraper_block_releases', drupalorg_scraper_block_configure_defaults($delta));
-      $visible_releases = array_keys($config['visible'], TRUE);
-      $releases = drupalorg_scraper_release_history_all();
+
+      // @see D9+ https://www.drupal.org/project/drupalorg/issues/3263693 fix.
+      $visible_releases = [
+        '10:stable',
+      ];
+      $releases = [
+        '10' => [
+          'latest' => [
+            'stable' => '10',
+          ],
+          'releases' => [
+            'release' => [
+              '10' => [
+                'version' => '10',
+                'version_major' => '10',
+                'download_link' => 'https://www.drupal.org/download',
+              ],
+            ],
+          ],
+        ],
+      ];
       foreach ($visible_releases as $release_id) {
         list($major, $release_type) = explode(':', $release_id);
         if (!isset($releases[$major]['latest'][$release_type])) {
@@ -150,8 +167,6 @@ function drupalorg_scraper_block_view($delta = '') {
 
         $release_key = $releases[$major]['latest'][$release_type];
         $release = $releases[$major]['releases']['release'][$release_key];
-        $release['translation'] = drupalorg_scraper_release_translation_url($release, $config['lang_code']);
-
         $block['content']['#releases'][$release_id] = $release;
 
         if ($release_type === 'stable'
@@ -406,13 +421,16 @@ function theme_drupalorg_scraper_releases(array $vars) {
     $output .= '<div' . ($vars['highlight'] === $release_id ? ' class="highlight">' : ' class="not-prefered">');
 
     $output .= l(
-      $release['version'], $release['download_link'], array(
+      $release['version'],
+      $release['download_link'],
+      array(
         'external' => TRUE,
         'attributes' => array(
           'class' => array('project-download'),
           'title' => t(
             'Download Drupal @ver', array('@ver' => $release['version_major'])
           ),
+          'target' => '_blank',
         ),
       )
     );
