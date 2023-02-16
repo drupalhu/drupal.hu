@@ -87,6 +87,7 @@
         "drupal/l10n_update": "^2.0",
         "drupal/libraries": "^2.0",
         "drupal/link": "^1.0",
+        "drupal/mail_safety": "^1.5",
         "drupal/masquerade": "^1.0",
         "drupal/memcache": "^1.0",
         "drupal/module_filter": "^2.0",

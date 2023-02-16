@@ -1,0 +1,326 @@
+<?php
+/**
+ * @file
+ * The core Mail Safety module file
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function mail_safety_menu() {
+  $menu_items = array();
+
+  $menu_items['admin/config/development/mail_safety'] = array(
+    'title' => 'Mail Safety',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_safety_admin_dashboard_form'),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $menu_items['admin/config/development/mail_safety/dashboard'] = array(
+    'title' => 'Dashboard',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'access arguments' => array('use mail safety dashboard'),
+    'weight' => -10,
+  );
+
+  $menu_items['admin/config/development/mail_safety/%mail_safety/view'] = array(
+    'title' => 'View Mail',
+    'page callback' => 'mail_safety_admin_view_mail',
+    'page arguments' => array(4),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $menu_items['admin/config/development/mail_safety/%mail_safety/details'] = array(
+    'title' => 'Details Mail',
+    'page callback' => 'mail_safety_admin_details_mail',
+    'page arguments' => array(4),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $menu_items['admin/config/development/mail_safety/%mail_safety/send_original'] = array(
+    'title' => 'Send Original',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_safety_admin_send_original_form', 4),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $menu_items['admin/config/development/mail_safety/%mail_safety/send_default'] = array(
+    'title' => 'Send Default',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_safety_admin_send_default_form', 4),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $menu_items['admin/config/development/mail_safety/%mail_safety/delete'] = array(
+    'title' => 'Delete Mail',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_safety_admin_delete_form', 4),
+    'access arguments' => array('use mail safety dashboard'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $menu_items['admin/config/development/mail_safety/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mail_safety_admin_settings_form'),
+    'access arguments' => array('administer mail safety'),
+    'file' => 'mail_safety.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+  );
+
+  return $menu_items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function mail_safety_theme() {
+  return array(
+    'mail_safety_mail' => array(
+      'variables' => array('mail' => NULL),
+    ),
+    'mail_safety_details' => array(
+      'variables' => array('mail' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Filters any e-mail going through the drupal mail system.
+ *
+ * If Mail Safety is enabled it stops all mails from being sent depending on
+ * the settings it will either send the mails to a default mail address and/or
+ * send it to the dashboard.
+ */
+function mail_safety_mail_alter(&$message) {
+  if (variable_get('mail_safety_enabled', FALSE)) {
+    $message['send'] = FALSE;
+  }
+  // If mail to dashboard is enabled it'll send the mail to the dashboard.
+  if (variable_get('mail_safety_send_mail_to_dashboard', TRUE)) {
+    mail_safety_insert_mail($message);
+  }
+
+  // If mail to default mail is enabled it will send the mail to the default
+  // mail address.
+  if (variable_get('mail_safety_send_mail_to_default_mail', TRUE)) {
+    $message['to'] = variable_get('mail_safety_default_mail_address', '');
+    unset($message['headers']['CC']);
+    unset($message['headers']['BCC']);
+
+    $message['send'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function mail_safety_permission() {
+  return array(
+    'use mail safety dashboard' => array(
+      'description' => t('Use the Mail Safety dashboard.'),
+      'title' => t('Use Mail Safety dashboard'),
+      'restrict access' => TRUE,
+    ),
+    'administer mail safety' => array(
+      'title' => t('Administer Mail Safety'),
+      'description' => t('Enable and configure Mail Safety'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+
+/**
+ * Get mail catched by the mail safety module.
+ *
+ * If the mail id parameter is omitted it will return all mail.
+ *
+ * @param int $mail_id
+ *   The mail id as it is saved in the mail safety table.
+ */
+function mail_safety_load($mail_id = NULL) {
+  if (!is_null($mail_id) && !is_numeric($mail_id)) {
+    return FALSE;
+  }
+
+  $mails = array();
+
+  $query = db_select('mail_safety_dashboard', 'msd');
+  $query->fields('msd', array('mail_id', 'sent', 'mail'));
+
+  // Add a condition for the mail id is given.
+  if (!is_null($mail_id)) {
+    $query->condition('mail_id', $mail_id);
+  }
+
+  $query->orderBy('sent', 'DESC');
+
+  $result = $query->execute();
+
+  while ($row = $result->fetchAssoc()) {
+    $mails[$row['mail_id']] = array(
+      'mail' => unserialize($row['mail']),
+      'sent' => $row['sent'],
+      'mail_id' => $row['mail_id'],
+    );
+  };
+
+  // Let other modules respond before a mail is loaded.
+  // E.g. attachments that were saved with the mail.
+  $modules = module_implements('mail_safety_load');
+
+  foreach ($mails as $key => $mail) {
+    foreach ($modules as $module) {
+      $mail['mail'] = module_invoke($module, 'mail_safety_load', $mail['mail']);
+    }
+
+    $mails[$key] = $mail;
+  }
+
+  if (!is_null($mail_id) && !empty($mails[$mail_id])) {
+    return $mails[$mail_id];
+  }
+  elseif (!empty($mails)) {
+    return $mails;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Saves the mail to the dashboard.
+ *
+ * @param array $message
+ *   The drupal message array.
+ */
+function mail_safety_insert_mail($message) {
+  // Let other modules alter the message array before a mail is inserted.
+  // E.g. save attachments that are sent with the mail.
+  drupal_alter('mail_safety_pre_insert', $message);
+
+  $mail = array(
+    'sent' => time(),
+    'mail' => serialize($message),
+  );
+
+  db_insert('mail_safety_dashboard')
+  ->fields($mail)
+  ->execute();
+}
+
+/**
+ * Delete a specific mail from the dashboard.
+ *
+ * @param int $mail_id
+ *   The mail id as it is saved in the mail safety table.
+ */
+function mail_safety_delete_mail($mail_id = NULL) {
+  module_invoke_all('mail_safety_delete_mail', $mail_id);
+
+  db_delete('mail_safety_dashboard')
+  ->condition('mail_id', $mail_id)
+  ->execute();
+
+  return TRUE;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Make sure our hook is called last.
+ */
+function mail_safety_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'mail_alter' && isset($implementations['mail_safety'])) {
+    // Move mail_safety_mail_alter() to the end of the list.
+    $group = $implementations['mail_safety'];
+    unset($implementations['mail_safety']);
+    $implementations['mail_safety'] = $group;
+  }
+}
+
+/**
+ * Returns HTML for the display of a mail.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - mail: The message array that is being formatted.
+ *
+ * @ingroup themeable
+ */
+function theme_mail_safety_mail($variables) {
+  $mail = $variables['mail']['mail'];
+
+  $output = '<h2>' . $mail['subject'] . '</h2>';
+  $output .= '<div class="mail-body">' . $mail['body'] . '</div>';
+
+  return check_markup($output);
+}
+
+/**
+ * Returns HTML for the details of a mail.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - mail: The message array that is being formatted.
+ *
+ * @ingroup themeable
+ */
+function theme_mail_safety_details($variables) {
+  $mail = $variables['mail']['mail'];
+
+  $output = '<h2>' . $mail['subject'] . '</h2>';
+  $output .= '<pre>' . print_r($mail, TRUE) . '</pre>';
+
+  return check_markup($output);
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function mail_safety_cron_queue_info() {
+  $queues['mail_safety_expire_mails'] = array(
+    'worker callback' => 'mail_safety_delete_mail',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function mail_safety_cron() {
+  // Queue Mail Safety mails older than the expiration setting to be deleted.
+  $expire = variable_get('mail_safety_mail_expire', 0);
+
+  if (!empty($expire)) {
+    $mail_ids = db_select('mail_safety_dashboard', 'msd')
+      ->fields('msd', array('mail_id'))
+      ->condition('sent', REQUEST_TIME - $expire, '<=')
+      ->execute()
+      ->fetchCol();
+
+    if (!empty($mail_ids)) {
+      $queue = DrupalQueue::get('mail_safety_expire_mails');
+
+      foreach ($mail_ids as $mail_id) {
+        $queue->createItem($mail_id);
+      }
+    }
+  }
+}

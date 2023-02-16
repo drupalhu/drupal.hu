@@ -3,7 +3,7 @@
         'name' => 'drupalhu/drupal-hu',
         'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
         'version' => 'dev-2.x-375-nodeevent-redesign',
-        'reference' => '568ec951535649b0bf4407ca654d3cb5865f0e7c',
+        'reference' => '0abc9a7ada5a2aeb926a29e1385156bdcec0eca3',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -406,6 +406,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/mail_safety' => array(
+            'pretty_version' => '1.5.0',
+            'version' => '1.5.0.0',
+            'reference' => '7.x-1.5',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/sites/all/modules/contrib/mail_safety',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/masquerade' => array(
             'pretty_version' => '1.0.0-rc7',
             'version' => '1.0.0.0-RC7',
@@ -643,7 +652,7 @@
         'drupalhu/drupal-hu' => array(
             'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
             'version' => 'dev-2.x-375-nodeevent-redesign',
-            'reference' => '568ec951535649b0bf4407ca654d3cb5865f0e7c',
+            'reference' => '0abc9a7ada5a2aeb926a29e1385156bdcec0eca3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
