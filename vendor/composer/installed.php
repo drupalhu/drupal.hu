@@ -3,7 +3,7 @@
         'name' => 'drupalhu/drupal-hu',
         'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
         'version' => 'dev-2.x-375-nodeevent-redesign',
-        'reference' => '37eb5dd6bdbf0cd4b9e9bd5989cc38ad8c4db925',
+        'reference' => '568ec951535649b0bf4407ca654d3cb5865f0e7c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -541,6 +541,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/smtp' => array(
+            'pretty_version' => '1.9.0',
+            'version' => '1.9.0.0',
+            'reference' => '7.x-1.9',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/sites/all/modules/contrib/smtp',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/stage_file_proxy' => array(
             'pretty_version' => '1.10.0',
             'version' => '1.10.0.0',
@@ -634,7 +643,7 @@
         'drupalhu/drupal-hu' => array(
             'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
             'version' => 'dev-2.x-375-nodeevent-redesign',
-            'reference' => '37eb5dd6bdbf0cd4b9e9bd5989cc38ad8c4db925',
+            'reference' => '568ec951535649b0bf4407ca654d3cb5865f0e7c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
