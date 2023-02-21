@@ -8,4 +8,4 @@ drush_alias=$1
 
 # Enable shield and its configuration to protect non production environments
 # from search engines.
-drush @$drush_alias pm-enable --yes shield drupalhu_shield_settings
+drush "@${drush_alias}" pm-enable --yes drupalhu_staging

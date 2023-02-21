@@ -1,0 +1,51 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the Mail Safety module.
+ */
+
+/**
+ * Implements hook_schema().
+ * 
+ * Define the schema's used for this module
+ * 
+ * - mail_safety_dashboard: Stores all mails sent by the system
+ */
+function mail_safety_schema() {
+  $schema['mail_safety_dashboard'] = array(
+    'description' => 'Stores all mails sent by the system in this table.',
+    'fields' => array(
+      'mail_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The mail id.',
+      ),
+      'sent' => array(
+        'type' => 'int',
+        'default' => 0,
+        'description' => 'The order in which this display is loaded.',
+      ),
+      'mail' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'A serialized mail object stored',
+        'serialize' => TRUE,
+        'serialized default' => 'a:0:{}',
+      ),
+    ),
+    'primary key' => array('mail_id' => 'mail_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function mail_safety_uninstall() {
+  variable_del('mail_safety_enabled');
+  variable_del('mail_safety_send_mail_to_dashboard');
+  variable_del('mail_safety_send_mail_to_default_mail');
+  variable_del('mail_safety_default_mail_address');
+  variable_del('mail_safety_mail_expire');
+}

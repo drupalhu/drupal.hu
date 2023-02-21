@@ -725,6 +725,13 @@ $conf['field_sql_storage_skip_writing_unchanged_fields'] = TRUE;
  * @see drupal_mail()
  */
 $conf['mail_display_name_site_name'] = TRUE;
+$conf['smtp_protocol'] = getenv('SMTP_PROTOCOL');
+$conf['smtp_username'] = getenv('SMTP_USERNAME');
+$conf['smtp_password'] = getenv('SMTP_PASSWORD');
+$conf['smtp_host'] = getenv('SMTP_HOST');
+$conf['smtp_port'] = getenv('SMTP_PORT');
+$conf['smtp_from'] = getenv('SMTP_FROM');
+$conf['smtp_fromname'] = getenv('SMTP_FROMNAME');
 
 /**
  * SameSite cookie attribute.
