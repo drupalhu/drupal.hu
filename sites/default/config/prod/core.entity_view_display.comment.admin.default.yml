@@ -1,4 +1,4 @@
-uuid: c56ded3c-8794-4dd6-a035-74f3bd3b4f88
+uuid: 47c8d66e-3c5f-442f-ae0d-2520d360e8e6
 langcode: hu
 status: true
 dependencies:
@@ -22,7 +22,7 @@ content:
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 1
     region: content
 hidden:
   langcode: true

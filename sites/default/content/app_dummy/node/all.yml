@@ -1,6 +1,7 @@
 
 #region book
 Felhasználói útmútató:
+  uuid: 'e4f8e512-7294-4636-8235-5f4d6a870332'
   type: 'book'
   uid: 'Gizi'
   title: 'Felhasználói útmútató'
@@ -12,6 +13,7 @@ Felhasználói útmútató:
         iségben. Ezek után mátyaság lápsin szajolta kradás lápsint.</p>
 
 Fejlesztői útmútató:
+  uuid: '3ac17652-5cb6-425a-bcab-800783b67857'
   type: 'book'
   uid: 'Gizi'
   title: 'Fejlesztői útmútató'
@@ -27,6 +29,7 @@ Fejlesztői útmútató:
 
 #region casestudy
 Esettanulmány 01:
+  uuid: 'f6a3c027-1b40-4fa3-aa47-4badbf65a99c'
   type: 'casestudy'
   uid: 'Gizi'
   title: 'Esettanulmány 01'
@@ -62,6 +65,7 @@ Esettanulmány 01:
 
 #region event
 Esemény 01:
+  uuid: '92509d6b-db50-481d-ba03-47a4c4588626'
   type: 'event'
   uid: 'Gizi'
   status: false
@@ -98,6 +102,7 @@ Esemény 01:
         fenijéről jántok, és skarok póros pamvban.</p>
 
 Esemény 02:
+  uuid: '81e2fe74-38c2-4e39-9bbd-3f81aa84566e'
   type: 'event'
   uid: 'Gizi'
   title: 'Esemény 02'
@@ -125,6 +130,7 @@ Esemény 02:
 
 #region forum
 Fórumtéma 01:
+  uuid: '07aa4f22-91d0-4b7b-a22d-a056aa0341dd'
   type: 'forum'
   uid: 'Gizi'
   title: 'Fórumtéma 01'
@@ -162,6 +168,7 @@ Fórumtéma 01:
 
 #region job
 Munkaajánlat 01:
+  uuid: '8d754163-f485-4091-8f9d-2fba87d1b4b4'
   type: 'job'
   uid: 'Gizi'
   title: 'Munkaajánlat 01'
@@ -234,6 +241,7 @@ Munkaajánlat 01:
 
 #region news
 Hír 01:
+  uuid: '8893287a-3a87-40b7-a7c9-03f58451fde8'
   type: 'news'
   uid: 'Gizi'
   title: 'Hír 01'
@@ -264,13 +272,14 @@ Hír 01:
 
 #region note
 Feljegyzés 01:
+  uuid: '22b6209f-282e-45b8-b688-0101d168d0b4'
   type: 'note'
   status: false
   uid: 'Gizi'
   title: 'Feljegyzés 01'
   app_attachments:
     -
-      target_id: attachment/2021/note-01.pdf
+      target_id: 'attachment/2021/note-01.pdf'
   app_body:
     -
       value: |
@@ -292,6 +301,7 @@ Feljegyzés 01:
 
 #region page
 Oldal 01:
+  uuid: '24d4435a-195a-47a8-ba6b-a9f1f14145dc'
   type: 'page'
   uid: 'Gizi'
   title: 'Oldal 01'

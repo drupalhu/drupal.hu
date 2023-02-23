@@ -1,4 +1,4 @@
-uuid: 794c98b2-366e-4f6f-9dc6-542cecc56e65
+uuid: e013debb-be5b-4dbd-a878-d18fb21a0c5f
 langcode: hu
 status: true
 dependencies:
@@ -10,106 +10,15 @@ dependencies:
     - field.field.node.casestudy.app_image
     - field.field.node.casestudy.app_links
     - field.field.node.casestudy.app_teaser
-    - image.style.media_library
     - node.type.casestudy
   module:
     - layout_builder
-    - layout_discovery
-    - media
     - text
     - user
 third_party_settings:
   layout_builder:
-    enabled: true
+    enabled: false
     allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          f30b7694-0f5e-4a39-ae8b-586cf77cd639:
-            uuid: f30b7694-0f5e-4a39-ae8b-586cf77cd639
-            region: content
-            configuration:
-              id: 'field_block:node:casestudy:app_image'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: media_thumbnail
-                label: hidden
-                settings:
-                  image_link: content
-                  image_style: media_library
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          b957aa1b-3a8d-4ce0-ba47-d43bc0e9fd6a:
-            uuid: b957aa1b-3a8d-4ce0-ba47-d43bc0e9fd6a
-            region: content
-            configuration:
-              id: 'field_block:node:casestudy:app_drupal_version'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 3
-            additional: {  }
-          164d4fd0-125d-4b9b-8296-93643f61553b:
-            uuid: 164d4fd0-125d-4b9b-8296-93643f61553b
-            region: content
-            configuration:
-              id: 'field_block:node:casestudy:app_teaser'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 4
-            additional: {  }
-          e01e7597-d4bf-4c57-a317-ab865b109f70:
-            uuid: e01e7597-d4bf-4c57-a317-ab865b109f70
-            region: content
-            configuration:
-              id: 'extra_field_block:node:casestudy:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 5
-            additional: {  }
-          667732a5-45a7-4159-99f4-cd103e541ac1:
-            uuid: 667732a5-45a7-4159-99f4-cd103e541ac1
-            region: content
-            configuration:
-              id: 'field_block:node:casestudy:app_links'
-              label: Linkek
-              label_display: '0'
-              provider: layout_builder
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-              formatter:
-                type: link
-                label: inline
-                settings:
-                  trim_length: 80
-                  url_only: false
-                  url_plain: false
-                  rel: nofollow
-                  target: '0'
-                third_party_settings: {  }
-            weight: 2
-            additional: {  }
-        third_party_settings: {  }
 id: node.casestudy.teaser
 targetEntityType: node
 bundle: casestudy
@@ -124,11 +33,11 @@ content:
     weight: 1
     region: content
   app_image:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      image_link: content
-      image_style: media_library
+      view_mode: hero
+      link: false
     third_party_settings: {  }
     weight: 0
     region: content
@@ -139,14 +48,10 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
-    region: content
 hidden:
   app_attachments: true
   app_body: true
   app_links: true
   langcode: true
+  links: true
   search_api_excerpt: true

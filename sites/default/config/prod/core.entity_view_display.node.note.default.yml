@@ -1,9 +1,8 @@
-uuid: 9146255a-5d40-438d-a636-e7b4b829e2f7
+uuid: 8de49dd7-6e92-4c2d-b414-a28e235fb1de
 langcode: hu
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.admin.default
     - field.field.node.note.app_attachments
     - field.field.node.note.app_body
     - field.field.node.note.app_comment_admin
@@ -12,94 +11,8 @@ dependencies:
   module:
     - comment
     - file
-    - layout_builder
-    - layout_discovery
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: true
-    allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          a440cee4-d99b-4658-99ea-851a4010fb76:
-            uuid: a440cee4-d99b-4658-99ea-851a4010fb76
-            region: content
-            configuration:
-              id: 'field_block:node:note:app_teaser'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          e9d46321-520a-4368-b4c2-3bc5d7bd8e8f:
-            uuid: e9d46321-520a-4368-b4c2-3bc5d7bd8e8f
-            region: content
-            configuration:
-              id: 'field_block:node:note:app_body'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          c5fff1d0-8191-4fab-887a-5144a678b8d1:
-            uuid: c5fff1d0-8191-4fab-887a-5144a678b8d1
-            region: content
-            configuration:
-              id: 'extra_field_block:node:note:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 2
-            additional: {  }
-          b82091ab-e013-4402-b0fa-22645f5ee259:
-            uuid: b82091ab-e013-4402-b0fa-22645f5ee259
-            region: content
-            configuration:
-              id: 'field_block:node:note:app_attachments'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: file_default
-                label: above
-                settings:
-                  use_description_as_link_text: true
-                third_party_settings: {  }
-            weight: 3
-            additional: {  }
-          6e248703-7108-4d07-a238-676bcaf37fd1:
-            uuid: 6e248703-7108-4d07-a238-676bcaf37fd1
-            region: content
-            configuration:
-              id: 'field_block:node:note:app_comment_admin'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: comment_default
-                label: above
-                settings:
-                  view_mode: default
-                  pager_id: 0
-                third_party_settings: {  }
-            weight: 4
-            additional: {  }
-        third_party_settings: {  }
 id: node.note.default
 targetEntityType: node
 bundle: note
@@ -111,7 +24,7 @@ content:
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   app_body:
     type: text_default
@@ -139,7 +52,7 @@ content:
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
 hidden:
   langcode: true

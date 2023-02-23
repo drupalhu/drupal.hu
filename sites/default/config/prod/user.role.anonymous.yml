@@ -1,7 +1,12 @@
 uuid: 36135aba-1d83-403e-9818-807bc43a1fa4
 langcode: hu
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - contact
+    - entity_legal
+    - media
+    - system
 _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
 id: anonymous

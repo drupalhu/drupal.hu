@@ -1,0 +1,92 @@
+langcode: 'en'
+status: true
+id: 'app_legacy__comment__forum'
+label: 'App - Legacy - comment:forum'
+
+migration_tags:
+  - 'src_comment'
+  - 'src_comment__forum'
+  - 'dst_comment'
+  - 'dst_comment__forum'
+
+migration_group: 'app_legacy'
+
+migration_dependencies:
+  required:
+    - 'app_legacy__user__user'
+    - 'app_legacy__node__book'
+    - 'app_legacy__node__casestudy'
+    - 'app_legacy__node__event'
+    - 'app_legacy__node__forum'
+    - 'app_legacy__node__news'
+
+source:
+  plugin: 'app_comment'
+  node_types:
+    - 'book'
+    - 'esemeny'
+    - 'forum'
+    - 'link'
+    - 'news'
+
+#    - poll
+#    - webform
+
+  constants:
+    entity_type: 'node'
+    field_name: 'comment_forum'
+    body_text_format: 'html_body'
+
+process:
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  entity_id:
+    source: 'nid'
+    plugin: 'migration_lookup'
+    no_stub: true
+    migration:
+      - 'app_legacy__node__book'
+      - 'app_legacy__node__casestudy'
+      - 'app_legacy__node__event'
+      - 'app_legacy__node__forum'
+      - 'app_legacy__node__news'
+  langcode:
+    source: 'language'
+    plugin: 'default_value'
+    default_value: 'hu'
+  cid: 'cid'
+  pid:
+    -
+      source: 'pid'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_legacy__comment__forum'
+  uid:
+    -
+      source: 'uid'
+      plugin: 'migration_lookup'
+      no_stub: true
+      migration:
+        - 'app_legacy__user__user'
+    -
+      plugin: 'default_value'
+      default_value: 0
+
+  name: 'name'
+  mail: 'mail'
+  homepage: 'homepage'
+  hostname: 'hostname'
+  created: 'created'
+  changed: 'changed'
+  thread: 'thread'
+  status: 'status'
+  subject: 'subject'
+  comment_body/0/value: 'comment_body/0/value'
+  comment_body/0/format: 'constants/body_text_format'
+
+destination:
+  plugin: 'entity:comment'
+  default_bundle: 'comment_forum'

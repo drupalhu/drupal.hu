@@ -5,7 +5,7 @@ dependencies: {  }
 _core:
   default_config_hash: 6uqsWgLopdBAXIzy2SwBKR3p6a2GgNIsdteOAG9K-08
 id: text_ngram_und_7_0_0
-label: 'NGram Text Field'
+label: 'NGram szöveges mező'
 minimum_solr_version: 7.0.0
 custom_code: ngram
 field_type_language_code: und

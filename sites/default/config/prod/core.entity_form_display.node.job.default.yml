@@ -1,4 +1,4 @@
-uuid: 5f22c060-2c17-467a-8c89-0b035ba03b97
+uuid: e2278723-c08c-40cd-bccb-6a38fa1b09d4
 langcode: hu
 status: true
 dependencies:
@@ -32,7 +32,7 @@ mode: default
 content:
   app_body:
     type: text_textarea
-    weight: 3
+    weight: 4
     region: content
     settings:
       rows: 5
@@ -47,7 +47,7 @@ content:
     third_party_settings: {  }
   app_job_advantage:
     type: text_textarea
-    weight: 5
+    weight: 9
     region: content
     settings:
       rows: 5
@@ -55,7 +55,7 @@ content:
     third_party_settings: {  }
   app_job_announcer_gives:
     type: text_textarea
-    weight: 9
+    weight: 5
     region: content
     settings:
       rows: 5
@@ -63,7 +63,7 @@ content:
     third_party_settings: {  }
   app_job_contact_email:
     type: email_default
-    weight: 16
+    weight: 15
     region: content
     settings:
       placeholder: ''
@@ -87,46 +87,46 @@ content:
     third_party_settings: {  }
   app_job_contact_phone:
     type: telephone_default
-    weight: 15
+    weight: 16
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   app_job_due_date:
     type: datetime_default
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   app_job_employment:
     type: options_select
-    weight: 8
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   app_job_expectations:
     type: text_textarea
-    weight: 4
+    weight: 6
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
   app_job_language:
-    type: options_buttons
-    weight: 12
+    type: options_select
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   app_job_level:
-    type: options_buttons
-    weight: 11
+    type: options_select
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   app_job_location_name:
     type: string_textfield
-    weight: 7
+    weight: 10
     region: content
     settings:
       size: 60
@@ -134,7 +134,7 @@ content:
     third_party_settings: {  }
   app_job_location_type:
     type: options_select
-    weight: 6
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -149,7 +149,7 @@ content:
     weight: 0
     region: content
     settings:
-      include_locked: false
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path
@@ -192,6 +192,7 @@ content:
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }

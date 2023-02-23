@@ -12,15 +12,15 @@
     <ini name="error_reporting" value="32767" />
     <ini name="memory_limit" value="-1" />
 
-    <env name="DTT_BASE_URL" value="http://drupalhu.localhost" />
-    <env name="DTT_API_URL" value="http://127.0.0.1:9222" />
+    <!--<env name="DTT_BASE_URL" value="https://local.drupal.hu" />-->
+    <!--<env name="DTT_API_URL" value="http://chrome:9222" />-->
     <env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value="../reports/human/functional-javascript" />
 
-    <env name="SIMPLETEST_BASE_URL" value="http://drupalhu.localhost" />
-    <env name="SIMPLETEST_DB" value="mysql://root:mysql@127.0.0.1:3306/drupalhu__default" />
+    <!--<env name="SIMPLETEST_BASE_URL" value="https://local.drupal.hu" />-->
+    <!--<env name="SIMPLETEST_DB" value="mysql://root:root@db:3306/db" />-->
 
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="./reports/human/browser_output" />
-    <env name="BROWSERTEST_OUTPUT_BASE_URL" value="" />
+    <!--<env name="BROWSERTEST_OUTPUT_BASE_URL" value="https://local.drupal.hu" />-->
 
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="/Drupal\\app(p|b|f|_.+?)\\/" />
 
@@ -48,18 +48,18 @@
     </testsuite>
   </testsuites>
 
-  <listeners>
-    <listener class="\Drupal\Tests\Listeners\DrupalListener" />
+  <!--<listeners>-->
+  <!--  <listener class="\Drupal\Tests\Listeners\DrupalListener" />-->
     <!-- The Symfony deprecation listener has to come after the Drupal deprecation listener -->
-    <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-  </listeners>
+    <!--<listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener" />-->
+  <!--</listeners>-->
 
   <logging>
     <testdoxHtml outputFile="reports/human/result/phpunit.html" />
     <junit outputFile="reports/machine/result/phpunit.xml" />
   </logging>
 
-  <coverage processUncoveredFiles="true">
+  <coverage>
     <include>
       <directory>./docroot/profiles/custom/</directory>
       <directory>./docroot/modules/custom/</directory>

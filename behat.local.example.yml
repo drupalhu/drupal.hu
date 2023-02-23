@@ -7,3 +7,4 @@ default:
         browserChrome:
           chrome:
             validate_certificate: false
+            api_url: 'http://chrome:9222'

@@ -6,3 +6,4 @@ marvin:
       gitCloneAndClean:
         remoteName: 'acquia'
         remoteUrl: '${marvin.acquia.projectId}@${marvin.acquia.gitHost}:${marvin.acquia.projectId}.git'
+        remoteBranch: '2.x'

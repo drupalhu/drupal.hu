@@ -1,4 +1,4 @@
-uuid: 232ff5f2-2ee4-4a63-88f8-63c64b7ccd71
+uuid: ed23fb7a-e016-45b0-882b-df8af693fd24
 langcode: hu
 status: true
 dependencies:
@@ -11,81 +11,36 @@ dependencies:
     - field.field.node.news.app_image
     - field.field.node.news.app_teaser
     - field.field.node.news.comment_forum
-    - image.style.media_library
     - node.type.news
   module:
+    - datetime_range
     - layout_builder
-    - layout_discovery
-    - media
     - text
     - user
 third_party_settings:
   layout_builder:
-    enabled: true
+    enabled: false
     allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          930a3d3a-590f-4ae1-b5d6-9dd723ad0f5a:
-            uuid: 930a3d3a-590f-4ae1-b5d6-9dd723ad0f5a
-            region: content
-            configuration:
-              id: 'field_block:node:news:app_image'
-              label: Kép
-              label_display: '0'
-              provider: layout_builder
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-              formatter:
-                type: media_thumbnail
-                label: hidden
-                settings:
-                  image_link: content
-                  image_style: l30s60
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          b0c34ddc-ec52-4c94-98e5-cf182d2d2772:
-            uuid: b0c34ddc-ec52-4c94-98e5-cf182d2d2772
-            region: content
-            configuration:
-              id: 'field_block:node:news:app_teaser'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          57b7e50b-ce3a-4594-81ec-537ececd4686:
-            uuid: 57b7e50b-ce3a-4594-81ec-537ececd4686
-            region: content
-            configuration:
-              id: 'extra_field_block:node:news:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 2
-            additional: {  }
-        third_party_settings: {  }
 id: node.news.teaser
 targetEntityType: node
 bundle: news
 mode: teaser
 content:
+  app_date:
+    type: daterange_default
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 1
+    region: content
   app_image:
-    type: media_thumbnail
+    type: entity_reference_label
     label: hidden
     settings:
-      image_link: content
-      image_style: media_library
+      link: true
     third_party_settings: {  }
     weight: 0
     region: content
@@ -94,18 +49,13 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
 hidden:
   app_attachments: true
   app_body: true
-  app_date: true
   app_drupal_version: true
   comment_forum: true
   langcode: true
+  links: true
   search_api_excerpt: true

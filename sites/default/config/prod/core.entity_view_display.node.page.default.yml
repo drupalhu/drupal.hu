@@ -1,4 +1,4 @@
-uuid: a67a07c5-eff0-4ac8-86e3-4c1ed7e6b55f
+uuid: e9b2c04f-afbe-47a9-b653-0685870dbd5e
 langcode: hu
 status: true
 dependencies:
@@ -6,84 +6,11 @@ dependencies:
     - field.field.node.page.app_attachments
     - field.field.node.page.app_body
     - field.field.node.page.app_image
-    - image.style.media_library
     - node.type.page
   module:
     - file
-    - layout_builder
-    - layout_discovery
-    - media
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: true
-    allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          04ddbe9c-abf0-4c84-bb01-01a8a689a090:
-            uuid: 04ddbe9c-abf0-4c84-bb01-01a8a689a090
-            region: content
-            configuration:
-              id: 'field_block:node:page:app_image'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: media_thumbnail
-                label: hidden
-                settings:
-                  image_link: ''
-                  image_style: media_library
-                third_party_settings: {  }
-            weight: -10
-            additional: {  }
-          ce350878-a1c3-47d9-a038-4eee6d0a7ccf:
-            uuid: ce350878-a1c3-47d9-a038-4eee6d0a7ccf
-            region: content
-            configuration:
-              id: 'field_block:node:page:app_body'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: -9
-            additional: {  }
-          6b42afdb-2b0b-403a-aaea-ffcbe759ff94:
-            uuid: 6b42afdb-2b0b-403a-aaea-ffcbe759ff94
-            region: content
-            configuration:
-              id: 'extra_field_block:node:page:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: -7
-            additional: {  }
-          68e32cc3-d351-4f83-9afb-0f90a7fae115:
-            uuid: 68e32cc3-d351-4f83-9afb-0f90a7fae115
-            region: content
-            configuration:
-              id: 'field_block:node:page:app_attachments'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: file_default
-                label: above
-                settings:
-                  use_description_as_link_text: true
-                third_party_settings: {  }
-            weight: -8
-            additional: {  }
-        third_party_settings: {  }
 id: node.page.default
 targetEntityType: node
 bundle: page
@@ -95,7 +22,7 @@ content:
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   app_body:
     type: text_default
@@ -105,18 +32,17 @@ content:
     weight: 1
     region: content
   app_image:
-    type: media_thumbnail
+    type: entity_reference_label
     label: hidden
     settings:
-      image_link: ''
-      image_style: media_library
+      link: true
     third_party_settings: {  }
     weight: 0
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
 hidden:
   langcode: true

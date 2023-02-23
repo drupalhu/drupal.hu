@@ -1,4 +1,4 @@
-uuid: a66e78c6-2157-4885-b4bb-55f5e4ec9068
+uuid: 97909e0b-7de3-4124-9d61-f49f298e0301
 langcode: hu
 status: true
 dependencies:
@@ -19,7 +19,7 @@ mode: default
 content:
   app_attachments:
     type: file_generic
-    weight: 10
+    weight: 4
     region: content
     settings:
       progress_indicator: throbber
@@ -41,7 +41,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -60,21 +60,21 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 6
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 8
+    weight: 10
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 7
+    weight: 8
     region: content
     settings:
       display_label: true
@@ -89,10 +89,11 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }

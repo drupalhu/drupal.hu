@@ -1,0 +1,8 @@
+parameters:
+  paths:
+    - ../docroot/profiles/custom/
+    - ../docroot/modules/custom/
+    - ../docroot/themes/custom/
+    - ../drush/Commands/custom/
+#  excludePaths:
+#    - ../foo

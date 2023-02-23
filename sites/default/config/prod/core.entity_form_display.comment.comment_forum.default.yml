@@ -1,4 +1,4 @@
-uuid: f79e3555-ac8c-4782-8b66-0786386dcdf6
+uuid: cbf7a7e4-c2c6-4592-8c71-3b2e76614811
 langcode: hu
 status: true
 dependencies:
@@ -7,21 +7,19 @@ dependencies:
     - field.field.comment.comment_forum.comment_body
   module:
     - text
-_core:
-  default_config_hash: FbD0Vvben3VEPcKqe88Y_ABUUW3RKq0AGFLwtZtYaVY
 id: comment.comment_forum.default
 targetEntityType: comment
 bundle: comment_forum
 mode: default
 content:
   author:
-    weight: 3
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
   comment_body:
     type: text_textarea
-    weight: 2
+    weight: 3
     region: content
     settings:
       rows: 5
@@ -36,7 +34,7 @@ content:
     third_party_settings: {  }
   subject:
     type: string_textfield
-    weight: 1
+    weight: 2
     region: content
     settings:
       size: 60

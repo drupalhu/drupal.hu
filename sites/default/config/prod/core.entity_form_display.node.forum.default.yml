@@ -1,4 +1,4 @@
-uuid: cfea06d3-da08-4725-8557-b44df5b08c6c
+uuid: 365b4322-8329-4e73-b9ef-9f2222cea48f
 langcode: hu
 status: true
 dependencies:
@@ -14,8 +14,6 @@ dependencies:
     - comment
     - path
     - text
-_core:
-  default_config_hash: QNS5prJxZ5ntiAjsrovv2SFwwYF8otWx9Cvz3yocq9U
 id: node.forum.default
 targetEntityType: node
 bundle: forum
@@ -23,7 +21,7 @@ mode: default
 content:
   app_body:
     type: text_textarea
-    weight: 3
+    weight: 6
     region: content
     settings:
       rows: 5
@@ -31,13 +29,13 @@ content:
     third_party_settings: {  }
   app_drupal_version:
     type: options_buttons
-    weight: 4
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   app_project:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS
@@ -47,7 +45,7 @@ content:
     third_party_settings: {  }
   app_tags:
     type: entity_reference_autocomplete_tags
-    weight: 6
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -103,13 +101,13 @@ content:
     third_party_settings: {  }
   taxonomy_forums:
     type: options_select
-    weight: 1
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 2
+    weight: 1
     region: content
     settings:
       size: 60

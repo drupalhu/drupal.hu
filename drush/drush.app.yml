@@ -42,6 +42,14 @@ sql:
       - 'watchdog'
 
 marvin:
+  environment: null
+
+  artifactDir: 'artifacts'
+
+  reportsDir: 'reports'
+
+  gitHookName: null
+
   environments:
     local:
       modules:
@@ -93,15 +101,79 @@ marvin:
         app_common: true
         app_dummy: true
 
+  lint:
+    reporters:
+      verboseStdOutput:
+        enabled: true
+        service: 'lintVerboseReporter'
+        options:
+          filePathStyle: 'relative'
+          #showSeverity: true
+          #showSource: false
+          #showLineNumber: true
+          #showColumnNumber: false
+          #showMessage: true
+
+    phpcs:
+      failOn: 'warning'
+
   phpunit:
     testSuite:
       default:
         unit: true
 
+  ##
+  # Keys are the official Git hook names.
+  #
+  # @var array
+  ##
+  gitHook:
+    commit-msg:
+      rules: {}
+        #customKey01:
+        ##
+        # @var bool
+        ##
+        #enabled: true
+
+        ##
+        # This will be auto-populated from the array key.
+        #
+        # @var string
+        ##
+        #name: 'customKey01'
+
+        ##
+        # RegExp pattern. Required.
+        #
+        # @var string
+        ##
+        #pattern: "/^.+$/u"
+
+        ##
+        # Human readable description.
+        #
+        # @var string
+        ##
+        #description: 'Lorem ipsum.'
+
+        ##
+        # The key is an example for a valid commit message.
+        #
+        # @var bool[]
+        ##
+        #examples:
+        #  'Issue #42 - Something': true
+
   acquia:
     projectId: 'druphungary'
+    gitHost: 'svn-3224.prod.hosting.acquia.com'
     artifact:
       gitCloneAndClean:
         remoteName: 'acquia'
         remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'
         remoteBranch: '2.x'
+        localBranch: '2.x'
+#      gitConfigNamesToCopy:
+#        user.name: true
+#        user.email: true

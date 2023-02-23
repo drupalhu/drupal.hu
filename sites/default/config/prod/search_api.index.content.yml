@@ -66,7 +66,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: app_body
     type: 'solr_text_custom:ngram'
-    boost: !!float 13
+    boost: 13.0
     dependencies:
       config:
         - field.storage.node.app_body
@@ -148,7 +148,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: 'solr_text_custom:ngram'
-    boost: !!float 21
+    boost: 21.0
     dependencies:
       module:
         - node
@@ -201,4 +201,5 @@ tracker_settings:
 options:
   cron_limit: 50
   index_directly: true
+  track_changes_in_references: true
 server: general

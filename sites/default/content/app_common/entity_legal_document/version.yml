@@ -1,5 +1,6 @@
 data_protection_1559764237:
-  document_name: data_protection
+  uuid: '4cf82c34-b1d8-40ee-bbdf-e33df93f1a4a'
+  document_name: 'data_protection'
   published: true
   label: 'Adatvédelmi és Adatkezelési tájékoztató'
   entity_legal_document_text:
@@ -11,7 +12,8 @@ data_protection_1559764237:
   acceptance_label: 'Elfogadom az <a href="[entity_legal_document:published-version:url]">Adatvédelmi és Adatkezelési tájékoztató</a> dokumentumban leírtakat.'
 
 terms_of_use_1559764237:
-  document_name: terms_of_use
+  uuid: '8926a828-a261-40ff-a1f0-3bf5efa4ecbf'
+  document_name: 'terms_of_use'
   published: true
   label: 'Felhasználási feltételek'
   entity_legal_document_text:

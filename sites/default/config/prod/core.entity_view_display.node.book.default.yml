@@ -1,4 +1,4 @@
-uuid: 4204c886-8060-42fc-b85a-7b7362fe2456
+uuid: d33f6e9d-3670-4953-8700-16ac1b88b71c
 langcode: hu
 status: true
 dependencies:
@@ -7,133 +7,14 @@ dependencies:
     - field.field.node.book.app_body
     - field.field.node.book.app_competence
     - field.field.node.book.app_drupal_version
+    - field.field.node.book.app_image
     - field.field.node.book.app_tags
     - field.field.node.book.app_target_audience
     - node.type.book
   module:
     - file
-    - layout_builder
-    - layout_discovery
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: true
-    allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          c212158e-452e-40bf-b51f-dc2188bd8d2d:
-            uuid: c212158e-452e-40bf-b51f-dc2188bd8d2d
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_drupal_version'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          26e55e69-4221-4d4a-9a9d-45ac4bc02b2b:
-            uuid: 26e55e69-4221-4d4a-9a9d-45ac4bc02b2b
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_target_audience'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 2
-            additional: {  }
-          49230cf4-fee1-4fdb-a8b7-67cbebd7eb13:
-            uuid: 49230cf4-fee1-4fdb-a8b7-67cbebd7eb13
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_competence'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 3
-            additional: {  }
-          ca5c5cba-4aa2-4a30-be3e-c45fb004525c:
-            uuid: ca5c5cba-4aa2-4a30-be3e-c45fb004525c
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_tags'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 4
-            additional: {  }
-          3e96c62c-dec6-4aa4-9f66-8a3ba6af0af1:
-            uuid: 3e96c62c-dec6-4aa4-9f66-8a3ba6af0af1
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_body'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 5
-            additional: {  }
-          b1b2c3b4-7747-4914-a2b1-ccef1ca88d20:
-            uuid: b1b2c3b4-7747-4914-a2b1-ccef1ca88d20
-            region: content
-            configuration:
-              id: 'field_block:node:book:app_attachments'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: file_default
-                label: above
-                settings:
-                  use_description_as_link_text: true
-                third_party_settings: {  }
-            weight: 6
-            additional: {  }
-          5d8fc0c3-4831-449c-bec4-191303febdfd:
-            uuid: 5d8fc0c3-4831-449c-bec4-191303febdfd
-            region: content
-            configuration:
-              id: 'extra_field_block:node:book:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 7
-            additional: {  }
-        third_party_settings: {  }
-_core:
-  default_config_hash: UWTnZUj-u-jp8I_S1C1nUCTlM5iIV2QKdxm37ehFjoI
 id: node.book.default
 targetEntityType: node
 bundle: book
@@ -145,14 +26,14 @@ content:
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   app_body:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
   app_competence:
     type: entity_reference_label
@@ -160,7 +41,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   app_drupal_version:
     type: entity_reference_label
@@ -170,13 +51,21 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  app_image:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
   app_tags:
     type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   app_target_audience:
     type: entity_reference_label
@@ -184,12 +73,12 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 0
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 6
     region: content
 hidden:
   langcode: true

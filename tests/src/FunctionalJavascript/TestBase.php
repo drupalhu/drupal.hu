@@ -10,13 +10,13 @@ use Drupal\Core\Url;
 use Sweetchuck\DrupalTestTraits\Core\FinderTrait;
 use Sweetchuck\DrupalTestTraits\Core\System\MessageTrait;
 use Sweetchuck\DrupalTestTraits\EntityLegal\EntityLegalTrait;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Webmozart\PathUtil\Path;
-use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
+use weitzman\DrupalTestTraits\ExistingSiteBase;
 use weitzman\DrupalTestTraits\ScreenShotTrait;
 
-class TestBase extends ExistingSiteWebDriverTestBase {
+class TestBase extends ExistingSiteBase {
 
   use ScreenShotTrait;
   use FinderTrait;

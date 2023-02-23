@@ -1,0 +1,61 @@
+langcode: 'en'
+status: true
+id: 'app_legacy__user__user'
+label: 'App - Legacy - user:user'
+
+migration_group: 'app_legacy'
+migration_tags:
+  - 'app'
+  - 'src_user'
+  - 'dst_user'
+
+migration_dependencies:
+  required:
+    - 'app_legacy__file__public'
+
+source:
+  plugin: 'd7_user'
+
+process:
+  uid: 'uid'
+  name: 'name'
+  pass: 'pass'
+  mail: 'mail'
+  init: 'init'
+  created: 'created'
+  access: 'access'
+  login: 'login'
+  status: 'status'
+  timezone: 'timezone'
+  langcode:
+    source: 'language'
+    plugin: 'user_langcode'
+    fallback_to_site_default: true
+  preferred_langcode:
+    source: 'language'
+    plugin: 'user_langcode'
+    fallback_to_site_default: true
+  preferred_admin_langcode:
+    source: 'language'
+    plugin: 'user_langcode'
+    fallback_to_site_default: true
+  app_picture:
+    -
+      source: 'picture'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      no_stub: false
+      migration:
+        - 'app_legacy__file__public'
+
+  app_introduction/0/value: 'profile_bio/0'
+  app_introduction/0/format:
+    plugin: 'default_value'
+    default_value: 'html_teaser'
+
+  app_homepage/0/uri: 'profile_homepage/0'
+
+destination:
+  plugin: 'entity:user'

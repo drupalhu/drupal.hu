@@ -1,0 +1,17 @@
+.field--type-daterange.field--widget-daterange-default {
+  .fieldset__wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    -webkit-column-gap: 1em;
+       -moz-column-gap: 1em;
+            column-gap: 1em;
+  }
+}
+
+@media (min-width: 576px) {
+  .field--type-daterange.field--widget-daterange-default {
+    .fieldset__wrapper {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}

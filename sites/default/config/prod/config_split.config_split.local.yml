@@ -1,0 +1,24 @@
+uuid: 4f657b04-609b-42bf-adcf-60e0501cc2dd
+langcode: hu
+status: true
+dependencies: {  }
+id: local
+label: local
+description: 'Local development'
+weight: 0
+folder: ../sites/default/config/local
+module:
+  app_dc: 0
+  dblog: 0
+  devel: 0
+  migrate: 0
+  migrate_dc: 0
+  migrate_drupal: 0
+  migrate_plus: 0
+  migrate_tools: 0
+  views_ui: 0
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true

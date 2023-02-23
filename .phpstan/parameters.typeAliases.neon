@@ -1,0 +1,18 @@
+parameters:
+  typeAliases:
+    version-number-part: '"major"|"minor"|"patch"|"pre-release"|"metadata"'
+    drush-artifact-acquia-state: '''
+      array{
+        artifact.type: string,
+        core.version: \Sweetchuck\Utils\VersionNumber,
+        versionPartToBump: version-number-part,
+        latestVersionNumber: \Sweetchuck\Utils\VersionNumber,
+        nextVersionNumber: \Sweetchuck\Utils\VersionNumber,
+        src.dir: string,
+        src.composerFileName: string,
+        src.composerFilePath: string,
+        src.drupalRootDir: string,
+        build.dir: string,
+        build.drupalRootDir: string,
+      }
+    '''

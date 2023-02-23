@@ -1,6 +1,6 @@
 trademark:
-  uuid: d7acbe44-1cfb-4bf8-8294-ca25c40ef603
-  info: Védjegy
+  uuid: 'd7acbe44-1cfb-4bf8-8294-ca25c40ef603'
+  info: 'Védjegy'
   app_body:
     -
       value: >
@@ -8,8 +8,8 @@ trademark:
         <a href="http://www.drupal.com/trademark">védjegye</a>.</p>
 
 hosting_thanksgiving:
-  uuid: 6a290725-ba59-4318-891c-52834d6a4bbb
-  info: Hosting köszönet nyilvánítás
+  uuid: '6a290725-ba59-4318-891c-52834d6a4bbb'
+  info: 'Hosting köszönet nyilvánítás'
   app_body:
     -
       value: >

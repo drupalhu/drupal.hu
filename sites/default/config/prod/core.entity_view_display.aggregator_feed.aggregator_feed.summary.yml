@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.aggregator_feed.summary
+    - field.field.aggregator_feed.aggregator_feed.app_author
+    - field.field.aggregator_feed.aggregator_feed.app_category
   module:
     - aggregator
 _core:
@@ -13,18 +15,26 @@ targetEntityType: aggregator_feed
 bundle: aggregator_feed
 mode: summary
 content:
-  items:
+  feed_icon:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
-  more_link:
+  items:
+    settings: {  }
+    third_party_settings: {  }
     weight: 1
+    region: content
+  more_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
     region: content
 hidden:
   app_author: true
   app_category: true
   checked: true
   description: true
-  feed_icon: true
   image: true
   langcode: true
   link: true

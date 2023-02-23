@@ -1,4 +1,4 @@
-uuid: 5b93ba27-ea6e-42d9-92f2-f381a33311a0
+uuid: ed234b63-5f6c-46ba-99bc-36df70bc7438
 langcode: hu
 status: true
 dependencies:
@@ -13,13 +13,13 @@ bundle: admin
 mode: default
 content:
   author:
-    weight: -2
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
   comment_body:
     type: text_textarea
-    weight: 11
+    weight: 3
     region: content
     settings:
       rows: 5
@@ -27,14 +27,14 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 0
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   subject:
     type: string_textfield
-    weight: 10
+    weight: 2
     region: content
     settings:
       size: 60

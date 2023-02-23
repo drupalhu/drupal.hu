@@ -1,0 +1,40 @@
+langcode: 'en'
+status: true
+id: 'app_legacy__aggregator_feed__sa'
+label: 'App - Legacy - aggregator_feed:security_announcement'
+
+migration_group: 'app_legacy'
+migration_tags:
+  - 'src_aggregator_feed__sa'
+  - 'dst_aggregator_feed__sa'
+
+audit: true
+
+source:
+  plugin: 'aggregator_feed'
+
+  constants:
+    category: 'security_announcement'
+
+process:
+  fid:
+    source: 'fid'
+    plugin: 'skip_on_value'
+    method: 'row'
+    value:
+      # Hungarian translation related changes.
+      - 2
+  title: 'title'
+  url: 'url'
+  refresh: 'refresh'
+  checked: 'checked'
+  queued: 'queued'
+  link: 'link'
+  description: 'description'
+  image: 'image'
+  etag: 'etag'
+  modified: 'modified'
+  app_category: 'constants/category'
+
+destination:
+  plugin: 'entity:aggregator_feed'

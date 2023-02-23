@@ -1,54 +1,61 @@
-uuid: 329ce2b5-9140-4c79-80d2-607eb5e1efa6
+uuid: 0c8767e4-a92f-4551-9c98-e83b1fd1f91c
 langcode: hu
 status: true
 dependencies:
   config:
     - filter.format.html_teaser
   module:
-    - ckeditor
+    - ckeditor5
 format: html_teaser
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Block
-          items:
-            - Format
-        -
-          name: Listák
-          items:
-            - BulletedList
-            - NumberedList
-            - '-'
-            - Indent
-            - Outdent
-        -
-          name: Formázás
-          items:
-            - Bold
-            - Italic
-            - '-'
-            - Superscript
-            - Subscript
-            - '-'
-            - SpecialChar
-        -
-          name: Hivatkozások
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Eszközök
-          items:
-            - Source
-            - ShowBlocks
+    items:
+      - undo
+      - redo
+      - '|'
+      - bulletedList
+      - numberedList
+      - indent
+      - outdent
+      - '|'
+      - blockQuote
+      - '|'
+      - link
+      - '|'
+      - bold
+      - italic
+      - strikethrough
+      - code
+      - superscript
+      - subscript
+      - '|'
+      - specialCharacters
+      - removeFormat
+      - '|'
+      - sourceEditing
+      - codeBlock
   plugins:
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
+    ckeditor5_list:
+      reversed: false
+      startIndex: false
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<abbr>'
+        - '<acronym>'
+        - '<cite>'
+        - '<del>'
+        - '<ins>'
+        - '<kbd>'
+        - '<mark>'
+        - '<q>'
+        - '<samp>'
+        - '<small>'
+        - '<wbr>'
+        - '<meter value min max>'
+        - '<time datetime>'
+        - '<img src alt data-entity-type data-entity-uuid>'
+        - '<a hreflang>'
 image_upload:
   status: false
   scheme: public

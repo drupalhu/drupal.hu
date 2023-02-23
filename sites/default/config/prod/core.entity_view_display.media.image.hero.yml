@@ -1,4 +1,4 @@
-uuid: aa90e381-2261-4032-b4bf-a4e76eee705f
+uuid: e70601bb-6bb7-41f7-82d6-e66a636aea59
 langcode: hu
 status: true
 dependencies:
@@ -25,10 +25,10 @@ content:
     settings:
       responsive_image_style: l30
       image_link: ''
-      svg_render_as_image: '1'
       svg_attributes:
-        width: ''
-        height: ''
+        width: null
+        height: null
+      svg_render_as_image: true
     third_party_settings: {  }
     weight: 0
     region: content

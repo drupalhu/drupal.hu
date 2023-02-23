@@ -12,17 +12,30 @@ project_tld: 'hu'
 name: 'local.drupal'
 
 # drupal6/7/8, backdrop, typo3, wordpress, php
-type: 'drupal9'
+type: 'drupal10'
+
+database:
+  type: 'mysql'
+  version: '5.7'
+
+# PHP version to use, "5.6", "7.0", "7.1", "7.2", "7.3", "7.4" "8.0", "8.1", "8.2".
+php_version: '8.1'
+
+# if composer_version:"" it will use the current ddev default composer release.
+# It can also be set to "1", to get most recent composer v1
+# or "2" for most recent composer v2.
+# It can be set to any existing specific composer version.
+# After first project 'ddev start' this will not be updated until it changes
+composer_version: '2'
+
+nodejs_version: '18'
+
+# webserver_type: nginx-fpm  # or apache-fpm
+webserver_type: 'nginx-fpm'
 
 # Relative path to the directory containing index.php.
 # docroot: <relative_path>
 docroot: 'docroot'
-
-# PHP version to use, "5.6", "7.0", "7.1", "7.2", "7.3", "7.4" "8.0"
-php_version: '7.4'
-
-# webserver_type: nginx-fpm  # or apache-fpm
-webserver_type: 'nginx-fpm'
 
 # Port to be used for http (defaults to port 80)
 #router_http_port: 80
@@ -47,13 +60,6 @@ additional_hostnames: []
 #  - sub1.example.com
 additional_fqdns: []
 
-# ddev can use many versions of mariadb and mysql
-# However these directives are mutually exclusive
-#mariadb_version: 10.2
-#mysql_version: 8.0
-mariadb_version: '10.3'
-mysql_version: ''
-
 # Currently either "default" or "pantheon"
 provider: 'default'
 
@@ -62,13 +68,6 @@ provider: 'default'
 # instead of editing /etc/hosts
 # Defaults to true
 use_dns_when_possible: true
-
-# if composer_version:"" it will use the current ddev default composer release.
-# It can also be set to "1", to get most recent composer v1
-# or "2" for most recent composer v2.
-# It can be set to any existing specific composer version.
-# After first project 'ddev start' this will not be updated until it changes
-composer_version: '2'
 
 # You can explicitly specify the webimage, dbimage, dbaimage lines,
 # but this is not recommended,
@@ -104,7 +103,8 @@ working_dir:
 # database container will be unusable.
 #omit_containers: [db, dba, ddev-ssh-agent]
 
-nfs_mount_enabled: true
+mutagen_enabled: true
+nfs_mount_enabled: false
 # Great performance improvement but requires host configuration first.
 # See https://ddev.readthedocs.io/en/stable/users/performance/#using-nfs-to-mount-the-project-into-the-container
 
@@ -138,7 +138,9 @@ nfs_mount_enabled: true
 #  - 'php7.3-tidy'
 #  - 'php-bcmath'
 webimage_extra_packages:
-  - 'php7.4-imagick'
+  - 'php8.1-imagick'
+  - 'php8.1-pcov'
+  - 'php8.1-yaml'
   - 'zsh'
   - 'fzf'
   - 'build-essential'
@@ -184,68 +186,47 @@ hooks:
         [[ -f './.ddev/.env' ]] || cp './.ddev/.env.example' './.ddev/.env'
     -
       exec-host: >-
-        bash ./.ddev/commands/host/generate-ddev-config-local.bash;
+        bash ./.ddev/commands/host/generate-ddev-config-local-yaml.bash;
     -
       exec-host: >-
         bash ./.ddev/commands/host/nfs-setup.bash;
 
   post-start:
     -
-      exec: >-
-        bash ./.ddev/commands/web/web-bash-init.bash;
+      exec: |-
+        timeout_limit=30
+        timeout_cmd=$(cat <<BASH
+          while ! test -f ./.ddev/commands/web/web-bash-init.bash
+          do
+            sleep 1
+            echo 'Waiting for filesystem mount'
+          done
+        BASH
+        )
+
+        timeout "${timeout_limit}" bash -c "${timeout_cmd}"
     -
       exec: >-
-        mysql \
-          --user='root' \
-          --password='root' \
-          --host='db' \
-          --execute="
-            CREATE DATABASE IF NOT EXISTS \`drupalhu7__default\`;
-            GRANT ALL PRIVILEGES ON drupalhu7__default.* TO 'db'@'%';
-            FLUSH PRIVILEGES;
-          "
+        bash ./.ddev/commands/web/web-bash-init.bash
     -
       exec: >-
-        timeout \
-          10 \
-          bash \
-          '-c' "
-            while ! curl -H 'host: localhost' --silent --show-error 'http://chrome:9222/json/version';
-            do
-              sleep 1;
-              echo 'Waiting for Chromium on http://chrome:9222';
-            done;
-          "
+        bash ./.ddev/commands/web/web-mysql-init.bash
+    -
+      exec: >-
+        bash ./.ddev/commands/web/web-chrome-wait.bash
     -
       exec: >-
         [ -f "$(composer config vendor-dir)/autoload.php" ]
         || composer install
     -
       exec: >-
-        . ~/.bashrc ;
-        bin/drush --config=drush @app.local -vv marvin:onboarding --url="${DDEV_PRIMARY_URL}"
+        ./vendor/bin/drush --config='drush' @app.local app:onboarding
     -
       exec: >-
-        . ~/.bashrc ;
-        bin/drush --config='drush' @app.local marvin:build
+        ./vendor/bin/drush --config='drush' @app.local app:runtime-environment:switch
     -
       # @todo This works only if there is no database table prefix.
       exec: >-
-        bin/drush --config='drush' @app.local sql:query 'SHOW TABLES;'
+        ./vendor/bin/drush --config='drush' @app.local sql:query 'SHOW TABLES;'
         | grep --perl-regexp '^users\s*$'
         || composer run site:install:prod:default
-    -
-      exec: |-
-        chrome_host='chrome' ;
-        chrome_ip="$(ping -c 1 ${chrome_host} | grep --color='never' --only-matching --perl-regexp '(?<= \()\d+\.\d+\.\d+\.\d+(?=\): )')" ;
-        export chrome_api_url="http://${chrome_ip}:9222"
-
-        yq eval \
-          --inplace \
-          '.default.extensions."Drupal\MinkExtension".sessions.browserChrome.chrome.api_url = env(chrome_api_url)' \
-          './behat.local.yml'
-
-        sed \
-          --expression "s@http://127.0.0.1:9222@${chrome_api_url}@g" \
-          --in-place \
-          './phpunit.xml'

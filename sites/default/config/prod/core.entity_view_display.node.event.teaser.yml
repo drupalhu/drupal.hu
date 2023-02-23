@@ -1,4 +1,4 @@
-uuid: 12173ce1-2a86-409e-ae24-9efc5634ba32
+uuid: bc6155eb-5b18-41fd-b93d-f1aa0df1435f
 langcode: hu
 status: true
 dependencies:
@@ -10,78 +10,16 @@ dependencies:
     - field.field.node.event.app_image
     - field.field.node.event.app_links
     - field.field.node.event.app_teaser
-    - image.style.media_library
     - node.type.event
   module:
     - datetime_range
     - layout_builder
-    - layout_discovery
-    - media
     - text
     - user
 third_party_settings:
   layout_builder:
-    enabled: true
+    enabled: false
     allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          199ac75e-53d8-40fb-9edc-5a9ba2c90b07:
-            uuid: 199ac75e-53d8-40fb-9edc-5a9ba2c90b07
-            region: content
-            configuration:
-              id: 'field_block:node:event:app_image'
-              label: Kép
-              label_display: '0'
-              provider: layout_builder
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-              formatter:
-                type: entity_reference_entity_view
-                label: hidden
-                settings:
-                  view_mode: hero
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          1b320b54-7f9e-456f-9986-eb393bfeaf0d:
-            uuid: 1b320b54-7f9e-456f-9986-eb393bfeaf0d
-            region: content
-            configuration:
-              id: 'field_block:node:event:app_date'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: daterange_default
-                label: inline
-                settings:
-                  timezone_override: ''
-                  format_type: medium
-                  separator: '-'
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          313a4d33-9b24-40c3-96a4-0501a1aad57b:
-            uuid: 313a4d33-9b24-40c3-96a4-0501a1aad57b
-            region: content
-            configuration:
-              id: 'field_block:node:event:app_teaser'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 2
-            additional: {  }
-        third_party_settings: {  }
 id: node.event.teaser
 targetEntityType: node
 bundle: event
@@ -98,11 +36,11 @@ content:
     weight: 1
     region: content
   app_image:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      image_link: content
-      image_style: media_library
+      view_mode: hero
+      link: false
     third_party_settings: {  }
     weight: 0
     region: content

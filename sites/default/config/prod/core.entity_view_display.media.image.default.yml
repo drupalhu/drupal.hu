@@ -1,4 +1,4 @@
-uuid: 92518dac-f9e1-41fd-a66e-aecd289d7454
+uuid: 927305da-1473-4482-99d1-e2b23c3a7704
 langcode: hu
 status: true
 dependencies:
@@ -13,46 +13,30 @@ targetEntityType: media
 bundle: image
 mode: default
 content:
-  created:
-    type: timestamp
-    label: inline
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  name:
-    type: string
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  thumbnail:
+  field_media_image:
     type: responsive_image
     label: hidden
     settings:
       responsive_image_style: org
       image_link: ''
-      svg_render_as_image: '1'
       svg_attributes:
-        width: ''
-        height: ''
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  uid:
-    type: entity_reference_label
-    label: inline
-    settings:
-      link: true
+        width: null
+        height: null
+      svg_render_as_image: true
     third_party_settings: {  }
     weight: 1
     region: content
+  name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
-  field_media_image: true
+  created: true
   langcode: true
   search_api_excerpt: true
+  thumbnail: true
+  uid: true

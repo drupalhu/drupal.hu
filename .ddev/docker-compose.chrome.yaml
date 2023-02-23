@@ -19,9 +19,9 @@ services:
 
     shm_size: '3072m'
 
-    image: 'microbox/chromium-headless:88.0.4296.0'
+    image: 'icalialabs/chromium:93.0.4577.82'
     entrypoint:
-      - 'chromium'
+      - '/usr/bin/chromium-browser'
     command:
       # Run in headless mode.
       - '--headless'

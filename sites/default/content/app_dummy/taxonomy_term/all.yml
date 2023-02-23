@@ -10,6 +10,7 @@
 
 #region tag
 FormAPI:
+  uuid: 'ca929fc0-6ce8-4fb7-b876-1d659ac10550'
   vid: 'tag'
   name: 'FormAPI'
 #endregion
@@ -25,13 +26,18 @@ FormAPI:
 
 #region project
 admin_toolbar:
-  vid: project
+  uuid: 'fc5b41a6-633d-4df3-8119-b90038498c4d'
+  vid: 'project'
 devel:
-  vid: project
+  uuid: '420cff19-a1a8-4b00-8d54-c61aecdaff95'
+  vid: 'project'
 masquerade:
-  vid: project
+  uuid: '0215cec5-7c2b-48ba-abd4-7f13edd5b965'
+  vid: 'project'
 pathauto:
-  vid: project
+  uuid: 'acd75fd7-38f8-4d9b-8923-5bf01050ec6b'
+  vid: 'project'
 token:
-  vid: project
+  uuid: '8a83e660-1ee5-4a27-bdd3-e18094bc0fef'
+  vid: 'project'
 #endregion

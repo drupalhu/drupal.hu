@@ -7,11 +7,10 @@ namespace Drush\Commands\app;
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
 use Consolidation\SiteProcess\SiteProcess;
-use Drush\Commands\marvin\CommandsBase;
 use Drush\Drush;
 use Drush\SiteAlias\SiteAliasManagerAwareInterface;
 use Symfony\Component\Finder\Finder;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterface {
 

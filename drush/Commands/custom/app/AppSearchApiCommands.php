@@ -6,27 +6,28 @@ namespace Drush\Commands\app;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\Core\Site\Settings;
-use Drupal\marvin\ComposerInfo;
 use DrupalHu\DrupalHu\Tests\Robo\AppSearchApiTaskLoader;
-use Drush\Commands\marvin\CommandsBase;
 use Robo\Collection\CollectionBuilder;
+use Robo\Collection\Tasks as LoopTaskLoader;
+use Robo\Contract\BuilderAwareInterface;
 use Robo\Contract\TaskInterface;
 use Robo\State\Data as RoboStateData;
-use Stringy\StaticStringy;
+use Robo\TaskAccessor;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
 
-class AppSearchApiCommands extends CommandsBase {
+class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface {
 
+  use TaskAccessor;
+  use LoopTaskLoader;
   use AppSearchApiTaskLoader;
 
   protected Filesystem $fs;
 
-  public function __construct(?ComposerInfo $composerInfo = NULL, ?Filesystem $fs = NULL) {
+  public function __construct(?Filesystem $fs = NULL) {
     $this->fs = $fs ?: new Filesystem();
-
-    parent::__construct($composerInfo);
   }
 
   /**
@@ -72,7 +73,9 @@ class AppSearchApiCommands extends CommandsBase {
 
           if ($index['server']['backend'] == 'search_api_solr') {
             if ($index['server']['backend_config']['connector'] == 'standard') {
-              $baseUrl = StaticStringy::ensureRight($this->getConfig()->get('options.uri'), '/');
+              $baseUrl = (new UnicodeString($this->getConfig()->get('options.uri')))
+                ->ensureEnd('/')
+                ->toString();
 
               $builder
                 ->addTask($this

@@ -25,8 +25,8 @@ Feature: Forum topic create
     And required attributes are removed from all input elements in form "node-forum-form"
     When I press "Mentés"
     Then I should see only the following error messages:
-      | Fórumok mező szükséges. |
       | Tárgy mező szükséges.   |
+      | Fórumok mező szükséges. |
 
   @javascript
   Scenario: Forum topic create - success

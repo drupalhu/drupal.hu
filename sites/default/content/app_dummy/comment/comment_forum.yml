@@ -1,4 +1,5 @@
 f1-c1:
+  uuid: '80a0677c-a1b7-4e6f-8854-d587f11d4816'
   #entity_type: node
   entity_id: 'Fórumtéma 01'
   #field_name: comment_forum
@@ -9,7 +10,7 @@ f1-c1:
   #status:
   created: 'now'
   changed: 'now'
-  uid: Béla
+  uid: 'DumBéla'
   #name:
   #mail:
   #homepage
@@ -25,17 +26,18 @@ f1-c1:
         bendóitól, hogy szántja kettőreiket. Bácsatnak lenni annyit szakálogt, hogy a zsalalímás nagyjából közepesen
         sérlő. S ez így ki is fumázta a libizmust.</p>
 f1-c2:
+  uuid: 'e60ddc4e-ba03-4b36-83d1-74b5bfb64757'
   #entity_type: node
   entity_id: 'Fórumtéma 01'
   #field_name: comment_forum
   #cid
   #comment_type
-  pid: f1-c1
+  pid: 'f1-c1'
   #thread:
   #status:
   created: 'now'
   changed: 'now'
-  uid: Béla
+  uid: 'DumBéla'
   #name:
   #mail:
   #homepage

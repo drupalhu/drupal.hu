@@ -1,19 +1,22 @@
 
 drupal.org.core:
-  title: Biztonsági figyelmeztetések (core)
-  url: http://drupal.org/security/rss.xml
-  link: https://www.drupal.org/security
-  app_category: security_announcement
+  uuid: '3880f293-e717-4dc5-8778-c9b7d7315a1f'
+  title: 'Biztonsági figyelmeztetések (core)'
+  url: 'http://drupal.org/security/rss.xml'
+  link: 'https://www.drupal.org/security'
+  app_category: 'security_announcement'
 
 drupal.org.contrib:
-  title: Biztonsági figyelmeztetések (contrib)
-  url: http://drupal.org/security/contrib/rss.xml
-  link: https://www.drupal.org/security
-  app_category: security_announcement
+  uuid: '06bb339f-811d-4aaa-8a7f-ef514d0ad8ba'
+  title: 'Biztonsági figyelmeztetések (contrib)'
+  url: 'http://drupal.org/security/contrib/rss.xml'
+  link: 'https://www.drupal.org/security'
+  app_category: 'security_announcement'
 
 gizi:
-  title: Gizi RSS csatornája
-  url: http://hup.hu/node/feed
-  link: http://hup.hu/node
-  app_category: planet
-  app_author: Gizi
+  uuid: '286a1097-6ed1-41e9-8462-fc853bf69861'
+  title: 'Gizi RSS csatornája'
+  url: 'http://hup.hu/node/feed'
+  link: 'http://hup.hu/node'
+  app_category: 'planet'
+  app_author: 'Gizi'

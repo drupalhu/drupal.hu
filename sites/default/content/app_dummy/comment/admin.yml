@@ -1,33 +1,34 @@
 note-01-c1:
-    #entity_type: node
-    entity_id: 'Feljegyzés 01'
-    field_name: app_comment_admin
-    #cid
-    comment_type: admin
-    pid: null
-    #thread:
-    #status:
-    created: 'now'
-    changed: 'now'
-    uid: Béla
-    #name:
-    #mail:
-    #homepage
-    subject: |
-        A pika tehát nemcsak vazás, hanem lozsdázja
-    comment_body:
-        -
-            value: |
-                <p>A pika a tagó (tölde) és a porodraság (karlóda, iség) képzős rányka padackánainak és bertéseinek
-                zöncsében, azaz a borzékos, csaló, jáncsos szatós padackán filitájában és pingezetében klacskony
-                hászatával a ponad fendetés spetését pici vényléssé ürít. A pika tehát nemcsak vazás, hanem lozsdázja a
-                ponad tettes és sebesztő balovarána képzős szárgyszerű szatós padackánokat. Ezeket kalkusázja, és a
-                filetes készítő vácskájával a ponadot a fojás pörölyűre nyarosítja a porodraság balovaránára a heteli,
-                csaló és borzékos aluson, betartva mind a tettes, mind a tranzit, mind pedig a sebesztő tili hákos és
-                illen összességeit, valamint a kövék illen sülteit, beleértve a ponad pacskájára, vődésére fojátros
-                sződésöket is. A pika örmen haságával és fojtos bornyakt sedéseinek porodraságával közvetlenül és
-                közvetve is sormozja a ponad spetését. Ez hális ancson arra is pian, hogy a köve a pika vácskájával
-                güzekedőben nyerkezhetik bele a fizgaság ancsona során visszás mostába, ilyenformán kövéje nemcsak a
-                kilivel kérő télzástól súlyosít, hanem a fajtás és illen csalandó haságok kavájával külön algáshoz is
-                bilíroghat. A pika matos hasága tehát a ponad spetésének rüstője révén bátható koporban pózik meg.
-                A bolt vezet csaprodása - balkaras születektől eltekintve - alig pulan el pika morupa nélkül.</p>
+  uuid: '83b3a9a9-0876-4cb2-8289-c83cbac0ac8d'
+  #entity_type: node
+  entity_id: 'Feljegyzés 01'
+  field_name: 'app_comment_admin'
+  #cid
+  comment_type: 'admin'
+  pid: null
+  #thread:
+  #status:
+  created: 'now'
+  changed: 'now'
+  uid: 'DumBéla'
+  #name:
+  #mail:
+  #homepage
+  subject: |
+      A pika tehát nemcsak vazás, hanem lozsdázja
+  comment_body:
+    -
+      value: |
+        <p>A pika a tagó (tölde) és a porodraság (karlóda, iség) képzős rányka padackánainak és bertéseinek
+        zöncsében, azaz a borzékos, csaló, jáncsos szatós padackán filitájában és pingezetében klacskony
+        hászatával a ponad fendetés spetését pici vényléssé ürít. A pika tehát nemcsak vazás, hanem lozsdázja a
+        ponad tettes és sebesztő balovarána képzős szárgyszerű szatós padackánokat. Ezeket kalkusázja, és a
+        filetes készítő vácskájával a ponadot a fojás pörölyűre nyarosítja a porodraság balovaránára a heteli,
+        csaló és borzékos aluson, betartva mind a tettes, mind a tranzit, mind pedig a sebesztő tili hákos és
+        illen összességeit, valamint a kövék illen sülteit, beleértve a ponad pacskájára, vődésére fojátros
+        sződésöket is. A pika örmen haságával és fojtos bornyakt sedéseinek porodraságával közvetlenül és
+        közvetve is sormozja a ponad spetését. Ez hális ancson arra is pian, hogy a köve a pika vácskájával
+        güzekedőben nyerkezhetik bele a fizgaság ancsona során visszás mostába, ilyenformán kövéje nemcsak a
+        kilivel kérő télzástól súlyosít, hanem a fajtás és illen csalandó haságok kavájával külön algáshoz is
+        bilíroghat. A pika matos hasága tehát a ponad spetésének rüstője révén bátható koporban pózik meg.
+        A bolt vezet csaprodása - balkaras születektől eltekintve - alig pulan el pika morupa nélkül.</p>

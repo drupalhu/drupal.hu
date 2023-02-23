@@ -1,5 +1,4 @@
 global-styling:
   version: '2.0.0-dev'
   css:
-    component:
-      css/components/header-navigation.css: {}
+    component: {}

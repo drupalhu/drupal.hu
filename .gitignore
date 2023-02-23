@@ -1,6 +1,7 @@
 
 /artifacts/
-/bin/
+/reports/
+/tmp/
 
 /docroot/core/
 /docroot/libraries/
@@ -37,20 +38,20 @@
 /sites/*/temporary/
 /sites/*/hash_salt.txt
 
-/reports/
-/tmp/
-/vendor/
-
 /behat.*.yml
 !/behat.local.example.yml
 
-/composer.local.example.lock
-/composer.local.json
-/composer.local.lock
+/vendor/
+/composer.local*.json
+/composer.local*.lock
 
 /.env
+/.env.ddev
+/.env.host
 
 /phpcs.xml
 
 /phpunit.xml
 /phpunit.*.xml
+
+/phpstan.neon

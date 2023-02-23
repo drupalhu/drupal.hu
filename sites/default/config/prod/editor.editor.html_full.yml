@@ -5,42 +5,86 @@ dependencies:
   config:
     - filter.format.html_full
   module:
-    - ckeditor
+    - ckeditor5
 format: html_full
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formázás
-          items:
-            - Bold
-            - Italic
-        -
-          name: Hivatkozások
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Listák
-          items:
-            - BulletedList
-            - NumberedList
-        -
-          name: Média
-          items:
-            - Blockquote
-            - DrupalImage
-        -
-          name: Eszközök
-          items:
-            - Source
+    items:
+      - undo
+      - redo
+      - '|'
+      - heading
+      - '|'
+      - bulletedList
+      - numberedList
+      - indent
+      - outdent
+      - '|'
+      - insertTable
+      - drupalMedia
+      - blockQuote
+      - horizontalLine
+      - '|'
+      - alignment
+      - '|'
+      - link
+      - '|'
+      - bold
+      - italic
+      - strikethrough
+      - code
+      - superscript
+      - subscript
+      - '|'
+      - style
+      - '|'
+      - specialCharacters
+      - removeFormat
+      - '|'
+      - sourceEditing
+      - codeBlock
   plugins:
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
+    ckeditor5_alignment:
+      enabled_alignments:
+        - center
+        - justify
+        - left
+        - right
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_list:
+      reversed: false
+      startIndex: false
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<abbr>'
+        - '<acronym>'
+        - '<cite>'
+        - '<del>'
+        - '<ins>'
+        - '<kbd>'
+        - '<mark>'
+        - '<q>'
+        - '<samp>'
+        - '<small>'
+        - '<wbr>'
+        - '<meter value min max>'
+        - '<time datetime>'
+        - '<img src alt data-entity-type data-entity-uuid>'
+        - '<a hreflang>'
+    ckeditor5_style:
+      styles:
+        -
+          label: Tipp
+          element: '<p class="user-tipp">'
+    media_media:
+      allow_view_mode_override: false
 image_upload:
   status: false
   scheme: public

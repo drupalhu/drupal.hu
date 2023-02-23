@@ -39,11 +39,11 @@ backend_config:
   environment: default
   connector: solr_acquia_connector
   connector_config:
+    skip_schema_check: true
     identifier: CDKV-36627
     api_key: b6f8667c32112e48366777694275f0c8
     uuid: 87e5fc5e-1081-5684-fd4b-e32058f6ca49
     api_host: 'https://api.sr-prod02.acquia.com'
-    skip_schema_check: true
   optimize: false
   fallback_multiple: false
   disabled_field_types: {  }

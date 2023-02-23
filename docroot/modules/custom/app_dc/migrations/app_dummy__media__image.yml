@@ -1,0 +1,89 @@
+langcode: 'en'
+status: true
+id: 'app_dummy__media__image'
+label: 'App - Dummy - media:image'
+
+migration_group: 'app_dummy'
+migration_tags:
+  - 'dst_media'
+  - 'dst_media__image'
+
+migration_dependencies:
+  required:
+    - 'app_dummy__user'
+    - 'app_dummy__file__public'
+
+source:
+  plugin: 'migrate_dc_yaml'
+  fileDir: '../sites/default/content/app_dummy'
+  fileName: 'file/public.yml'
+  identifier: 'field_media_image'
+  identifierDepth: 0
+
+  fields:
+    uuid: 'UUID'
+    langcode: 'Language code'
+    uid: 'Author identifier'
+    status: 'Status'
+    created: 'Created'
+    changed: 'Changed'
+    field_media_image: 'Image'
+
+process:
+  uuid: 'uuid'
+
+  langcode:
+    source: 'langcode'
+    plugin: 'default_value'
+    default_value: 'hu'
+
+  uid:
+    -
+      source: 'uid'
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_dummy__user'
+    -
+      plugin: 'default_value'
+      default_value: 1
+
+  status:
+    source: 'status'
+    plugin: 'default_value'
+    default_value: true
+    strict: true
+
+  created:
+    -
+      source: 'created'
+      plugin: 'default_value'
+      default_value: now
+      strict: true
+    -
+      plugin: 'migrate_dc_str_to_time'
+
+  changed:
+    -
+      source: 'changed'
+      plugin: 'default_value'
+      default_value: 'now'
+      strict: true
+    -
+      plugin: 'migrate_dc_str_to_time'
+
+  field_media_image:
+    source: 'field_media_image'
+    plugin: 'migration_lookup'
+    migration:
+      - 'app_dummy__file__public'
+
+destination:
+  plugin: 'entity:media'
+  default_bundle: 'image'
+#  overwrite_properties:
+#    - 'langcode'
+#    - 'uid'
+#    - 'status'
+#    - 'created'
+#    - 'changed'
+#    - 'field_media_image'

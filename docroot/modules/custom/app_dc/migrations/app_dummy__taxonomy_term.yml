@@ -1,0 +1,92 @@
+langcode: 'en'
+status: true
+id: 'app_dummy__taxonomy_term'
+label: 'App - Dummy - taxonomy_term'
+
+migration_group: 'app_dummy'
+migration_tags:
+  - 'dst_taxonomy_term'
+
+migration_dependencies:
+  required:
+    - 'app_dummy__user'
+
+source:
+  plugin: 'migrate_dc_yaml'
+  fileDir: '../sites/default/content/app_dummy'
+  fileName: 'taxonomy_term/all.yml'
+  identifier: 'name'
+
+  fields:
+    id: 'Identifier'
+    uuid: 'UUID'
+    vid: 'Type'
+    langcode: 'Language code'
+    status: 'Status'
+    parent: 'Parent'
+    name: 'Name'
+    description: 'Description'
+    weight: 'Weight'
+    changed: 'Changed'
+    forum_container: 'Fórum tároló'
+
+process:
+  uuid: 'uuid'
+  vid: 'vid'
+  langcode:
+    source: 'langcode'
+    plugin: 'default_value'
+    default_value: hu
+  status:
+    source: 'status'
+    plugin: 'default_value'
+    default_value: true
+    strict: true
+  parent:
+    -
+      source: 'parent'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_dummy__taxonomy_term'
+  weight:
+    source: 'weight'
+    plugin: 'default_value'
+    default_value: 0
+  changed:
+    -
+      source: 'changed'
+      plugin: 'default_value'
+      default_value: 'now'
+    -
+      plugin: 'migrate_dc_str_to_time'
+      output_format: 'U'
+  name: 'name'
+  description:
+    source: 'description'
+    plugin: 'sub_process'
+    process:
+      value: 'value'
+      format:
+        source: 'format'
+        plugin: 'default_value'
+        default_value: 'html_teaser'
+  forum_container:
+    source: 'status'
+    plugin: 'default_value'
+    default_value: false
+    strict: true
+
+destination:
+  plugin: 'entity:taxonomy_term'
+#  overwrite_properties:
+#    - 'langcode'
+#    - 'status'
+#    - 'parent'
+#    - 'weight'
+#    - 'changed'
+#    - 'name'
+#    - 'description'
+#    - 'forum_container'
