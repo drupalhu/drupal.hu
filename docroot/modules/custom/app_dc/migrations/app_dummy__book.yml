@@ -1,0 +1,52 @@
+langcode: 'en'
+status: true
+id: 'app_dummy__book'
+label: 'App - Dummy - book'
+
+migration_group: 'app_dummy'
+migration_tags:
+  - 'dst_book'
+
+migration_dependencies:
+  required:
+    - 'app_dummy__node'
+
+source:
+  plugin: 'migrate_dc_yaml'
+  fileDir: '../sites/default/content/app_dummy'
+  fileName: 'book/all.yml'
+  identifier: 'id'
+
+  fields:
+    nid: 'Content identifier'
+    bid: 'Book identifier'
+    weight: 'Weight'
+    p0_nid: 'Top level parent identifier'
+
+process:
+  nid:
+    source: 'nid'
+    plugin: 'migration_lookup'
+    migration:
+      - 'app_dummy__node'
+
+  'book/bid':
+    source: 'bid'
+    plugin: 'migration_lookup'
+    migration:
+      - 'app_dummy__node'
+
+  'book/weight': 'weight'
+
+  'book/pid':
+    -
+      source: 'p0_nid'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_dummy__node'
+
+destination:
+  plugin: 'book'

@@ -1,4 +1,4 @@
-uuid: 35743acd-b087-4361-b8a3-48b29d7291b1
+uuid: 20ddcbb8-2a4a-4160-9558-5d3d96ee1232
 langcode: hu
 status: true
 dependencies:
@@ -20,5 +20,6 @@ content:
       rows: 9
       summary_rows: 3
       placeholder: ''
+      show_summary: false
     third_party_settings: {  }
 hidden: {  }

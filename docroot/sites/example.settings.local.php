@@ -29,37 +29,6 @@
 
 use Drupal\Component\Assertion\Handle;
 
-$is_ddev_on_host = !getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
-$is_ddev_inside = getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
-$is_ddev = $is_ddev_on_host || $is_ddev_inside;
-
-$databases['default']['default']['username'] = '';
-$databases['default']['default']['password'] = '';
-
-$databases['migrate']['default'] = $databases['default']['default'];
-$databases['migrate']['default']['database'] = 'drupalhu7__default';
-
-if ($is_ddev) {
-  $databases['default']['default']['username'] = 'db';
-  $databases['default']['default']['password'] = 'db';
-  $databases['default']['default']['host'] = $is_ddev_inside ? 'db' : '127.0.0.1';
-  $databases['default']['default']['port'] = $is_ddev_inside ? 3306 : 3306;
-  $databases['default']['default']['database'] = 'db';
-
-  $databases['migrate']['default'] = $databases['default']['default'];
-  $databases['migrate']['default']['database'] = 'drupalhu7__default';
-}
-
-$settings['trusted_host_patterns'] = [
-  '^drupalhu9\.localhost$',
-];
-
-if ($is_ddev_inside) {
-  $settings['trusted_host_patterns'][] = '^web$';
-  $settings['trusted_host_patterns'][] = '^' . preg_quote(getenv('DDEV_HOSTNAME')) . '$';
-  $settings['trusted_host_patterns'][] = '^ddev-' . preg_quote(getenv('DDEV_HOSTNAME')) . '-web.ddev_default$';
-}
-
 /**
  * Assertions.
  *
@@ -78,6 +47,65 @@ if ($is_ddev_inside) {
  */
 assert_options(ASSERT_ACTIVE, TRUE);
 Handle::register();
+
+$is_ddev_on_host = !getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
+$is_ddev_inside = getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
+$is_ddev = $is_ddev_on_host || $is_ddev_inside;
+
+// region Database
+$databases['default']['default']['username'] = getenv('MYSQL_USER') ?: getenv('USER');
+$databases['default']['default']['password'] = getenv('MYSQL_PASSWORD') ?: 'admin';
+$databases['default']['default']['host'] = getenv('MYSQL_HOST') ?: '127.0.0.1';
+$databases['default']['default']['port'] = getenv('MYSQL_PORT') ?: 3306;
+$databases['default']['default']['database'] = getenv('MYSQL_DATABASE') ?: 'drupalhu__default';
+
+$databases['migrate']['default'] = $databases['default']['default'];
+$databases['migrate']['default']['database'] = getenv('MYSQL_DATABASE_LEGACY') ?: 'drupalhu7__default';
+// endregion
+
+// region SMTP
+$config['smtp.settings']['smtp_on'] = TRUE;
+$config['smtp.settings']['smtp_protocol'] = getenv('SMTP_PROTOCOL') ?: 'standard';
+$config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME') ?: '';
+$config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD') ?: '';
+$config['smtp.settings']['smtp_host'] = getenv('SMTP_HOST') ?: '127.0.0.1';
+$config['smtp.settings']['smtp_port'] = getenv('SMTP_PORT') ?: '1025';
+// endregion
+
+// region SearchAPI
+/**
+ * @link /admin/config/search/search-api/server/general
+ */
+$config['search_api.server.general']['backend'] = 'search_api_solr';
+$config['search_api.server.general']['backend_config']['connector'] = 'standard';
+$config['search_api.server.general']['backend_config']['connector_config'] = [
+  'scheme' => 'http',
+  'host' => getenv('SOLR_SERVER_GENERAL_HOST') ?: '127.0.0.1',
+  'port' => getenv('SOLR_SERVER_GENERAL_PORT') ?: 8983,
+  'path' => '/',
+  'core' => getenv('SOLR_SERVER_GENERAL_CORE') ?: $databases['default']['default']['database'],
+  'timeout' => 5,
+  'index_timeout' => 10,
+  'optimize_timeout' => 15,
+  'finalize_timeout' => 30,
+  'commit_within' => 1000,
+  'solr_version' => '8',
+  'http_method' => 'AUTO',
+  'jmx' => FALSE,
+  'solr_install_dir' => '',
+];
+// endregion
+
+$settings['trusted_host_patterns'] = [
+  '^drupalhu9\.localhost$',
+  '^drupalhu10\.localhost$',
+];
+
+if ($is_ddev_inside) {
+  $settings['trusted_host_patterns'][] = '^web$';
+  $settings['trusted_host_patterns'][] = '^' . preg_quote(getenv('DDEV_HOSTNAME')) . '$';
+  $settings['trusted_host_patterns'][] = '^ddev-' . preg_quote(getenv('DDEV_HOSTNAME')) . '-web.ddev_default$';
+}
 
 /**
  * Enable local development services.
@@ -183,25 +211,3 @@ $config['acquia_connector.settings']['send_watchdog'] = 0;
 $config['acquia_connector.settings']['use_cron'] = 0;
 $config['acquia_connector.settings']['dynamic_banner'] = 0;
 $config['acquia_connector.settings']['hide_signup_messages'] = TRUE;
-
-/**
- * @link /admin/config/search/search-api/server/general
- */
-$config['search_api.server.general']['backend'] = 'search_api_solr';
-$config['search_api.server.general']['backend_config']['connector'] = 'standard';
-$config['search_api.server.general']['backend_config']['connector_config'] = [
-  'scheme' => 'http',
-  'host' => $is_ddev ? 'solr' : '127.0.0.1',
-  'port' => $is_ddev ? 8983 : 8983,
-  'path' => '/',
-  'core' => $is_ddev ? 'general' : $databases['default']['default']['database'],
-  'timeout' => 5,
-  'index_timeout' => 10,
-  'optimize_timeout' => 15,
-  'finalize_timeout' => 30,
-  'commit_within' => 1000,
-  'solr_version' => '8',
-  'http_method' => 'AUTO',
-  'jmx' => FALSE,
-  'solr_install_dir' => '',
-];

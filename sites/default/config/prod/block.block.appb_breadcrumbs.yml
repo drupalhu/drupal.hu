@@ -1,4 +1,4 @@
-uuid: 8fba0c03-dcd4-411d-975f-21fd0b6005cc
+uuid: dd160e18-1b78-41c7-8812-62c5943b2c00
 langcode: hu
 status: true
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
 id: appb_breadcrumbs
 theme: appb
 region: breadcrumb
-weight: -4
+weight: 0
 provider: null
 plugin: system_breadcrumb_block
 settings:

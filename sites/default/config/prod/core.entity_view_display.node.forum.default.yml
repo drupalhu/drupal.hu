@@ -1,9 +1,8 @@
-uuid: b4e61fd1-3f5a-41ce-8613-bfda4ced0b19
+uuid: 654e3f71-e8b2-485e-8730-46c5d49ee1b8
 langcode: hu
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.comment_forum.default
     - field.field.node.forum.app_body
     - field.field.node.forum.app_drupal_version
     - field.field.node.forum.app_project
@@ -13,129 +12,8 @@ dependencies:
     - node.type.forum
   module:
     - comment
-    - layout_builder
-    - layout_discovery
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: true
-    allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          56815186-043c-4dcd-b90c-fbc752abc604:
-            uuid: 56815186-043c-4dcd-b90c-fbc752abc604
-            region: content
-            configuration:
-              id: 'field_block:node:forum:taxonomy_forums'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          1e01c33c-a68b-4e90-99e6-627809a2c6bf:
-            uuid: 1e01c33c-a68b-4e90-99e6-627809a2c6bf
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_drupal_version'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          231b2626-c7b5-424a-af46-d40cb57a3c1e:
-            uuid: 231b2626-c7b5-424a-af46-d40cb57a3c1e
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_project'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 2
-            additional: {  }
-          ccf404e9-a0af-4542-b36d-8c424daf1417:
-            uuid: ccf404e9-a0af-4542-b36d-8c424daf1417
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_tags'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 3
-            additional: {  }
-          d2303090-608b-4083-a1c8-edac60d06072:
-            uuid: d2303090-608b-4083-a1c8-edac60d06072
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_body'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 4
-            additional: {  }
-          b4a1027a-fc86-4395-bac2-a907a8902c3c:
-            uuid: b4a1027a-fc86-4395-bac2-a907a8902c3c
-            region: content
-            configuration:
-              id: 'extra_field_block:node:forum:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 5
-            additional: {  }
-          ba756b6d-fb9e-4c14-afd8-bedf3c24be9f:
-            uuid: ba756b6d-fb9e-4c14-afd8-bedf3c24be9f
-            region: content
-            configuration:
-              id: 'field_block:node:forum:comment_forum'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: comment_default
-                label: hidden
-                settings:
-                  view_mode: default
-                  pager_id: 0
-                third_party_settings: {  }
-            weight: 6
-            additional: {  }
-        third_party_settings: {  }
-_core:
-  default_config_hash: TM_8DV1XKUAtF-wGxTBLOtg_GTtF5CX9WLrADxG7Xm4
 id: node.forum.default
 targetEntityType: node
 bundle: forum
@@ -174,7 +52,7 @@ content:
     region: content
   comment_forum:
     type: comment_default
-    label: hidden
+    label: above
     settings:
       view_mode: default
       pager_id: 0

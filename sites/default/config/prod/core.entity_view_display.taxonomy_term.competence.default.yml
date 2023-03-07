@@ -1,0 +1,23 @@
+uuid: f026dfe0-d585-4676-abea-6e04a2c202b8
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.competence
+  module:
+    - text
+id: taxonomy_term.competence.default
+targetEntityType: taxonomy_term
+bundle: competence
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

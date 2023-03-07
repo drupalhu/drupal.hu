@@ -1,10 +1,12 @@
 
 Felhasználói útmútató:
+  uuid: '72ec50ce-daf5-4893-b71c-9bcf3999b0cd'
   nid: 'Felhasználói útmútató'
   bid: 'Felhasználói útmútató'
   weight: 0
 
 Fejlesztői útmútató:
+  uuid: '936caccf-7aa8-433b-b891-411d07820170'
   nid: 'Fejlesztői útmútató'
   bid: 'Fejlesztői útmútató'
   weight: 1

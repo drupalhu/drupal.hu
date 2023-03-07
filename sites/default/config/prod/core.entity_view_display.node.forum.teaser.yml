@@ -1,4 +1,4 @@
-uuid: d63611a7-8352-45b6-912a-62a81aa22612
+uuid: 8e1433a2-d5c1-43f8-aff1-69eee3567855
 langcode: hu
 status: true
 dependencies:
@@ -13,80 +13,12 @@ dependencies:
     - node.type.forum
   module:
     - layout_builder
-    - layout_discovery
     - text
     - user
 third_party_settings:
   layout_builder:
-    enabled: true
+    enabled: false
     allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          30f20723-1dc9-4158-bddd-483c2cc84574:
-            uuid: 30f20723-1dc9-4158-bddd-483c2cc84574
-            region: content
-            configuration:
-              id: 'field_block:node:forum:taxonomy_forums'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          39284b4d-d376-4a06-8604-46555d4567c0:
-            uuid: 39284b4d-d376-4a06-8604-46555d4567c0
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_drupal_version'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_label
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          c2100e6a-8a7b-4357-a949-0fe7af8a9630:
-            uuid: c2100e6a-8a7b-4357-a949-0fe7af8a9630
-            region: content
-            configuration:
-              id: 'field_block:node:forum:app_body'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: text_trimmed
-                label: hidden
-                settings:
-                  trim_length: 600
-                third_party_settings: {  }
-            weight: 2
-            additional: {  }
-          342ed78f-65f6-4f96-a48c-9de4acfef993:
-            uuid: 342ed78f-65f6-4f96-a48c-9de4acfef993
-            region: content
-            configuration:
-              id: 'extra_field_block:node:forum:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 3
-            additional: {  }
-        third_party_settings: {  }
-_core:
-  default_config_hash: MK_j248n6esK84n87ulM_yPeqdkndKn94h4vTJC4wjw
 id: node.forum.teaser
 targetEntityType: node
 bundle: forum
@@ -98,7 +30,7 @@ content:
     settings:
       trim_length: 600
     third_party_settings: {  }
-    weight: 2
+    weight: 4
     region: content
   app_drupal_version:
     type: entity_reference_label
@@ -108,8 +40,19 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  links:
-    settings: {  }
+  app_project:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  app_tags:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
     third_party_settings: {  }
     weight: 3
     region: content
@@ -122,8 +65,7 @@ content:
     weight: 0
     region: content
 hidden:
-  app_project: true
-  app_tags: true
   comment_forum: true
   langcode: true
+  links: true
   search_api_excerpt: true

@@ -1,15 +1,16 @@
 version: 2.1
 
 orbs:
-  codecov: 'codecov/codecov@3.0.0'
+  codecov: 'codecov/codecov@3.2.4'
+  browser-tools: 'circleci/browser-tools@1.1'
 
 .env_common: &env_common
-  BASH_ENV: '/root/.bashrc'
+  BASH_ENV: '/home/circleci/.bashrc'
 
 .env_composer: &env_composer
   COMPOSER_NO_INTERACTION: '1'
   COMPOSER_MEMORY_LIMIT: '-1'
-  COMPOSER_CACHE_DIR: '/root/.cache/composer'
+  COMPOSER_CACHE_DIR: '/home/circleci/.cache/composer'
 
 .env_drush: &env_drush
   DRUSH_OPTIONS_PROGRESS_DELAY: '9999'
@@ -18,16 +19,16 @@ orbs:
   DRUSH_MARVIN_ENVIRONMENT: 'ci'
 
 .env_node: &env_node
-  YARN_CACHE_FOLDER: '/root/.cache/yarn/v6'
+  YARN_CACHE_FOLDER: '/home/circleci/.cache/yarn/v6'
 
 .env_app: &env_app
   APP_HASH_SALT: '04Wz1klfHuAtBZh9ufzsDL8YIKJ6rZYPMwWFI4unhDU7'
-  appDrushExecutable: 'bin/drush --config=drush'
+  appDrushExecutable: 'vendor/bin/drush --config=drush'
   appDrushSiteAlias: '@app.local'
   appDocroot: 'docroot'
   appInstallProfileName: 'appp'
 
-  appChromiumHostPort: 'localhost:9222'
+  appChromiumHostPort: '127.0.0.1:9222'
 
   appSolrRootPassword: 'root'
 
@@ -57,7 +58,7 @@ executors:
     docker:
       - &docker_container_main
         name: 'main'
-        image: 'sweetchuck/php-env-dev:7.4.24-n141701-20211019'
+        image: 'cimg/php:8.1.16-browsers'
         environment:
           <<: *env_common
           <<: *env_composer
@@ -80,6 +81,21 @@ executors:
         image: 'sweetchuck/solr:7.7.3'
 
 commands:
+  php_extension_install:
+    description: 'Install required PHP extensions'
+    steps:
+      -
+        run:
+          name: 'Install required PHP extensions'
+          command: |-
+            sudo apt-get update
+            sudo apt-get -y install \
+              libyaml-dev
+
+            (yes '' || true) | sudo pecl install \
+              pcov \
+              yaml
+
   git_config:
     description: 'Git config'
     steps:
@@ -99,19 +115,17 @@ commands:
           name: 'Composer install – cache restore'
           keys:
             - 'composer-{{ checksum "./composer.lock" }}-3'
-
       -
         run:
           name: 'Composer install – execute'
           command: >
             composer install --no-progress
-
       -
         save_cache:
           name: 'Composer install – cache save'
           key: 'composer-{{ checksum "./composer.lock" }}-3'
           paths:
-            - '/root/.cache/composer/'
+            - '/home/circleci/.cache/composer/'
 
   main_instance_build:
     description: 'Main instance build'
@@ -130,17 +144,17 @@ commands:
             - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
       -
         run:
-          name: 'Main instance build – drush marvin:build'
+          name: 'Main instance build – drush app:build'
           command: |-
             . ./.circleci/scripts/include.bash
             appMarvinOnboardingDrushLocalYml "${PWD}"
-            ${appDrushExecutable} marvin:build
+            ${appDrushExecutable} app:build
       -
         save_cache:
           name: 'Main instance build – NPM – cache save'
           key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
           paths:
-            - '/root/.cache/yarn/v6'
+            - '/home/circleci/.cache/yarn/v6'
 
   test_lint:
     description: 'Run linters'
@@ -149,22 +163,16 @@ commands:
         run:
           name: 'Run linters'
           command: >-
-            ${appDrushExecutable} marvin:lint
+            ${appDrushExecutable} app:lint
 
   test_unit:
     description: 'Test – Unit'
     steps:
       -
         run:
-          name: 'Test – Unit – php.ini preset – xdebug3'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appPhpCliPresetActivate xdebug3
-      -
-        run:
           name: 'Test – Unit – execute'
           command: |-
-            XDEBUG_MODE='coverage' bin/phpunit --testsuite='unit'
+            "$(composer config bin-dir)/phpunit" --testsuite='unit'
       -
         run:
           name: 'Test – Unit – php.ini preset – prod'
@@ -187,7 +195,7 @@ commands:
         run:
           name: 'Build an Acquia specific release artifact'
           command: |-
-            ${appDrushExecutable} marvin:artifact:build:acquia
+            ${appDrushExecutable} app:artifact:build:acquia
       -
         persist_to_workspace:
           name: 'Store the release artifact'
@@ -372,7 +380,7 @@ commands:
         run:
           name: 'Test – Behat – execute'
           command: |-
-            ./bin/behat
+            "$(composer config bin-dir)/behat"
       -
         store_artifacts:
           name: 'Test – Behat – Store test reports as artifacts'
@@ -391,7 +399,7 @@ commands:
           name: 'Test – Functional JavaScript – execute'
           command: |-
             # Environment variable XDEBUG_MODE=coverage is intentionally ignored.
-            ./bin/phpunit --testsuite 'functional-javascript'
+            "$(composer config bin-dir)/phpunit" --testsuite 'functional-javascript'
       -
         store_artifacts:
           name: 'Test – Functional JavaScript – Store test reports as artifacts'
@@ -436,7 +444,7 @@ commands:
             remoteHome='/home/druphungary'
             mkdir --parents './sites/default/backup/prod/'
 
-            ./bin/drush \
+            "$(composer config bin-dir)/drush" \
               --config='drush' \
               core:rsync \
               "@app.dev:/${remoteHome}/backup/prod/default/" \
@@ -463,12 +471,12 @@ commands:
             . ./.circleci/scripts/include.bash
 
             eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
-            ./bin/drush \
+            "$(composer config bin-dir)/drush" \
               --config='drush' \
               --yes \
               sql:drop \
             && \
-            ./bin/drush \
+            "$(composer config bin-dir)/drush" \
               --config='drush' \
               --yes \
               sql:cli \
@@ -481,7 +489,7 @@ commands:
 
             eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
 
-            ./bin/drush \
+            "$(composer config bin-dir)/drush" \
               --config='drush' \
               --yes \
               core:rsync \
@@ -490,7 +498,7 @@ commands:
               -- \
               --delete \
             && \
-            ./bin/drush \
+            "$(composer config bin-dir)/drush" \
               --config='drush' \
               --yes \
               core:rsync \
@@ -511,19 +519,19 @@ commands:
             version="$(appLatestArtifactVersionNumber)"
             cd "./artifacts/${version}/acquia"
 
-            ./bin/drush site:set "${PWD}/docroot#default"
+            "$(composer config bin-dir)/drush" site:set "${PWD}/docroot#default"
 
-            ./bin/drush --config='drush' status || true
+            "$(composer config bin-dir)/drush" --config='drush' status || true
 
-            ./bin/drush --config='drush' --yes updatedb \
+            "$(composer config bin-dir)/drush" --config='drush' --yes updatedb \
             && \
-            ./bin/drush --config='drush' --yes config:import \
+            "$(composer config bin-dir)/drush" --config='drush' --yes config:import \
             && \
-            ./bin/drush --config='drush' --yes locale:check \
+            "$(composer config bin-dir)/drush" --config='drush' --yes locale:check \
             && \
-            ./bin/drush --config='drush' --yes locale:update \
+            "$(composer config bin-dir)/drush" --config='drush' --yes locale:update \
 
-            ./bin/drush site:set
+            "$(composer config bin-dir)/drush" site:set
 
   add_ssh_keys_acquia:
     description: 'Add SSH keys – Acquia'
@@ -632,27 +640,126 @@ commands:
             . ./.circleci/scripts/include.bash
             appDebugAcquiaEnvAccess '<<parameters.ah_env>>'
 
-##
-# @todo Replace "~/repo" with "/root/project" (or whatever the ~/ is in the used Docker container)
-#       because the tilde (~) symbol is not resolved by the shell in a case like this:
-#       shell: cd "${CIRCLE_WORKING_DIRECTORY}"
-#       Unfortunately all the examples uses the "~" char on this page:
-#       https://circleci.com/docs/2.0/configuration-reference/#example
-##
+  ddev_init_info:
+    description: 'DDev – init – info'
+    steps:
+      -
+        run:
+          name: 'DDev – init – info'
+          command: |
+            env | sort
+            echo "OS release:\n$(cat /etc/os-release)"
+            echo "pwd:\n$(pwd)"
+            echo "id:\n$(id)"
+            echo "bash:\n$(bash --version)"
+            echo "zsh:\n$(zsh --version)"
+            echo "git:\n$(git --version)"
+            echo "parallel:\n$(parallel --version)"
+            echo "sed:\n$(sed --version)"
+            echo "jq:\n$(jq --version)"
+            echo "yq:\n$(yq --version)"
+
+  ddev_init_install:
+    description: 'DDev – init – install'
+    steps:
+      -
+        run:
+          name: 'DDev – init – install'
+          command: |
+            curl -s -L https://raw.githubusercontent.com/drud/ddev/master/scripts/install_ddev.sh | bash
+  ddev_init_config:
+    description: 'DDev – init – configure'
+    steps:
+      -
+        run:
+          name: 'DDev – init – configure'
+          command: |
+            cp ./.ddev/.env.example ./.ddev/.env
+  ddev_init_start:
+    description: 'DDev – init – start'
+    steps:
+      -
+        run:
+          name: 'Yarn cache – Calculate checksum'
+          command: |-
+            # Collect all the checksum of yarn.lock files into one file.
+            echo -n '' > 'checksum-of-frontend-asset-sources.sha256'
+            git ls-files -- '**/yarn.lock' | xargs sha256sum >> 'checksum-of-frontend-asset-sources.sha256'
+      -
+        restore_cache:
+          name: 'Yarn cache – restore'
+          keys:
+            - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
+      -
+        restore_cache:
+          name: 'Composer cache – restore'
+          keys:
+            - 'composer-{{ checksum "./composer.lock" }}-3'
+      -
+        run:
+          name: 'DDev – init – start'
+          command: |
+            ddev start
+      -
+        save_cache:
+          name: 'Composer cache – save'
+          key: 'composer-{{ checksum "./composer.lock" }}-3'
+          paths:
+            - '/mnt/ddev-global-cache/composer'
+      -
+        save_cache:
+          name: 'Yarn cache – save'
+          key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
+          paths:
+            - '/mnt/ddev-global-cache/yarn'
+
+  ddev_lint_phpcs:
+    description: 'DDev – QA static – lint_phpcs'
+    steps:
+      -
+        run:
+          name: 'DDev – QA static – lint:phpcs'
+          command: |
+            ddev drush app:lint:phpcs
+  ddev_test_unit:
+    description: 'DDev – QA unit – test:unit'
+    steps:
+      -
+        run:
+          name: 'DDev – QA unit – test:unit'
+          command: |
+            ddev exec ./vendor/bin/phpunit --testsuite='unit'
+  ddev_test_functional_javascript:
+    description: 'DDev – QA e2e – test:functional-javascript'
+    steps:
+      -
+        run:
+          name: 'DDev – QA e2e – test:functional-javascript'
+          command: |
+            ddev exec ./vendor/bin/phpunit --testsuite='functional-javascript'
+  ddev_test_behat:
+    description: 'DDev – QA e2e – test:behat'
+    steps:
+      -
+        run:
+          name: 'DDev – QA e2e – test:behat'
+          command: |
+            ddev exec ./vendor/bin/behat
+
 jobs:
   build:
     executor: 'php_min'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_extension_install'
       - 'composer_install'
       - 'main_instance_build'
 
   test_static:
     executor: 'php_min'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_extension_install'
       - 'composer_install'
       - 'main_instance_build'
       - 'test_lint'
@@ -660,9 +767,9 @@ jobs:
 
   release_artifact_build:
     executor: 'php_min'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_extension_install'
       - 'composer_install'
       - 'main_instance_build'
       - 'add_ssh_keys_acquia'
@@ -670,10 +777,11 @@ jobs:
 
   test_behat:
     executor: 'php_min_with_services'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'browser-tools/install-browser-tools'
       - 'git_config'
+      - 'php_extension_install'
       - 'composer_install'
       - 'main_instance_build'
       - 'artifact_acquia_restore'
@@ -688,10 +796,11 @@ jobs:
 
   test_functional_javascript:
     executor: 'php_min_with_services'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'browser-tools/install-browser-tools'
       - 'git_config'
+      - 'php_extension_install'
       - 'composer_install'
       - 'main_instance_build'
       - 'artifact_acquia_restore'
@@ -706,9 +815,9 @@ jobs:
 
   test_updatedb:
     executor: 'php_min_with_services'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_extension_install'
       - 'git_config'
       - 'add_ssh_keys_acquia'
       - 'artifact_acquia_restore'
@@ -729,9 +838,9 @@ jobs:
 
   deploy_to_acquia_env_dev:
     executor: 'php_min'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
+      - 'php_extension_install'
       - 'git_config'
       - 'add_ssh_keys_acquia'
       - 'artifact_acquia_restore'
@@ -739,7 +848,6 @@ jobs:
 
   debug_acquia_access:
     executor: 'php_min'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
       - 'git_config'
@@ -754,14 +862,39 @@ jobs:
 
   debug_mysql:
     executor: 'php_min_with_services'
-    working_directory: '~/repo'
     steps:
       - 'checkout'
       - 'mysql_start'
       - 'debug_mysql'
 
+  ddev_all_in_one:
+    machine:
+      image: 'ubuntu-2004:current'
+      docker_layer_caching: true
+    environment:
+      DDEV_NONINTERACTIVE: "true"
+      <<: *env_app
+      <<: *env_composer
+      <<: *env_node
+    steps:
+      - 'checkout'
+      - 'ddev_init_info'
+      - 'ddev_init_install'
+      - 'ddev_init_config'
+      - 'ddev_init_start'
+      - 'ddev_lint_phpcs'
+      - 'ddev_test_unit'
+      - 'ddev_test_functional_javascript'
+      - 'ddev_test_behat'
+
 workflows:
+  QA_DDev:
+    jobs:
+      -
+        ddev_all_in_one: {}
+
   QA:
+    when: false
     jobs:
       -
         build: {}

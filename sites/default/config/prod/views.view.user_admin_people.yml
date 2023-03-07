@@ -16,7 +16,7 @@ base_field: uid
 display:
   default:
     id: default
-    display_title: Alapértelmezés
+    display_title: Default
     display_plugin: default
     position: 0
     display_options:
@@ -340,8 +340,8 @@ display:
           hide_alter_empty: true
           type: timestamp_ago
           settings:
-            future_format: '@interval hence'
-            past_format: '@interval ago'
+            future_format: '@interval múlva'
+            past_format: '@interval ideje'
             granularity: 2
         operations:
           id: operations
@@ -352,7 +352,7 @@ display:
           admin_label: ''
           entity_type: user
           plugin_id: entity_operations
-          label: Műveletek
+          label: Operations
           exclude: false
           alter:
             alter_text: false
@@ -472,23 +472,23 @@ display:
             last: 'Utolsó »'
           expose:
             items_per_page: false
-            items_per_page_label: 'Elemek száma oldalanként'
+            items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '– Mind –'
+            items_per_page_options_all_label: '- All -'
             offset: false
-            offset_label: Eltolás
+            offset_label: Offset
           quantity: 9
       exposed_form:
         type: basic
         options:
-          submit_button: Szűrő
+          submit_button: Filter
           reset_button: true
-          reset_button_label: Alaphelyzet
-          exposed_sorts_label: Rendezés
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
           expose_sort_order: true
-          sort_asc_label: Növ
-          sort_desc_label: Csökk
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       access:
         type: perm
         options:
@@ -894,7 +894,7 @@ display:
       tags: {  }
   page_1:
     id: page_1
-    display_title: Oldal
+    display_title: Page
     display_plugin: page
     position: 1
     display_options:

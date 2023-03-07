@@ -16,7 +16,7 @@ id: comment.admin.comment_body
 field_name: comment_body
 entity_type: comment
 bundle: admin
-label: Comment
+label: Hozzászólás
 description: ''
 required: true
 translatable: true

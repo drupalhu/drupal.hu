@@ -5,7 +5,7 @@ dependencies: {  }
 _core:
   default_config_hash: DPIStY3LxFlmBmgKFboV64GH7FLNZIEl5pwLcHL3tCU
 id: text_hu_7_0_0
-label: 'Hungarian Text Field'
+label: 'Magyar szöveges mező'
 minimum_solr_version: 7.0.0
 custom_code: ''
 field_type_language_code: hu

@@ -103,13 +103,12 @@ $databases = [
   'default' => [
     'default' => [
       'driver' => 'mysql',
-      'namespace' => '\Drupal\Core\Database\Driver\mysql',
       'username' => '',
       'password' => '',
       'host' => '127.0.0.1',
       'port' => 3306,
       'prefix' => '',
-      'database' => 'drupalhu9__default',
+      'database' => '',
       'collation' => 'utf8mb4_general_ci',
     ],
   ],

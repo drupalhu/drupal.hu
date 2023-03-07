@@ -4,12 +4,11 @@ declare(strict_types = 1);
 
 namespace DrupalHu\DrupalHu\Tests\Robo\Task;
 
-use Drupal\marvin\Robo\Task\BaseTask as MarvinBaseTask;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\ClientInterface as GuzzleHttpClientInterface;
 use Sweetchuck\Utils\Uri as UtilsUri;
 
-class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
+class AppSearchApiSolrIndexClearTask extends BaseTask {
 
   protected string $baseUrl = '';
 
@@ -17,10 +16,7 @@ class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
     return $this->baseUrl;
   }
 
-  /**
-   * @return $this
-   */
-  public function setBaseUrl(string $baseUrl) {
+  public function setBaseUrl(string $baseUrl): static {
     $this->baseUrl = $baseUrl;
 
     return $this;
@@ -32,19 +28,13 @@ class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
     return $this->index;
   }
 
-  /**
-   * @return $this
-   */
-  public function setIndex(array $index) {
+  public function setIndex(array $index): static {
     $this->index = $index;
 
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setOptions(array $options) {
+  public function setOptions(array $options): static {
     parent::setOptions($options);
 
     if (array_key_exists('baseUrl', $options)) {
@@ -65,16 +55,13 @@ class AppSearchApiSolrIndexClearTask extends MarvinBaseTask {
     $this->taskName = 'App - Search API Solr - Index - Clear';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function runHeader() {
+  protected function runHeader(): static {
     $this->printTaskInfo('Search API index: {indexId}');
 
     return $this;
   }
 
-  protected function runAction() {
+  protected function runAction(): static {
     // @todo Use Solarium.
     $index = $this->getIndex();
     $connectorConfig =& $index['server']['backend_config']['connector_config'];
@@ -132,7 +119,7 @@ XML;
     return $context;
   }
 
-  protected function escapeSolrQueryValue(string $value):string {
+  protected function escapeSolrQueryValue(string $value): string {
     return addcslashes($value, '"');
   }
 

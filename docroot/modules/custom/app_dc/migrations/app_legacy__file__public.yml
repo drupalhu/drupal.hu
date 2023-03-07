@@ -1,0 +1,68 @@
+langcode: 'en'
+status: true
+id: 'app_legacy__file__public'
+label: 'App - Legacy - file:public'
+
+migration_group: 'app_legacy'
+migration_tags:
+  - 'app'
+  - 'src_file'
+  - 'src_file__public'
+  - 'dst_file'
+  - 'dst_file__public'
+
+migration_dependencies:
+  optional:
+    - 'app_legacy__user__user'
+
+source:
+  plugin: 'd7_file'
+  scheme:
+    - 'public'
+  constants:
+    source_base_path: '../sites/default/backup/legacy/files'
+    dst_scheme: 'public:/'
+
+process:
+  # Cut off the leading "files/".
+  source_filepath:
+    source: 'filepath'
+    plugin: 'substr'
+    start: 6
+  source:
+    plugin: 'concat'
+    delimiter: '/'
+    source:
+      - 'constants/source_base_path'
+      - '@source_filepath'
+  dst:
+    plugin: 'concat'
+    delimiter: '/'
+    source:
+      - 'constants/dst_scheme'
+      - '@source_filepath'
+
+  fid: 'fid'
+  uid:
+    -
+      source: 'uid'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      no_stub: false
+      migration:
+        - 'app_legacy__user__user'
+  filename: 'filename'
+  uri:
+    source:
+      - '@source'
+      - '@dst'
+    plugin: 'file_copy'
+    file_exists: 'use existing'
+  filemime: 'filemime'
+  status: 'status'
+  created: 'timestamp'
+
+destination:
+  plugin: 'entity:file'

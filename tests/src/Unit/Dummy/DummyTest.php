@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace DrupalHu\DrupalHu\Tests\Unit\Dummy;
 
 use Drupal\Tests\UnitTestCase;
-use Drush\Commands\app\MarvinLintCommands;
+use Drush\Commands\app\SiteCommands;
 
 /**
  * @group app
@@ -13,7 +13,7 @@ use Drush\Commands\app\MarvinLintCommands;
 class DummyTest extends UnitTestCase {
 
   public function testDummy(): void {
-    $commands = new MarvinLintCommands();
+    $commands = new SiteCommands();
     static::assertNotNull($commands, 'namespace "\Drush\Commands\app" is available');
 
     $entityStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');

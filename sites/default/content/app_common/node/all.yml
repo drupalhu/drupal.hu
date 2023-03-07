@@ -1,8 +1,8 @@
 
 page.impressum:
-  uuid: d859bb03-4344-4715-910a-8dcbe92cec97
-  type: page
-  title: Impresszum
+  uuid: 'd859bb03-4344-4715-910a-8dcbe92cec97'
+  type: 'page'
+  title: 'Impresszum'
   created: 'yesterday 18:42:24'
   app_body:
     -

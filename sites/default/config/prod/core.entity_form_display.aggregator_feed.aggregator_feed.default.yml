@@ -1,4 +1,4 @@
-uuid: 61ee918e-63d1-4834-93c4-382288ea52ab
+uuid: 9110271d-3814-43f8-9249-884a9e9b63f5
 langcode: hu
 status: true
 dependencies:
@@ -18,31 +18,32 @@ content:
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
   app_category:
-    type: options_buttons
-    weight: 4
+    type: options_select
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 0
+    weight: 4
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   refresh:
     type: options_select
-    weight: 2
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 1
+    weight: 0
     region: content
     settings:
       size: 60
@@ -50,7 +51,7 @@ content:
     third_party_settings: {  }
   url:
     type: uri
-    weight: 3
+    weight: 2
     region: content
     settings:
       size: 60

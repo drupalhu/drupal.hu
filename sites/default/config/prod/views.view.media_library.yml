@@ -484,6 +484,7 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
         - 'config:core.entity_view_display.media.image.hero'
         - 'config:core.entity_view_display.media.image.media_library'
   page:
@@ -784,6 +785,7 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
         - 'config:core.entity_view_display.media.image.hero'
         - 'config:core.entity_view_display.media.image.media_library'
   widget:
@@ -1107,6 +1109,7 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
         - 'config:core.entity_view_display.media.image.hero'
         - 'config:core.entity_view_display.media.image.media_library'
   widget_table:
@@ -1182,6 +1185,8 @@ display:
           settings:
             image_link: ''
             image_style: orgw40
+            image_loading:
+              attribute: lazy
             svg_attributes:
               width: null
               height: null

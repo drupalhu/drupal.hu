@@ -1,3 +1,6 @@
+_core:
+  default_config_hash: cSdYeE-_AQETCNZnl8BMFS9-sVn5--VzAYILkpPBUbM
+langcode: hu
 cache_strings: true
 translate_english: false
 javascript:
@@ -9,8 +12,5 @@ translation:
   overwrite_customized: false
   overwrite_not_customized: false
   update_interval_days: 0
-  path: ''
+  path: ../sites/all/translations
   import_enabled: true
-_core:
-  default_config_hash: cSdYeE-_AQETCNZnl8BMFS9-sVn5--VzAYILkpPBUbM
-langcode: hu

@@ -14,16 +14,16 @@ use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFieldsWithMetadata;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
-use Drush\Commands\marvin\CommandsBase;
+use Drush\Commands\DrushCommands;
 
-class AppDcCommands extends CommandsBase {
+class AppDcCommands extends DrushCommands {
 
   protected MigrationPluginManagerInterface $migrationPluginManager;
 
   public function __construct(MigrationPluginManagerInterface $migrationPluginManager) {
     $this->migrationPluginManager = $migrationPluginManager;
 
-    parent::__construct(NULL);
+    parent::__construct();
   }
 
   /**
@@ -46,15 +46,33 @@ class AppDcCommands extends CommandsBase {
    * @default-string-field id
    *
    * @default-fields status_label,group,id,total,processed,imported,needs_update,ignored,failed
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   public function report(
     array $options = [
+      'group' => '',
       'format' => 'table',
     ]
   ): CommandResult {
+    $migrations = $this->migrations();
+
+    $groups = array_filter(explode(',', $options['group']));
+    if ($groups) {
+      $migrations = array_filter(
+        $migrations,
+        function (MigrationInterface $migration) use ($groups): bool {
+          return in_array(
+            $migration->getPluginDefinition()['migration_group'] ?? '',
+            $groups,
+          );
+        },
+      );
+    }
+
     // @todo Exit code based on the "failed" and "needs_update" columns.
     return CommandResult::dataWithExitCode(
-      $this->reportRows($this->migrations()),
+      $this->reportRows($migrations),
       0,
     );
   }
@@ -62,7 +80,7 @@ class AppDcCommands extends CommandsBase {
   /**
    * @hook alter app:dc:report
    */
-  public function reportAlter(CommandResult $result, CommandData $commandData) {
+  public function reportAlter(CommandResult $result, CommandData $commandData): void {
     $data = $result->getOutputData();
     if ($commandData->formatterOptions()->getFormat() === 'table' && !($data instanceof RowsOfFields)) {
       $rows = new RowsOfFieldsWithMetadata($data);
@@ -76,6 +94,8 @@ class AppDcCommands extends CommandsBase {
 
   /**
    * @param \Drupal\migrate\Plugin\MigrationInterface[] $migrations
+   *
+   * @phpstan-return array<string, array<string, mixed>>
    */
   protected function reportRows(array $migrations): array {
     $rows = [];
@@ -87,7 +107,9 @@ class AppDcCommands extends CommandsBase {
   }
 
   /**
-   * @return \Consolidation\OutputFormatters\StructuredData\RenderCellInterface[]
+   * @phpstan-param array<string, mixed> $data
+   *
+   * @phpstan-return \Consolidation\OutputFormatters\StructuredData\RenderCellInterface[]
    */
   protected function reportRenderers(array $data): array {
     return [
@@ -96,6 +118,9 @@ class AppDcCommands extends CommandsBase {
     ];
   }
 
+  /**
+   * @phpstan-param array<string, mixed> $data
+   */
   protected function reportRendererNumeric(array $data): RenderCellInterface {
     return new NumericCellRenderer(
       $data,
@@ -130,6 +155,9 @@ class AppDcCommands extends CommandsBase {
     });
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   protected function reportRow(MigrationInterface $migration): array {
     $definition = $migration->getPluginDefinition();
     $source = $migration->getSourcePlugin();
@@ -154,6 +182,50 @@ class AppDcCommands extends CommandsBase {
   }
 
   /**
+   * @command app:dc:definition
+   * @bootstrap full
+   *
+   * @option string $format
+   *   Default: yaml
+   *
+   * @phpstan-param array<string, mixed> $options
+   */
+  public function cmdDcDefinitionExecute(
+    string $migration_id,
+    array $options = [],
+  ): CommandResult {
+    $migrations = $this->migrations();
+    $exitCode = 0;
+
+    return CommandResult::dataWithExitCode(
+      $migrations[$migration_id]->getPluginDefinition(),
+      $exitCode,
+    );
+  }
+
+  /**
+   * @command app:dc:definition-source-fields
+   * @bootstrap full
+   *
+   * @option string $format
+   *   Default: yaml
+   *
+   * @phpstan-param array<string, mixed> $options
+   */
+  public function cmdDcDefinitionSourceFieldsExecute(
+    string $migration_id,
+    array $options = [],
+  ): CommandResult {
+    $migrations = $this->migrations();
+    $exitCode = 0;
+
+    return CommandResult::dataWithExitCode(
+      $migrations[$migration_id]->getSourcePlugin()->fields(),
+      $exitCode,
+    );
+  }
+
+  /**
    * @return \Drupal\migrate\Plugin\MigrationInterface[]
    */
   protected function migrations(): array {
@@ -168,8 +240,8 @@ class AppDcCommands extends CommandsBase {
   }
 
   protected function migrationFilter(): callable {
-    return function ($id) {
-      return strpos($id, 'app_') === 0;
+    return function (string $id): bool {
+      return str_starts_with($id, 'app_');
     };
   }
 

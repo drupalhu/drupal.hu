@@ -1,0 +1,106 @@
+langcode: 'en'
+status: true
+id: 'app_dummy__user'
+label: 'App - Dummy - user'
+
+migration_group: 'app_dummy'
+migration_tags:
+  - 'dst_user'
+
+migration_dependencies:
+  required:
+    - 'app_dummy__file__public'
+
+source:
+  plugin: 'migrate_dc_yaml'
+  fileDir: '../sites/default/content/app_dummy'
+  fileName: 'user/user.yml'
+  identifier: 'name'
+  identifierDepth: 0
+  constants:
+    mailDefaultDomain: 'localhost'
+
+  fields:
+    uuid: 'uuid'
+    name: 'Name'
+    pass: 'Pass'
+    mail: 'Mail'
+    roles: 'Roles'
+    created: 'Created'
+    changed: 'Changed'
+    app_picture: 'User picture'
+
+process:
+  mailDefaultLocal:
+    source: 'name'
+    plugin: 'machine_name'
+
+  mailDefault:
+    plugin: 'concat'
+    source:
+      - '@mailDefaultLocal'
+      - 'constants/mailDefaultDomain'
+    delimiter: '@'
+
+  uuid: 'uuid'
+  name: 'name'
+
+  pass:
+    source: 'pass'
+    plugin: 'migrate_dc_plain_password'
+
+  mail:
+    -
+      source:
+        - 'mail'
+        - '@mailDefault'
+      plugin: 'get'
+    -
+      plugin: 'callback'
+      callable: 'array_filter'
+    -
+      plugin: 'callback'
+      callable: 'current'
+
+  roles: 'roles'
+
+  status:
+    source: 'status'
+    plugin: 'default_value'
+    default_value: true
+    strict: true
+
+  created:
+    -
+      source: 'created'
+      plugin: 'default_value'
+      default_value: 'now'
+    -
+      plugin: 'migrate_dc_str_to_time'
+
+  changed:
+    -
+      source: 'changed'
+      plugin: 'default_value'
+      default_value: 'now'
+    -
+      plugin: 'migrate_dc_str_to_time'
+
+  app_picture:
+    -
+      source: 'app_picture'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'sub_process'
+      process:
+        target_id:
+          source: 'target_id'
+          plugin: 'migration_lookup'
+          migration:
+            - 'app_dummy__file__public'
+        alt: 'alt'
+        title: 'title'
+
+destination:
+  plugin: 'entity:user'

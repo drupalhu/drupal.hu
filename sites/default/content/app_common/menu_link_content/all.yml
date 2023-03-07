@@ -1,6 +1,7 @@
 
 #region Account.
 account:node-add:
+  uuid: 'bb29537c-4420-4585-9b50-ebd8dc680647'
   menu_name: 'account'
   title: 'Tartalom beküldés'
   link: 'internal:/node/add'
@@ -11,6 +12,7 @@ account:node-add:
 
 #region Main.
 main.forum:
+  uuid: '2c1a1655-fab1-4b0c-a5d2-8e629314f730'
   menu_name: 'main'
   title: 'Fórum'
   link: 'internal:/forum'
@@ -21,6 +23,7 @@ main.forum:
 
 #region Footer.
 footer:impressum:
+  uuid: '983dd99b-1d4c-462f-80bf-9aa51da3d7af'
   menu_name: 'footer'
   title: 'Impresszum'
   link: 'entity.uuid:node/d859bb03-4344-4715-910a-8dcbe92cec97'
@@ -29,6 +32,7 @@ footer:impressum:
   enabled: 1
 
 footer:data_protection:
+  uuid: '1bf24efa-3cd9-4dcd-9fe0-c364ea6ab40e'
   menu_name: 'footer'
   title: 'Adatvédelmi és Adatkezelési tájékoztató'
   link: 'internal:/legal/document/data_protection'
@@ -37,6 +41,7 @@ footer:data_protection:
   enabled: 1
 
 footer:terms_of_use:
+  uuid: '1bb12642-efdb-4dbc-8fe7-b25c6243e873'
   menu_name: 'footer'
   title: 'Felhasználási feltételek'
   link: 'internal:/legal/document/terms_of_use'

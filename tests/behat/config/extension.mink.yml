@@ -6,13 +6,10 @@ default:
       files_path: '%paths.base%/tests/behat/media'
       base_url: 'http://drupalhu.localhost'
       browser_name: 'chrome'
-      default_session: 'goutte'
+      default_session: 'browserChrome'
       javascript_session: 'browserChrome'
-      goutte: ~
       sessions:
         default:
-          goutte: ~
-        browserChrome:
           chrome:
             api_url: 'http://127.0.0.1:9222'
             validate_certificate: false

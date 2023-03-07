@@ -1,10 +1,10 @@
-uuid: 5e44aa18-c286-49b3-83ba-9137ddd66a26
+uuid: f00c1a80-015e-4050-b3a5-0a249f5bded8
 langcode: hu
 status: true
 dependencies:
   config:
     - field.field.media.image.field_media_image
-    - image.style.orgw40
+    - image.style.orgw30
     - media.type.image
   module:
     - image_widget_crop
@@ -16,19 +16,22 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_media_image:
     type: image_widget_crop
-    weight: 0
+    weight: 2
     region: content
     settings:
       progress_indicator: throbber
-      preview_image_style: orgw40
-      crop_preview_image_style: orgw60
+      preview_image_style: orgw30
+      crop_preview_image_style: l10s40
       crop_list:
+        - sqr
+        - l10
+        - l20
         - l30
         - l42
       crop_types_required: {  }
@@ -38,14 +41,14 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 0
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   name:
     type: string_textfield
-    weight: -5
+    weight: 1
     region: content
     settings:
       size: 60
@@ -53,20 +56,20 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 100
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 3
     region: content
     settings:
       match_operator: CONTAINS

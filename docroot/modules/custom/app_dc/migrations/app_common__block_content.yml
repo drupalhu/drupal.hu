@@ -1,0 +1,104 @@
+langcode: 'en'
+status: true
+id: 'app_common__block_content'
+label: 'App - Common - block_content'
+
+migration_group: 'app_common'
+migration_tags:
+  - 'dst_block_content'
+
+source:
+  plugin: 'migrate_dc_yaml'
+  fileDir: '../sites/default/content/app_common'
+  fileName: 'block_content/all.yml'
+  identifier: 'id'
+
+  fields:
+    id: 'Identifier'
+    uuid: 'UUID'
+    type: 'Type'
+    langcode: 'Language code'
+    revision_user: 'Revision - user'
+#    revision_created: 'Revision - created'
+#    revision_log: 'Revision - log'
+#    revision_default: 'Revision - default'
+#    revision_translation_affected: 'Revision - translation affected'
+    status: 'Status'
+    changed: 'Changed'
+    reusable: 'Reusable'
+    info: 'Info'
+    app_body: 'Body'
+
+process:
+  uuid:
+    source: 'uuid'
+    plugin: 'skip_on_empty'
+    method: 'process'
+
+  type:
+    source: 'type'
+    plugin: 'default_value'
+    default_value: 'simple'
+
+  langcode:
+    source: 'langcode'
+    plugin: 'default_value'
+    default_value: 'hu'
+
+  revision_user:
+    source: 'revision_user'
+    plugin: 'default_value'
+    default_value: 1
+
+  #revision_created:
+  #revision_log:
+  #revision_default:
+  #revision_translation_affected:
+
+  status:
+    source: status
+    plugin: default_value
+    default_value: true
+    strict: true
+
+  changed:
+    -
+      source: 'changed'
+      plugin: 'default_value'
+      default_value: 'now'
+    -
+      plugin: 'migrate_dc_str_to_time'
+      output_format: 'U'
+
+  reusable:
+    source: 'reusable'
+    plugin: 'default_value'
+    default_value: true
+    strict: true
+
+  info: 'info'
+
+  app_body:
+    source: 'app_body'
+    plugin: 'sub_process'
+    process:
+      value: 'value'
+      format:
+        source: 'format'
+        plugin: 'default_value'
+        default_value: 'html_full'
+
+destination:
+  plugin: 'entity:block_content'
+#  overwrite_properties:
+#    - 'langcode'
+#    - 'revision_user'
+#    #- 'revision_created'
+#    #- 'revision_log'
+#    #- 'revision_default'
+#    #- 'revision_translation_affected'
+#    - 'status'
+#    - 'changed'
+#    - 'reusable'
+#    - 'info'
+#    - 'body'

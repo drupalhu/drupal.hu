@@ -1,13 +1,25 @@
 
-images/casestudy-01.jpg: {}
-images/comb.jpg: {}
-images/desiccation-cracks.jpg: {}
-images/event-01.jpg: {}
-images/event-02.jpg: {}
-images/goemetry.jpg: {}
-images/job-01.jpg: {}
-images/mosque.jpg: {}
-images/news-01.jpg: {}
-images/red-dots.jpg: {}
-images/utrecht.jpg: {}
-images/white.jpg: {}
+images/casestudy-01.jpg:
+  uuid: '4b05d765-8ed5-4dbd-81ef-f2235a6bb168'
+images/comb.jpg:
+  uuid: 'edad4780-6d73-4307-b3a8-0844298c68f1'
+images/desiccation-cracks.jpg:
+  uuid: 'cbd91d60-dda0-4cb6-a885-ce2f27874151'
+images/event-01.jpg:
+  uuid: '4c010cfd-b997-4c46-a608-fed047f44e55'
+images/event-02.jpg:
+  uuid: '928ce794-2dcf-4884-bf90-02b6cd9b57f8'
+images/goemetry.jpg:
+  uuid: '46c4ba3a-35e0-489d-9028-68f851bf476c'
+images/job-01.jpg:
+  uuid: 'ace172ed-3beb-4977-8aaf-a22af973d5f5'
+images/mosque.jpg:
+  uuid: '762bb463-e443-48da-986c-581098347ff7'
+images/news-01.jpg:
+  uuid: 'a278a8b2-a9bb-4616-9f80-cdc485a5f187'
+images/red-dots.jpg:
+  uuid: 'c8bccd94-284b-4032-8ad0-1e7f8f7ee77b'
+images/utrecht.jpg:
+  uuid: '2142f4c6-09c0-4231-81a7-7bd68d72ac7d'
+images/white.jpg:
+  uuid: 'd807df20-ac1f-4483-b43d-ac4f4d7bcfa5'

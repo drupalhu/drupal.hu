@@ -1,0 +1,117 @@
+langcode: 'en'
+status: true
+id: 'app_legacy__node__book'
+label: 'App - Legacy - node:book'
+
+migration_group: 'app_legacy'
+migration_tags:
+  - 'src_node'
+  - 'src_node__book'
+  - 'dst_node'
+  - 'dst_node__book'
+
+migration_dependencies:
+  required:
+    - 'app_legacy__file__public'
+    - 'app_legacy__user__user'
+    - 'app_legacy__taxonomy_term:competence'
+    - 'app_legacy__taxonomy_term:drupal_version'
+    - 'app_legacy__taxonomy_term:target_audience'
+    - 'app_legacy__taxonomy_term:tag'
+
+source:
+  plugin: 'd7_node'
+  node_type: 'book'
+  constants:
+    body_text_format: 'html_body'
+    langcode: 'hu'
+    default_langcode: true
+
+process:
+  uuid:
+    source: 'nid'
+    plugin: 'static_map'
+    bypass: true
+    map:
+      # book:Handbook
+      26: '5c0dd66f-f4c5-44dd-99ff-198541fcaa87'
+  langcode: 'constants/langcode'
+  default_langcode: 'constants/default_langcode'
+  nid: 'nid'
+  vid: 'vid'
+  uid:
+    -
+      source: 'node_uid'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_legacy__user__user'
+  status: 'status'
+  created: 'created'
+  changed: 'changed'
+  promote: 'promote'
+  sticky: 'sticky'
+  revision_uid:
+    -
+      source: 'revision_uid'
+      plugin: 'skip_on_empty'
+      method: 'process'
+    -
+      plugin: 'migration_lookup'
+      migration:
+        - 'app_legacy__user__user'
+  revision_log: 'log'
+  revision_timestamp: 'timestamp'
+
+  title: 'title'
+
+  app_body/0/value: 'body/0/value'
+  app_body/0/format: 'constants/body_text_format'
+
+  app_drupal_version:
+    source: 'taxonomy_vocabulary_10'
+    plugin: 'sub_process'
+    process:
+      target_id:
+        source: 'tid'
+        plugin: 'migration_lookup'
+        migration:
+          - 'app_legacy__taxonomy_term:drupal_version'
+
+  app_target_audience:
+    source: 'field_voc_celkozonseg'
+    plugin: 'sub_process'
+    process:
+      target_id:
+        source: 'tid'
+        plugin: 'migration_lookup'
+        migration:
+          - 'app_legacy__taxonomy_term:target_audience'
+
+  app_competence:
+    source: 'field_voc_szint'
+    plugin: 'sub_process'
+    process:
+      target_id:
+        source: 'tid'
+        plugin: 'migration_lookup'
+        migration:
+          - 'app_legacy__taxonomy_term:competence'
+
+  app_attachments:
+    source: 'upload'
+    plugin: 'sub_process'
+    process:
+      target_id:
+        source: 'fid'
+        plugin: 'migration_lookup'
+        migration:
+          - 'app_legacy__file__public'
+      display: 'display'
+      description: 'description'
+
+destination:
+  plugin: 'entity:node'
+  default_bundle: 'book'

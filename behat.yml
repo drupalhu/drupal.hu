@@ -3,7 +3,7 @@ imports:
   - './tests/behat/config/extension.chrome.yml'
   - './tests/behat/config/extension.drupal.yml'
   - './tests/behat/config/extension.mink.yml'
-  - './tests/behat/config/extension.screenshot.yml'
+  #- './tests/behat/config/extension.screenshot.yml'
   - './tests/behat/config/formatters.junit.yml'
   - './tests/behat/config/formatters.pretty.yml'
   - './tests/behat/config/suite.default.yml'

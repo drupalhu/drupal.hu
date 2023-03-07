@@ -2,9 +2,9 @@
 drush:
   paths:
     config:
-      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin/Commands/drush.yml'
-      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product/Commands/drush.yml'
-      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_acquia/Commands/drush.yml'
+#      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin/Commands/drush.yml'
+#      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_product/Commands/drush.yml'
+#      - '${drush.vendor-dir}/../drush/Commands/contrib/marvin_acquia/Commands/drush.yml'
       - '${drush.vendor-dir}/../drush/drush.app.yml'
       - '${drush.vendor-dir}/../drush/drush.local.yml'
     include:

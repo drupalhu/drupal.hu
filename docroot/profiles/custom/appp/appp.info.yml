@@ -1,5 +1,5 @@
-type: profile
-core_version_requirement: '^9'
+type: 'profile'
+core_version_requirement: '^10'
 
 package: 'App'
 name: 'App - Profile'

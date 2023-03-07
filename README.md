@@ -33,6 +33,7 @@ Egy terminál ablakban az alábbi parancsok futtatása:
    hogy NFS nélkül menjen, de az automata detektálás már túl későn
    történik, így csak a második `ddev start` működne rendesen.
 5. Ha a host gépen a standard port-ok valamelyike (80 443 stb) DDev-től függetlenül foglalt: \
+   Futtatandó parancs: \
    `./.ddev/commands/host/config-port-offset.bash 5000;` \
    Ellenőrizendő fájlok:
    1. .ddev/.env
@@ -104,6 +105,7 @@ APP_SOLR_HOST_HTTPS_PORT=5984
 
 A szükséges szoftverek (PHP, NVM, HTTP, MySQL, Solr) telepítését és
 konfigurációját kézzel kell megoldani.
+Ez a dokumentáció jelenleg nem add útmutatást a szükséges szoftverek telepítéséhez.
 
 
 ### Bekapcsolódás a fejlesztésbe - Local - előfeltételek
@@ -121,6 +123,8 @@ konfigurációját kézzel kell megoldani.
 
 
 ### Bekapcsolódás a fejlesztésbe - Local - lépések
+
+@todo Marvin parancsok jelenleg nem elérhetőek, ezért az 5. 9. és 10. lépés nem fog menni.
 
 1. `git clone https://github.com/drupalhu/drupal.hu.git`
 2. `cd drupal.hu`

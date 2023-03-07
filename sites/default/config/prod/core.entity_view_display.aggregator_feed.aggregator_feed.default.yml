@@ -1,4 +1,4 @@
-uuid: f386e88b-0a0b-4caf-af27-c7a6a2602413
+uuid: 99f76de6-4ce2-4317-afd6-47bd490678a2
 langcode: hu
 status: true
 dependencies:
@@ -8,27 +8,17 @@ dependencies:
   module:
     - aggregator
     - options
-_core:
-  default_config_hash: ORtH44CMbYMb3_0zumUPwVhPmaLBiImWpZa_hO3qmhU
 id: aggregator_feed.aggregator_feed.default
 targetEntityType: aggregator_feed
 bundle: aggregator_feed
 mode: default
 content:
-  app_author:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 7
-    region: content
   app_category:
     type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 2
     region: content
   checked:
     type: timestamp_ago
@@ -38,7 +28,7 @@ content:
       past_format: '@interval ago'
       granularity: 2
     third_party_settings: {  }
-    weight: 1
+    weight: 6
     region: content
   description:
     settings: {  }
@@ -48,17 +38,17 @@ content:
   feed_icon:
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 0
     region: content
   image:
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   items:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 5
     region: content
   link:
     type: uri_link
@@ -67,7 +57,12 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  more_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
 hidden:
+  app_author: true
   langcode: true
-  more_link: true
   search_api_excerpt: true

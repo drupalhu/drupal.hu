@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - editor
+    - media
 name: 'HTML - Teljes'
 format: html_full
 weight: -7
@@ -14,7 +15,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<a href hreflang> <abbr> <acronym> <blockquote cite> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <img src title alt data-entity-type data-entity-uuid> <ins> <kbd> <li> <mark> <meter value min max> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time datetime> <ul type> <ol start type> <wbr>'
+      allowed_html: '<br> <p class="user-tipp text-align-left text-align-center text-align-right text-align-justify"> <h2 class="text-align-left text-align-center text-align-right text-align-justify"> <h3 class="text-align-left text-align-center text-align-right text-align-justify"> <h4 class="text-align-left text-align-center text-align-right text-align-justify"> <h5 class="text-align-left text-align-center text-align-right text-align-justify"> <h6 class="text-align-left text-align-center text-align-right text-align-justify"> <abbr> <acronym> <cite> <del> <ins> <kbd> <mark> <q> <samp> <small> <wbr> <meter value min max> <time datetime> <img src alt data-entity-type data-entity-uuid> <a hreflang href> <strong> <em> <code class="language-*"> <pre class="text-align-left text-align-center text-align-right text-align-justify"> <s> <sub> <sup> <blockquote> <ul> <ol> <li> <hr> <table> <tr> <td rowspan colspan> <th rowspan colspan> <thead> <tbody> <tfoot> <caption> <drupal-media data-entity-type data-entity-uuid alt>'
       filter_html_help: true
       filter_html_nofollow: true
   editor_file_reference:
@@ -66,3 +67,12 @@ filters:
     weight: -43
     settings:
       filter_url_length: 72
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: 100
+    settings:
+      default_view_mode: default
+      allowed_view_modes: {  }
+      allowed_media_types: {  }

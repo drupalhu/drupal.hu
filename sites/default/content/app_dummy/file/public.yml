@@ -5,54 +5,70 @@
 
 #region Attachments.
 attachments/2021/dummy.pdf:
-  uid: Gizi
+  uuid: '453fb349-3b63-4cbc-9fbb-33fca23be8b8'
+  uid: 'Gizi'
 
 attachments/2021/note-01.pdf:
-  uid: Gizi
+  uuid: 'dd2aa958-a08b-422f-867c-66af4ea14db4'
+  uid: 'Gizi'
 #endregion
 
 #region Pictures.
 pictures/bela.png:
-  uid: Béla
+  uuid: '8d249031-526e-4e24-a964-2d367b3642b1'
+  uid: 'DumBéla'
 
 pictures/gizi.png:
-  uid: Gizi
+  uuid: '06fc8730-9ec3-4820-9db5-2f0cfbf9b107'
+  uid: 'Gizi'
 #endregion
 
 #region Images.
 images/casestudy-01.jpg:
-  uid: Gizi
+  uuid: '5ac3671e-70e8-4a18-806d-94f6027aa0ba'
+  uid: 'Gizi'
 
 images/comb.jpg:
-  uid: Gizi
+  uuid: '87904399-6955-4706-bc86-0feaa822a7d9'
+  uid: 'Gizi'
 
 images/desiccation-cracks.jpg:
-  uid: Gizi
+  uuid: '5df7fb84-c649-41e1-ba07-e16aa6ed9f69'
+  uid: 'Gizi'
 
 images/event-01.jpg:
-  uid: Gizi
+  uuid: '9ef7ca61-5304-4677-9797-4b8e4c129176'
+  uid: 'Gizi'
 
 images/event-02.jpg:
-  uid: Gizi
+  uuid: 'fbf649d2-0d0b-4150-9b32-675993a3e5fd'
+  uid: 'Gizi'
 
 images/geometry.jpg:
-  uid: Gizi
+  uuid: '25d565d1-3e73-440b-bc2a-512cf4379606'
+  uid: 'Gizi'
 
 images/job-01.jpg:
-  uid: Gizi
+  uuid: 'acdcc667-6649-4b0f-bf6e-6f05e0209b1d'
+  uid: 'Gizi'
 
 images/mosque.jpg:
-  uid: Gizi
+  uuid: '092d5442-02c5-40c9-bda5-2a93e9a4ec98'
+  uid: 'Gizi'
 
 images/news-01.jpg:
-  uid: Gizi
+  uuid: '635b753f-d6be-4cb7-864b-85e13e6a2ba4'
+  uid: 'Gizi'
 
 images/red-dots.jpg:
-  uid: Gizi
+  uuid: '28b7e271-384e-4872-a0c7-b466cc822041'
+  uid: 'Gizi'
 
 images/utrecht.jpg:
-  uid: Gizi
+  uuid: 'b4f3da2c-08e4-4e4e-91d9-6fab4ef6b2b0'
+  uid: 'Gizi'
 
 images/white.jpg:
-  uid: Gizi
+  uuid: '8136230c-84b9-4568-b8c6-8d0154ddcad9'
+  uid: 'Gizi'
 #endregion

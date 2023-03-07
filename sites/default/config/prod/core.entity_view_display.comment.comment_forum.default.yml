@@ -1,4 +1,4 @@
-uuid: 1790d563-f70d-4888-bd2a-6cee1b58ccff
+uuid: e1118639-6c4f-494c-b3ac-ee0a56a6d49d
 langcode: hu
 status: true
 dependencies:
@@ -7,8 +7,6 @@ dependencies:
     - field.field.comment.comment_forum.comment_body
   module:
     - text
-_core:
-  default_config_hash: Td9G-YV2hlf2GR_F3rjhQZxwdq1yD7P_W-Wl2Ivf7Iw
 id: comment.comment_forum.default
 targetEntityType: comment
 bundle: comment_forum
@@ -16,13 +14,15 @@ mode: default
 content:
   comment_body:
     type: text_default
-    label: hidden
+    label: above
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
   links:
-    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
     region: content
 hidden:
   langcode: true

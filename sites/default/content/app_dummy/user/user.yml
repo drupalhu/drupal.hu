@@ -1,9 +1,11 @@
 Gizi:
+  uuid: '7d9c2f9c-ea7c-4635-826c-1e6697ef6d30'
   app_picture:
     -
       target_id: 'pictures/gizi.png'
 
-Béla:
+DumBéla:
+  uuid: 'cf34b90b-ece8-44e7-b77d-07398d256667'
   app_picture:
     -
       target_id: 'pictures/bela.png'

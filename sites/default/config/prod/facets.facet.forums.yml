@@ -11,6 +11,8 @@ id: forums
 name: Fórumok
 weight: -2
 min_count: 1
+missing: false
+missing_label: others
 url_alias: forums
 facet_source_id: 'search_api:views_page__search__page'
 field_identifier: taxonomy_forums
@@ -19,6 +21,9 @@ hard_limit: 0
 exclude: false
 use_hierarchy: false
 keep_hierarchy_parents_active: false
+hierarchy:
+  type: taxonomy
+  config: {  }
 expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
 widget:

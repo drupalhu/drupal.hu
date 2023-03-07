@@ -19,6 +19,9 @@ class CropTypeAspectRatioComparer {
     return ($aAr['width'] / $aAr['height']) <=> ($bAr['width'] / $bAr['height']);
   }
 
+  /**
+   * @phpstan-return array{width: int, height: int}
+   */
   public function getAspectRatio(CropTypeInterface $cropType): array {
     $aspectRatio = $cropType->getAspectRatio();
     if ($aspectRatio) {
@@ -41,6 +44,9 @@ class CropTypeAspectRatioComparer {
     ];
   }
 
+  /**
+   * @phpstan-return array{width: int, height: int}
+   */
   public function parseAspectRatio(string $aspectRatio): array {
     $parts = explode(':', $aspectRatio) + [1 => 1];
 

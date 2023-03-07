@@ -1,8 +1,8 @@
 
 book.handbook:
-  uuid: 5c0dd66f-f4c5-44dd-99ff-198541fcaa87
-  type: book
-  title: Kézikönyv
+  uuid: '5c0dd66f-f4c5-44dd-99ff-198541fcaa87'
+  type: 'book'
+  title: 'Kézikönyv'
   app_body:
     -
       value: |

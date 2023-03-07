@@ -7,9 +7,9 @@ dependencies:
 name: webp
 label: WebP
 processors:
-  5478c9e6-46d2-4d0f-bccb-e28d25b2b032:
+  0e257535-5ad8-4919-8c94-535713235f3a:
     id: webp_webp
     data:
       quality: '100'
     weight: 1
-    uuid: 5478c9e6-46d2-4d0f-bccb-e28d25b2b032
+    uuid: 0e257535-5ad8-4919-8c94-535713235f3a

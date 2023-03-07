@@ -1,94 +1,116 @@
 
 #region forums
 Telepítés előtt:
-  vid: forums
+  uuid: '09660f9b-7582-4930-a15f-5373f8c14096'
+  vid: 'forums'
   weight: 0
 Telepítés, migráció, beállítások:
-  vid: forums
+  uuid: '61c8cf58-49f3-41a9-9c43-fa6821f40436'
+  vid: 'forums'
   weight: 1
 Hoszting kérdések:
-  vid: forums
+  uuid: 'b5586f66-060d-4440-8418-31af97cc770e'
+  vid: 'forums'
   weight: 2
 Modulok használata:
-  vid: forums
+  uuid: '92e3dff4-3ee6-4067-bef6-4e9c9ec4bc09'
+  vid: 'forums'
   weight: 3
 Modulok fejlesztése:
-  vid: forums
+  uuid: '83dbc379-239b-4173-9c8b-04b745b76771'
+  vid: 'forums'
   weight: 4
 Sminkek:
-  vid: forums
+  uuid: 'bed48972-6112-435d-b46b-794867f5af00'
+  vid: 'forums'
   weight: 5
 Honosítás:
-  vid: forums
+  uuid: '4ab52be1-d89f-43bc-b4db-be1b9bcaafc1'
+  vid: 'forums'
   weight: 6
 Többnyelvűsítés:
-  vid: forums
+  uuid: '9627ecda-c45d-4bcb-bdfc-0de32f0897ee'
+  vid: 'forums'
   weight: 7
 Közösségi média integráció, tartalommegosztás:
-  vid: forums
+  uuid: 'fb48dda4-0605-432b-960a-32b6f93f396a'
+  vid: 'forums'
   weight: 8
 Drupal dojo magyarul:
-  vid: forums
+  uuid: '17260e8a-73ed-4d67-a10f-f6983cbf3a4c'
+  vid: 'forums'
   weight: 9
 Munkaközvetítő:
-  vid: forums
+  uuid: 'a2fda577-0af7-436e-9b0d-c544fdff4fb1'
+  vid: 'forums'
   weight: 10
 Drupal.hu:
-  vid: forums
+  uuid: '5e676c3e-ad1c-462e-9925-4ce419df6741'
+  vid: 'forums'
   weight: 11
 MDE:
-  vid: forums
+  uuid: '43724fa1-71d1-45c0-aa47-69ccefbe30e4'
+  vid: 'forums'
   weight: 12
 Egyéb:
-  vid: forums
+  uuid: 'd9892dda-7074-4f90-b183-24bab7f49341'
+  vid: 'forums'
   weight: 13
 #endregion
 
 
 #region competence
 Kezdő:
-  vid: competence
+  uuid: 'd274ee56-f1f3-4725-a766-07b32a0fd19d'
+  vid: 'competence'
   weight: 0
 Haladó:
-  vid: competence
+  uuid: '7caadd70-24b0-4a19-9501-32d9df92cb2b'
+  vid: 'competence'
   weight: 1
 Tapasztalt:
-  vid: competence
+  uuid: '54ac68ee-f0d8-4caa-ab8b-a536743da331'
+  vid: 'competence'
   weight: 2
 #endregion
 
 
 #region target_audience
 Dizájner:
-  vid: target_audience
+  uuid: '307ef9ef-974b-4b85-8dd8-34f1c89206a5'
+  vid: 'target_audience'
   weight: 0
   description:
     -
       value: |
         <p>UX kutatással és UI tervezéssel foglalozó személyek.</p>
 Backend fejlesztő:
-  vid: target_audience
+  uuid: '6e56f09d-0921-40b9-995d-b982e2036314'
+  vid: 'target_audience'
   weight: 1
   description:
     -
       value: |
         <p>Szerver oldali programozással foglalkozó személyek.</p>
 Frontend fejlesztő:
-  vid: target_audience
+  uuid: '1f439e76-8396-4738-ab7a-3a6b8b2118c6'
+  vid: 'target_audience'
   weight: 2
   description:
     -
       value: |
         <p>Kliens oldali fejlesztéssel foglalkozó személyek.</p>
 Webhely építő:
-  vid: target_audience
+  uuid: '221874b9-4f05-49ad-9e19-457cea6dff52'
+  vid: 'target_audience'
   weight: 3
   description:
     -
       value: |
         <p>Modulok és sminkek telepítésével és konfigurálásával foglalkozó személyek.</p>
 Webhely tulajdonos:
-  vid: target_audience
+  uuid: 'a6dd546a-5c26-4676-9533-95d6e9ace029'
+  vid: 'target_audience'
   weight: 3
   description:
     -
@@ -97,21 +119,24 @@ Webhely tulajdonos:
         vagy csak részben vesznek részt, illetve azok a döntés hozók akik a webhely fejlesztésével kapcsolatos
         prioritásokat meghatározzák.</p>
 Üzemeltető:
-  vid: target_audience
+  uuid: '261f8dbe-f343-4f5f-9e69-76733db2d80e'
+  vid: 'target_audience'
   weight: 4
   description:
     -
       value: |
         <p>Azok akik a webhely fejlesztéséhez és üzemeltetéséhez szükséges infrastuktúrát biztosítják.</p>
 Fordító:
-  vid: target_audience
+  uuid: 'c6048d5d-a5cd-4f36-ac51-477230e37c73'
+  vid: 'target_audience'
   weight: 5
   description:
     -
       value: |
         <p>Drupal felhasználói felületének fordításával foglalkozó személyek.</p>
 Rendezvény szervező:
-  vid: target_audience
+  uuid: '2aa1b3fe-bcb7-4930-9cd3-82b647abbf89'
+  vid: 'target_audience'
   weight: 6
   description:
     -
@@ -125,28 +150,36 @@ Rendezvény szervező:
 
 #region drupal_version
 10.x:
-  vid: drupal_version
+  uuid: 'e160c0de-36cc-49a9-812b-73227ef5236a'
+  vid: 'drupal_version'
   weight: -10
 9.x:
-  vid: drupal_version
+  uuid: '7597d827-fb7e-4abb-8a77-e5c5156c90cc'
+  vid: 'drupal_version'
   weight: -9
 8.x:
-  vid: drupal_version
+  uuid: 'ae27b039-bf8e-46bc-ac43-d8b5c59804fd'
+  vid: 'drupal_version'
   weight: -8
 7.x:
-  vid: drupal_version
+  uuid: '8b418405-f0bf-4d4e-9885-ab8379e89dee'
+  vid: 'drupal_version'
   weight: -7
 6.x:
-  vid: drupal_version
+  uuid: '681410ef-522b-4ffc-ac52-d5b1a7cb8736'
+  vid: 'drupal_version'
   weight: -6
 5.x:
-  vid: drupal_version
+  uuid: '5c5d998b-f606-4643-a66e-36642113c8e5'
+  vid: 'drupal_version'
   weight: -5
 4.7.x:
-  vid: drupal_version
+  uuid: '3ea7f93f-1f44-48a6-b82d-f1b3fbffc647'
+  vid: 'drupal_version'
   weight: -4
 4.6.x:
-  vid: drupal_version
+  uuid: 'caecba05-60dd-4481-beec-cd8b0b9d1ff1'
+  vid: 'drupal_version'
   weight: -3
 #endregion
 

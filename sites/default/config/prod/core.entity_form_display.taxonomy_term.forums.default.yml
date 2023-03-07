@@ -1,4 +1,4 @@
-uuid: 2aa33769-97f8-452c-98ae-438fe8e5e657
+uuid: 5d46e9a7-bd58-47d7-96ea-79e86d7c08c8
 langcode: hu
 status: true
 dependencies:
@@ -6,30 +6,31 @@ dependencies:
     - field.field.taxonomy_term.forums.forum_container
     - taxonomy.vocabulary.forums
   module:
+    - path
     - text
-_core:
-  default_config_hash: cUA2G1-U3jnekhLYnfiqYaZj-n4U8dgIZi61zrNCi3U
 id: taxonomy_term.forums.default
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default
 content:
   description:
-    type: text_textfield
-    weight: 0
+    type: text_textarea
+    weight: 2
     region: content
-    settings: {  }
+    settings:
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 0
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   name:
     type: string_textfield
-    weight: -5
+    weight: 1
     region: content
     settings:
       size: 60
@@ -37,13 +38,13 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 100
+    weight: 4
     region: content
     settings:
       display_label: true
