@@ -11,9 +11,8 @@ use Robo\Collection\CollectionBuilder;
 use Robo\Collection\Tasks as LoopTaskLoader;
 use Robo\Contract\BuilderAwareInterface;
 use Robo\Contract\TaskInterface;
-use Robo\State\Data as RoboStateData;
+use Robo\State\Data as RoboState;
 use Robo\TaskAccessor;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
@@ -24,18 +23,12 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
   use LoopTaskLoader;
   use AppSearchApiTaskLoader;
 
-  protected Filesystem $fs;
-
-  public function __construct(?Filesystem $fs = NULL) {
-    $this->fs = $fs ?: new Filesystem();
-  }
-
   /**
    * @command app:search-api:index:clear
    *
    * @bootstrap configuration
    */
-  public function cmdAppSearchApiIndexClearExecute() {
+  public function cmdAppSearchApiIndexClearExecute(): TaskInterface {
     return $this->getTaskAppSearchApiIndexClear();
   }
 
@@ -50,7 +43,7 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
    *
    * @see \Drush\Commands\core\SiteInstallCommands::pre
    */
-  public function cmdSiteInstallPreExecute(CommandData $commandData) {
+  public function cmdSiteInstallPreExecute(CommandData $commandData): void {
     $result = $this
       ->getTaskAppSearchApiIndexClear()
       ->run();
@@ -104,7 +97,7 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
             );
           }
 
-          $builder->addCode(function (RoboStateData $data) use ($logMessage): int {
+          $builder->addCode(function (RoboState $data) use ($logMessage): int {
             $this->getLogger()->warning($logMessage);
 
             return 0;
@@ -113,17 +106,23 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
   }
 
   protected function getTaskCollectSearchApiIndexes(): \Closure {
-    return function (RoboStateData $data): int {
-      $data['search_api.indexes'] = $this->getSearchApiIndexes();
+    return function (RoboState $state): int {
+      $state['search_api.indexes'] = $this->getSearchApiIndexes();
 
       return 0;
     };
   }
 
+  /**
+   * @phpstan-return array<string, array<string, mixed>>
+   */
   protected function getSearchApiServers(): array {
     return $this->getConfigsWithOverrides('/^search_api\.server\.[^\.]+\.yml$/');
   }
 
+  /**
+   * @phpstan-return array<string, array<string, mixed>>
+   */
   protected function getSearchApiIndexes(): array {
     $indexes = $this->getConfigsWithOverrides('/^search_api\.index\.[^\.]+\.yml$/');
     $servers = $this->getSearchApiServers();
@@ -135,6 +134,9 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
     return $indexes;
   }
 
+  /**
+   * @phpstan-return array<string, array<string, mixed>>
+   */
   protected function getConfigsWithOverrides(string $configNamePattern): array {
     $files = (new Finder())
       ->in(Settings::get('config_sync_directory'))
@@ -152,6 +154,7 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
       $configs[$config['id']] = $config;
     }
 
+    /** @var array<string, array<string, mixed>> */
     return $configs;
   }
 

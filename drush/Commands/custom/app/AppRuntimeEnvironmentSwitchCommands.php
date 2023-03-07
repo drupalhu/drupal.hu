@@ -12,9 +12,7 @@ class AppRuntimeEnvironmentSwitchCommands extends CommandsBase {
   /**
    * @command app:runtime-environment:switch
    */
-  public function cmdAppRuntimeEnvironmentSwitchExecute(
-    array $options = []
-  ): CollectionBuilder {
+  public function cmdAppRuntimeEnvironmentSwitchExecute(): CollectionBuilder {
     return $this
       ->collectionBuilder()
       ->addCode($this->getTaskRuntimeEnvironmentSwitchInit())

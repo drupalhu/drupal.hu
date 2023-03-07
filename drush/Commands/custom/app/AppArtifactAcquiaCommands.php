@@ -37,6 +37,8 @@ class AppArtifactAcquiaCommands extends CommandsBase {
    *
    * @command app:artifact:build:acquia
    *
+   * @phpstan-param array<string, mixed> $options
+   *
    * @todo Options for version number handling.
    */
   public function cmdAppArtifactBuildAcquiaExecute(
@@ -44,7 +46,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
   ): CollectionBuilder {
     $cb = $this->collectionBuilder();
     $cb->addTaskList([
-      'initBasic.app' => $this->getTaskInitBasic($cb, $options),
+      'initBasic.app' => $this->getTaskInitBasic($cb),
       'detectLatestVersionNumber.app' => $this->getTaskDetectLatestVersionNumber($cb),
       'composeNextVersionNumber.app' => $this->getTaskComposeNextVersionNumber($cb),
       'composeBuildDir.app' => $this->getTaskComposeBuildDir($cb),
@@ -78,7 +80,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
     return $cb;
   }
 
-  protected function getTaskInitBasic(CollectionBuilder $cb, array $options): TaskInterface {
+  protected function getTaskInitBasic(CollectionBuilder $cb): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $state['artifact.type'] = 'acquia';
@@ -314,7 +316,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
       ->deferTaskConfiguration('setDrupalRootDir', 'project.drupalRootDir');
   }
 
-  protected function getTaskCopyFiles() {
+  protected function getTaskCopyFiles(): TaskInterface {
     return $this
       ->taskAppCopyFiles()
       ->deferTaskConfiguration('setSrcDir', 'project.dir')
@@ -432,7 +434,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
         if ($changed) {
           $this->fs->dumpFile(
             $composerJsonFilePath,
-            json_encode($json, $this->jsonEncodeFlags)
+            (string) json_encode($json, $this->jsonEncodeFlags)
           );
         }
 
@@ -452,8 +454,6 @@ class AppArtifactAcquiaCommands extends CommandsBase {
    * MAYBE  a/docroot => b/web
    * NOT OK docroot   => a/web
    * NOT OK a/web     => docroot
-   *
-   * @return \Closure|\Robo\Contract\TaskInterface
    *
    * @todo Probably a symlink would be much easier.
    */
@@ -491,7 +491,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
           $pattern = "'\${drush.vendor-dir}/../%s'";
           // @todo Figure out a better way to preserve the comments.
           $drushYmlContent = strtr(
-            file_get_contents($drushYmlFileName),
+            (string) file_get_contents($drushYmlFileName),
             [
               sprintf($pattern, $state['project.drupalRootDir']) => sprintf($pattern, $state['build.drupalRootDir']),
             ],
@@ -503,7 +503,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
         $jsonFileName = getenv('COMPOSER') ?: 'composer.json';
         $jsonFilePath = Path::join($state['build.dir'], $jsonFileName);
         $json = json_decode(
-          file_get_contents($jsonFilePath),
+          file_get_contents($jsonFilePath) ?: '{}',
           TRUE,
         );
         $installerPaths = $json['extra']['installer-paths'] ?? [];
@@ -522,7 +522,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         $this->fs->dumpFile(
           $jsonFilePath,
-          json_encode($json, $this->jsonEncodeFlags),
+          (string) json_encode($json, $this->jsonEncodeFlags),
         );
 
         return 0;

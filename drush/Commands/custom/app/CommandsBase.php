@@ -21,6 +21,7 @@ use Sweetchuck\LintReport\ReporterInterface;
 use Sweetchuck\Utils\Comparer\ArrayValueComparer;
 use Sweetchuck\Utils\Filesystem as UtilsFilesystem;
 use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
+use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Process;
@@ -80,6 +81,9 @@ class CommandsBase extends Tasks implements
     $this->fs = new Filesystem();
   }
 
+  /**
+   * @phpstan-return app-composer-info
+   */
   protected function getComposerInfo(): array {
     return [
       'config' => [
@@ -90,11 +94,16 @@ class CommandsBase extends Tasks implements
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param string $key
+   * @phpstan-param null|mixed $default
+   *
+   * @phpstan-return null|mixed
    */
   protected function getConfigValue($key, $default = NULL) {
-    $config = $this->getConfig();
-
-    return $config ? $config->get(static::getClassKey($key), $default) : $default;
+    return $this
+      ->getConfig()
+      ->get(static::getClassKey($key), $default);
   }
 
   /**
@@ -188,6 +197,14 @@ class CommandsBase extends Tasks implements
     return NULL;
   }
 
+  /**
+   * @phpstan-return array{
+   *   nl: string,
+   *   command: string,
+   *   stdOutput: string,
+   *   stdError: string,
+   * }
+   */
   protected function logArgsFromProcess(Process $process): array {
     return [
       'nl' => PHP_EOL,
@@ -197,8 +214,14 @@ class CommandsBase extends Tasks implements
     ];
   }
 
+  /**
+   * @phpstan-var null|array<string, app-runtime-environment>
+   */
   protected ?array $runtimeEnvironments = NULL;
 
+  /**
+   * @phpstan-return array<string, app-runtime-environment>
+   */
   protected function getRuntimeEnvironments(bool $reset = FALSE): array {
     if ($reset) {
       $this->runtimeEnvironments = NULL;
@@ -265,8 +288,10 @@ class CommandsBase extends Tasks implements
    * @return \Sweetchuck\LintReport\ReporterInterface[]
    */
   protected function getLintReporters(): array {
-    $lintReporterConfigs = $this->getConfig()->get('marvin.lint.reporters', []);
-    $lintReporterConfigs = array_filter($lintReporterConfigs, new ArrayFilterEnabled());
+    $lintReporterConfigs = array_filter(
+      (array) $this->getConfig()->get('marvin.lint.reporters'),
+      new ArrayFilterEnabled(),
+    );
 
     return $this->parseLintReporterConfigs($lintReporterConfigs);
   }
@@ -305,7 +330,7 @@ class CommandsBase extends Tasks implements
   /**
    * @hook pre-command @appInitLintReporters
    */
-  public function initLintReporters() {
+  public function initLintReporters(): void {
     $container = $this->getContainer();
     if (!($container instanceof LeagueContainer)) {
       return;
@@ -320,6 +345,14 @@ class CommandsBase extends Tasks implements
         ->add($name, $class)
         ->setShared(FALSE);
     }
+  }
+
+  protected function getProcessHelper(): ProcessHelper {
+    return $this
+      ->getContainer()
+      ->get('application')
+      ->getHelperSet()
+      ->get('process');
   }
 
 }

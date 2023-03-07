@@ -18,14 +18,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CoreStatusMessages extends StyleguidePluginBase {
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
+   *
+   * @phpstan-param array<string, mixed> $configuration
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+  ) {
     return new static($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
+   *
+   * @phpstan-return array<string, array<string, mixed>>
    */
   public function items() {
     $items = [];
@@ -61,17 +70,15 @@ class CoreStatusMessages extends StyleguidePluginBase {
     return $items;
   }
 
+  /**
+   * @return string[]
+   */
   protected function getStatusMessages(int $amount): array {
     return array_fill(0, $amount, $this->getStatusMessage());
   }
 
-  /**
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
-   */
-  protected function getStatusMessage() {
-    return $this->t(
-      'Vestibulum ante <a href="#">ipsum primis in</a> ac felis <em>quis tortor</em>. Fusce fermentum odio nec',
-    );
+  protected function getStatusMessage(): string {
+    return 'Vestibulum ante <a href="#">ipsum primis in</a> ac felis <em>quis tortor</em>. Fusce fermentum odio nec';
   }
 
 }

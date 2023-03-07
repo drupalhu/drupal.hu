@@ -15,6 +15,9 @@ use Drupal\Tests\UnitTestCase;
  */
 class DeleteMeTest extends UnitTestCase {
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesDummy(): array {
     return [
       'should-pass' => ['a', 'a'],

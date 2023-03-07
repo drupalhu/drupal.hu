@@ -15,6 +15,9 @@ use Drupal\migrate\Row;
  */
 class NonEmpty extends ProcessPluginBase {
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   protected function getDefaultConfiguration(): array {
     return [
       'offset' => 0,

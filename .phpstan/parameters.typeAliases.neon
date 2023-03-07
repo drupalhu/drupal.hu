@@ -16,3 +16,16 @@ parameters:
         build.drupalRootDir: string,
       }
     '''
+    app-runtime-environment: '''
+      array{
+        id: string,
+        provider: string,
+        weight: int|float,
+        description: string,
+      }
+    '''
+    app-composer-info: '''
+      array{
+        config: array<string, mixed>,
+      }
+    '''

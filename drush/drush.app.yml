@@ -113,6 +113,11 @@ marvin:
           #showLineNumber: true
           #showColumnNumber: false
           #showMessage: true
+      checkstyleFile:
+        enabled: true
+        service: 'lintCheckstyleReporter'
+        options:
+          destination: '${marvin.reportsDir}/machine/result/phpcs.checkstyle.xml'
 
     phpcs:
       failOn: 'warning'

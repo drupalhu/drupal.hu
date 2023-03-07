@@ -17,6 +17,8 @@ class Feeds extends DrupalSqlBase {
 
   /**
    * {@inheritDoc}
+   *
+   * @phpstan-return array<string, string|\Drupal\Core\StringTranslation\TranslatableMarkup>
    */
   public function fields() {
     return [
@@ -47,6 +49,8 @@ class Feeds extends DrupalSqlBase {
 
   /**
    * {@inheritDoc}
+   *
+   * @phpstan-return array<string, mixed>
    */
   public function getIds() {
     return [

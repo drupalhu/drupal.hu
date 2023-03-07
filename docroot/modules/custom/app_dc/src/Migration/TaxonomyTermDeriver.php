@@ -10,6 +10,10 @@ class TaxonomyTermDeriver extends DeriverBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param array<string, mixed> $base_plugin_definition
+   *
+   * @phpstan-return array<string, mixed>
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_type_id = 'taxonomy_term';

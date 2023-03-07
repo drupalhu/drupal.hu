@@ -2,9 +2,7 @@
   .fieldset__wrapper {
     display: grid;
     grid-template-columns: 1fr;
-    -webkit-column-gap: 1em;
-       -moz-column-gap: 1em;
-            column-gap: 1em;
+    column-gap: 1em;
   }
 }
 

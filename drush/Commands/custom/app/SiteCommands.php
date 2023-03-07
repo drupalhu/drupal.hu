@@ -17,9 +17,11 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
   use SiteAliasManagerAwareTrait;
 
   /**
+   * @phpstan-param mixed $parentResult
+   *
    * @hook post-command site:install
    */
-  public function onPostSiteInstall($parentResult, CommandData $commandData) {
+  public function onPostSiteInstall($parentResult, CommandData $commandData): void {
     $input = $commandData->input();
     if ($input->getOption('existing-config')) {
       $this
@@ -32,10 +34,7 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     $this->addRoleToUser('administrator', $adminName);
   }
 
-  /**
-   * @return $this
-   */
-  protected function localeCheck() {
+  protected function localeCheck(): static {
     $logger = $this->getLogger();
     $self = $this->siteAliasManager()->getSelf();
 
@@ -50,10 +49,7 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function localeUpdate() {
+  protected function localeUpdate(): static {
     $logger = $this->getLogger();
     $self = $this->siteAliasManager()->getSelf();
 
@@ -68,10 +64,7 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     return $this;
   }
 
-  /**
-   * @return $this
-   */
-  protected function localeImport(string $langCode, string $filePath) {
+  protected function localeImport(string $langCode, string $filePath): static {
     $logger = $this->getLogger();
     $self = $this->siteAliasManager()->getSelf();
 
@@ -86,7 +79,7 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     return $this;
   }
 
-  protected function configImport() {
+  protected function configImport(): static {
     $logger = $this->getLogger();
     $self = $this->siteAliasManager()->getSelf();
 
@@ -120,6 +113,9 @@ class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterfac
     return $process;
   }
 
+  /**
+   * @phpstan-return array<string, string>
+   */
   protected function collectLanguageCodes(string $siteDir): array {
     $languageCodes = [];
     $files = (new Finder())

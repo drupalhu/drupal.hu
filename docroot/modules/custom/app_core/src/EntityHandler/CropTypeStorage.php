@@ -23,8 +23,13 @@ class CropTypeStorage extends ConfigEntityStorage {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param null|array<string> $ids
+   *
+   * @return array<string, \Drupal\app_core\EntityHandler\CropType>
    */
   public function loadMultiple(array $ids = NULL) {
+    /** @var array<string, \Drupal\app_core\EntityHandler\CropType> $entities */
     $entities = parent::loadMultiple($ids);
     if ($ids === NULL) {
       uasort($entities, $this->getComparer());

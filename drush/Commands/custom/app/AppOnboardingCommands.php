@@ -18,9 +18,7 @@ class AppOnboardingCommands extends CommandsBase {
    *
    * @bootstrap none
    */
-  public function cmdAppOnboardingExecute(
-    array $options = []
-  ): TaskInterface {
+  public function cmdAppOnboardingExecute(): TaskInterface {
     return $this->getTaskOnboarding();
   }
 
@@ -176,11 +174,11 @@ class AppOnboardingCommands extends CommandsBase {
 
       if ($this->fs->exists($dstFilePath)) {
         $logger->info('update option.uri in {dstFilePath}', $loggerArgs);
-        $content = file_get_contents($dstFilePath);
+        $content = (string) file_get_contents($dstFilePath);
       }
       elseif ($this->fs->exists($exampleFilePath)) {
         $logger->info('create {dstFilePath} based on {exampleFilePath}', $loggerArgs);
-        $content = file_get_contents($exampleFilePath);
+        $content = (string) file_get_contents($exampleFilePath);
       }
       else {
         $logger->info('create {hostFilePath} with default content', $loggerArgs);
@@ -210,7 +208,7 @@ class AppOnboardingCommands extends CommandsBase {
 
       $envFilePath = "$behatDir/behat.{$state['runtimeEnvironment']}.yml";
       $envFileContent = $this->fs->exists($envFilePath) ?
-        file_get_contents($envFilePath)
+        (string) file_get_contents($envFilePath)
         : $exampleFileContent;
 
       $url = $state['primaryUrl'];
@@ -221,7 +219,7 @@ class AppOnboardingCommands extends CommandsBase {
         $envFileContent,
       );
 
-      $this->fs->dumpFile($envFilePath, $envFileContent);
+      $this->fs->dumpFile($envFilePath, (string) $envFileContent);
       $logger->info(
         'File "<info>{envFilePath}</info>" {action}',
         [
@@ -246,7 +244,7 @@ class AppOnboardingCommands extends CommandsBase {
       $doc = new \DOMDocument();
       $doc->preserveWhiteSpace = TRUE;
       $doc->formatOutput = TRUE;
-      $doc->loadXML(file_get_contents($dst));
+      $doc->loadXML((string) file_get_contents($dst));
       $xpath = new \DOMXPath($doc);
 
       $values = [
@@ -264,7 +262,7 @@ class AppOnboardingCommands extends CommandsBase {
       ];
 
       $elements = $xpath->query('/phpunit/php');
-      if ($elements->count()) {
+      if ($elements && $elements->count()) {
         $php = $elements->item(0);
       }
       else {
@@ -275,7 +273,7 @@ class AppOnboardingCommands extends CommandsBase {
 
       foreach ($values['env'] as $name => $value) {
         $elements = $xpath->query(expression: "/phpunit/php/env[@name = '{$name}']");
-        if ($elements->count()) {
+        if ($elements && $elements->count()) {
           /** @var \DOMElement $env */
           $env = $elements->item(0);
           $env->setAttribute($name, $value);
@@ -287,12 +285,15 @@ class AppOnboardingCommands extends CommandsBase {
         }
       }
 
-      $this->fs->dumpFile($dst, $doc->saveXML());
+      $this->fs->dumpFile($dst, (string) $doc->saveXML());
 
       return 0;
     };
   }
 
+  /**
+   * @phpstan-param \Robo\Collection\CollectionBuilder|\Robo\Collection\TaskForEach $taskForEach
+   */
   protected function getTaskBuilderOnboardingHashSaltTxt($taskForEach): callable {
     return function (CollectionBuilder $builder, string $key, $siteDir) use ($taskForEach): void {
       if (!($siteDir instanceof \SplFileInfo)) {
@@ -375,7 +376,7 @@ class AppOnboardingCommands extends CommandsBase {
   protected function getPrimaryUrl(string $runtimeEnvironment): string {
     return match ($runtimeEnvironment) {
       'ddev' => getenv('DDEV_PRIMARY_URL'),
-      'host' => $this->input()->getOption('uri') ?: 'https://drupalhu.localhost',
+      default => $this->input()->getOption('uri') ?: 'https://drupalhu.localhost',
     };
   }
 

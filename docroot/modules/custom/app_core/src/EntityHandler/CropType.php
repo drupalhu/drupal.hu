@@ -13,6 +13,8 @@ class CropType extends CropTypeBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return int
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     /** @var \Drupal\crop\CropTypeInterface $a */

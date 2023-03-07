@@ -1,2 +1,211 @@
 parameters:
-  ignoreErrors: {}
+	ignoreErrors:
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: ../docroot/modules/custom/app_core/src/Plugin/Styleguide/CoreStatusMessages.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\ArtifactCollectFilesTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\CopyFilesTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\PrepareDirectoryTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\VersionNumberBumpExtensionInfoTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\VersionNumberBumpExtensionInfoTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setBumpComposerJson\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\VersionNumberBumpExtensionInfoTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setBumpExtensionInfo\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:withBuilder\\(\\)\\.$#"
+			count: 2
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 2
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:getState\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Base\\\\ExecStack\\:\\:dir\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Composer\\\\Update\\:\\:noDev\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitCloneAndCleanTask\\:\\:setRemoteName\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitConfigGetTask\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitListFilesTask\\:\\:setPaths\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitTagListTask\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Task\\\\Base\\\\ExecStack\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Task\\\\Composer\\\\Update\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitCloneAndCleanTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Method Drush\\\\Commands\\\\app\\\\AppArtifactAcquiaCommands\\:\\:getTaskGitCloneAndCleanClone\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Parameter \\#2 \\$reference of class Robo\\\\Collection\\\\CallableTask constructor expects Robo\\\\Contract\\\\TaskInterface, Robo\\\\Collection\\\\CollectionInterface given\\.$#"
+			count: 12
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\NodeDetectorTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:withBuilder\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitListFilesTask\\:\\:setPaths\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitListStagedFilesTask\\:\\:setDiffFilter\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Parameter \\#2 \\$reference of class Robo\\\\Collection\\\\CallableTask constructor expects Robo\\\\Contract\\\\TaskInterface, Robo\\\\Collection\\\\CollectionInterface given\\.$#"
+			count: 3
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:getState\\(\\)\\.$#"
+			count: 3
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:iterationMessage\\(\\)\\.$#"
+			count: 3
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\File\\\\Write\\:\\:text\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:copy\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 3
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|false given\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
+
+		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\AppSearchApiSolrIndexClearTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setBaseUrl\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppSearchApiCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:iterationMessage\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppSearchApiCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppSearchApiCommands.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/CommandsBase.php

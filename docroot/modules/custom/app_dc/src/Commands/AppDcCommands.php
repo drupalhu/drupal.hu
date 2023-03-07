@@ -46,6 +46,8 @@ class AppDcCommands extends DrushCommands {
    * @default-string-field id
    *
    * @default-fields status_label,group,id,total,processed,imported,needs_update,ignored,failed
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   public function report(
     array $options = [
@@ -78,7 +80,7 @@ class AppDcCommands extends DrushCommands {
   /**
    * @hook alter app:dc:report
    */
-  public function reportAlter(CommandResult $result, CommandData $commandData) {
+  public function reportAlter(CommandResult $result, CommandData $commandData): void {
     $data = $result->getOutputData();
     if ($commandData->formatterOptions()->getFormat() === 'table' && !($data instanceof RowsOfFields)) {
       $rows = new RowsOfFieldsWithMetadata($data);
@@ -92,6 +94,8 @@ class AppDcCommands extends DrushCommands {
 
   /**
    * @param \Drupal\migrate\Plugin\MigrationInterface[] $migrations
+   *
+   * @phpstan-return array<string, array<string, mixed>>
    */
   protected function reportRows(array $migrations): array {
     $rows = [];
@@ -103,7 +107,9 @@ class AppDcCommands extends DrushCommands {
   }
 
   /**
-   * @return \Consolidation\OutputFormatters\StructuredData\RenderCellInterface[]
+   * @phpstan-param array<string, mixed> $data
+   *
+   * @phpstan-return \Consolidation\OutputFormatters\StructuredData\RenderCellInterface[]
    */
   protected function reportRenderers(array $data): array {
     return [
@@ -112,6 +118,9 @@ class AppDcCommands extends DrushCommands {
     ];
   }
 
+  /**
+   * @phpstan-param array<string, mixed> $data
+   */
   protected function reportRendererNumeric(array $data): RenderCellInterface {
     return new NumericCellRenderer(
       $data,
@@ -146,6 +155,9 @@ class AppDcCommands extends DrushCommands {
     });
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   protected function reportRow(MigrationInterface $migration): array {
     $definition = $migration->getPluginDefinition();
     $source = $migration->getSourcePlugin();
@@ -175,6 +187,8 @@ class AppDcCommands extends DrushCommands {
    *
    * @option string $format
    *   Default: yaml
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   public function cmdDcDefinitionExecute(
     string $migration_id,
@@ -195,6 +209,8 @@ class AppDcCommands extends DrushCommands {
    *
    * @option string $format
    *   Default: yaml
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   public function cmdDcDefinitionSourceFieldsExecute(
     string $migration_id,

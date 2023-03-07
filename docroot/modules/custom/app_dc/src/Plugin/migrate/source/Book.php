@@ -19,6 +19,8 @@ class Book extends D7Book {
 
   /**
    * {@inheritDoc}
+   *
+   * @phpstan-return array<string, string|\Drupal\Core\StringTranslation\TranslatableMarkup>
    */
   public function fields() {
     $fields = parent::fields();
