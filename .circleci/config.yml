@@ -667,6 +667,7 @@ commands:
           name: 'DDev – init – install'
           command: |
             curl -s -L https://raw.githubusercontent.com/drud/ddev/master/scripts/install_ddev.sh | bash
+
   ddev_init_config:
     description: 'DDev – init – configure'
     steps:
@@ -675,6 +676,7 @@ commands:
           name: 'DDev – init – configure'
           command: |
             cp ./.ddev/.env.example ./.ddev/.env
+
   ddev_init_start:
     description: 'DDev – init – start'
     steps:
@@ -714,13 +716,32 @@ commands:
             - '/mnt/ddev-global-cache/yarn'
 
   ddev_lint_phpcs:
-    description: 'DDev – QA static – lint_phpcs'
+    description: 'DDev – QA static – lint:phpcs'
     steps:
       -
         run:
           name: 'DDev – QA static – lint:phpcs'
           command: |
             ddev drush app:lint:phpcs
+
+  ddev_lint_phpstan:
+    description: 'DDev – QA static – lint:phpstan'
+    steps:
+      -
+        run:
+          name: 'DDev – QA static – lint:phpstan'
+          command: |
+            ddev drush app:lint:phpstan
+
+  ddev_lint_frontend:
+    description: 'DDev – QA static – lint:frontend'
+    steps:
+      -
+        run:
+          name: 'DDev – QA static – lint:frontend'
+          command: |
+            ddev drush app:lint:frontend
+
   ddev_test_unit:
     description: 'DDev – QA unit – test:unit'
     steps:
@@ -729,6 +750,7 @@ commands:
           name: 'DDev – QA unit – test:unit'
           command: |
             ddev exec ./vendor/bin/phpunit --testsuite='unit'
+
   ddev_test_functional_javascript:
     description: 'DDev – QA e2e – test:functional-javascript'
     steps:
@@ -737,6 +759,7 @@ commands:
           name: 'DDev – QA e2e – test:functional-javascript'
           command: |
             ddev exec ./vendor/bin/phpunit --testsuite='functional-javascript'
+
   ddev_test_behat:
     description: 'DDev – QA e2e – test:behat'
     steps:
@@ -883,6 +906,8 @@ jobs:
       - 'ddev_init_config'
       - 'ddev_init_start'
       - 'ddev_lint_phpcs'
+      - 'ddev_lint_phpstan'
+      - 'ddev_lint_frontend'
       - 'ddev_test_unit'
       - 'ddev_test_functional_javascript'
       - 'ddev_test_behat'
