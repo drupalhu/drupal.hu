@@ -195,7 +195,7 @@ commands:
         run:
           name: 'Build an Acquia specific release artifact'
           command: |-
-            ${appDrushExecutable} marvin:artifact:build:acquia
+            ${appDrushExecutable} app:artifact:build:acquia
       -
         persist_to_workspace:
           name: 'Store the release artifact'
@@ -640,13 +640,112 @@ commands:
             . ./.circleci/scripts/include.bash
             appDebugAcquiaEnvAccess '<<parameters.ah_env>>'
 
-##
-# @todo Replace "~/repo" with "/root/project" (or whatever the ~/ is in the used Docker container)
-#       because the tilde (~) symbol is not resolved by the shell in a case like this:
-#       shell: cd "${CIRCLE_WORKING_DIRECTORY}"
-#       Unfortunately all the examples uses the "~" char on this page:
-#       https://circleci.com/docs/2.0/configuration-reference/#example
-##
+  ddev_init_info:
+    description: 'DDev – init – info'
+    steps:
+      -
+        run:
+          name: 'DDev – init – info'
+          command: |
+            env | sort
+            echo "OS release:\n$(cat /etc/os-release)"
+            echo "pwd:\n$(pwd)"
+            echo "id:\n$(id)"
+            echo "bash:\n$(bash --version)"
+            echo "zsh:\n$(zsh --version)"
+            echo "git:\n$(git --version)"
+            echo "parallel:\n$(parallel --version)"
+            echo "sed:\n$(sed --version)"
+            echo "jq:\n$(jq --version)"
+            echo "yq:\n$(yq --version)"
+
+  ddev_init_install:
+    description: 'DDev – init – install'
+    steps:
+      -
+        run:
+          name: 'DDev – init – install'
+          command: |
+            curl -s -L https://raw.githubusercontent.com/drud/ddev/master/scripts/install_ddev.sh | bash
+  ddev_init_config:
+    description: 'DDev – init – configure'
+    steps:
+      -
+        run:
+          name: 'DDev – init – configure'
+          command: |
+            cp ./.ddev/.env.example ./.ddev/.env
+  ddev_init_start:
+    description: 'DDev – init – start'
+    steps:
+      -
+        run:
+          name: 'Yarn cache – Calculate checksum'
+          command: |-
+            # Collect all the checksum of yarn.lock files into one file.
+            echo -n '' > 'checksum-of-frontend-asset-sources.sha256'
+            git ls-files -- '**/yarn.lock' | xargs sha256sum >> 'checksum-of-frontend-asset-sources.sha256'
+      -
+        restore_cache:
+          name: 'Yarn cache – restore'
+          keys:
+            - 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
+      -
+        restore_cache:
+          name: 'Composer cache – restore'
+          keys:
+            - 'composer-{{ checksum "./composer.lock" }}-3'
+      -
+        run:
+          name: 'DDev – init – start'
+          command: |
+            ddev start
+      -
+        save_cache:
+          name: 'Composer cache – save'
+          key: 'composer-{{ checksum "./composer.lock" }}-3'
+          paths:
+            - '/mnt/ddev-global-cache/composer'
+      -
+        save_cache:
+          name: 'Yarn cache – save'
+          key: 'npm-{{ checksum "checksum-of-frontend-asset-sources.sha256" }}-2'
+          paths:
+            - '/mnt/ddev-global-cache/yarn'
+
+  ddev_lint_phpcs:
+    description: 'DDev – QA static – lint_phpcs'
+    steps:
+      -
+        run:
+          name: 'DDev – QA static – lint:phpcs'
+          command: |
+            ddev drush app:lint:phpcs
+  ddev_test_unit:
+    description: 'DDev – QA unit – test:unit'
+    steps:
+      -
+        run:
+          name: 'DDev – QA unit – test:unit'
+          command: |
+            ddev exec ./vendor/bin/phpunit --testsuite='unit'
+  ddev_test_functional_javascript:
+    description: 'DDev – QA e2e – test:functional-javascript'
+    steps:
+      -
+        run:
+          name: 'DDev – QA e2e – test:functional-javascript'
+          command: |
+            ddev exec ./vendor/bin/phpunit --testsuite='functional-javascript'
+  ddev_test_behat:
+    description: 'DDev – QA e2e – test:behat'
+    steps:
+      -
+        run:
+          name: 'DDev – QA e2e – test:behat'
+          command: |
+            ddev exec ./vendor/bin/behat
+
 jobs:
   build:
     executor: 'php_min'
@@ -768,8 +867,34 @@ jobs:
       - 'mysql_start'
       - 'debug_mysql'
 
+  ddev_all_in_one:
+    machine:
+      image: 'ubuntu-2004:current'
+      docker_layer_caching: true
+    environment:
+      DDEV_NONINTERACTIVE: "true"
+      <<: *env_app
+      <<: *env_composer
+      <<: *env_node
+    steps:
+      - 'checkout'
+      - 'ddev_init_info'
+      - 'ddev_init_install'
+      - 'ddev_init_config'
+      - 'ddev_init_start'
+      - 'ddev_lint_phpcs'
+      - 'ddev_test_unit'
+      - 'ddev_test_functional_javascript'
+      - 'ddev_test_behat'
+
 workflows:
+  QA_DDev:
+    jobs:
+      -
+        ddev_all_in_one: {}
+
   QA:
+    when: false
     jobs:
       -
         build: {}

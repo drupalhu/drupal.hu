@@ -225,6 +225,9 @@ hooks:
       exec: >-
         ./vendor/bin/drush --config='drush' @app.local app:runtime-environment:switch
     -
+      exec: >-
+        ./vendor/bin/drush --config='drush' @app.local app:build
+    -
       # @todo This works only if there is no database table prefix.
       exec: >-
         ./vendor/bin/drush --config='drush' @app.local sql:query 'SHOW TABLES;'
