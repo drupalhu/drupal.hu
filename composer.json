@@ -185,7 +185,7 @@
             "drush --config=drush @app.local --yes pm:enable app_dc",
             "drush --config=drush @app.local --yes migrate:import --group='app_default'",
             "drush --config=drush @app.local --yes migrate:import --group='app_common'",
-            "drush --config=drush @app.local --yes pm:uninstall migrate_dc,migrate_tools,migrate_plus,app_dc"
+            "drush --config=drush @app.local --yes pm:uninstall migrate,migrate_drupal,migrate_tools,migrate_plus,migrate_dc,app_dc"
         ],
         "site:install:prod:dummy": [
             "@site:install:prod:empty",
@@ -193,7 +193,7 @@
             "drush --config=drush @app.local --yes migrate:import --group='app_default'",
             "drush --config=drush @app.local --yes migrate:import --group='app_common'",
             "drush --config=drush @app.local --yes migrate:import --group='app_dummy'",
-            "drush --config=drush @app.local --yes pm:uninstall migrate_dc,migrate_tools,migrate_plus,app_dc"
+            "drush --config=drush @app.local --yes pm:uninstall migrate,migrate_drupal,migrate_tools,migrate_plus,migrate_dc,app_dc"
         ],
         "site:install:local:empty": [
             "@site:install:prod:empty",
