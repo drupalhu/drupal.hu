@@ -23,6 +23,7 @@ function onPostCodeDeploy() {
 
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
         appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
+        appMailSafetyEnable || returnCode=$?
     fi
 
     appLogger 'END onPostCodeDeploy'
@@ -52,6 +53,7 @@ function onPostCodeUpdate() {
 
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
         appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
+        appMailSafetyEnable || returnCode=$?
     fi
 
     appLogger 'END onPostCodeUpdate'
@@ -283,6 +285,18 @@ function appHttpAuthEnable() {
         "${pass}"
 
     appLogger 'info' 'shield module is activated'
+}
+
+function appMailSafetyEnable() {
+    local drush=('./vendor/bin/drush' '--config="drush"' '--yes')
+
+    "${drush[@]}" pm:enable 'mail_safety' \
+    && \
+    "${drush[@]}" config:set 'mail_safety.settings' 'enabled' 'true' \
+    && \
+    "${drush[@]}" config:set 'mail_safety.settings' 'send_mail_to_dashboard' 'true' \
+    && \
+    "${drush[@]}" config:set 'mail_safety.settings' 'send_mail_to_default_mail' 'false'
 }
 
 #region Helper functions

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8addb845e615b48257a0dbf79ef4c84",
+    "content-hash": "f1e38f467f230352fd8e5a911b916f8a",
     "packages": [
         {
             "name": "acquia/http-hmac-php",
@@ -2644,6 +2644,20 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/imageapi_optimize"
             }
+        },
+        {
+            "name": "drupal/mail_safety",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/mail_safety.git",
+                "reference": "8.x-1.x"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/mail_safety-8.x-1.x-dev.zip"
+            },
+            "type": "drupal-module"
         },
         {
             "name": "drupal/media_library_edit",

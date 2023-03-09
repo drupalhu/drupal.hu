@@ -1,5 +1,5 @@
 {
-    "_hash": "6dbaa25caa50e9c6b9a5953595860f81568063a2eb4536f90cabe78b0ddcd174",
+    "_hash": "163b74ba87ff3383a3bf4c7ffab60a0efdcaa90b0e03830c9ecec82e459f42fd",
     "patches": {
         "drupal/core": [
             {
@@ -28,7 +28,7 @@
                 "package": "drupal/drupal-extension",
                 "description": "Behat config schema - extendable selectors and text",
                 "url": "https://patch-diff.githubusercontent.com/raw/jhedstrom/drupalextension/pull/640.patch",
-                "sha256": "b8de2b9cf93d8970a32561089ee435bb9f94dfddb99dc480d2279e76674e0514",
+                "sha256": "0c6759fe79625b3c0893418cacef8a6c0bde5256207efcc928a772aaa974a156",
                 "depth": 1,
                 "extra": {
                     "issue-tracker-url": "https://github.com/jhedstrom/drupalextension/issues/493"
@@ -54,6 +54,18 @@
                 "depth": 1,
                 "extra": {
                     "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3341578"
+                }
+            }
+        ],
+        "drupal/mail_safety": [
+            {
+                "package": "drupal/mail_safety",
+                "description": "D10 compatibility",
+                "url": "https://git.drupalcode.org/project/mail_safety/-/merge_requests/5.patch",
+                "sha256": "d8993c80ddb47477c4161d795b26005d13f4be60f9c4c8cd3a572aa843462ddb",
+                "depth": 1,
+                "extra": {
+                    "issue-tracker-url": "https://www.drupal.org/project/mail_safety/issues/3288410"
                 }
             }
         ],

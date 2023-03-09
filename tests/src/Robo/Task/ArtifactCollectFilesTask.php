@@ -171,6 +171,8 @@ class ArtifactCollectFilesTask extends BaseTask {
           "$docroot/favicon.ico",
           "$docroot/robots.txt",
           'sites/all/assets/robots-additions.txt',
+          'patches.lock',
+          'patches.lock.json',
         ],
         (new ArrayFilterFileSystemExists())->setBaseDir($projectDir),
       ),

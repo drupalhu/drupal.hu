@@ -658,6 +658,15 @@ $config['field_ui.settings']['field_prefix'] = 'app_';
 
 $config['views.settings']['ui']['exposed_filter_any_label'] = 'new_any';
 
+// region SMTP
+$config['smtp.settings']['smtp_on'] = TRUE;
+$config['smtp.settings']['smtp_protocol'] = getenv('SMTP_PROTOCOL') ?: 'tls';
+$config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME') ?: '';
+$config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD') ?: '';
+$config['smtp.settings']['smtp_host'] = getenv('SMTP_HOST') ?: '127.0.0.1';
+$config['smtp.settings']['smtp_port'] = getenv('SMTP_PORT') ?: '587';
+// endregion
+
 /**
  * Fast 404 pages:
  *
