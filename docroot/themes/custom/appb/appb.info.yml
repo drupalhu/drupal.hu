@@ -1,5 +1,5 @@
 type: 'theme'
-core_version_requirement: '^9.0'
+core_version_requirement: '^10.0'
 
 name: 'App - Backend'
 description: 'A theme based on Claro.'

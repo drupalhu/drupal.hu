@@ -145,16 +145,16 @@ function appLocalBackupRestoreSiteDatabase() {
     local fileName="${backupDir}/database/${database}.mysql"
 
     appLogger 'info' "BEGIN database import site:${site} database:${database} file:${fileName}"
-    ./bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
+    ./vendor/bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
     setopt XTRACE
 
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         --database="${database}" \
         sql:drop || return 1
 
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         --database="${database}" \
@@ -163,7 +163,7 @@ function appLocalBackupRestoreSiteDatabase() {
 
     unsetopt XTRACE
 
-    ./bin/drush --config='drush' site:set
+    ./vendor/bin/drush --config='drush' site:set
     appLogger 'info' "END   database import"
 }
 
@@ -195,12 +195,12 @@ function appLocalBackupRestoreSiteFile() {
     srcDir="${backupDir}/file/${dir}"
 
     appLogger 'info' "BEGIN file sync site:${site} dir:${dir} srcDir:${srcDir}"
-    ./bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
+    ./vendor/bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
     setopt XTRACE
     # @todo This only works if the Drupal instance is fully functional.
-    dstDir="${PWD}/docroot/$(./bin/drush --config='drush' status --format='list' --fields="${dir}")"
+    dstDir="${PWD}/docroot/$(./vendor/bin/drush --config='drush' status --format='list' --fields="${dir}")"
 
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         core:rsync \
@@ -210,7 +210,7 @@ function appLocalBackupRestoreSiteFile() {
         --delete || return 1
     unsetopt XTRACE
 
-    ./bin/drush --config='drush' site:set
+    ./vendor/bin/drush --config='drush' site:set
     appLogger 'info' "END   file sync"
 }
 
@@ -236,20 +236,20 @@ function appUpdateSite() {
     local site="${1}"
     : "${site:?'site argument is required'}"
 
-    ./bin/drush site:set "${PWD}/docroot#${site}"
+    ./vendor/bin/drush site:set "${PWD}/docroot#${site}"
 
     setopt XTRACE
-    ./bin/drush --config='drush' --yes updatedb      || return 1
-    ./bin/drush --config='drush' --yes config:import || return 2
+    ./vendor/bin/drush --config='drush' --yes updatedb      || return 1
+    ./vendor/bin/drush --config='drush' --yes config:import || return 2
 
     nonEnglishLangCodes="$(appNonEnglishLangCodes)"
     if [[ "${nonEnglishLangCodes}" != '' ]]; then
-        ./bin/drush --config='drush' --yes locale:check  || return 3
-        ./bin/drush --config='drush' --yes locale:update || return 4
+        ./vendor/bin/drush --config='drush' --yes locale:check  || return 3
+        ./vendor/bin/drush --config='drush' --yes locale:update || return 4
     fi
     unsetopt XTRACE
 
-    ./bin/drush site:set
+    ./vendor/bin/drush site:set
 }
 #endregion
 
@@ -260,13 +260,13 @@ function appHttpAuthEnable() {
     local pass="${2}"
     : "${pass:?'pass argument is required'}"
 
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         pm:enable \
         'shield' \
     && \
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         config:set \
@@ -274,7 +274,7 @@ function appHttpAuthEnable() {
         'credentials.shield.user' \
         "${user}" \
     && \
-    ./bin/drush \
+    ./vendor/bin/drush \
         --config='drush' \
         --yes \
         config:set \
@@ -346,6 +346,6 @@ fwrite(STDOUT, implode(PHP_EOL, array_keys($languages)) . PHP_EOL);
 PHP
 )
 
-    ./bin/drush --config='drush' php:eval "${script}"
+    ./vendor/bin/drush --config='drush' php:eval "${script}"
 }
 #endregion

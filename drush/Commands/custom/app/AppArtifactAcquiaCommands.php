@@ -595,6 +595,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
           Path::join($buildDir, 'patches'),
           Path::join($buildDir, 'sites', 'all', 'assets', 'robots-additions.txt'),
           Path::join($buildDir, 'sites', 'default', 'config', 'local'),
+          Path::join($buildDir, 'drush', 'Commands', 'custom'),
           Path::join($buildDir, 'drush', 'drush.ddev.yml'),
           Path::join($buildDir, 'drush', 'drush.host.yml'),
           Path::join($buildDir, 'drush', 'drush.local.yml'),

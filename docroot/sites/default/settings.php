@@ -812,6 +812,8 @@ if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}
   // aren't working as expected.
   $settings['config_sync_directory'] = "$app_root/../$site_path/config/prod";
 
+  $config['config_split.config_split.local']['status'] = FALSE;
+
   $ahSiteName = getenv('AH_SITE_NAME');
   $ahSiteEnvironment = getenv('AH_SITE_ENVIRONMENT');
   if ($ahSiteEnvironment !== 'prod') {
@@ -822,6 +824,7 @@ if ($ahSiteGroup && file_exists("/var/www/site-php/{$ahSiteGroup}/{$ahSiteGroup}
   $settings['file_private_path'] = '../acquia-files/files-private';
   $settings['php_storage']['twig']['directory'] = '../acquia-files/tmp/php_storage';
   $config['system.file']['path']['temporary'] = '../acquia-files/tmp';
+  $config['locale.settings']['translation']['path'] = '../acquia-files/translations';
 }
 
 /**
