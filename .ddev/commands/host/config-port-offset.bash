@@ -42,10 +42,10 @@ done
 
 
 env_vars=(
-    'APP_CHROME_HOST_HEADLESS_PORT'
+    'APP_CHROME_EXPOSE_HEADLESS_PORT'
 
-    'APP_SOLR_HOST_HTTP_PORT'
-    'APP_SOLR_HOST_HTTPS_PORT'
+    'APP_SOLR_EXPOSE_HTTP_PORT'
+    'APP_SOLR_EXPOSE_HTTPS_PORT'
 )
 
 env_file_name='./.ddev/.env'

@@ -6,8 +6,10 @@ namespace Drush\Commands\app;
 
 use DrupalHu\DrupalHu\Tests\Robo\ArtifactCollectFilesTaskLoader;
 use DrupalHu\DrupalHu\Tests\Robo\CopyFilesTaskLoader;
+use DrupalHu\DrupalHu\Tests\Robo\FilesystemSymlinkTaskLoader;
 use DrupalHu\DrupalHu\Tests\Robo\PrepareDirectoryTaskLoader;
 use DrupalHu\DrupalHu\Tests\Robo\VersionNumberTaskLoader;
+use DrupalHu\DrupalHu\Tests\Utils as AppUtils;
 use Robo\Collection\CallableTask;
 use Robo\Collection\CollectionBuilder;
 use Robo\Contract\TaskInterface;
@@ -29,6 +31,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
   use ArtifactCollectFilesTaskLoader;
   use CopyFilesTaskLoader;
   use VersionNumberTaskLoader;
+  use FilesystemSymlinkTaskLoader;
 
   protected string $versionTagNamePattern = '/^(v){0,1}(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(|-(?P<special>[\da-zA-Z.]+))(|\+(?P<metadata>[\da-zA-Z.]+))$/';
 
@@ -75,12 +78,13 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
       'cleanupFilesCollect.app' => $this->getTaskCleanupCollect($cb),
       'cleanupFiles.app' => $this->getTaskCleanup(),
+      'latestSymlink.app' => $this->getTaskLatestSymlink($cb),
     ]);
 
     return $cb;
   }
 
-  protected function getTaskInitBasic(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskInitBasic(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $state['artifact.type'] = 'acquia';
@@ -97,6 +101,9 @@ class AppArtifactAcquiaCommands extends CommandsBase {
         $state['project.composerInfo'] = json_decode(file_get_contents($state['project.composerFilePath']) ?: '{}');
         $state['project.drupalRootDir'] = $this->getDrupalRootDir();
 
+        $state['artifacts.dir'] = Path::join($state['project.dir'], 'artifacts');
+
+        // This will be calculated later, based on the version number.
         $state['build.dir'] = NULL;
         $state['build.drupalRootDir'] = 'docroot';
 
@@ -104,11 +111,11 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
-  protected function getTaskDetectLatestVersionNumber(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskDetectLatestVersionNumber(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $logger = $this->getLogger();
@@ -139,11 +146,11 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
-  protected function getTaskComposeNextVersionNumber(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskComposeNextVersionNumber(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $logger = $this->getLogger();
@@ -164,23 +171,22 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
-  protected function getTaskComposeBuildDir(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskComposeBuildDir(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $state['build.dir'] = Path::join(
-          $state['project.dir'],
-          'artifacts',
+          $state['artifacts.dir'],
           (string) $state['nextVersionNumber'],
           'acquia',
         );
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -213,7 +219,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
     ];
   }
 
-  protected function getTaskMissingAcquiaProjectIdMessage(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskMissingAcquiaProjectIdMessage(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (): int {
         $logger = $this->getLogger();
@@ -227,7 +233,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -242,7 +248,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
       ->deferTaskConfiguration('setWorkingDirectory', 'build.dir');
   }
 
-  protected function getTaskGitCloneAndCleanCollectGitConfigNames(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskGitCloneAndCleanCollectGitConfigNames(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $gitConfigNamesToCopy = array_keys(
@@ -262,7 +268,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -332,7 +338,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
       ->deferTaskConfiguration('setVersionNumber', 'nextVersionNumber');
   }
 
-  protected function getTaskCollectChildExtensionDirs(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskCollectChildExtensionDirs(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $drupalRootDir = $state['build.drupalRootDir'];
@@ -359,7 +365,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -395,7 +401,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
     return $forEachTask;
   }
 
-  protected function getTaskResolveRelativePackagePaths(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskResolveRelativePackagePaths(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $logger = $this->getLogger();
@@ -440,7 +446,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -457,7 +463,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
    *
    * @todo Probably a symlink would be much easier.
    */
-  protected function getTaskMoveDocroot(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskMoveDocroot(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $logger = $this->getLogger();
@@ -527,7 +533,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -541,13 +547,14 @@ class AppArtifactAcquiaCommands extends CommandsBase {
       ->deferTaskConfiguration('dir', 'build.dir');
   }
 
-  protected function getTaskGitIgnoreEntries(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskGitIgnoreEntries(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $w = 0;
         $drupalRootDir = $state['build.drupalRootDir'];
         $state['.gitignore'] = [
           "/$drupalRootDir/sites/*/files/" => ++$w,
+          "/$drupalRootDir/sites/*/settings.local.php" => ++$w,
           '/sites/*/backup/' => ++$w,
           '/sites/*/php_storage/' => ++$w,
           '/sites/*/private/' => ++$w,
@@ -558,11 +565,11 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
-  protected function getTaskGitIgnoreDump(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskGitIgnoreDump(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         asort($state['.gitignore']);
@@ -580,11 +587,11 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
-  protected function getTaskCleanupCollect(CollectionBuilder $cb): TaskInterface {
+  protected function getTaskCleanupCollect(TaskInterface $reference): TaskInterface {
     return new CallableTask(
       function (RoboState $state): int {
         $buildDir = $state['build.dir'];
@@ -624,7 +631,7 @@ class AppArtifactAcquiaCommands extends CommandsBase {
 
         return 0;
       },
-      $cb->getCollection(),
+      $reference,
     );
   }
 
@@ -632,6 +639,26 @@ class AppArtifactAcquiaCommands extends CommandsBase {
     return $this
       ->taskFilesystemStack()
       ->deferTaskConfiguration('remove', 'filesToCleanup');
+  }
+
+  protected function getTaskLatestSymlink(TaskInterface $reference): TaskInterface {
+    return new CallableTask(
+      function (RoboState $state): int {
+        $versionNumber = AppUtils::findLatestArtifactDir($state['artifacts.dir']);
+        if ($versionNumber === NULL) {
+          return 0;
+        }
+
+        $result = $this
+          ->taskAppFilesystemSymlink()
+          ->setSymlinkFilePath(Path::join($state['artifacts.dir'], 'latest'))
+          ->setSymlinkPointsTo("./$versionNumber")
+          ->run();
+
+        return $result->wasSuccessful() ? 0 : 1;
+      },
+      $reference,
+    );
   }
 
   protected function getVersionTagNameFilter(): callable {

@@ -1,0 +1,5 @@
+
+# Allow Let's Encrypt RFC 5785 ACME protocol.
+location ~* ^/\.well-known/ {
+  allow all;
+}

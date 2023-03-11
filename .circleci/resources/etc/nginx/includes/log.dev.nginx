@@ -1,0 +1,4 @@
+rewrite_log     on;
+log_not_found   on;
+access_log      /home/circleci/slash/var/log/nginx/$site_id.access.log;
+error_log       /home/circleci/slash/var/log/nginx/error.log            notice;

@@ -1,6 +1,6 @@
 uuid: 4f657b04-609b-42bf-adcf-60e0501cc2dd
 langcode: hu
-status: true
+status: false
 dependencies: {  }
 id: local
 label: local

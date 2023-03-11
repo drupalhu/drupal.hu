@@ -1,0 +1,7 @@
+##
+# Only include this in server{} scope.
+##
+
+fastcgi_param   HTTP_X-Sendfile-Type	X-Accel-Redirect;
+fastcgi_param   HTTP_X-Accel-Mapping	private://=/__private_files/;
+fastcgi_param   X_SENDFILE_IS_SUPPORTED true;

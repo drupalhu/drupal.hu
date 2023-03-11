@@ -15,6 +15,8 @@ trait AppSearchApiTaskLoader {
 
   /**
    * @return \DrupalHu\DrupalHu\Tests\Robo\Task\AppSearchApiSolrIndexClearTask|\Robo\Collection\CollectionBuilder
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   protected function taskAppSearchApiIndexClear(array $options = []) {
     /** @var \DrupalHu\DrupalHu\Tests\Robo\Task\AppSearchApiSolrIndexClearTask $task */

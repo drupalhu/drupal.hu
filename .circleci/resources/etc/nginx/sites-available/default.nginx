@@ -1,0 +1,24 @@
+server {
+    server_name localhost 127.0.0.1;
+
+    set $site_base      default;
+    set $site_db        my0507;
+    set $project_vendor circleci;
+    set $project_name   project;
+    set $project_root   /home/$project_vendor/$project_name;
+    set $site_id        $project_vendor.$project_name.$site_base.$site_db;
+    set $site_name      $site_base.$site_db;
+    set $public_html    docroot;
+
+    set $fastcgi_pass   "unix:/home/circleci/slash/var/run/php-fpm.sock";
+
+    root $project_root/$public_html;
+
+    include includes/listen.http.nginx;
+    include includes/application.drupal-10.nginx;
+    include includes/log.dev.nginx;
+
+    include includes/fastcgi_params.nginx;
+    include includes/fastcgi_params.common.nginx;
+    include includes/fastcgi_params.x-sendfile.nginx;
+}

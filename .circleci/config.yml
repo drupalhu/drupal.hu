@@ -2,10 +2,21 @@ version: 2.1
 
 orbs:
   codecov: 'codecov/codecov@3.2.4'
-  browser-tools: 'circleci/browser-tools@1.1'
+  browser-tools: 'circleci/browser-tools@1.4'
+
+.env_mysql: &env_mysql
+  MYSQL_ROOT_HOST: '%'
+  MYSQL_ROOT_PASSWORD: 'root'
+  MYSQL_USER: 'drupalhu'
+  MYSQL_PASSWORD: 'drupalhu'
+  MYSQL_HOST: 'database'
+  MYSQL_PORT: '3306'
+  MYSQL_DATABASE: 'drupalhu__default'
+  MYSQL_DATABASE_LEGACY: 'drupalhu7__default'
 
 .env_common: &env_common
-  BASH_ENV: '/home/circleci/.bashrc'
+  COLUMN: '110'
+  BAT_PAGER: ''
 
 .env_composer: &env_composer
   COMPOSER_NO_INTERACTION: '1'
@@ -16,34 +27,21 @@ orbs:
   DRUSH_OPTIONS_PROGRESS_DELAY: '9999'
   DRUSH_OPTIONS_NO_INTERACTION: '1'
 
-  DRUSH_MARVIN_ENVIRONMENT: 'ci'
-
 .env_node: &env_node
   YARN_CACHE_FOLDER: '/home/circleci/.cache/yarn/v6'
 
 .env_app: &env_app
   APP_HASH_SALT: '04Wz1klfHuAtBZh9ufzsDL8YIKJ6rZYPMwWFI4unhDU7'
+  APP_CHROME_HOST: '127.0.0.1'
+  APP_CHROME_PORT: '9222'
+
+  DTT_BASE_URL: 'http://localhost'
+
   appDrushExecutable: 'vendor/bin/drush --config=drush'
   appDrushSiteAlias: '@app.local'
   appDocroot: 'docroot'
   appInstallProfileName: 'appp'
-
-  appChromiumHostPort: '127.0.0.1:9222'
-
   appSolrRootPassword: 'root'
-
-  COLUMN: '110'
-
-
-.env_mysql: &env_mysql
-  MYSQL_ROOT_HOST: '%'
-  MYSQL_ROOT_PASSWORD: 'root'
-  MYSQL_USER: 'drupalhu'
-  MYSQL_PASSWORD: 'drupalhu'
-  MYSQL_HOST: '127.0.0.1'
-  MYSQL_PORT: '3306'
-  MYSQL_DATABASE: 'drupalhu__default'
-  appMysqlHost: 'database'
 
 .parameters:
   project_root: &parameter_project_root
@@ -60,12 +58,12 @@ executors:
         name: 'main'
         image: 'cimg/php:8.1.16-browsers'
         environment:
+          <<: *env_mysql
           <<: *env_common
           <<: *env_composer
           <<: *env_drush
           <<: *env_node
           <<: *env_app
-          <<: *env_mysql
         entrypoint: ['/bin/bash']
 
   php_min_with_services:
@@ -81,31 +79,88 @@ executors:
         image: 'sweetchuck/solr:7.7.3'
 
 commands:
+  apt_get_update:
+    description: 'Runs `apt-get update`, so the following tasks can use `apt-get install`'
+    steps:
+      -
+        run:
+          name: 'apt-get update'
+          command: |-
+            sudo apt-get update
+      -
+        run:
+          name: 'apt-get install common packages'
+          command: |-
+            sudo apt-get install -y \
+              bat \
+              rsync \
+              sshpass
+
+  bash_env_init:
+    # https://circleci.com/docs/env-vars/#parameters-and-bash-environment
+    description: 'BASH_ENV initialize'
+    steps:
+      -
+        run:
+          name: 'BASH_ENV initialize – Setup calculated environment variables'
+          command: |
+            echo "export DTT_API_URL='http://${APP_CHROME_HOST}:${APP_CHROME_PORT}'" >> "${BASH_ENV}"
+            echo "export SIMPLETEST_BASE_URL='${DTT_BASE_URL}'" >> "${BASH_ENV}"
+            echo "export SIMPLETEST_DB='mysql://root:${MYSQL_ROOT_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}'" >> "${BASH_ENV}"
+            echo "export BROWSERTEST_OUTPUT_BASE_URL='${DTT_BASE_URL}'" >> "${BASH_ENV}"
+            echo "[ ! -f ./.circleci/app.bash ] || . ./.circleci/app.bash" >> "${BASH_ENV}"
+
   php_extension_install:
     description: 'Install required PHP extensions'
     steps:
       -
         run:
-          name: 'Install required PHP extensions'
+          name: 'Install required PHP extensions – cache restore prepare'
           command: |-
-            sudo apt-get update
-            sudo apt-get -y install \
-              libyaml-dev
-
-            (yes '' || true) | sudo pecl install \
-              pcov \
-              yaml
+            extDir="$(php -r 'echo ini_get("extension_dir");')"
+            sudo chmod 0777 "${extDir}"
+      -
+        restore_cache:
+          name: 'Install required PHP extensions – cache restore'
+          keys:
+            - 'php-extensions-{{ checksum "/etc/os-release" }}-1'
+      -
+        run:
+          name: 'Install required PHP extensions – cache restore post process'
+          command: |-
+            extDir="$(php -r 'echo ini_get("extension_dir");')"
+            sudo chmod 0755 "${extDir}"
+            sudo chown --recursive root:root "${extDir}"
+      -
+        run:
+          name: 'Install required PHP extensions – do it'
+          command: |-
+            appPhpExtensionInstall
+      -
+        save_cache:
+          name: 'Install required PHP extensions – cache save'
+          key: 'php-extensions-{{ checksum "/etc/os-release" }}-1'
+          paths:
+            - '/usr/local/lib/php/extensions/no-debug-non-zts-20210902/pcov.so'
+            - '/usr/local/lib/php/extensions/no-debug-non-zts-20210902/yaml.so'
 
   git_config:
     description: 'Git config'
     steps:
       -
         run:
-          name: 'Git config – user.{email,name}'
+          name: 'Git config'
           command: |-
-            git config --global user.email 'circleci@drupal.hu'
-            git config --global user.name  "CircleCI ${CIRCLE_USERNAME}"
-            git config --global log.date   'iso'
+            git config --global 'user.email'            'circleci@drupal.hu'
+            git config --global 'user.name'             "CircleCI ${CIRCLE_USERNAME}"
+            git config --global 'log.date'              'iso'
+            git config --global 'color.diff.plain'      'normal'
+            git config --global 'color.diff.meta'       'yellow normal bold'
+            git config --global 'color.diff.frag'       'magenta normal bold'
+            git config --global 'color.diff.old'        'red'
+            git config --global 'color.diff.new'        'green'
+            git config --global 'color.diff.commit'     'white  blue'
+            git config --global 'color.diff.whitespace' 'normal cyan'
 
   composer_install:
     description: 'Composer install'
@@ -114,7 +169,7 @@ commands:
         restore_cache:
           name: 'Composer install – cache restore'
           keys:
-            - 'composer-{{ checksum "./composer.lock" }}-3'
+            - 'composer-{{ checksum "./composer.lock" }}-4'
       -
         run:
           name: 'Composer install – execute'
@@ -123,9 +178,25 @@ commands:
       -
         save_cache:
           name: 'Composer install – cache save'
-          key: 'composer-{{ checksum "./composer.lock" }}-3'
+          key: 'composer-{{ checksum "./composer.lock" }}-4'
           paths:
             - '/home/circleci/.cache/composer/'
+
+  main_instance_onboarding:
+    description: ''
+    steps:
+      -
+        run:
+          name: 'Main instance onboarding – app:onboarding'
+          command: |-
+            appMarvinOnboarding \
+              "${PWD}" \
+              "${appDrushSiteAlias}"
+      -
+        run:
+          name: 'Main instance onboarding – debug'
+          command: |-
+            appDebugConfigFiles
 
   main_instance_build:
     description: 'Main instance build'
@@ -146,8 +217,6 @@ commands:
         run:
           name: 'Main instance build – drush app:build'
           command: |-
-            . ./.circleci/scripts/include.bash
-            appMarvinOnboardingDrushLocalYml "${PWD}"
             ${appDrushExecutable} app:build
       -
         save_cache:
@@ -174,19 +243,15 @@ commands:
           command: |-
             "$(composer config bin-dir)/phpunit" --testsuite='unit'
       -
-        run:
-          name: 'Test – Unit – php.ini preset – prod'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appPhpCliPresetActivate prod
-      -
         store_test_results:
           name: 'Test – Unit – Store unit test results'
-          path: './reports/machine/result'
+          path: './reports/machine/junit'
       -
         codecov/upload:
           flags: 'unit'
           file: './reports/machine/coverage/phpunit.clover.xml'
+          # https://github.com/codecov/codecov-circleci-orb/issues/148
+          #validate: false
 
   artifact_acquia_build:
     description: 'Build an Acquia specific release artifact'
@@ -201,7 +266,10 @@ commands:
           name: 'Store the release artifact'
           root: './artifacts'
           paths:
-            - '*/acquia'
+            - '1*/acquia'
+            - '2*/acquia'
+            - '3*/acquia'
+            - '4*/acquia'
 
   artifact_acquia_restore:
     description: 'Restore the previously built Acquia artifact'
@@ -210,17 +278,29 @@ commands:
         attach_workspace:
           name: 'Restore the previously built Acquia artifact'
           at: './artifacts'
+      -
+        run:
+          name: 'symlink artifacts/latest'
+          command: |-
+            . ./.circleci/app.bash
+            version="$(appLatestArtifactVersionNumber)"
+            ( \
+              cd ./artifacts \
+              && \
+              ln -s "./${version}" 'latest' \
+            )
 
   supervisor_start:
     description: 'Start supervisor'
     steps:
       -
+        browser-tools/install-chrome:
+          channel: 'stable'
+      -
         run:
           name: 'Start Supervisor – execute'
           command: |-
-            . ./.circleci/scripts/include.bash
-
-            supervisord
+            appE2ePrepare
             appWaitForSupervisor 'http://127.0.0.1:8999' '10'
 
   mysql_start:
@@ -230,17 +310,20 @@ commands:
     steps:
       -
         run:
-          # The MySQL container is not immediately ready for connections.
-          name: 'MySQL – start – wait'
+          name: 'MySQL – start – install required packages'
           command: |-
-            . ./.circleci/scripts/include.bash
-            appWaitForMysql 'root' "${MYSQL_ROOT_PASSWORD}" "${appMysqlHost}" "${MYSQL_PORT}"
+            appMysqlInstallRequiredPackages
       -
         run:
           name: 'MySQL – start – ~/.my.cnf'
           command: |-
-            . ./.circleci/scripts/include.bash
             appMysqlPrepareCnf
+      -
+        run:
+          # The MySQL container is not immediately ready for connections.
+          name: 'MySQL – start – wait'
+          command: |-
+            appMysqlWait
       -
         run:
           # Legacy migration not going to happen on CI,
@@ -249,13 +332,7 @@ commands:
           # but luckily the database tables aren't required.
           name: 'MySQL – start – create migration source database'
           command: |-
-            mysql \
-              --execute="
-                CREATE DATABASE migrate /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
-                GRANT ALL PRIVILEGES ON migrate.* TO '${MYSQL_USER}'@'%';
-                FLUSH PRIVILEGES;
-                SHOW CREATE DATABASE migrate;
-              "
+            appMysqlCreateMigrationSourceDatabase
 
   solr_start:
     # @todo Multi-site support.
@@ -269,7 +346,6 @@ commands:
         run:
           name: 'Solr – start – Initialize SSH access to "solr" host'
           command: |-
-            . ./.circleci/scripts/include.bash
             appSshKnownHostsAdd 'solr'
       -
         run:
@@ -283,88 +359,44 @@ commands:
             sshpass -p "${appSolrRootPassword}" ssh 'root@solr' supervisorctl restart solr.07
       # @todo Wait for the Solr service to be ready.
 
-  phpfpm_start:
-    description: 'PHP-FPM – start'
+  headless_chrome_start:
+    description: 'Headless Google Chrome – Start'
+    # Headless Google Chrome is already started in "supervisor_start"
+    # It takes a few seconds to be ready for connections.
     steps:
       -
         run:
-          name: 'PHP-FPM – start'
+          name: 'Headless Google Chrome – Start – Wait for the headless Google Chrome'
           command: |-
-            . ./.circleci/scripts/include.bash
-            supervisorctl start "php-fpm.$(appPhpbrewCurrent).prod"
+            appWaitForHeadlessGoogleChrome
 
-  nginx_start:
-    description: 'Nginx – start'
+
+  main_instance_prepare_to_e2e:
+    description: 'Main instance build'
     steps:
       -
         run:
-          name: 'Nginx – start – configure'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appNginxVirtualHost "${PWD}"
-      -
-        run:
-          name: 'Nginx – start – start'
-          command: |-
-            supervisorctl start nginx
-
-  headless_chromium_start:
-    description: 'Headless chromium – start'
-    steps:
-      -
-        run:
-          name: 'Headless chromium – start'
-          command: |-
-            supervisorctl start chromium.headless.9222
-      -
-        run:
-          name: 'Headless chromium start – Wait for the headless Chromium'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appWaitForHeadlessChromium "${appChromiumHostPort}"
-
-  artifact_acquia_instance_prepare:
-    description: 'Acquia artifact – prepare'
-    steps:
-      -
-        run:
-          name: 'Acquia artifact – prepare – settings.php'
-          command: |-
-            echo '@todo'
-
-  main_instance_prepare:
-    description: 'Prepare the main Drupal instance for end-to-end tests'
-    steps:
-      -
-        attach_workspace:
-          name: ''
-          at: './artifacts'
-      -
-        run:
-          name: 'Test – Behat – main instance – marvin:onboarding'
-          command: |-
-            . ./.circleci/scripts/include.bash
-
-            appMarvinOnboarding \
-              "${PWD}" \
-              "${appDrushSiteAlias}"
-      -
-        run:
-          name: 'Test – Behat – main instance – settings.php – general'
-          command: |-
-            echo '@todo e.g: thrusted host settings'
-      -
-        run:
-          name: 'Test – Behat – Site install'
+          name: 'Main instance – prepare to E2E – Site install'
           command: |-
             composer run site:install:prod:default
+
+  acquia_instance_prepare_to_e2e:
+    description: 'Acquia instance - prepare to E2E'
+    steps:
       -
         run:
-          name: 'Test – Behat – Check config status'
+          name: 'Aquia instance - prepare to E2E'
           command: |-
-            . ./.circleci/scripts/include.bash
+            appAcquiaInstanceE2ePrepare
 
-            appCheckConfigStatus "${PWD}/${appDocroot}" '@app.local'
+  test_config_status:
+    description: 'Test – drush app:test:config-status'
+    steps:
+      -
+        run:
+          name: 'Test – drush app:test:config-status'
+          command: |-
+            ${appDrushExecutable} "${appDrushSiteAlias}" app:test:config-status
 
   test_behat:
     description: 'Test – Behat'
@@ -389,7 +421,7 @@ commands:
       -
         store_test_results:
           name: 'Test – Behat – Store test results'
-          path: './reports/machine/result/behat/'
+          path: './reports/machine/junit/behat/'
 
   test_functional_javascript:
     description: 'Test – Functional JavaScript'
@@ -399,7 +431,7 @@ commands:
           name: 'Test – Functional JavaScript – execute'
           command: |-
             # Environment variable XDEBUG_MODE=coverage is intentionally ignored.
-            "$(composer config bin-dir)/phpunit" --testsuite 'functional-javascript'
+            "$(composer config bin-dir)/phpunit" --testsuite='functional-javascript'
       -
         store_artifacts:
           name: 'Test – Functional JavaScript – Store test reports as artifacts'
@@ -408,25 +440,7 @@ commands:
       -
         store_test_results:
           name: 'Test – Functional JavaScript – Store test results'
-          path: './reports/machine/result/'
-
-  acquia_instance_prepare:
-    description: 'Acquia instance prepare'
-    parameters:
-      project_root: *parameter_project_root
-      site:
-        type: 'string'
-        default: 'default'
-    steps:
-      -
-        run:
-          name: 'Acquia instance prepare – settings.local.php'
-          command: |-
-            . ./.circleci/scripts/include.bash
-
-            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
-
-            appMarvinOnboardingSettingsLocalPhp "${PWD}" 'default'
+          path: './reports/machine/junit'
 
   acquia_backup_download:
     description: 'Download backup from AcquiaHosting:dev'
@@ -437,10 +451,9 @@ commands:
         run:
           name: 'Download backup from AcquiaHosting:dev'
           command: |-
-            . ./.circleci/scripts/include.bash
+            cd '<<parameters.project_root>>'
 
-            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
-
+            # @todo Get this from drush config marvin.acquia.projectId.
             remoteHome='/home/druphungary'
             mkdir --parents './sites/default/backup/prod/'
 
@@ -468,9 +481,7 @@ commands:
         run:
           name: 'Backup restore – databases'
           command: |-
-            . ./.circleci/scripts/include.bash
-
-            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+            cd '<<parameters.project_root>>'
             "$(composer config bin-dir)/drush" \
               --config='drush' \
               --yes \
@@ -485,9 +496,7 @@ commands:
         run:
           name: 'Backup restore – files'
           command: |-
-            . ./.circleci/scripts/include.bash
-
-            eval "cd ${CIRCLE_WORKING_DIRECTORY}/<<parameters.project_root>>"
+            cd '<<parameters.project_root>>'
 
             "$(composer config bin-dir)/drush" \
               --config='drush' \
@@ -514,24 +523,9 @@ commands:
         run:
           name: 'Test – update process'
           command: |-
-            . ./.circleci/scripts/include.bash
-
-            version="$(appLatestArtifactVersionNumber)"
-            cd "./artifacts/${version}/acquia"
-
-            "$(composer config bin-dir)/drush" site:set "${PWD}/docroot#default"
-
-            "$(composer config bin-dir)/drush" --config='drush' status || true
-
-            "$(composer config bin-dir)/drush" --config='drush' --yes updatedb \
-            && \
-            "$(composer config bin-dir)/drush" --config='drush' --yes config:import \
-            && \
-            "$(composer config bin-dir)/drush" --config='drush' --yes locale:check \
-            && \
-            "$(composer config bin-dir)/drush" --config='drush' --yes locale:update \
-
-            "$(composer config bin-dir)/drush" site:set
+            source ./hooks/.includes/app.bash
+            cd './artifacts/latest/acquia'
+            appUpdate
 
   add_ssh_keys_acquia:
     description: 'Add SSH keys – Acquia'
@@ -545,8 +539,7 @@ commands:
         run:
           name: 'Add SSH keys – Acquia – add to ~/.ssh/known_hosts'
           command: |-
-            . ./.circleci/scripts/include.bash
-            appSshKnownHostsAdd "$(yq eval '.marvin.acquia.gitHost' ./.circleci/scripts/drush.acquia.yml)"
+            appSshKnownHostsAdd "$(yq eval '.marvin.acquia.gitHost' ./.circleci/resources/project/drush/drush.host.yml)"
             appSshKnownHostsAdd "$(yq eval '.dev.host'  ./drush/sites/app.site.yml)"
             appSshKnownHostsAdd "$(yq eval '.test.host' ./drush/sites/app.site.yml)"
 
@@ -557,89 +550,28 @@ commands:
         run:
           name: 'Deploy to Acquia environment – dev – git push'
           command: |-
-            . ./.circleci/scripts/include.bash
-
             version="$(appLatestArtifactVersionNumber)"
             acquiaGitRemoteBranch='2.x'
 
             srcGitCommitHash="$(git log -1 --format='%h')"
             srcGitCommitDate="$(git log -1 --format='%ad')"
             (
-                cd "artifacts/${version}/acquia"
-                rm --recursive --force ./.git/hooks
-                composer update --no-dev --lock
-                acquiaGitLocalBranch="$(git rev-parse --abbrev-ref HEAD)"
-                git add .
-                git commit \
-                    --message="Built from ${srcGitCommitHash} ${srcGitCommitDate}" \
-                    --message="${APP_GITHUB_URL}/commit/${srcGitCommitHash}"
-                git push acquia "${acquiaGitLocalBranch}:${acquiaGitRemoteBranch}"
+              cd "artifacts/${version}/acquia"
+
+              rm --recursive --force ./.git/hooks
+              git config --unset core.hooksPath
+
+              composer update --no-dev --lock
+              acquiaGitLocalBranch="$(git rev-parse --abbrev-ref HEAD)"
+              git add .
+              git commit \
+                --message="Built from ${srcGitCommitHash} ${srcGitCommitDate}" \
+                --message="${APP_GITHUB_URL}/commit/${srcGitCommitHash}"
+              git push acquia "${acquiaGitLocalBranch}:${acquiaGitRemoteBranch}"
             )
 
-  debug_mysql:
-    description: 'MySQL – Debug'
-    steps:
-      -
-        run:
-          name: 'MySQL – Debug – ENV vars'
-          command: |-
-            echo "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${appMysqlHost}:${MYSQL_PORT}/${MYSQL_DATABASE}"
-      -
-        run:
-          name: 'MySQL – Debug – root connection'
-          command: |-
-            mysql \
-              --user='root' \
-              --password="${MYSQL_ROOT_PASSWORD}" \
-              --host="${appMysqlHost}" \
-              --port="${MYSQL_PORT}" \
-              "${MYSQL_DATABASE}" \
-              --execute='SELECT USER(); SHOW DATABASES;'
-      -
-        run:
-          name: 'MySQL – Debug – normal connection'
-          command: |-
-            mysql \
-              --user="${MYSQL_USER}" \
-              --password="${MYSQL_PASSWORD}" \
-              --host="${appMysqlHost}" \
-              --port="${MYSQL_PORT}" \
-              "${MYSQL_DATABASE}" \
-              --execute='SELECT USER(); SHOW DATABASES;'
 
-  debug_ssh_config:
-    description: 'Debug – SSH config'
-    steps:
-      -
-        run:
-          name: 'Debug – SSH config'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appDebugSshConfig
-
-  debug_acquia_git_access:
-    description: 'Debug – Acquia Hosting – Git access'
-    steps:
-      -
-        run:
-          name: 'Debug – Acquia Hosting – Git access'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appDebugAcquiaGitAccess
-
-  debug_acquia_env_access:
-    description: 'Debug – Acquia Hosting – Environment access'
-    parameters:
-      ah_env:
-        type: 'string'
-    steps:
-      -
-        run:
-          name: 'Debug – Acquia Hosting – Environment access'
-          command: |-
-            . ./.circleci/scripts/include.bash
-            appDebugAcquiaEnvAccess '<<parameters.ah_env>>'
-
+  # region DDev commands
   ddev_init_info:
     description: 'DDev – init – info'
     steps:
@@ -769,21 +701,114 @@ commands:
           command: |
             ddev exec ./vendor/bin/behat
 
+  # endregion
+
+  # region Debug commands
+  debug_mysql:
+    description: 'MySQL – Debug'
+    steps:
+      -
+        run:
+          name: 'MySQL – Debug – ENV vars'
+          command: |-
+            echo "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}"
+      -
+        run:
+          name: 'MySQL – Debug – root connection'
+          command: |-
+            mysql \
+              --user='root' \
+              --password="${MYSQL_ROOT_PASSWORD}" \
+              --host="${MYSQL_HOST}" \
+              --port="${MYSQL_PORT}" \
+              "${MYSQL_DATABASE}" \
+              --execute='SELECT USER(); SHOW DATABASES;'
+      -
+        run:
+          name: 'MySQL – Debug – normal connection'
+          command: |-
+            mysql \
+              --user="${MYSQL_USER}" \
+              --password="${MYSQL_PASSWORD}" \
+              --host="${MYSQL_HOST}" \
+              --port="${MYSQL_PORT}" \
+              "${MYSQL_DATABASE}" \
+              --execute='SELECT USER(); SHOW DATABASES;'
+
+  debug_headless_chrome:
+    description: 'Headless Google Chrome – Debug'
+    steps:
+      - 'supervisor_start'
+      - 'headless_chrome_start'
+  debug_ssh_config:
+    description: 'Debug – SSH config'
+    steps:
+      -
+        run:
+          name: 'Debug – SSH config'
+          command: |-
+            . ./.circleci/app.bash
+            appDebugSshConfig
+
+  debug_acquia_git_access:
+    description: 'Debug – Acquia Hosting – Git access'
+    steps:
+      -
+        run:
+          name: 'Debug – Acquia Hosting – Git access'
+          command: |-
+            . ./.circleci/app.bash
+            appDebugAcquiaGitAccess
+
+  debug_acquia_env_access:
+    description: 'Debug – Acquia Hosting – Environment access'
+    parameters:
+      ah_env:
+        type: 'string'
+    steps:
+      -
+        run:
+          name: 'Debug – Acquia Hosting – Environment access'
+          command: |-
+            . ./.circleci/app.bash
+            appDebugAcquiaEnvAccess '<<parameters.ah_env>>'
+  debug_bash_env:
+    description: 'Debug – BASH_ENV'
+    steps:
+      -
+        run:
+          name: 'Debug – BASH_ENV – list environment variables'
+          command: |-
+            echo "\${BASH_ENV} = ${BASH_ENV}"
+            env | sort
+      -
+        run:
+          name: 'Debug – BASH_ENV – cat "${BASH_ENV}"'
+          command: |-
+            cat "${BASH_ENV}" || true
+  # endregion
+
 jobs:
   build:
     executor: 'php_min'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'php_extension_install'
       - 'composer_install'
+      - 'main_instance_onboarding'
       - 'main_instance_build'
 
   test_static:
     executor: 'php_min'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'php_extension_install'
       - 'composer_install'
+      - 'main_instance_onboarding'
       - 'main_instance_build'
       - 'test_lint'
       - 'test_unit'
@@ -791,9 +816,12 @@ jobs:
   release_artifact_build:
     executor: 'php_min'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'php_extension_install'
       - 'composer_install'
+      - 'main_instance_onboarding'
       - 'main_instance_build'
       - 'add_ssh_keys_acquia'
       - 'artifact_acquia_build'
@@ -801,60 +829,67 @@ jobs:
   test_behat:
     executor: 'php_min_with_services'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
-      - 'browser-tools/install-browser-tools'
       - 'git_config'
       - 'php_extension_install'
       - 'composer_install'
-      - 'main_instance_build'
       - 'artifact_acquia_restore'
+      - 'main_instance_onboarding'
+      - 'main_instance_build'
       - 'supervisor_start'
       - 'mysql_start'
       - 'solr_start'
-      - 'phpfpm_start'
-      - 'nginx_start'
-      - 'headless_chromium_start'
-      - 'main_instance_prepare'
+      - 'headless_chrome_start'
+      - 'main_instance_prepare_to_e2e'
+      - 'test_config_status'
+      - 'acquia_instance_prepare_to_e2e'
       - 'test_behat'
 
   test_functional_javascript:
     executor: 'php_min_with_services'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'browser-tools/install-browser-tools'
       - 'git_config'
       - 'php_extension_install'
       - 'composer_install'
+      - 'main_instance_onboarding'
       - 'main_instance_build'
-      - 'artifact_acquia_restore'
       - 'supervisor_start'
       - 'mysql_start'
       - 'solr_start'
-      - 'phpfpm_start'
-      - 'nginx_start'
-      - 'headless_chromium_start'
-      - 'main_instance_prepare'
+      - 'headless_chrome_start'
+      - 'main_instance_prepare_to_e2e'
+      - 'test_config_status'
       - 'test_functional_javascript'
 
   test_updatedb:
     executor: 'php_min_with_services'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'php_extension_install'
       - 'git_config'
       - 'add_ssh_keys_acquia'
+      - 'composer_install'
+      - 'main_instance_onboarding'
+      - 'main_instance_build'
       - 'artifact_acquia_restore'
+      - 'supervisor_start'
       - 'mysql_start'
       - 'solr_start'
-      -
-        acquia_instance_prepare:
-          project_root: 'artifacts/*/acquia'
+      - 'acquia_instance_prepare_to_e2e'
       -
         acquia_backup_download:
-          project_root: 'artifacts/*/acquia'
+          project_root: 'artifacts/latest/acquia'
       -
         backup_restore:
-          project_root: 'artifacts/*/acquia'
+          project_root: 'artifacts/latest/acquia'
           site: 'default'
           backup: 'prod'
       - 'test_updatedb'
@@ -862,6 +897,8 @@ jobs:
   deploy_to_acquia_env_dev:
     executor: 'php_min'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'php_extension_install'
       - 'git_config'
@@ -869,9 +906,44 @@ jobs:
       - 'artifact_acquia_restore'
       - 'deploy_to_acquia_env_dev'
 
+  ddev_all_in_one:
+    machine:
+      image: 'ubuntu-2004:current'
+      docker_layer_caching: true
+    environment:
+      DDEV_NONINTERACTIVE: "true"
+      <<: *env_app
+      <<: *env_composer
+      <<: *env_node
+    steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
+      - 'checkout'
+      - 'ddev_init_info'
+      - 'ddev_init_install'
+      - 'ddev_init_config'
+      - 'ddev_init_start'
+      - 'ddev_lint_phpcs'
+      - 'ddev_lint_phpstan'
+      - 'ddev_lint_frontend'
+      - 'ddev_test_unit'
+      - 'ddev_test_functional_javascript'
+      - 'ddev_test_behat'
+
+  # region Debug jobs
+  debug_headless_chrome:
+    executor: 'php_min_with_services'
+    steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
+      - 'checkout'
+      - 'debug_headless_chrome'
+
   debug_acquia_access:
     executor: 'php_min'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'git_config'
       - 'add_ssh_keys_acquia'
@@ -886,40 +958,28 @@ jobs:
   debug_mysql:
     executor: 'php_min_with_services'
     steps:
+      - 'apt_get_update'
+      - 'bash_env_init'
       - 'checkout'
       - 'mysql_start'
       - 'debug_mysql'
 
-  ddev_all_in_one:
-    machine:
-      image: 'ubuntu-2004:current'
-      docker_layer_caching: true
-    environment:
-      DDEV_NONINTERACTIVE: "true"
-      <<: *env_app
-      <<: *env_composer
-      <<: *env_node
+  debug_bash_env:
+    executor: 'php_min'
     steps:
-      - 'checkout'
-      - 'ddev_init_info'
-      - 'ddev_init_install'
-      - 'ddev_init_config'
-      - 'ddev_init_start'
-      - 'ddev_lint_phpcs'
-      - 'ddev_lint_phpstan'
-      - 'ddev_lint_frontend'
-      - 'ddev_test_unit'
-      - 'ddev_test_functional_javascript'
-      - 'ddev_test_behat'
+      - 'bash_env_init'
+      - 'debug_bash_env'
+  # endregion
 
 workflows:
   QA_DDev:
+    when: false
     jobs:
       -
         ddev_all_in_one: {}
 
-  QA:
-    when: false
+  QA_Docker:
+    when: true
     jobs:
       -
         build: {}
@@ -935,10 +995,16 @@ workflows:
         test_behat:
           requires:
             - 'build'
+            - 'release_artifact_build'
+      -
+        test_functional_javascript-hold:
+          description: 'Approval will trigger other jobs.'
+          type: 'approval'
       -
         test_functional_javascript:
           requires:
             - 'build'
+            - 'test_functional_javascript-hold'
       -
         test_updatedb:
           requires:
@@ -951,16 +1017,21 @@ workflows:
               only: '2.x'
           requires:
             - 'test_static'
-            - 'test_behat'
-            - 'test_functional_javascript'
-            - 'test_updatedb'
+#            - 'test_functional_javascript'
             - 'release_artifact_build'
+            - 'test_behat'
+            - 'test_updatedb'
 
   debug_acquia_access:
     when: false
     jobs:
       -
         debug_acquia_access: {}
+
+  debug_headless_chrome:
+    when: false
+    jobs:
+      - 'debug_headless_chrome'
 
   debug_test_updatedb:
     when: false
@@ -981,3 +1052,8 @@ workflows:
     when: false
     jobs:
       - 'debug_mysql'
+
+  debug_bash_env:
+    when: false
+    jobs:
+      - 'debug_bash_env'

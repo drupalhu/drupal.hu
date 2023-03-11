@@ -194,7 +194,7 @@ hooks:
   post-start:
     -
       exec: |-
-        timeout_limit=30
+        timeout_limit=120
         timeout_cmd=$(cat <<BASH
           while ! test -f ./.ddev/commands/web/web-bash-init.bash
           do

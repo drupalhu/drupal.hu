@@ -44,6 +44,8 @@ class AppOnboardingCommands extends CommandsBase {
         $state['projectRoot'] = '.';
       }
 
+      $state['chromeUrl'] = $this->getChromeUrl();
+
       // @todo Autodetect.
       $state['drupalRoot'] = 'docroot';
       $state['siteDirs'] = (new Finder())
@@ -204,18 +206,24 @@ class AppOnboardingCommands extends CommandsBase {
       }
 
       $exampleFilePath = "$behatDir/behat.local.example.yml";
-      $exampleFileContent = file_get_contents($exampleFilePath);
+      $exampleFileContent = file_get_contents($exampleFilePath) ?: '{}';
 
       $envFilePath = "$behatDir/behat.{$state['runtimeEnvironment']}.yml";
       $envFileContent = $this->fs->exists($envFilePath) ?
-        (string) file_get_contents($envFilePath)
+        file_get_contents($envFilePath) ?: '{}'
         : $exampleFileContent;
 
-      $url = $state['primaryUrl'];
       // @todo This is not bullet proof.
       $envFileContent = preg_replace(
         '/(?<=\n {6}base_url:).*?(?=\n)/u',
-        ' ' . $url,
+        ' ' . $state['primaryUrl'],
+        $envFileContent,
+      );
+
+      // @todo This is not bullet proof.
+      $envFileContent = preg_replace(
+        '/(?<=\n {12}api_url:).*?(?=\n)/u',
+        ' ' . $state['chromeUrl'],
         $envFileContent,
       );
 
@@ -378,6 +386,13 @@ class AppOnboardingCommands extends CommandsBase {
       'ddev' => getenv('DDEV_PRIMARY_URL'),
       default => $this->input()->getOption('uri') ?: 'https://drupalhu.localhost',
     };
+  }
+
+  protected function getChromeUrl(): string {
+    $host = getenv('APP_CHROME_HOST') ?: '127.0.0.1';
+    $port = getenv('APP_CHROME_PORT') ?: '9222';
+
+    return "http://$host:$port";
   }
 
 }

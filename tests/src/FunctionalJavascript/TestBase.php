@@ -23,6 +23,9 @@ class TestBase extends ExistingSiteBase {
   use MessageTrait;
   use EntityLegalTrait;
 
+  /**
+   * @phpstan-var array<string, mixed>
+   */
   protected array $finderSettings = [];
 
   /**
@@ -32,6 +35,9 @@ class TestBase extends ExistingSiteBase {
    */
   protected array $userRoles = [];
 
+  /**
+   * {@inheritdoc}
+   */
   public function getContainer() {
     return $this->container;
   }
@@ -60,6 +66,9 @@ class TestBase extends ExistingSiteBase {
     $this->initFindersDrupalCoreSystemMessage();
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   protected function getFinderSettings(): array {
     if (!$this->finderSettings) {
       $fileName = Path::join($this->getProjectRoot(), 'tests', 'behat', 'config', 'extension.drupal.yml');
@@ -101,6 +110,9 @@ class TestBase extends ExistingSiteBase {
     $this->container->get('current_user')->setAccount($account);
   }
 
+  /**
+   * @phpstan-return array<string, string>
+   */
   protected function getUserRoles(): array {
     if (!$this->userRoles) {
       $files = (new Finder())

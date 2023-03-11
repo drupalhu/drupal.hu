@@ -56,7 +56,7 @@
 
   <logging>
     <testdoxHtml outputFile="reports/human/result/phpunit.html" />
-    <junit outputFile="reports/machine/result/phpunit.xml" />
+    <junit outputFile="reports/machine/junit/phpunit.xml" />
   </logging>
 
   <coverage>

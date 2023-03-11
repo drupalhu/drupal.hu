@@ -1,0 +1,18 @@
+##
+# Helper include file for includes/user-andor-php.conf.
+#
+# The $phpfpm_pool variable must be set in server{} scope.
+#
+# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini.
+##
+
+fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+
+fastcgi_intercept_errors    on;
+fastcgi_pass                $fastcgi_pass;
+fastcgi_read_timeout        900;
+
+fastcgi_buffering           on;
+fastcgi_busy_buffers_size   256k;
+fastcgi_buffer_size         128k;
+fastcgi_buffers             4       256k;

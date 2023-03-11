@@ -10,6 +10,8 @@ trait CopyFilesTaskLoader {
 
   /**
    * @return \Robo\Collection\CollectionBuilder|\DrupalHu\DrupalHu\Tests\Robo\Task\CopyFilesTask
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   protected function taskAppCopyFiles(array $options = []) {
     /** @var \DrupalHu\DrupalHu\Tests\Robo\Task\CopyFilesTask $task */

@@ -10,6 +10,8 @@ trait ArtifactCollectFilesTaskLoader {
 
   /**
    * @return \Robo\Collection\CollectionBuilder|\DrupalHu\DrupalHu\Tests\Robo\Task\ArtifactCollectFilesTask
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   protected function taskAppArtifactCollectFiles(array $options = []) {
     /** @var \DrupalHu\DrupalHu\Tests\Robo\Task\ArtifactCollectFilesTask $task */

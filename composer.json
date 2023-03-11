@@ -299,6 +299,16 @@
             ]
         },
         "patches": {
+            "dmore/chrome-mink-driver": [
+                {
+                    "description": "Using unsafe HTTP verb GET to invoke /json/new.",
+                    "url": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/merge_requests/146/diffs.patch",
+                    "sha256": "a1e4b71cc64caa559dc777b86576dd1e4021e309d029282f9f9a0a29abeb74de",
+                    "extra": {
+                        "issue-tracker-url": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/issues/135"
+                    }
+                }
+            ],
             "drupal/core": [
                 {
                     "description": "[meta] Improve ::generateSampleValue() for common field types",

@@ -11,12 +11,18 @@ abstract class NodeAccessTestBase extends TestBase {
    */
   protected string $nodeTypeId = '';
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   abstract public function casesNodeAccessCreate(): array;
 
   /**
    * @dataProvider casesNodeAccessCreate
+   *
+   * @phpstan-param array<string, mixed> $expected
+   * @phpstan-param array<string, mixed> $visitorValues
    */
-  public function testNodeAccessCreate(array $expected, array $visitorValues) {
+  public function testNodeAccessCreate(array $expected, array $visitorValues): void {
     $visitor = NULL;
     if ($visitorValues['roles'][0]['target_id'] === 'anonymous') {
       unset($visitorValues['roles'][0]);
@@ -48,12 +54,19 @@ abstract class NodeAccessTestBase extends TestBase {
     }
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   abstract public function casesNodeAccess(): array;
 
   /**
    * @dataProvider casesNodeAccess
+   *
+   * @phpstan-param array<string, mixed> $expected
+   * @phpstan-param array<string, mixed> $nodeValues
+   * @phpstan-param array<string, mixed> $visitorValues
    */
-  public function testNodeAccess(array $expected, bool $owner, array $nodeValues, array $visitorValues) {
+  public function testNodeAccess(array $expected, bool $owner, array $nodeValues, array $visitorValues): void {
     $visitor = NULL;
     if ($visitorValues['roles'][0]['target_id'] === 'anonymous') {
       unset($visitorValues['roles'][0]);

@@ -92,4 +92,29 @@ class Utils {
     return $state ? "--$optionName" : "--no-$optionName";
   }
 
+  public static function findLatestArtifactDir(string $parentDir): ?string {
+    $directory = new \DirectoryIterator($parentDir);
+    $versionNumbers = [];
+    while ($directory->valid()) {
+      if ($directory->isDot() || !$directory->isDir() || $directory->isLink()) {
+        $directory->next();
+
+        continue;
+      }
+
+      $versionNumbers[] = $directory->getFilename();
+
+      $directory->next();
+    }
+
+    usort(
+      $versionNumbers,
+      function (string $a, string $b): int {
+        return version_compare($a, $b);
+      },
+    );
+
+    return end($versionNumbers) ?: NULL;
+  }
+
 }

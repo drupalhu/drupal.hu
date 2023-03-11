@@ -93,8 +93,8 @@ grep \
 
 Példa a `./.ddev/.env` fájl tartalmára:
 ```bash
-APP_SOLR_HOST_HTTP_PORT=5983
-APP_SOLR_HOST_HTTPS_PORT=5984
+APP_SOLR_EXPOSE_HTTP_PORT=5983
+APP_SOLR_EXPOSE_HTTPS_PORT=5984
 ```
 
 

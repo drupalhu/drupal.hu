@@ -1,0 +1,3 @@
+add_header  Access-Control-Allow-Origin     "*";
+add_header  Access-Control-Allow-Methods    "GET, POST, DELETE, PUT, PATCH, OPTIONS";
+add_header  Access-Control-Allow-Headers    "Content-Type, api_key, Authorization";

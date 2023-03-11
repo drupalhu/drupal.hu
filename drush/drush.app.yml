@@ -26,8 +26,7 @@ command:
         site-name: 'Drupal.hu'
         account-name: 'admin'
         account-pass: 'admin'
-        account-mail: 'admin@${marvin.acquia.projectId}.localhost'
-        marvin-migrate: 'default'
+        account-mail: 'admin@drupalhu.localhost'
 
 sql:
   skip-tables:
@@ -117,7 +116,7 @@ marvin:
         enabled: true
         service: 'lintCheckstyleReporter'
         options:
-          destination: '${marvin.reportsDir}/machine/result/phpcs.checkstyle.xml'
+          destination: '${marvin.reportsDir}/machine/checkstyle/phpcs.xml'
 
     phpcs:
       failOn: 'warning'
@@ -169,16 +168,3 @@ marvin:
         ##
         #examples:
         #  'Issue #42 - Something': true
-
-  acquia:
-    projectId: 'druphungary'
-    gitHost: 'svn-3224.prod.hosting.acquia.com'
-    artifact:
-      gitCloneAndClean:
-        remoteName: 'acquia'
-        remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'
-        remoteBranch: '2.x'
-        localBranch: '2.x'
-#      gitConfigNamesToCopy:
-#        user.name: true
-#        user.email: true
