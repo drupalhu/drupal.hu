@@ -559,9 +559,8 @@ commands:
               cd "artifacts/${version}/acquia"
 
               rm --recursive --force ./.git/hooks
-              git config --unset core.hooksPath
+              git config --unset core.hooksPath || true
 
-              composer update --no-dev --lock
               acquiaGitLocalBranch="$(git rev-parse --abbrev-ref HEAD)"
               git add .
               git commit \
