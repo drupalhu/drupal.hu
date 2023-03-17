@@ -15,6 +15,6 @@ targetEnv="${2}"
 projectRoot="$([ "${PWD:t}" = 'livedev' ] && echo "${PWD}" || echo "/var/www/html/${site}${targetEnv}")"
 
 cd "${projectRoot}" || exit 1
-. './hooks/.includes/app.zsh'
+. './hooks/.includes/app.bash'
 
 onPostDbCopy "${@}"
