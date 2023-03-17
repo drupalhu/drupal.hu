@@ -174,7 +174,7 @@ function appLocalBackupRestoreSiteFiles() {
     while read -r dir
     do
         appLocalBackupRestoreSiteFile "${backupDir}" "${site}" "${dir}" || returnCode=$?
-    done <<< "$(find "${backupDir}/file" -mindepth 1 -maxdepth 1 -type d -printf '%P\n')"
+    done <<< "$(find "${backupDir}/${site}/file" -mindepth 1 -maxdepth 1 -type d -printf '%P\n')"
 
     return "${returnCode}"
 }
