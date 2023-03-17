@@ -10,6 +10,8 @@ trait PrepareDirectoryTaskLoader {
 
   /**
    * @return \Robo\Collection\CollectionBuilder|\DrupalHu\DrupalHu\Tests\Robo\Task\PrepareDirectoryTask
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   protected function taskAppPrepareDirectory(array $options = []) {
     /** @var \DrupalHu\DrupalHu\Tests\Robo\Task\PrepareDirectoryTask $task */

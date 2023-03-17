@@ -10,6 +10,9 @@ class PageNodeAccessTest extends NodeAccessTestBase {
 
   protected string $nodeTypeId = 'page';
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesNodeAccessCreate(): array {
     $cases = [
       'r:administrator' => [
@@ -46,6 +49,9 @@ class PageNodeAccessTest extends NodeAccessTestBase {
     return $cases;
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function casesNodeAccess(): array {
     // Multipliers:
     // - Owner:         yes|no

@@ -22,12 +22,21 @@ class AppSearchApiSolrIndexClearTask extends BaseTask {
     return $this;
   }
 
+  /**
+   * @phpstan-var array<string, mixed>
+   */
   protected array $index = [];
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   public function getIndex(): array {
     return $this->index;
   }
 
+  /**
+   * @phpstan-param array<string, mixed> $index
+   */
   public function setIndex(array $index): static {
     $this->index = $index;
 

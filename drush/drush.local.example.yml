@@ -1,3 +1,17 @@
 
 options:
   uri: 'http://drupalhu.localhost'
+
+#marvin:
+#  acquia:
+#    projectId: 'druphungary'
+#    gitHost: 'svn-3224.prod.hosting.acquia.com'
+#    artifact:
+#      gitCloneAndClean:
+#        remoteName: 'acquia'
+#        remoteUrl: '${marvin.acquia.projectId}@svn-3224.prod.hosting.acquia.com:${marvin.acquia.projectId}.git'
+#        remoteBranch: '2.x'
+#        localBranch: '2.x'
+#      gitConfigNamesToCopy:
+#        user.name: true
+#        user.email: true

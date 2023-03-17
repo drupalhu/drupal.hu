@@ -7,3 +7,7 @@ marvin:
         remoteName: 'acquia'
         remoteUrl: '${marvin.acquia.projectId}@${marvin.acquia.gitHost}:${marvin.acquia.projectId}.git'
         remoteBranch: '2.x'
+        localBranch: '2.x'
+      gitConfigNamesToCopy:
+        user.name: true
+        user.email: true

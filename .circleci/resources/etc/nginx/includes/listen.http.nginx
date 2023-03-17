@@ -1,0 +1,7 @@
+##
+# Port number in one place
+#
+# Only include this in server{} scope.
+##
+
+listen 80;

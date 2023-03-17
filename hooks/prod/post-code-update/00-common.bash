@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 site="${1}"
 : "${site:?required}"
@@ -23,4 +23,4 @@ projectRoot="$([ "${PWD:t}" = 'livedev' ] && echo "${PWD}" || echo "/var/www/htm
 cd "${projectRoot}" || exit 1
 . './hooks/.includes/app.zsh'
 
-onPostCodeDeploy "${@}"
+onPostCodeUpdate "${@}"

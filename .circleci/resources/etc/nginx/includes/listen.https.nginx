@@ -1,0 +1,33 @@
+##
+# Port number in one place
+#
+# Only include this in server{} scope.
+##
+
+ssl_protocols               TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers                 "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+ssl_prefer_server_ciphers   on;
+ssl_ecdh_curve              secp384r1;
+ssl_session_timeout         5m;
+ssl_session_cache           shared:SSL:10m;
+ssl_session_tickets         off;
+ssl_stapling                off;
+ssl_stapling_verify         off;
+
+ssl_dhparam                 certificates/dhparam.pem;
+
+# resolver          $DNS-IP-1 $DNS-IP-2 valid=300s;
+# resolver_timeout  5s;
+
+add_header  Strict-Transport-Security   "max-age=63072000; includeSubdomains; preload";
+add_header  X-Frame-Options             DENY;
+add_header  X-Content-Type-Options      nosniff;
+
+
+# http2_chunk_size              8k;
+# http2_idle_timeout            3m;
+# http2_max_concurrent_streams  128;
+# http2_max_field_size          4k;
+# http2_max_header_size         16k;
+# http2_recv_buffer_size        256k;
+# http2_recv_timeout            30s;

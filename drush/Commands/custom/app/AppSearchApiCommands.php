@@ -65,7 +65,7 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
           $logMessage = NULL;
 
           if ($index['server']['backend'] == 'search_api_solr') {
-            if ($index['server']['backend_config']['connector'] == 'standard') {
+            if ($index['server']['backend_config']['connector'] === 'standard') {
               $baseUrl = (new UnicodeString($this->getConfig()->get('options.uri')))
                 ->ensureEnd('/')
                 ->toString();

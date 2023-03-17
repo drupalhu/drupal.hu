@@ -7,3 +7,4 @@ parameters:
     - ../docroot/modules/custom/
     - ../docroot/themes/custom/
     - ../drush/Commands/custom/
+    - ../tests/src/

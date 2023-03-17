@@ -92,7 +92,7 @@ services:
       # This will be sitename.ddev.site.
       VIRTUAL_HOST: '${DDEV_HOSTNAME}'
 
-      HTTP_EXPOSE: '${APP_CHROME_HOST_HEADLESS_PORT:-9222}:9222'
+      HTTP_EXPOSE: '${APP_CHROME_EXPOSE_HEADLESS_PORT:-9222}:9222'
 
     ports:
       - 9222

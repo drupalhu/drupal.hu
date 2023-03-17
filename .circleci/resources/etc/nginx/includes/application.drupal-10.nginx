@@ -1,0 +1,149 @@
+##
+# Configuration for Drupal 10 based websites.
+#
+# Only include this in server{} scope.
+##
+
+index index.php index.html index.htm;
+
+location ^~ /__private_files/ {
+  internal;
+
+  alias $project_root/sites/$site_name/private/;
+}
+
+location / {
+
+  location = /favicon.ico {
+    try_files
+      $uri
+      /favicon.svg
+      /themes/custom/appf/favicon.svg
+      /themes/custom/appb/favicon.svg
+      /core/misc/favicon.ico
+      =404
+    ;
+
+    access_log      off;
+    log_not_found   off;
+
+    expires     max;
+    add_header  Pragma          "public";
+    add_header  Cache-Control   "public";
+  }
+
+  location ~ \.(css|js)\.map$ {
+    try_files
+      $uri
+      =404
+    ;
+
+    access_log      off;
+    log_not_found   off;
+  }
+
+  location ~ ^/sites/[^/]+/files/styles/ {
+    expires     max;
+    add_header  Pragma          "public";
+    add_header  Cache-Control   "public";
+
+    try_files $uri  @drupal.rewrite;
+  }
+
+  location ~ ^/sites/simpletest/[^/]+/files/styles/ {
+    expires     max;
+    add_header  Pragma          "public";
+    add_header  Cache-Control   "public";
+
+    try_files $uri  @drupal.rewrite;
+  }
+
+  location ~ ^(/[a-z\-]+)?/system/files/ {
+    try_files $uri  @drupal.rewrite;
+  }
+
+  location ~ ^/sites/[^/]+/(private|tmp|temp|temporary|translations)/ {
+    include includes/location.non-public.nginx;
+  }
+
+  location ~ ^/sites/[^/]+/files/(private|tmp|temp|temporary|translations|config_.+)/ {
+    internal;
+  }
+
+  location ~ ^/sites/simpletest/[^/]+/(private|tmp|temp|temporary|translations)/ {
+    include  includes/location.non-public.nginx;
+  }
+
+  location ~ ^/sites/simpletest/[^/]+/files/(private|config_.+)/ {
+    internal;
+  }
+
+  location ~ '^/(index\.php$|update\.php($|/)|core/(authorize|install|rebuild|modules/system/tests/(http|https)|modules/statistics/statistics)\.php$)' {
+    include  includes/php-options.nginx;
+  }
+
+  location ~ (?!^/(index|update|core/(authorize|install|rebuild|modules/system/tests/(http|https)|modules/statistics/statistics)))\.php(/|(~|\.(swo|swp|bak|orig|save))?$) {
+    include  includes/location.non-public.nginx;
+  }
+
+  try_files  $uri  @drupal.rewrite;
+
+  access_log  /home/circleci/slash/var/log/nginx/$site_id.access.log;
+
+  #include includes/cors.nginx;
+}
+
+location @drupal.rewrite {
+  rewrite ^ /index.php last;
+
+  include includes/php-options.nginx;
+}
+
+location = /robots.txt {
+  allow all;
+
+  access_log    off;
+  log_not_found off;
+}
+
+# Protect all hidden files.
+location ~ (^|/)\. {
+  include includes/location.non-public.nginx;
+}
+
+# Non public source files and IDE/editor temporary files.
+location ~* '\.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml|yaml)(~|(\.(swo|swp|bak|orig|save)))?$' {
+  include includes/location.non-public.nginx;
+}
+
+location ~ '/composer\.(json|lock)$' {
+  include includes/location.non-public.nginx;
+}
+
+location ~ '/(Entries.*|Repository|Root|Tag|Template|#[^/]*#)$' {
+  include includes/location.non-public.nginx;
+}
+
+# @todo In the "files" directory could be some *.txt or *.log files.
+location ~* \.(txt|log)$ {
+  include includes/access-trusty.nginx;
+}
+
+location ~* \.(css|js|eot|ttf|otf|svg|json|yml|yaml)$ {
+  gzip_static   on;
+  gzip_vary     on;
+  gzip_proxied  expired no-cache no-store private auth;
+}
+
+location ~* \.(html|css|js|woff2?|eot|ttf|gif|ico|jpg|jpeg|png|svg|swf)$ {
+  expires max;
+
+  add_header  Pragma        "public";
+  add_header  Cache-Control "public";
+
+  log_not_found off;
+}
+
+location ~* \.svgz$ {
+  add_header  Content-Encoding  gzip;
+}

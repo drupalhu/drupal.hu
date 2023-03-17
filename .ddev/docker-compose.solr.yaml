@@ -66,11 +66,11 @@ services:
 
       # HTTP_EXPOSE exposes http traffic from the container port 8983
       # to the host port 8983 vid ddev-router reverse proxy.
-      HTTP_EXPOSE: '${APP_SOLR_HOST_HTTP_PORT:-8983}:8983'
+      HTTP_EXPOSE: '${APP_SOLR_EXPOSE_HTTP_PORT:-8983}:8983'
 
       # HTTPS_EXPOSE exposes https traffic from the container port 8983
       # to the host port 8984 vid ddev-router reverse proxy.
-      HTTPS_EXPOSE: '${APP_SOLR_HOST_HTTPS_PORT:-8984}:8983'
+      HTTPS_EXPOSE: '${APP_SOLR_EXPOSE_HTTPS_PORT:-8984}:8983'
 
     # @todo For some reason the `dev` core is always exists.
     # It would be good to fully understood how the configuration process works.

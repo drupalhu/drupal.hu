@@ -32,8 +32,14 @@ abstract class BaseTask extends RoboBaseTask implements
    */
   protected string $taskName = '';
 
+  /**
+   * @phpstan-var array<string, mixed>
+   */
   protected array $assets = [];
 
+  /**
+   * @phpstan-var array<string, mixed>
+   */
   protected array $options = [];
 
   protected string $assetNamePrefix = '';
@@ -136,6 +142,9 @@ abstract class BaseTask extends RoboBaseTask implements
     );
   }
 
+  /**
+   * @phpstan-return array<string, mixed>
+   */
   protected function getAssetsWithPrefixedNames(): array {
     $prefix = $this->getAssetNamePrefix();
     if (!$prefix) {
@@ -166,6 +175,10 @@ abstract class BaseTask extends RoboBaseTask implements
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param array<string, mixed> $context
+   *
+   * @phpstan-return array<string, mixed>
    */
   protected function getTaskContext($context = NULL) {
     $context = parent::getTaskContext($context);

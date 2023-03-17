@@ -1,0 +1,10 @@
+##
+# Use this for data sensitive locations.
+#
+# Like apc.php or status.html of php-fpm.
+# Only include this in location{} scope.
+##
+
+#allow 192.168.0.0/16;
+allow   127.0.0.0/16;
+deny    all;

@@ -16,6 +16,11 @@ parameters:
 			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
 
 		-
+			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\FilesystemSymlinkTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setSymlinkFilePath\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
 			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\PrepareDirectoryTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:deferTaskConfiguration\\(\\)\\.$#"
 			count: 1
 			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
@@ -32,6 +37,11 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\VersionNumberBumpExtensionInfoTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setBumpExtensionInfo\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setOptions\\(\\)\\.$#"
 			count: 1
 			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
 
@@ -106,11 +116,6 @@ parameters:
 			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
 
 		-
-			message: "#^Parameter \\#2 \\$reference of class Robo\\\\Collection\\\\CallableTask constructor expects Robo\\\\Contract\\\\TaskInterface, Robo\\\\Collection\\\\CollectionInterface given\\.$#"
-			count: 12
-			path: ../drush/Commands/custom/app/AppArtifactAcquiaCommands.php
-
-		-
 			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\NodeDetectorTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
 			count: 1
 			path: ../drush/Commands/custom/app/AppLintCommands.php
@@ -151,6 +156,11 @@ parameters:
 			path: ../drush/Commands/custom/app/AppLintCommands.php
 
 		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppLintCommands.php
+
+		-
 			message: "#^Parameter \\#2 \\$reference of class Robo\\\\Collection\\\\CallableTask constructor expects Robo\\\\Contract\\\\TaskInterface, Robo\\\\Collection\\\\CollectionInterface given\\.$#"
 			count: 3
 			path: ../drush/Commands/custom/app/AppLintCommands.php
@@ -186,11 +196,6 @@ parameters:
 			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
 
 		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|false given\\.$#"
-			count: 1
-			path: ../drush/Commands/custom/app/AppOnboardingCommands.php
-
-		-
 			message: "#^Call to an undefined method DrupalHu\\\\DrupalHu\\\\Tests\\\\Robo\\\\Task\\\\AppSearchApiSolrIndexClearTask\\|Robo\\\\Collection\\\\CollectionBuilder\\:\\:setBaseUrl\\(\\)\\.$#"
 			count: 1
 			path: ../drush/Commands/custom/app/AppSearchApiCommands.php
@@ -206,6 +211,86 @@ parameters:
 			path: ../drush/Commands/custom/app/AppSearchApiCommands.php
 
 		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Collection\\\\TaskForEach\\:\\:iterationMessage\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppTestCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Base\\\\ExecStack\\:\\:envVars\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppTestCommands.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\TaskForEach\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../drush/Commands/custom/app/AppTestCommands.php
+
+		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: ../drush/Commands/custom/app/CommandsBase.php
+
+		-
+			message: "#^Parameter \\#1 \\$account of method DrupalHu\\\\DrupalHu\\\\Tests\\\\FunctionalJavascript\\\\TestBase\\:\\:entityLegalAcceptDocuments\\(\\) expects Drupal\\\\Core\\\\Session\\\\AccountInterface, Drupal\\\\user\\\\Entity\\\\User\\|false given\\.$#"
+			count: 2
+			path: ../tests/src/FunctionalJavascript/NodeAccessTestBase.php
+
+		-
+			message: "#^Parameter \\#1 \\$url of method weitzman\\\\DrupalTestTraits\\\\ExistingSiteBase\\:\\:visit\\(\\) expects string, Drupal\\\\Core\\\\GeneratedUrl\\|string given\\.$#"
+			count: 3
+			path: ../tests/src/FunctionalJavascript/NodeAccessTestBase.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$sessionId\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:setAccount\\(\\)\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Method DrupalHu\\\\DrupalHu\\\\Tests\\\\FunctionalJavascript\\\\TestBase\\:\\:drupalLogin\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Method DrupalHu\\\\DrupalHu\\\\Tests\\\\FunctionalJavascript\\\\TestBase\\:\\:getContainer\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Method DrupalHu\\\\DrupalHu\\\\Tests\\\\FunctionalJavascript\\\\TestBase\\:\\:initFinders\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Property weitzman\\\\DrupalTestTraits\\\\ExistingSiteBase\\:\\:\\$loggedInUser \\(Drupal\\\\user\\\\UserInterface\\) does not accept Drupal\\\\Core\\\\Session\\\\AccountInterface\\.$#"
+			count: 1
+			path: ../tests/src/FunctionalJavascript/TestBase.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\('docroot/\\.htaccess'\\|'docroot/favicon\\.ico'\\|'docroot/robots\\.txt'\\|'patches\\.lock'\\|'patches\\.lock\\.json'\\|'sites/all/assets…'\\)\\: mixed, Sweetchuck\\\\Utils\\\\Filter\\\\ArrayFilterFileSystemExists given\\.$#"
+			count: 1
+			path: ../tests/src/Robo/Task/ArtifactCollectFilesTask.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:addArgument\\(\\)\\.$#"
+			count: 1
+			path: ../tests/src/Robo/Task/NodeDetectorTask.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setWorkingDirectory\\(\\)\\.$#"
+			count: 1
+			path: ../tests/src/Robo/Task/NodeDetectorTask.php

@@ -28,7 +28,7 @@ class Browser extends Base {
     // @todo Check that the element is exists.
     $locator = 'css';
     $matches = [];
-    if (preg_match('/^(?P<locator>jquery|css|xpath):/', $selector) === 1) {
+    if (preg_match('/^(?P<locator>jquery|css|xpath):/', $selector, $matches) === 1) {
       $locator = $matches['locator'];
       $selector = preg_replace('/^(jquery|css|xpath):/', '', $selector);
     }

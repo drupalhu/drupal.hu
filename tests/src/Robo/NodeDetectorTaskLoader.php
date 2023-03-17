@@ -11,6 +11,8 @@ trait NodeDetectorTaskLoader {
 
   /**
    * @return \Robo\Collection\CollectionBuilder|\DrupalHu\DrupalHu\Tests\Robo\Task\NodeDetectorTask
+   *
+   * @phpstan-param array<string, mixed> $options
    */
   protected function taskAppNodeDetector(array $options = []) {
     /** @var \DrupalHu\DrupalHu\Tests\Robo\Task\NodeDetectorTask $task */

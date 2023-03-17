@@ -10,6 +10,9 @@ class NewsNodeAccessTest extends NodeAccessTestBase {
 
   protected string $nodeTypeId = 'news';
 
+  /**
+   * {@inheritdoc}
+   */
   public function casesNodeAccessCreate(): array {
     $cases = [
       'r:administrator' => [
@@ -46,6 +49,9 @@ class NewsNodeAccessTest extends NodeAccessTestBase {
     return $cases;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function casesNodeAccess(): array {
     // Multipliers:
     // - Owner:         yes|no

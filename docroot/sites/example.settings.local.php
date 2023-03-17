@@ -52,6 +52,8 @@ $is_ddev_on_host = !getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 
 $is_ddev_inside = getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
 $is_ddev = $is_ddev_on_host || $is_ddev_inside;
 
+$config['config_split.config_split.local']['status'] = FALSE;
+
 // region Database
 $databases['default']['default']['username'] = getenv('MYSQL_USER') ?: getenv('USER');
 $databases['default']['default']['password'] = getenv('MYSQL_PASSWORD') ?: 'admin';
@@ -97,6 +99,8 @@ $config['search_api.server.general']['backend_config']['connector_config'] = [
 // endregion
 
 $settings['trusted_host_patterns'] = [
+  '^127\.0\.0\.1$',
+  '^localhost$',
   '^drupalhu9\.localhost$',
   '^drupalhu10\.localhost$',
 ];

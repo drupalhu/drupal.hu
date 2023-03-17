@@ -14,7 +14,6 @@ function onPostCodeDeploy() {
 
     local returnCode=0
 
-    setopt XTRACE
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
         appLocalBackupRestore "$(appLocalBackupRestoreDir)" || returnCode=$?
     fi
@@ -22,8 +21,7 @@ function onPostCodeDeploy() {
     appUpdate || returnCode=$?
 
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
-        appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
-        appMailSafetyEnable || returnCode=$?
+        appStagingConfig || returnCode=$?
     fi
 
     appLogger 'END onPostCodeDeploy'
@@ -44,7 +42,6 @@ function onPostCodeUpdate() {
 
     local returnCode=0
 
-    setopt XTRACE
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
         appLocalBackupRestore "$(appLocalBackupRestoreDir)" || returnCode=$?
     fi
@@ -52,8 +49,7 @@ function onPostCodeUpdate() {
     appUpdate || returnCode=$?
 
     if [[ "${AH_NON_PRODUCTION}" = '1' ]]; then
-        appHttpAuthEnable "${APP_HTTP_AUTH_USER}" "${APP_HTTP_AUTH_PASS}" || returnCode=$?
-        appMailSafetyEnable || returnCode=$?
+        appStagingConfig || returnCode=$?
     fi
 
     appLogger 'END onPostCodeUpdate'
@@ -70,7 +66,6 @@ function onPostDbCopy() {
     appLogger 'BEGIN onPostDbCopy'
     returnCode=0
 
-    setopt XTRACE
     appUpdate || returnCode=$?
     appLogger 'END onPostDbCopy'
 
@@ -85,9 +80,7 @@ function onPostFilesCopy() {
     returnCode=0
 
     appLogger 'BEGIN onPostFilesCopy'
-    setopt XTRACE
     echo 'Nothing to do.'
-    unsetopt XTRACE
     appLogger 'END onPostFilesCopy'
 
     return "${returnCode}"
@@ -101,36 +94,38 @@ function appLocalBackupRestore() {
 
     local returnCode=0
 
-    setopt XTRACE
-
-    local sites=("${(@f)$(find "${backupDir}" -mindepth 1 -maxdepth 1 -type d)}")
-    for site in "${sites[@]}"; do
-        appLocalBackupRestoreSite "${site}" || returnCode=$?
-    done
+    while read -r site
+    do
+        appLocalBackupRestoreSite "${backupDir}" "${site}" || returnCode=$?
+    done <<< "$(appSites)"
 
     return "${returnCode}"
 }
 
 function appLocalBackupRestoreSite() {
     local backupDir="${1}"
-    : "${backupDir:?'site specific backup directory is required'}"
+    : "${backupDir:?'backupDir argument is required'}"
 
-    setopt XTRACE
-    appLocalBackupRestoreSiteDatabases "${backupDir}"
-    appLocalBackupRestoreSiteFiles "${backupDir}"
+    local site="${2}"
+    : "${site:?'site name is required'}"
+
+    appLocalBackupRestoreSiteDatabases "${backupDir}" "${site}"
+    appLocalBackupRestoreSiteFiles "${backupDir}" "${site}"
 }
 
 function appLocalBackupRestoreSiteDatabases() {
     local backupDir="${1}"
-    : "${backupDir:?'site specific backup directory is required'}"
+    : "${backupDir:?'backupDir argument is required'}"
+
+    local site="${2}"
+    : "${site:?'site name is required'}"
 
     local returnCode=0
 
-    setopt XTRACE
-    local fileNames=("${(@f)$(find "${backupDir}/database" -mindepth 1 -maxdepth 1 -type f -name '*.mysql')}")
-    for fileName in "${fileNames[@]}"; do
-        appLocalBackupRestoreSiteDatabase "${backupDir}" "${fileName:t:r}" || returnCode=$?
-    done
+    while read -r database
+    do
+        appLocalBackupRestoreSiteDatabase "${backupDir}" "${site}" "${database}" || returnCode=$?
+    done <<< "$(appDatabases "${backupDir}/${site}/database")"
 
     return "${returnCode}"
 }
@@ -139,16 +134,16 @@ function appLocalBackupRestoreSiteDatabase() {
     local backupDir="${1}"
     : "${backupDir:?'site specific backup directory is required'}"
 
-    local database="${2:-default}"
+    local site="${2}"
+    : "${site:?'site name is required'}"
+
+    local database="${3}"
     : "${database:?'database argument is required'}"
 
-    local site="${backupDir:t}"
-
-    local fileName="${backupDir}/database/${database}.mysql"
+    local fileName="${backupDir}/${site}/database/${database}.mysql"
 
     appLogger 'info' "BEGIN database import site:${site} database:${database} file:${fileName}"
     ./vendor/bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
-    setopt XTRACE
 
     ./vendor/bin/drush \
         --config='drush' \
@@ -163,24 +158,23 @@ function appLocalBackupRestoreSiteDatabase() {
         sql:cli \
         < "${fileName}" || return 2
 
-    unsetopt XTRACE
-
     ./vendor/bin/drush --config='drush' site:set
-    appLogger 'info' "END   database import"
+    appLogger 'info' "END database import"
 }
 
 function appLocalBackupRestoreSiteFiles() {
     local backupDir="${1}"
     : "${backupDir:?'site specific backup directory is required'}"
 
+    local site="${2}"
+    : "${site:?'site name is required'}"
+
     local returnCode=0
 
-    setopt XTRACE
-
-    local dirs=("${(@f)$(find "${backupDir}/file" -mindepth 1 -maxdepth 1 -type d)}")
-    for dir in "${dirs[@]}"; do
-        appLocalBackupRestoreSiteFile "${backupDir}" "${dir:t}" || returnCode=$?
-    done
+    while read -r dir
+    do
+        appLocalBackupRestoreSiteFile "${backupDir}" "${site}" "${dir}" || returnCode=$?
+    done <<< "$(find "${backupDir}/file" -mindepth 1 -maxdepth 1 -type d -printf '%P\n')"
 
     return "${returnCode}"
 }
@@ -189,18 +183,17 @@ function appLocalBackupRestoreSiteFile() {
     local backupDir="${1}"
     : "${backupDir:?'site specific backup directory is required'}"
 
-    local dir="${2:-files}"
+    local site="${2}"
+    : "${site:?'site name is required'}"
+
+    local dir="${3}"
     : "${dir:?'dir argument is required'}"
 
-    local site="${backupDir:t}"
-
-    srcDir="${backupDir}/file/${dir}"
-
-    appLogger 'info' "BEGIN file sync site:${site} dir:${dir} srcDir:${srcDir}"
-    ./vendor/bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
-    setopt XTRACE
     # @todo This only works if the Drupal instance is fully functional.
+    srcDir="${backupDir}/${site}/file/${dir}"
     dstDir="${PWD}/docroot/$(./vendor/bin/drush --config='drush' status --format='list' --fields="${dir}")"
+    appLogger 'info' "BEGIN file sync src:${srcDir} dst:${dstDir}"
+    ./vendor/bin/drush --config='drush' site:set "${PWD}/docroot#${site}"
 
     ./vendor/bin/drush \
         --config='drush' \
@@ -210,10 +203,9 @@ function appLocalBackupRestoreSiteFile() {
         "${dstDir}"\
         -- \
         --delete || return 1
-    unsetopt XTRACE
 
     ./vendor/bin/drush --config='drush' site:set
-    appLogger 'info' "END   file sync"
+    appLogger 'info' "END file sync"
 }
 
 function appLocalBackupRestoreDir() {
@@ -223,13 +215,12 @@ function appLocalBackupRestoreDir() {
 
 #region appUpdate
 function appUpdate() {
-    local sites=("${(@f)$(appSites)}")
     local returnCode=0
 
-    setopt XTRACE
-    for site in "${sites[@]}"; do
+    while read -r site
+    do
         appUpdateSite "${site}" || returnCode=$?
-    done
+    done <<< "$(appSites)"
 
     return "${returnCode}"
 }
@@ -240,51 +231,38 @@ function appUpdateSite() {
 
     ./vendor/bin/drush site:set "${PWD}/docroot#${site}"
 
-    setopt XTRACE
-    ./vendor/bin/drush --config='drush' --yes updatedb      || return 1
+    ./vendor/bin/drush --config='drush' --yes updatedb --no-post-updates || return 1
     ./vendor/bin/drush --config='drush' --yes config:import || return 2
+    ./vendor/bin/drush --config='drush' --yes updatedb || return 3
+
+    ./vendor/bin/drush --config='drush' cache:rebuild
 
     nonEnglishLangCodes="$(appNonEnglishLangCodes)"
     if [[ "${nonEnglishLangCodes}" != '' ]]; then
-        ./vendor/bin/drush --config='drush' --yes locale:check  || return 3
-        ./vendor/bin/drush --config='drush' --yes locale:update || return 4
+        ./vendor/bin/drush --config='drush' --yes locale:check  || return 4
+        ./vendor/bin/drush --config='drush' --yes locale:update || return 5
     fi
-    unsetopt XTRACE
+
+    # @todo SearchAPI reindex if it is necessary.
+    ./vendor/bin/drush --config='drush' cache:rebuild
 
     ./vendor/bin/drush site:set
 }
 #endregion
 
+function appStagingConfig() {
+    appHttpAuthEnable || returnCode=$?
+    appMailSafetyEnable || returnCode=$?
+}
+
 function appHttpAuthEnable() {
-    local user="${1}"
-    : "${user:?'user argument is required'}"
+    local drush=('./vendor/bin/drush' '--config="drush"' '--yes')
 
-    local pass="${2}"
-    : "${pass:?'pass argument is required'}"
-
-    ./vendor/bin/drush \
-        --config='drush' \
-        --yes \
-        pm:enable \
-        'shield' \
+    "${drush[@]}" pm:enable 'shield' \
     && \
-    ./vendor/bin/drush \
-        --config='drush' \
-        --yes \
-        config:set \
-        'shield.settings' \
-        'credentials.shield.user' \
-        "${user}" \
+    "${drush[@]}" config:set 'shield.settings' 'credentials.shield.user' "${APP_HTTP_AUTH_USER}" \
     && \
-    ./vendor/bin/drush \
-        --config='drush' \
-        --yes \
-        config:set \
-        'shield.settings' \
-        'credentials.shield.pass' \
-        "${pass}"
-
-    appLogger 'info' 'shield module is activated'
+    "${drush[@]}" config:set 'shield.settings' 'credentials.shield.pass' "${APP_HTTP_AUTH_PASS}"
 }
 
 function appMailSafetyEnable() {
@@ -334,6 +312,24 @@ function appSites() {
         -printf '%h\n' \
     | \
     sed --expression 's@./docroot/sites/@@g'
+}
+
+function appDatabases() {
+    parentDir="${1}"
+    : "${parentDir:?'is required'}"
+
+    find \
+        "${parentDir}" \
+        -mindepth '1' \
+        -maxdepth '1' \
+        '(' \
+            -type f \
+            -or \
+            -type l \
+        ')' \
+        -name '*.mysql' \
+        -printf '%P\n' \
+    | sed --expression 's@\.mysql@@g'
 }
 
 function appNonEnglishLangCodes() {
