@@ -320,6 +320,7 @@
                 {
                     "description": "PoStreamReader::getSeek",
                     "url": "https://www.drupal.org/files/issues/2023-02-20/drupal-po_stream_reader_seek-3126929-45.patch",
+                    "sha256": "b39da0e1ee6a2eff1deaf5f2a3532d7dd09489ce58e2f1838910d6d6a9397f6f",
                     "extra": {
                         "issue-tracker-url": "https://www.drupal.org/project/drupal/issues/3126929"
                     }
@@ -329,6 +330,7 @@
                 {
                     "description": "Behat config schema - extendable selectors and text",
                     "url": "https://patch-diff.githubusercontent.com/raw/jhedstrom/drupalextension/pull/640.patch",
+                    "sha256": "0c6759fe79625b3c0893418cacef8a6c0bde5256207efcc928a772aaa974a156",
                     "extra": {
                         "issue-tracker-url": "https://github.com/jhedstrom/drupalextension/issues/493"
                     }
@@ -338,6 +340,7 @@
                 {
                     "description": "Automated Drupal 10 compatibility fixes",
                     "url": "https://www.drupal.org/files/issues/2022-08-22/entity_legal.3.0.x-dev.rector.patch",
+                    "sha256": "7ca004f9d5a51e4ac7d98d52f154004fccefb44162c84d9b061d22f3376ae8d7",
                     "extra": {
                         "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3287248"
                     }
@@ -345,6 +348,7 @@
                 {
                     "description": "D10 entity_storage->getQuery()->accessCheck()",
                     "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/11.patch",
+                    "sha256": "dc5b0e913acce3c77daac2c8f6c7c3f12de1d4010b6eb352827681e92ced081e",
                     "extra": {
                         "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3341578"
                     }
@@ -364,6 +368,7 @@
                 {
                     "description": "Drupal 10 compatibility",
                     "url": "https://www.drupal.org/files/issues/2022-08-22/webp.1.x-dev.rector.patch",
+                    "sha256": "f8fbc6b3c83941eb7ba3a1fd1548ef6e5e7f3f5c328fb15bb68b6dfdd28af3a9",
                     "extra": {
                         "issue-tracker-url": "https://www.drupal.org/project/webp/issues/3290669"
                     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "661f2a17a258f82565a8d5e35038f2b0",
+    "content-hash": "999fbe6a3092f4f9e6ac79d7433af05d",
     "packages": [
         {
             "name": "acquia/http-hmac-php",
