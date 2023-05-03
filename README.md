@@ -17,7 +17,7 @@ Bekapcsolódás a fejlesztésbe [DDev local] használatával.
 * [Git] `git --version` >= 2.25.0
 * [Docker] `docker --version` >= 20.10.3
 * [Docker Compose] `docker-compose --version` >= 1.26.2
-* [DDev local] `ddev version` >= v1.17.0
+* [DDev local] `ddev version` >= v1.21.6
 * [yq] `yq --version` >= 4.0.0
 * [jq] `jq --version` >= 1.5.0
 
