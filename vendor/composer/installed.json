@@ -2780,18 +2780,18 @@
         },
         {
             "name": "drupal/google_analytics",
-            "version": "2.6.0",
-            "version_normalized": "2.6.0.0",
+            "version": "2.8.0",
+            "version_normalized": "2.8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/google_analytics.git",
-                "reference": "7.x-2.6"
+                "reference": "7.x-2.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/google_analytics-7.x-2.6.zip",
-                "reference": "7.x-2.6",
-                "shasum": "a66b8cd58f74ba30aad42835367ea800e0999dc2"
+                "url": "https://ftp.drupal.org/files/projects/google_analytics-7.x-2.8.zip",
+                "reference": "7.x-2.8",
+                "shasum": "e9f9884d2e091600d7deb74db766e85b4fa1dc04"
             },
             "require": {
                 "drupal/drupal": "~7.0"
@@ -2802,8 +2802,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "7.x-2.6",
-                    "datestamp": "1548968580",
+                    "version": "7.x-2.8",
+                    "datestamp": "1681835715",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2833,8 +2833,8 @@
                     "homepage": "https://www.drupal.org/user/45640"
                 },
                 {
-                    "name": "pfaocle",
-                    "homepage": "https://www.drupal.org/user/9740"
+                    "name": "mglaman",
+                    "homepage": "https://www.drupal.org/user/2416470"
                 },
                 {
                     "name": "roberto.rivera.ixis",
