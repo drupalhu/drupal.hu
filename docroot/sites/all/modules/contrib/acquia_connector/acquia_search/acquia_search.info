@@ -37,8 +37,8 @@ files[] = src/v3/AcquiaSearchV3SearchApi.php
 ; Tests
 files[] = tests/acquia_search.test
 
-; Information added by Drupal.org packaging script on 2022-12-19
-version = "7.x-4.1"
+; Information added by Drupal.org packaging script on 2023-04-05
+version = "7.x-4.4"
 core = "7.x"
 project = "acquia_connector"
-datestamp = "1671471058"
+datestamp = "1680718209"

@@ -95,7 +95,7 @@ class AcquiaSubscription {
     $this->setLocalCredentials();
 
     // If local credentials don't exist, attempt to set with Acquia cloud.
-    if (!$this->settings) {
+    if (!$this->settingsProvider) {
       $this->setAcquiaCloudCredentials();
     }
   }
@@ -195,16 +195,18 @@ class AcquiaSubscription {
     if (isset($this->subscriptionData) && $refresh !== TRUE) {
       return $this->subscriptionData;
     }
-    $subscriptionData = variable_get('acquia_subscription_data', []);
-    if ($subscriptionData !== [] && $refresh !== TRUE) {
-      return $subscriptionData;
-    }
 
+    $subscriptionData = variable_get('acquia_subscription_data', []);
     // Only use default subscription data if the Application UUID changed.
     // This step gets hit if refresh is TRUE.
     if ($subscriptionData === [] ||
         (isset($subscriptionData['uuid']) && $subscriptionData['uuid'] !== $this->getSettings()->getApplicationUuid())) {
       $subscriptionData = $this->getDefaultSubscriptionData();
+      $refresh = TRUE;
+    }
+
+    if ($refresh !== TRUE) {
+      return $subscriptionData;
     }
 
     // Refresh from Acquia Cloud, if its available.
@@ -214,6 +216,7 @@ class AcquiaSubscription {
       $subscription_info = _acquia_agent_cloud_api_request('/api/subscriptions/' . $subscription_uuid);
 
       $subscriptionData['active'] = $subscription_info['flags']['active'];
+      $subscriptionData['application'] = $application_data;
       $subscriptionData['subscription_name'] = $subscription_info['name'];
       $subscriptionData['expiration_date'] = $subscription_info['expire_at'];
       $subscriptionData['href'] = $subscription_info['_links']['self']['href'];

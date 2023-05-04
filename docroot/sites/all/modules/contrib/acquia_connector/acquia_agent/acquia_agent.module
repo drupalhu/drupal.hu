@@ -614,6 +614,7 @@ function acquia_agent_get_server_superglobal() {
  *   The response data, or NULL if unable to be completed.
  */
 function _acquia_agent_cloud_api_request($path) {
+  static $refresh_attempted = FALSE;
   $oauth = variable_get(ACQUIA_AGENT_OAUTH_VARIABLE_KEY, []);
   if (!isset($oauth['access_token'])) {
     return NULL;
@@ -626,7 +627,8 @@ function _acquia_agent_cloud_api_request($path) {
       'Authorization' => 'Bearer ' . $oauth['access_token'],
     ],
   ]);
-  if (in_array((int) $response->code, [401, 403], TRUE)) {
+  if ($refresh_attempted === FALSE && in_array((int) $response->code, [401, 403], TRUE)) {
+    $refresh_attempted = TRUE;
     if (!isset($oauth['refresh_token'])) {
       return NULL;
     }

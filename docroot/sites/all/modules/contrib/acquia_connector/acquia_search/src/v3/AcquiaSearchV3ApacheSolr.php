@@ -99,7 +99,9 @@ class AcquiaSearchV3ApacheSolr extends DrupalApacheSolrService implements Acquia
     $preferredCoreService = $api->getPreferredCoreService();
     if ($this->env_id !== NULL) {
       $core = $preferredCoreService->getPreferredCore($this->env_id);
-      return parent::setUrl($core['data']['attributes']['url']);
+      if ($core) {
+        return parent::setUrl($core['data']['attributes']['url']);
+      }
     }
     return parent::setUrl($url);
   }

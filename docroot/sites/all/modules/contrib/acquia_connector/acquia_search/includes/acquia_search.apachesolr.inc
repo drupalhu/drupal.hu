@@ -68,9 +68,11 @@ function acquia_search_environment_delete_access($this_environment) {
     AcquiaSearch3::ACQUIA_SEARCH_VERSION => 0,
   ];
   foreach ($environments as $environment) {
-    if ($version = ApacheSolrEnvironment::getAcquiaServiceVersion($environment['service_class'])) {
-      $count[$version]++;
-      unset($version);
+    if ($environment['service_class']) {
+      if ($version = ApacheSolrEnvironment::getAcquiaServiceVersion($environment['service_class'])) {
+        $count[$version]++;
+        unset($version);
+      }
     }
   }
 
@@ -187,7 +189,7 @@ function acquia_search_form_apachesolr_environment_edit_form_alter(&$form, $form
   $form['#suffix'] = '</div>';
 
   array_unshift($form['actions']['save']['#submit'], 'acquia_search_settings_form_environment_submit');
-  array_unshift($form['actions']['save_edit']['#submit'], ['acquia_search_settings_form_environment_submit']);
+  array_unshift($form['actions']['save_edit']['#submit'], 'acquia_search_settings_form_environment_submit');
 
   // Add message to Acquia-connected indexes.
   if (!empty($environment) && $environment->isConnected()) {
@@ -202,6 +204,7 @@ function acquia_search_form_apachesolr_environment_edit_form_alter(&$form, $form
       $form['conf']['apachesolr_read_only']['#type'] = 'hidden';
     }
 
+    $form['url']['#default_value'] = $environment->getUrl();
     $form['url']['#disabled'] = TRUE;
   }
 
@@ -387,12 +390,28 @@ function acquia_search_apachesolr_requirements() {
  * Creates an apachesolr server when a valid API is fetched.
  */
 function acquia_search_apachesolr_create_server($api) {
+  // Don't create a new server if one already has been created.
+  if (variable_get('acquia_search_apachesolr_created', FALSE)) {
+    return;
+  }
+
   // API is null when credentials aren't yet created. Install server later.
   $environments = apachesolr_load_all_environments();
+  // Look for any existing Acquia Server class
   $service_class = $api->getServiceClass(APACHESOLR_ECOSYSTEM);
   foreach ($environments as $environment) {
+    if (!isset($environment['service_class'])) {
+      continue;
+    }
+    // Upgrade existing servers instead of creating new ones.
+    if ($environment['service_class'] == 'AcquiaSearchSolrService') {
+      $environment['service_class'] = $service_class;
+      apachesolr_environment_save($environment);
+    }
     // Do not create a new environment if there is at least one Acquia server.
-    if (isset($environment['service_class']) && $environment['service_class'] == $service_class) {
+    if ($environment['service_class'] == $service_class) {
+      // Covers upgrade paths where this variable may have not been set yet.
+      variable_set('acquia_search_apachesolr_created', TRUE);
       return;
     }
   }
@@ -403,6 +422,7 @@ function acquia_search_apachesolr_create_server($api) {
     $env_id = 'apachesolr_acquia_search_server_3';
     $environment = new ApacheSolrEnvironment($env_id, $api, ['service_class' => $service_class]);
     $environment->create();
+    variable_set("acquia_search_apachesolr_created", TRUE);
 
     // If we have apachesolr_attachments enabled, set the extraction method to
     // Solr and enforce the correct servlet path and servlet params.

@@ -64,6 +64,18 @@ function acquia_search_search_api_index_load(array $indexes) {
 }
 
 /**
+ * Implements hook_form_search_api_admin_add_server_alter().
+ *
+ * @throws \Exception
+ */
+function acquia_search_form_search_api_admin_add_server_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['class'])) {
+    unset($form['class']['#options']['AcquiaSearchApiService']);
+    $form['class']['#description'] .= ' '. t('Only non-Acquia Search servers can be added here. Acquia Search will automatically create an associated server upon installation of the module.');
+  }
+}
+
+/**
  * Implements hook_form_search_api_admin_server_edit_alter().
  *
  * Adds extra information to some Search API edit forms.
@@ -287,6 +299,7 @@ function acquia_search_set_version() {
  *   Legacy (Search API Acquia) Servers.
  */
 function acquia_search_searchapi_upgrade_servers(array $legacy_servers) {
+  drupal_static_reset('search_api_get_service_info');
   foreach ($legacy_servers as $legacy_server) {
     /** @var SearchApiServer $legacy_server */
     $legacy_server->class = "AcquiaSearchApiService";
@@ -299,9 +312,14 @@ function acquia_search_searchapi_upgrade_servers(array $legacy_servers) {
  */
 function acquia_search_searchapi_create_server() {
   // Don't create a default server if one already exists.
+  if (variable_get('acquia_search_searchapi_created', FALSE)) {
+    return;
+  }
   $existing_servers = entity_load('search_api_server');
   foreach ($existing_servers as $server) {
     if ($server->class == 'AcquiaSearchApiService') {
+      // Covers upgrade paths where this variable may have not been set yet.
+      variable_set('acquia_search_searchapi_created', TRUE);
       return;
     }
   }
@@ -316,6 +334,7 @@ function acquia_search_searchapi_create_server() {
   ];
   $server = entity_create('search_api_server', $default_values);
   $server->save();
+  variable_set("acquia_search_searchapi_created", TRUE);
 
   // Create Default Index (of nodes)
   $node_bundles = field_info_bundles('node');

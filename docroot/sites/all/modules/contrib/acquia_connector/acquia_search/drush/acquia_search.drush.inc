@@ -58,6 +58,11 @@ function acquia_search_drush_help($section) {
  * customers to set any environment as an acquia environment.
  */
 function acquia_search_set_derived_key_for_env() {
+  drush_print(dt("This command was specific to Search v2. It can be safely removed."));
+  return TRUE;
+
+  // The following code is kept for future use. Specifically, adding the ability
+  // for users to specify different subscriptions per search server.
   acquia_search_include();
   // Environment id.
   $env_id = drush_get_option('env-id');

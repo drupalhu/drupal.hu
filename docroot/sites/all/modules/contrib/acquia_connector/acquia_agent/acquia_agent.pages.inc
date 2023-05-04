@@ -235,6 +235,7 @@ function acquia_agent_settings_credentials_submit($form, &$form_state) {
  */
 function acquia_agent_settings_form($form, &$form_state) {
   // Help documentation is local unless the Help module is disabled.
+  $subscription = AcquiaSubscription::getInstance();
   if (module_exists('help')) {
     $help_url = url('admin/help/acquia_agent');
   }
@@ -245,12 +246,31 @@ function acquia_agent_settings_form($form, &$form_state) {
   $form['connected'] = [
     '#markup' => t('<h3>Connected to Acquia Cloud</h3>'),
   ];
-  // Fetch the subscription name if it's saved within subscription data..
-  $subscription_data = AcquiaSubscription::getInstance()->getSubscription();
+  // Fetch the subscription name if it's saved within subscription data.
+  $subscription_data = $subscription->getSubscription();
+
   $form['subscription'] = [
-    '#markup' => t('Subscription: @sub <a href="!url">change</a>', [
+    '#markup' => t('<strong>Subscription:</strong> @sub <a href="!url">change</a>', [
       '@sub' => $subscription_data['subscription_name'] ?? '',
       '!url' => url('admin/config/system/acquia-agent/configure'),
+    ]) . '<br />',
+  ];
+  if (isset($subscription_data['application'])) {
+    $form['app_name'] = [
+      '#markup' => t('<strong>Application Name:</strong> @app_name', [
+        '@app_name' => $subscription_data['application']['name'] ?? '',
+      ]) . '<br />',
+    ];
+  }
+  $form['identifier'] = [
+    '#markup' => t('<strong>Identifier:</strong> @identifier @overridden', [
+      '@identifier' => AcquiaSubscription::getInstance()->getSettings()->getIdentifier(),
+      '@overridden' => _acquia_agent_is_cloud_overridden() ? '(Overridden)' : '',
+    ]) . '<br />',
+  ];
+  $form['app_uuid'] = [
+    '#markup' => t('<strong>Application UUID:</strong> @app_uuid', [
+      '@app_uuid' => $subscription->getSettings()->getApplicationUuid(),
     ]),
   ];
 
@@ -440,3 +460,22 @@ function _acquia_agent_oauth_pkce_code() {
   }
   return $_SESSION[ACQUIA_AGENT_OAUTH_PKCE_KEY];
 }
+
+/**
+ * Checks if Acquia Cloud's values are overridden.
+ *
+ * @return bool
+ *   Determines whether the subscription matches AH values.
+ */
+function _acquia_agent_is_cloud_overridden() {
+  $subscription = AcquiaSubscription::getInstance();
+
+  if ($subscription->getProvider() !== 'acquia_cloud') {
+    return FALSE;
+  }
+  if ($subscription->getSettings()->getMetadata('ah_network_identifier') !== $subscription->getSettings()->getIdentifier()) {
+    return TRUE;
+  }
+  return FALSE;
+}
+

@@ -50,7 +50,7 @@ class PreferredSearchCoreService {
    *
    * @var array
    */
-  protected $availableCores;
+  protected $availableCores = [];
 
   /**
    * Overridden search core from Config.
@@ -127,10 +127,12 @@ class PreferredSearchCoreService {
       return $this->preferredCore[$server_id];
     }
 
-    $expected_cores = $this->getListOfPossibleCores($server_id);
-    foreach ($expected_cores as $expected_core) {
-      foreach ($this->acquiaSearchApi->getCores() as $available_core) {
-        if ($expected_core == $available_core['core_id']) {
+    $possible_cores = $this->getListOfPossibleCores($server_id);
+    $available_cores = $this->acquiaSearchApi->getCores();
+
+    foreach ($possible_cores as $possible_core) {
+      foreach ($available_cores as $available_core) {
+        if ($possible_core == $available_core['core_id']) {
           $this->preferredCore[$server_id] = $available_core;
           return $this->preferredCore[$server_id];
         }
@@ -188,6 +190,9 @@ class PreferredSearchCoreService {
    *   The search core(s) that are overridden.
    */
   public function setLocalOverriddenCore(string $server_id, $overridden_search_core) {
+    if ($overridden_search_core === NULL) {
+      return;
+    }
     if (!is_array($overridden_search_core)) {
       $overridden_search_core = [$overridden_search_core];
     }

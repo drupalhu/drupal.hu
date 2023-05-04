@@ -633,17 +633,17 @@
         },
         {
             "name": "drupal/acquia_connector",
-            "version": "4.1.0",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/acquia_connector.git",
-                "reference": "7.x-4.1"
+                "reference": "7.x-4.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-4.1.zip",
-                "reference": "7.x-4.1",
-                "shasum": "a4d8c4b175390cd7c0b56044359408af3011c976"
+                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-4.4.zip",
+                "reference": "7.x-4.4",
+                "shasum": "22a64e0e01695c8568b9286127d0d42d0a08b3a7"
             },
             "require": {
                 "drupal/drupal": "~7.0"
@@ -654,8 +654,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "7.x-4.1",
-                    "datestamp": "1671471056",
+                    "version": "7.x-4.4",
+                    "datestamp": "1680718244",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -682,6 +682,10 @@
                 {
                     "name": "japerry",
                     "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "kaynen",
+                    "homepage": "https://www.drupal.org/user/733308"
                 },
                 {
                     "name": "kolafson",
