@@ -156,6 +156,9 @@ function date_api_menu() {
  * @see FeedsDateTimeElement class
  */
 class DateObject extends DateTime {
+  public $dateOnly = NULL;
+  public $originalTime = NULL;
+  public $timeOnly = NULL;
   public $granularity = array();
   public $errors = array();
   protected static $allgranularity = array(

@@ -146,7 +146,7 @@ abstract class AcquiaSearchSolrApiBase implements AcquiaSearchSolrApiInterface {
     $preferredCoreService = &drupal_static(__FUNCTION__);
 
     if (!isset($preferredCoreService)) {
-      $ah_env = $_SERVER['AH_SITE_ENVIRONMENT'] ?? '';
+      $ah_env = getenv('AH_SITE_ENVIRONMENT') ?? '';
 
       global $databases;
       $options = \Database::getConnection()->getConnectionOptions();

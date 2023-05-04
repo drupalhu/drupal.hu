@@ -14,8 +14,8 @@ features[field_instance][] = node-date_repeat_test-body
 features[field_instance][] = node-date_repeat_test-field_date_repeat
 features[node][] = date_repeat_test
 
-; Information added by Drupal.org packaging script on 2022-08-04
-version = "7.x-2.13"
+; Information added by Drupal.org packaging script on 2023-01-14
+version = "7.x-2.14"
 core = "7.x"
 project = "date"
-datestamp = "1659633190"
+datestamp = "1673711079"

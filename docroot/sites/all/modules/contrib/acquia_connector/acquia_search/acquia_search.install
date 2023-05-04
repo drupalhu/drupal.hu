@@ -119,7 +119,7 @@ function acquia_search_modules_enabled($modules) {
   // Add Acquia Search to existing servers.
   // Note: if both modules are enabled, the service will be created on both.
   if (in_array('search_api_solr', $modules)) {
-    $legacy_servers = search_api_server_load_multiple(FALSE, ['class' => 'SearchApiAcquiaSearchService']);
+    $legacy_servers = search_api_server_load_multiple(FALSE, ['class' => 'acquia_search_service']);
     if ($legacy_servers) {
       acquia_search_searchapi_upgrade_servers($legacy_servers);
     }
@@ -127,7 +127,7 @@ function acquia_search_modules_enabled($modules) {
     // Disable Search API Acquia module.
     if (module_exists('search_api_acquia')) {
       module_disable(['search_api_acquia']);
-      watchdog('acquia_search', 'Search API Acquia has been disabled. You can safely remove it from your codebase.', '', WATCHDOG_INFO);
+      watchdog('acquia_search', 'Search API Acquia has been disabled. You can safely remove it from your codebase.', NULL, WATCHDOG_INFO);
     }
   }
 
@@ -135,7 +135,7 @@ function acquia_search_modules_enabled($modules) {
   if (in_array('search_api_acquia', $modules)) {
     // Set install server flag, we will check credentials later.
     module_disable(['search_api_acquia']);
-    watchdog('acquia_search', 'This version of Acquia Search is incompatible with Search Api Acquia.', '', WATCHDOG_ERROR);
+    watchdog('acquia_search', 'This version of Acquia Search is incompatible with Search Api Acquia.', NULL, WATCHDOG_ERROR);
   }
 }
 
@@ -203,12 +203,15 @@ function acquia_search_uninstall() {
         }
       }
     }
-    variable_del('acquia_search_derived_key_salt');
-    variable_del('apachesolr_default_environment');
     // Make sure apachesolr search is the default search module.
     variable_set('search_default_module', 'apachesolr_search');
   }
 
+  // Delete Acquia Search specific variables.
+  variable_del('acquia_search_searchapi_created');
+  variable_del('acquia_search_apachesolr_created');
+  variable_del('acquia_search_derived_key_salt');
+  variable_del('apachesolr_default_environment');
   variable_del('acquia_search_derived_key_salt');
   variable_del('acquia_search_solr_core');
 }
@@ -271,7 +274,7 @@ function acquia_search_update_7401() {
   // Disable Search API Acquia module.
   if (module_exists('search_api_acquia')) {
     module_disable(['search_api_acquia']);
-    watchdog('acquia_search', 'Search API Acquia has been disabled. You can safely remove it from your codebase.', '', WATCHDOG_INFO);
+    watchdog('acquia_search', 'Search API Acquia has been disabled. You can safely remove it from your codebase.', NULL, WATCHDOG_INFO);
   }
 }
 

@@ -52,13 +52,14 @@ class AcquiaSearchSolrApi extends AcquiaSearchSolrApiBase implements AcquiaSearc
    * @throws \InvalidArgumentException
    */
   public static function getFromSettings() {
-    $subscription = acquia_agent_settings('acquia_identifier');
-    $api_key = acquia_agent_settings('acquia_key');
+    $subscription = \AcquiaSubscription::getInstance();
     $host = variable_get('acquia_search_v' . self::ACQUIA_SEARCH_VERSION . '_host', 'https://api.sr-prod02.acquia.com');
-    // If no UUID explicitly set, get it from subscription data.
-    $uuid = acquia_agent_settings('acquia_application_uuid');
-
-    return new self($subscription, $api_key, $host, $uuid);
+    return new self(
+      $subscription->getSettings()->getIdentifier(),
+      $subscription->getSettings()->getSecretKey(),
+      $host,
+      $subscription->getSettings()->getApplicationUuid()
+    );
   }
 
   /**
@@ -70,7 +71,7 @@ class AcquiaSearchSolrApi extends AcquiaSearchSolrApiBase implements AcquiaSearc
    * @throws \Exception
    */
   public function getCores() {
-    $result = &drupal_static(__FUNCTION__);
+    $result = &drupal_static(__FUNCTION__, NULL);
     if ($result === NULL) {
       $cid = 'acquia_search.indexes.' . $this->subscription;
       if (($cache = cache_get($cid))) {
@@ -89,7 +90,7 @@ class AcquiaSearchSolrApi extends AcquiaSearchSolrApiBase implements AcquiaSearc
       $indexes = $this->searchRequest($config_path, $query);
       if (empty($indexes) && !is_array($indexes)) {
         // When API is not reachable, cache it for 1 minute.
-        cache_set($cid, FALSE, 'cache', $now + 60);
+        cache_set($cid, [], 'cache', $now + 60);
         return [];
       }
       lock_release('acquia_search_get_search_indexes');
