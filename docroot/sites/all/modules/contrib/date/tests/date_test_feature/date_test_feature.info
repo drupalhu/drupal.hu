@@ -26,8 +26,8 @@ features[field_instance][] = node-date_test-field_datetime
 features[field_instance][] = node-date_test-field_datetime_range
 features[node][] = date_test
 
-; Information added by Drupal.org packaging script on 2022-08-04
-version = "7.x-2.13"
+; Information added by Drupal.org packaging script on 2023-01-14
+version = "7.x-2.14"
 core = "7.x"
 project = "date"
-datestamp = "1659633190"
+datestamp = "1673711079"

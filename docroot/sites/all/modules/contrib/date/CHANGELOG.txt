@@ -1,3 +1,25 @@
+Date 7.x-2.14, 2023-01-14
+-------------------------
+#2898235 by DamienMcKenna, veugenio, photuris5, drumm: Improved test coverage
+  for timezone handling.
+#3328051 by joseph.olstad, Liam Morland: PHP 8.2 - Fix deprecated dynamic
+  properties.
+#3204114 by DamienMcKenna, Darren Oh, steinmb, jwilson3, webservant316, ron_s,
+  arnoldbird, sadashiv: Date field validation broken after update to 7.x-2.11.
+#2581013 by energee, TLWatson, Francewhoa, Pardip Kumar, DamienMcKenna,
+  Nikhilesh Gupta, imclean, Anybody, tregismoreira, davidwhthomas, jwilson3:
+  Collect end date required toggle is disabled after data entry.
+#2572213 by lwalley, DamienMcKenna, frodri: Unable to set class attributes using
+  preprocess functions for date display themes.
+#2909166 by sakiland, DamienMcKenna: Diff configuration for Date fields.
+#3219052 by steinmb, DamienMcKenna: Minor clean up in date_admin.inc.
+#2503301 by emmonsaz, DamienMcKenna: Conditional warning on install.
+#2907007 by hkirsman, DamienMcKenna: Remove html from date nav if there's no
+  content.
+#2716659 by extqy, DamienMcKenna: Entity Metadata Wrappers doesn't set correctly
+  the value when the entity is translatable, and the field is not.
+
+
 Date 7.x-2.13, 2022-08-04
 -------------------------
 #1762120 by DamienMcKenna: Change field timezone handling default to no

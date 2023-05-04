@@ -491,6 +491,7 @@ function date_popup_process_time_part(&$element) {
         // Then we are using lowercase am/pm.
         $options = date_ampm_options(FALSE, FALSE);
         $settings['ampmNames'] = array($options['am'], $options['pm']);
+        $settings['ampmPrefix'] = ' ';
       }
 
       if (strpos($element['#date_format'], 'A') !== FALSE) {

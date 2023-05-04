@@ -73,6 +73,8 @@ function date_sql_pad($str, $size = 2, $pad = '0', $side = 'l') {
  */
 class date_sql_handler {
 
+  public $granularity = NULL;
+  public $placeholders = NULL;
   public $db_type = NULL;
 
   public $date_type = DATE_DATETIME;

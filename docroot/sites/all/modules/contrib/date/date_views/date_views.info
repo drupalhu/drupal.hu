@@ -16,8 +16,8 @@ files[] = includes/date_views_plugin_pager.inc
 files[] = tests/date_views_filter.test
 files[] = tests/date_views_pager.test
 
-; Information added by Drupal.org packaging script on 2022-08-04
-version = "7.x-2.13"
+; Information added by Drupal.org packaging script on 2023-01-14
+version = "7.x-2.14"
 core = "7.x"
 project = "date"
-datestamp = "1659633190"
+datestamp = "1673711079"
