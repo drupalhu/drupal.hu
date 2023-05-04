@@ -1610,28 +1610,24 @@
         },
         {
             "name": "drupal/drupal",
-            "version": "7.94.0",
-            "version_normalized": "7.94.0.0",
+            "version": "7.97.0",
+            "version_normalized": "7.97.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/drupal.git",
-                "reference": "7.94"
+                "reference": "7.97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/drupal-7.94.zip",
-                "reference": "7.94",
-                "shasum": "4d732bbf9b50a5076e8c353cd77d1a4e879d94a4"
-            },
-            "require-dev": {
-                "drupal/color-color": "*",
-                "drupal/rdf": "*"
+                "url": "https://ftp.drupal.org/files/projects/drupal-7.97.zip",
+                "reference": "7.97",
+                "shasum": "4749311df12aef4c008f092fddf194818c3b214f"
             },
             "type": "drupal-core",
             "extra": {
                 "drupal": {
-                    "version": "7.94",
-                    "datestamp": "1671034684",
+                    "version": "7.97",
+                    "datestamp": "1682075527",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -1681,6 +1677,10 @@
                     "homepage": "https://www.drupal.org/user/4166"
                 },
                 {
+                    "name": "justafish",
+                    "homepage": "https://www.drupal.org/user/161058"
+                },
+                {
                     "name": "larowlan",
                     "homepage": "https://www.drupal.org/user/395439"
                 },
@@ -1695,6 +1695,10 @@
                 {
                     "name": "mcdruid",
                     "homepage": "https://www.drupal.org/user/255969"
+                },
+                {
+                    "name": "nod_",
+                    "homepage": "https://www.drupal.org/user/598310"
                 },
                 {
                     "name": "poker10",
