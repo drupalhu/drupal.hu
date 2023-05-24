@@ -1,18 +1,6 @@
 {
-    "_hash": "fda634a894ce2f16cddefe281c5d8610f8dfb6787297c1574c06e3c37d7333b7",
+    "_hash": "163b74ba87ff3383a3bf4c7ffab60a0efdcaa90b0e03830c9ecec82e459f42fd",
     "patches": {
-        "dmore/chrome-mink-driver": [
-            {
-                "package": "dmore/chrome-mink-driver",
-                "description": "Using unsafe HTTP verb GET to invoke /json/new.",
-                "url": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/merge_requests/146/diffs.patch",
-                "sha256": "a1e4b71cc64caa559dc777b86576dd1e4021e309d029282f9f9a0a29abeb74de",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://gitlab.com/behat-chrome/chrome-mink-driver/-/issues/135"
-                }
-            }
-        ],
         "drupal/core": [
             {
                 "package": "drupal/core",
