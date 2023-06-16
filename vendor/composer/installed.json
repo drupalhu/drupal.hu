@@ -2852,6 +2852,65 @@
             "install-path": "../../docroot/sites/all/modules/contrib/google_analytics"
         },
         {
+            "name": "drupal/honeypot",
+            "version": "1.26.0",
+            "version_normalized": "1.26.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/honeypot.git",
+                "reference": "7.x-1.26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/honeypot-7.x-1.26.zip",
+                "reference": "7.x-1.26",
+                "shasum": "2260196be097e4ed0b3360027921c7ec810a4f90"
+            },
+            "require": {
+                "drupal/drupal": "~7.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "7.x-1.26",
+                    "datestamp": "1576274586",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/7/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "geerlingguy",
+                    "homepage": "https://www.drupal.org/user/389011"
+                },
+                {
+                    "name": "Manuel Garcia",
+                    "homepage": "https://www.drupal.org/user/213194"
+                },
+                {
+                    "name": "TR",
+                    "homepage": "https://www.drupal.org/user/202830"
+                },
+                {
+                    "name": "vijaycs85",
+                    "homepage": "https://www.drupal.org/user/93488"
+                }
+            ],
+            "description": "Mitigates spam form submissions using the honeypot method.",
+            "homepage": "https://www.drupal.org/project/honeypot",
+            "support": {
+                "source": "https://git.drupalcode.org/project/honeypot"
+            },
+            "install-path": "../../docroot/sites/all/modules/contrib/honeypot"
+        },
+        {
             "name": "drupal/job_scheduler",
             "version": "2.0.0",
             "version_normalized": "2.0.0.0",

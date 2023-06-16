@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Code for the drupalhu_ureg feature.
+ */
+
+include_once 'drupalhu_ureg.features.inc';

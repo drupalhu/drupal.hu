@@ -3,7 +3,7 @@
         'name' => 'drupalhu/drupal-hu',
         'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
         'version' => 'dev-2.x-375-nodeevent-redesign',
-        'reference' => 'd5d29fd0b5b4e108e0462e351ea1d6ab1090fffc',
+        'reference' => '6fbbb8358f95f99eee59704665a9391a863a5dec',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -352,6 +352,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/honeypot' => array(
+            'pretty_version' => '1.26.0',
+            'version' => '1.26.0.0',
+            'reference' => '7.x-1.26',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/sites/all/modules/contrib/honeypot',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/job_scheduler' => array(
             'pretty_version' => '2.0.0',
             'version' => '2.0.0.0',
@@ -652,7 +661,7 @@
         'drupalhu/drupal-hu' => array(
             'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
             'version' => 'dev-2.x-375-nodeevent-redesign',
-            'reference' => 'd5d29fd0b5b4e108e0462e351ea1d6ab1090fffc',
+            'reference' => '6fbbb8358f95f99eee59704665a9391a863a5dec',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
