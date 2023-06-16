@@ -135,10 +135,10 @@ function geofield_set_target_simple($source, $entity, $target, $values) {
     $values = array($values);
   }
 
-  $field = isset($entity->$field_name) ? $entity->$field_name : array('und' => array());
+  $field = isset($entity->$field_name) ? $entity->$field_name : array(LANGUAGE_NONE => array());
   $delta = 0;
   foreach ($values as $value) {
-    $field['und'][$delta][$sub_field] = $value;
+    $field[LANGUAGE_NONE][$delta][$sub_field] = $value;
     $delta++;
   }
 
@@ -218,14 +218,14 @@ function _geofield_set_target($source, $entity, $target, $values) {
   // Iterate over all values.
   $i = 0;
 
-  $field = isset($entity->$target) ? $entity->$target : array('und' => array());
+  $field = isset($entity->$target) ? $entity->$target : array(LANGUAGE_NONE => array());
   foreach ($values as $value) {
     // Check if field value is empty.
     if(empty($value)){
       continue;
     }
     if (is_array($value) || is_object($value)) {
-      $field['und'][$i] = $value;
+      $field[LANGUAGE_NONE][$i] = $value;
     }
     $i++;
   }

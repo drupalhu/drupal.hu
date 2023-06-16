@@ -281,7 +281,7 @@ function openlayers_geofield_widget_afterbuild($element, &$form_state) {
                    . '</div>');
 
   $element['geofield_openlayers_map_desc'] = array(
-    '#markup' => t('<div class="description geofield-help">Use the icons to select what type of feature to draw. Each map can contain one simple feature. Pan and zoom with arrows and the zoom bar.</div>')
+    '#markup' => '<div class="description geofield-help">' . t('Use the icons to select what type of feature to draw. Each map can contain one simple feature. Pan and zoom with arrows and the zoom bar.') . '</div>'
   );
 
   drupal_add_js(
@@ -299,7 +299,7 @@ function openlayers_geofield_widget_afterbuild($element, &$form_state) {
 /**
  * Create LatLon Helper Map.
  */
-function openlayers_geofield_form_latlon_map($defaults = array(), $map_name) {
+function openlayers_geofield_form_latlon_map($defaults = array(), $map_name = '') {
   // Pass variables etc. to javascript
   // Set up our map to help set lat and lon
   // This map will always be projected as 4326 and use just the default map preset
