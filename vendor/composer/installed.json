@@ -784,18 +784,18 @@
         },
         {
             "name": "drupal/admin_menu",
-            "version": "3.0.0-rc6",
-            "version_normalized": "3.0.0.0-RC6",
+            "version": "3.0.0-rc7",
+            "version_normalized": "3.0.0.0-RC7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/admin_menu.git",
-                "reference": "7.x-3.0-rc6"
+                "reference": "7.x-3.0-rc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/admin_menu-7.x-3.0-rc6.zip",
-                "reference": "7.x-3.0-rc6",
-                "shasum": "c2c554aed8c8db494831ef3edf900d53f03d83a7"
+                "url": "https://ftp.drupal.org/files/projects/admin_menu-7.x-3.0-rc7.zip",
+                "reference": "7.x-3.0-rc7",
+                "shasum": "ab4778b6daeea00329ac31a4ed79ee68de9770bd"
             },
             "require": {
                 "drupal/drupal": "^7.11"
@@ -803,8 +803,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "7.x-3.0-rc6",
-                    "datestamp": "1543859280",
+                    "version": "7.x-3.0-rc7",
+                    "datestamp": "1685019870",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
