@@ -321,7 +321,7 @@ function geofield_field_load($entity_type, $entities, $field, $instances, $langc
             $items[$id][$delta]['geom'] = $writer->write($geom);
           }
           catch (Exception $e) {
-            watchdog(WATCHDOG_ERROR, 'Cannot render poorly formatted WKB value %message', array('%message' => $e->getMessage()));
+            watchdog('geofield', 'Cannot render poorly formatted WKB value %message', array('%message' => $e->getMessage()), WATCHDOG_ERROR);
           }
         }
       }

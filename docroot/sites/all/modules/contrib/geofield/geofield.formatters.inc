@@ -333,7 +333,9 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
       return $element;
     case 'geofield_openlayers':
       $map_name = $display['settings']['map_preset'] ? $display['settings']['map_preset'] : 'geofield_formatter_map';
-      $element[0] = array('#markup' => _geofield_openlayers_formatter($map_name, $items));
+      if (!empty($items)) {
+        $element[0] = array('#markup' => _geofield_openlayers_formatter($map_name, $items));
+      }
       return $element;
     case 'geofield_def_list':
       foreach ($items as $delta => $item) {

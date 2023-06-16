@@ -27,6 +27,7 @@ function geofield_rules_action_info() {
  * Rules action for creating geofield values from lat/lon.
  */
 function geofield_rules_create_values($lat, $lon) {
+  geophp_load();
   $geometry = new Point($lon, $lat);
   $value = geofield_get_values_from_geometry($geometry);
   return array(
