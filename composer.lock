@@ -1558,23 +1558,23 @@
         },
         {
             "name": "drupal/drupal",
-            "version": "7.97.0",
+            "version": "7.98.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/drupal.git",
-                "reference": "7.97"
+                "reference": "7.98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/drupal-7.97.zip",
-                "reference": "7.97",
-                "shasum": "4749311df12aef4c008f092fddf194818c3b214f"
+                "url": "https://ftp.drupal.org/files/projects/drupal-7.98.zip",
+                "reference": "7.98",
+                "shasum": "388ab378e346997f6739f74daf2bf1fafea1e851"
             },
             "type": "drupal-core",
             "extra": {
                 "drupal": {
-                    "version": "7.97",
-                    "datestamp": "1682075527",
+                    "version": "7.98",
+                    "datestamp": "1686154390",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
