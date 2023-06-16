@@ -81,6 +81,7 @@
         "drupal/geshifilter": "^1.0",
         "drupal/globalredirect": "^1.0",
         "drupal/google_analytics": "^2.0",
+        "drupal/honeypot": "^1.26",
         "drupal/job_scheduler": "^2.0",
         "drupal/jquery_update": "^2.0",
         "drupal/l10n_client": "^1.0",

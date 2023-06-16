@@ -1,0 +1,15 @@
+name = Drupal.hu User register settings
+description = User register settings
+core = 7.x
+package = Drupalhu
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = honeypot
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = honeypot_element_name
+features[variable][] = honeypot_form_user_pass
+features[variable][] = honeypot_form_user_register_form
+features[variable][] = user_register
+project path = sites/all/modules/features
