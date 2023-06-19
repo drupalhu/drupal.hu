@@ -768,6 +768,9 @@ $conf['smtp_fromname'] = getenv('SMTP_FROMNAME');
  */
 # $conf['block_interest_cohort'] = TRUE;
 
+$conf['recaptcha_site_key'] = getenv('RECAPTCHA_SITE_KEY') ?: '';
+$conf['recaptcha_secret_key'] = getenv('RECAPTCHA_SECRET_KEY') ?: '';
+
 if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/druphungary/druphungary-settings.inc');
 }

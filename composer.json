@@ -98,6 +98,7 @@
         "drupal/panels": "^3.0",
         "drupal/pathauto": "^1.0",
         "drupal/proj4js": "^1.0",
+        "drupal/recaptcha": "^2.3",
         "drupal/rules": "^2.0",
         "drupal/search_api": "^1.0",
         "drupal/search_api_multi": "^1.0",
