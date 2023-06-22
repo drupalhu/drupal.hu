@@ -1,0 +1,211 @@
+<?php
+
+/**
+ * @file
+ * Specifies rules for restricting the data users can set for their accounts.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function user_restrictions_cron() {
+  UserRestrictions::deleteExpired();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_login().
+ */
+function user_restrictions_form_user_login_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'user_restrictions_login_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_login_block().
+ */
+function user_restrictions_form_user_login_block_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'user_restrictions_login_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_profile_form().
+ */
+function user_restrictions_form_user_profile_form_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'user_restrictions_user_profile_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_register_form().
+ */
+function user_restrictions_form_user_register_form_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'user_restrictions_user_register_form_validate';
+}
+
+/**
+ * Implements hook_help().
+ */
+function user_restrictions_help($path, $arg) {
+  if ($path == 'admin/help#user_restrictions') {
+    return '<p>' . t("The user restrictions module allows you to specify rules for allowable usernames, or e-mail addresses. A rule may either explicitly <q>allow</q> access or <q>deny</q> access based on the rule's <em>Access type</em>, <em>Rule type</em>, and <em>Mask</em>. For <em>Username</em> and <em>E-Mail</em> rule types, if the username or e-mail address of an existing account or new registration matches the <em>Mask</em> of a <q>deny</q> rule, but not an <q>allow</q> rule, then the account will not be created (for new registrations) or able to log in (for existing accounts).
+      The user restrictions module could also be used to prevent new users from registering with usernames like <q>Admin</q> or with e-mail addresses from certain domains. Existing logged-in users with e-mail addresses or usernames that match a <q>deny</q> rule (but not an <q>allow</q> rule) are not immediately logged out (but once they log out, may not log back in), Be careful to not create a <q>deny</q> rule that includes your administrative account.
+      Visitors attempting to view your site from an IP address or hostname that matches a <q>deny</q> rule will receive a <q>banned address</q> message. Drupal checks incoming addresses for potential bans before any other Drupal modules or themes are loaded."
+    ) . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function user_restrictions_permission() {
+  $perms = array(
+    'edit user restriction rules' => array(
+      'title' => t('Edit user restriction rules'),
+      'restrict access' => TRUE,
+    ),
+    'bypass user restriction rules' => array(
+      'title' => t('Bypass user restriction rules'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_user_restrictions_alter().
+ */
+function user_restrictions_user_restrictions_alter(&$denied, &$error, $context) {
+  if ($context['type'] == 'mail' && $denied) {
+    $error['field'] = 'mail';
+    $error['message'] = t('The email address %email is not allowed.', array('%email' => $context['mask']));
+  }
+
+  if ($context['type'] == 'name' && $denied) {
+    $error['field'] = 'name';
+    $error['message'] = t('The name %name is not allowed.', array('%name' => $context['mask']));
+  }
+}
+
+/**
+ * Implements hook_user_restrictions_info().
+ */
+function user_restrictions_user_restrictions_info($id, $arg1 = NULL, $arg2 = NULL) {
+  switch ($id) {
+    case 'fields':
+      switch ($arg2) {
+        case 'check_mail':
+          return array('mail' => $arg1['values']['value']);
+
+        case 'check_name':
+          return array('name' => $arg1['values']['value']);
+
+        case 'login':
+          $account = user_load($arg1['uid']);
+          return array('name' => $account->name);
+
+        case 'profile':
+          if (isset($arg1['values']['mail'])) {
+            return array(
+              'mail' => $arg1['values']['mail'],
+              'name' => $arg1['values']['name'],
+            );
+          }
+          else {
+            return array(
+            'mail' => $arg1['user']->mail,
+            'name' => $arg1['user']->name,
+            );
+          }
+        case 'register':
+          return array(
+            'mail' => $arg1['values']['mail'],
+            'name' => $arg1['values']['name'],
+          );
+      }
+      break;
+
+    case 'status options':
+      return array(
+        t('Denied'),
+        t('Allowed'),
+      );
+
+    case 'type options':
+      return array(
+        'mail' => t('Email'),
+        'name' => t('Username'),
+      );
+
+    default:
+      watchdog('user_restrictions', 
+               'got an unexpected id value in user_restrictions_user_restrictions_info ' . print_r($id, TRUE),
+               NULL,
+               WATCHDOG_ERROR
+              );
+  }
+}
+
+/**
+ * Form validation handler for user_login(), and user_login_block().
+ *
+ * @see user_login()
+ * @see user_login_block()
+ */
+function user_restrictions_login_form_validate($form, &$form_state) {
+  if (!empty($form_state['uid']) && isset($form_state['values']['name'])) {
+    $account = user_load($form_state['uid']);
+    if (!empty($account)) {
+      if (user_access('bypass user restriction rules', $account)) {
+        return;
+      }
+
+      $error = UserRestrictions::check($form_state, 'login');
+
+      if ($error['message']) {
+        form_set_error($error['field'], $error['message']);
+      }
+    }
+  }
+}
+
+/**
+ * Form validation handler for user_profile_form().
+ *
+ * @see user_profile_form()
+ */
+function user_restrictions_user_profile_form_validate($form, &$form_state) {
+  $account = $form_state['user'];
+  if (user_access('bypass user restriction rules') || user_access('bypass user restriction rules', $account)) {
+    return;
+  }
+
+  $error = UserRestrictions::check($form_state, 'profile');
+  if ($error['message']) {
+    form_set_error($error['field'], $error['message']);
+  }
+}
+
+/**
+ * Form validation handler for user_register_form().
+ *
+ * @see user_register_form()
+ */
+function user_restrictions_user_register_form_validate($form, &$form_state) {
+  if (user_access('bypass user restriction rules')) {
+    return;
+  }
+
+  $error = UserRestrictions::check($form_state, 'register');
+  if ($error['message']) {
+    form_set_error($error['field'], $error['message']);
+  }
+}
+
+/**
+ * Loads the restriction rule from the database.
+ *
+ * @param $urid
+ *   The ID of the restriction rule.
+ */
+function user_restrictions_load($urid) {
+  return UserRestrictions::getInstance($urid);
+}

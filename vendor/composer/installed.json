@@ -4927,6 +4927,69 @@
             "install-path": "../../docroot/sites/all/modules/contrib/unique_field"
         },
         {
+            "name": "drupal/user_restrictions",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/user_restrictions.git",
+                "reference": "7.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/user_restrictions-7.x-1.1.zip",
+                "reference": "7.x-1.1",
+                "shasum": "1f11c17a23f2a69857348435ce54ae37b9268866"
+            },
+            "require": {
+                "drupal/drupal": "~7.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "7.x-1.1",
+                    "datestamp": "1541452980",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/7/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "adammalone",
+                    "homepage": "https://www.drupal.org/user/1295980"
+                },
+                {
+                    "name": "catch",
+                    "homepage": "https://www.drupal.org/user/35733"
+                },
+                {
+                    "name": "fizk",
+                    "homepage": "https://www.drupal.org/user/473174"
+                },
+                {
+                    "name": "psynaptic",
+                    "homepage": "https://www.drupal.org/user/93429"
+                },
+                {
+                    "name": "snufkin",
+                    "homepage": "https://www.drupal.org/user/58645"
+                }
+            ],
+            "description": "Specifies rules for restricting the data users can set for their accounts.",
+            "homepage": "https://www.drupal.org/project/user_restrictions",
+            "support": {
+                "source": "https://git.drupalcode.org/project/user_restrictions"
+            },
+            "install-path": "../../docroot/sites/all/modules/contrib/user_restrictions"
+        },
+        {
             "name": "drupal/views",
             "version": "3.29.0",
             "version_normalized": "3.29.0.0",

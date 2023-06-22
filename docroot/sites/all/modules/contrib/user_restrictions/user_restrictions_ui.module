@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * User interface for the User restrictions module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function user_restrictions_ui_help($path, $arg) {
+  if ($path == 'admin/config/people/user-restrictions') {
+    return '<p>' . t("Set up rules for allowable usernames and e-mail address. A rule may either explicitly <q>allow</q> access or <q>deny</q> access based on the rule's <em>Access type</em>, <em>Rule type</em>, and <em>Mask</em>. If the username or e-mail address of an existing account or new registration matches a <q>deny</q> rule, but not an <q>allow</q> rule, then the account will not be created (for new registrations) or able to log in (for existing accounts).") . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function user_restrictions_ui_menu() {
+  $edit_restrictions = array('edit user restriction rules');
+  $items = array();
+
+  $items['admin/config/people/user-restrictions'] = array(
+    'title' => 'User restrictions',
+    'description' => 'Specify rules for restricted usernames and e-mail addresses.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_restrictions_ui_overview_form'),
+    'access arguments' => $edit_restrictions,
+    'file' => 'user_restrictions_ui.admin.inc',
+    'weight' => 14,
+  );
+
+  $items['admin/config/people/user-restrictions/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'user_restrictions_ui.admin.inc',
+    'weight' => -10,
+  );
+
+  $items['admin/config/people/user-restrictions/add'] = array(
+    'title' => 'Add rule',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_restrictions_ui_edit_rule_form'),
+    'access arguments' => $edit_restrictions,
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'user_restrictions_ui.admin.inc',
+  );
+
+  $items['admin/config/people/user-restrictions/%user_restrictions/edit'] = array(
+    'title' => 'Edit restriction',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_restrictions_ui_edit_rule_form', 4),
+    'access arguments' => $edit_restrictions,
+    'type' => MENU_CALLBACK,
+    'file' => 'user_restrictions_ui.admin.inc',
+  );
+
+  $items['admin/config/people/user-restrictions/%user_restrictions/delete'] = array(
+    'title' => 'Delete rule',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_restrictions_ui_delete_rule_form', 4),
+    'access arguments' => $edit_restrictions,
+    'type' => MENU_CALLBACK,
+    'file' => 'user_restrictions_ui.admin.inc',
+  );
+
+  $items['admin/config/people/user-restrictions/import'] = array(
+    'title' => 'Import rules',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_restrictions_ui_import_rule_form'),
+    'access arguments' => $edit_restrictions,
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'user_restrictions_ui.admin.inc',
+  );
+
+  return $items;
+}

@@ -9,6 +9,7 @@ dependencies[] = features
 dependencies[] = honeypot
 dependencies[] = recaptcha
 dependencies[] = strongarm
+dependencies[] = user_restrictions
 features[captcha_points][] = user_login
 features[captcha_points][] = user_login_block
 features[captcha_points][] = user_pass
