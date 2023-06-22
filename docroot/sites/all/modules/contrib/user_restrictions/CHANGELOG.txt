@@ -1,0 +1,31 @@
+# All the dates reported here are referred to UTC.
+
+2011-01-21
+----------
+#1034650 by kiam: Call to undefined method UserRestrictions::mask().
+
+2011-01-19
+----------
+#1028254 by kiam: Call to undefined method UserRestrictions::type().
+
+2010-12-19
+----------
+#1002360 by arpeggio: Syntax error at line 71.
+#1002362 by arpeggio: Call to undefined method UserRestrictions::status().
+
+2010-12-10
+----------
+#991804 by kiam: Constant array is passed to drupal_alter().
+
+2010-07-14
+----------
+#843252 by kiam: Add code to check if the username used for the login is really an email address.
+
+2010-07-11
+----------
+#200789 by kiam: Change the error message shown when a username is not allowed from the restriction rules.
+#849998 by kiam: Change the permissions used by the module.
+
+2010-07-07
+----------
+#268405 by kiam: Help text cleanup.

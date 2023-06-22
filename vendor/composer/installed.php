@@ -3,7 +3,7 @@
         'name' => 'drupalhu/drupal-hu',
         'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
         'version' => 'dev-2.x-375-nodeevent-redesign',
-        'reference' => '68c51209f68835a2ab909aeef5918ebbcfc783c1',
+        'reference' => '8eeac0f064158c6d1aef05f12ff41d25ff45a696',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -631,6 +631,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/user_restrictions' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '7.x-1.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/sites/all/modules/contrib/user_restrictions',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/views' => array(
             'pretty_version' => '3.29.0',
             'version' => '3.29.0.0',
@@ -679,7 +688,7 @@
         'drupalhu/drupal-hu' => array(
             'pretty_version' => 'dev-2.x-375-nodeevent-redesign',
             'version' => 'dev-2.x-375-nodeevent-redesign',
-            'reference' => '68c51209f68835a2ab909aeef5918ebbcfc783c1',
+            'reference' => '8eeac0f064158c6d1aef05f12ff41d25ff45a696',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

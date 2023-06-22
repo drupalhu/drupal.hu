@@ -111,6 +111,7 @@
         "drupal/token": "^1.0",
         "drupal/transliteration": "^3.0",
         "drupal/unique_field": "^1.0",
+        "drupal/user_restrictions": "^1.1",
         "drupal/views": "^3.0",
         "drupal/views_bulk_operations": "^3.0",
         "drupal/views_slideshow": "^3.0",
