@@ -31,7 +31,7 @@ Feature: Event node create
   Scenario: Event node create – all fields
     When I fill in "Cím" with "My event 01"
     And I open the media library browser of the "Kép" media field
-    And I attach the file "behat-01-1440x1080.jpg" to "files[upload]"
+    And I attach the file "behat-01-1440x1080.jpg" to "files[upload][]"
     And I wait for AJAX to finish
     And I fill in "media[0][fields][field_media_image][0][alt]" with "My alt text"
     And I press the "Mentés" action button in the "Média hozzáadása vagy kiválasztása" dialog

@@ -82,15 +82,15 @@
         "php": ">=8.1",
         "ext-yaml": "*",
         "composer/installers": "^1.6",
-        "cweagans/composer-patches": "dev-main#f88fd46757d4375edf1143f0e7319a9bf407db8d",
+        "cweagans/composer-patches": "^2.0",
         "drupal/acquia_connector": "^4.0",
         "drupal/acquia_search": "^3.1",
         "drupal/admin_toolbar": "^3.3",
         "drupal/aggregator": "^2.0",
         "drupal/allowed_formats": "^2.0",
         "drupal/config_split": "^1.9",
-        "drupal/core-composer-scaffold": "^10.0",
-        "drupal/core-recommended": "^10.0",
+        "drupal/core-composer-scaffold": "^10.1",
+        "drupal/core-recommended": "^10.1",
         "drupal/entity_legal": "^3.0@beta",
         "drupal/eu_cookie_compliance": "^1.24",
         "drupal/facets": "^3.0",
@@ -300,13 +300,6 @@
         },
         "patches": {
             "drupal/core": [
-                {
-                    "description": "[meta] Improve ::generateSampleValue() for common field types",
-                    "url": "./patches/drupal/core/issue-2960714-string-item-sample-value-min-length.patch",
-                    "extra": {
-                        "issue-tracker-url": "https://www.drupal.org/project/drupal/issues/2960714"
-                    }
-                },
                 {
                     "description": "PoStreamReader::getSeek",
                     "url": "https://www.drupal.org/files/issues/2023-02-20/drupal-po_stream_reader_seek-3126929-45.patch",
