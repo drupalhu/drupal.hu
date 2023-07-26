@@ -13080,7 +13080,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/dtt-core.git",
-                "reference": "fb1d14b6142e1a4188d4d99f48e3850fa04ea287"
+                "reference": "b2bb87c3017b462f2e9c3b6a5c968369ad59207b"
             },
             "require": {
                 "ext-pdo": "*",
@@ -13088,6 +13088,7 @@
                 "sweetchuck/utils": "1.x-dev",
                 "symfony/filesystem": "^5.0 || ^6.0"
             },
+            "default-branch": true,
             "type": "drupal-dtt",
             "autoload": {
                 "psr-4": {
@@ -13118,7 +13119,7 @@
                 "source": "https://github.com/Sweetchuck/dtt-core",
                 "issues": "https://github.com/Sweetchuck/dtt-core/issues"
             },
-            "time": "2023-02-28T20:50:36+00:00"
+            "time": "2023-07-11T13:41:56+00:00"
         },
         {
             "name": "sweetchuck/dtt-entity_legal",
@@ -13557,12 +13558,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/utils.git",
-                "reference": "524262cd335731bdfa0e42b1c05c96bfaba390e2"
+                "reference": "85038454eefee53587b24d6e06c576b1cf6faa3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/524262cd335731bdfa0e42b1c05c96bfaba390e2",
-                "reference": "524262cd335731bdfa0e42b1c05c96bfaba390e2",
+                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/85038454eefee53587b24d6e06c576b1cf6faa3f",
+                "reference": "85038454eefee53587b24d6e06c576b1cf6faa3f",
                 "shasum": ""
             },
             "require": {
@@ -13616,7 +13617,7 @@
                 "issues": "https://github.com/Sweetchuck/utils/issues",
                 "source": "https://github.com/Sweetchuck/utils"
             },
-            "time": "2022-12-19T20:44:47+00:00"
+            "time": "2023-04-19T22:51:06+00:00"
         },
         {
             "name": "symfony/browser-kit",
