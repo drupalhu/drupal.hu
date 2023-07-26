@@ -91,7 +91,7 @@
         "drupal/config_split": "^1.9",
         "drupal/core-composer-scaffold": "^10.1",
         "drupal/core-recommended": "^10.1",
-        "drupal/entity_legal": "^3.0@beta",
+        "drupal/entity_legal": "^4.0",
         "drupal/eu_cookie_compliance": "^1.24",
         "drupal/facets": "^3.0",
         "drupal/honeypot": "^2.1",
@@ -130,7 +130,7 @@
         "phpunit/phpunit": "^9.0",
         "squizlabs/php_codesniffer": "^3.7",
         "sweetchuck/dtt-core": "10.x-dev",
-        "sweetchuck/dtt-entity_legal": "3.0.x-dev",
+        "sweetchuck/dtt-entity_legal": "4.0.x-dev",
         "sweetchuck/robo-git": "3.x-dev",
         "sweetchuck/robo-nvm": "3.x-dev",
         "sweetchuck/robo-phpcs": "3.x-dev",
@@ -321,19 +321,11 @@
             ],
             "drupal/entity_legal": [
                 {
-                    "description": "Automated Drupal 10 compatibility fixes",
-                    "url": "https://www.drupal.org/files/issues/2022-08-22/entity_legal.3.0.x-dev.rector.patch",
-                    "sha256": "7ca004f9d5a51e4ac7d98d52f154004fccefb44162c84d9b061d22f3376ae8d7",
+                    "description": "Fix missing source_module annotation key",
+                    "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
+                    "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
                     "extra": {
-                        "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3287248"
-                    }
-                },
-                {
-                    "description": "D10 entity_storage->getQuery()->accessCheck()",
-                    "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/11.patch",
-                    "sha256": "dc5b0e913acce3c77daac2c8f6c7c3f12de1d4010b6eb352827681e92ced081e",
-                    "extra": {
-                        "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3341578"
+                        "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
                     }
                 }
             ],

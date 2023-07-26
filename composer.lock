@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0ec970e75b1f93970187534e611da22",
+    "content-hash": "3f0ff9d3398e627c63b77f9b323a86ef",
     "packages": [
         {
             "name": "acquia/http-hmac-php",
@@ -2271,17 +2271,17 @@
         },
         {
             "name": "drupal/entity_legal",
-            "version": "3.0.0-beta4",
+            "version": "4.0.0-alpha1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entity_legal.git",
-                "reference": "3.0.0-beta4"
+                "reference": "4.0.0-alpha1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_legal-3.0.0-beta4.zip",
-                "reference": "3.0.0-beta4",
-                "shasum": "f66165d80dc3229505a8b1898fe78b1ea579ecc9"
+                "url": "https://ftp.drupal.org/files/projects/entity_legal-4.0.0-alpha1.zip",
+                "reference": "4.0.0-alpha1",
+                "shasum": "1716a5cea062c8899db310725a86c0f0e72c952f"
             },
             "require": {
                 "drupal/core": "^9 || ^10",
@@ -2290,11 +2290,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.0.0-beta4",
-                    "datestamp": "1656431182",
+                    "version": "4.0.0-alpha1",
+                    "datestamp": "1684844592",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "message": "Alpha releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -2303,10 +2303,6 @@
                 "GPL-2.0+"
             ],
             "authors": [
-                {
-                    "name": "Deciphered",
-                    "homepage": "https://www.drupal.org/user/103796"
-                },
                 {
                     "name": "alex.skrypnyk",
                     "homepage": "https://www.drupal.org/user/620694"
@@ -2322,6 +2318,10 @@
                 {
                     "name": "codesidekick",
                     "homepage": "https://www.drupal.org/user/1633774"
+                },
+                {
+                    "name": "Deciphered",
+                    "homepage": "https://www.drupal.org/user/103796"
                 },
                 {
                     "name": "geek-merlin",
@@ -13114,13 +13114,12 @@
         },
         {
             "name": "sweetchuck/dtt-entity_legal",
-            "version": "3.0.x-dev",
+            "version": "4.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/dtt-entity_legal.git",
                 "reference": "75deee88aeb6c0ab2525e18751fd034b9e78215a"
             },
-            "default-branch": true,
             "type": "drupal-dtt",
             "autoload": {
                 "psr-4": {
@@ -14448,7 +14447,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/entity_legal": 10,
         "drupal/rabbit_hole": 10,
         "drupal/webp": 20,
         "drupal/migrate_dc": 20,

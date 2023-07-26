@@ -5,8 +5,6 @@ dependencies:
   module:
     - entity_legal
     - user
-_core:
-  default_config_hash: rR7s2SHuUVEW2pHcWUYbAewn3ntkoxagmKILO_w27mo
 id: legal_document_acceptances
 label: 'Jogi dokumentum elfogadások'
 module: views
@@ -23,15 +21,15 @@ display:
     display_options:
       title: 'Jogi dokumentum elfogadások'
       fields:
-        document_version_name:
-          id: document_version_name
+        vid:
+          id: vid
           table: entity_legal_document_acceptance
-          field: document_version_name
+          field: vid
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: entity_legal_document_acceptance
-          entity_field: document_version_name
+          entity_field: vid
           plugin_id: field
           label: 'Dokumentum verzió elnevezés és azonosító'
           exclude: false
@@ -79,71 +77,6 @@ display:
           settings:
             link: false
           group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        name_1:
-          id: name_1
-          table: entity_legal_document_version_data
-          field: name
-          relationship: document_version_name
-          group_type: group
-          admin_label: ''
-          entity_type: entity_legal_document_version
-          entity_field: name
-          plugin_id: field
-          label: Név
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -338,7 +271,7 @@ display:
           id: document_name
           table: entity_legal_document_version_data
           field: document_name
-          relationship: document_version_name
+          relationship: vid
           group_type: group
           admin_label: ''
           entity_type: entity_legal_document_version
@@ -376,49 +309,6 @@ display:
           transform_dash: false
           break_phrase: false
       filters:
-        name:
-          id: name
-          table: entity_legal_document_version_data
-          field: name
-          relationship: document_version_name
-          group_type: group
-          admin_label: ''
-          entity_type: entity_legal_document_version
-          entity_field: name
-          plugin_id: string
-          operator: '='
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: name_op
-            label: 'Dokumentum verzió azonosító'
-            description: ''
-            use_operator: false
-            operator: name_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: name
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
         uid:
           id: uid
           table: users_field_data
@@ -439,8 +329,6 @@ display:
             description: ''
             use_operator: false
             operator: uid_op
-            operator_limit_selection: false
-            operator_list: {  }
             identifier: uid
             required: false
             remember: false
@@ -462,106 +350,8 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        acceptance_date:
-          id: acceptance_date
-          table: entity_legal_document_acceptance
-          field: acceptance_date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: entity_legal_document_acceptance
-          entity_field: acceptance_date
-          plugin_id: date
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
-          group: 1
-          exposed: true
-          expose:
-            operator_id: acceptance_date_op
-            label: 'Elfogadás dátuma'
-            description: ''
-            use_operator: true
-            operator: acceptance_date_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: acceptance_date
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            min_placeholder: ''
-            max_placeholder: ''
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
       style:
         type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          columns:
-            document_version_name: document_version_name
-            name_1: document_version_name
-            name: name
-            acceptance_date: acceptance_date
-          default: acceptance_date
-          info:
-            document_version_name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: '<br />'
-              empty_column: false
-              responsive: ''
-            name_1:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            acceptance_date:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          override: true
-          sticky: false
-          summary: ''
-          empty_table: false
-          caption: ''
-          description: ''
       row:
         type: fields
       query:
@@ -573,15 +363,15 @@ display:
           replica: false
           query_tags: {  }
       relationships:
-        document_version_name:
-          id: document_version_name
+        vid:
+          id: vid
           table: entity_legal_document_acceptance
-          field: document_version_name
+          field: vid
           relationship: none
           group_type: group
-          admin_label: 'Dokumentum verzió elnevezés'
+          admin_label: 'Version name'
           entity_type: entity_legal_document_acceptance
-          entity_field: document_version_name
+          entity_field: vid
           plugin_id: standard
           required: false
         uid:
@@ -591,21 +381,11 @@ display:
           entity_type: entity_legal_document_acceptance
           entity_field: uid
           plugin_id: standard
-      header:
-        result:
-          id: result
-          table: views
-          field: result
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: result
-          empty: true
-          content: '@start – @end / @total megjelenítése'
+      header: {  }
       footer: {  }
       display_extenders: {  }
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -630,7 +410,7 @@ display:
         parent: ''
         context: '0'
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'

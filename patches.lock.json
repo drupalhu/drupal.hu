@@ -1,5 +1,5 @@
 {
-    "_hash": "c048d20bd635bc57a7007f2bd73e1d8aad441217815b428090bd2e012538f860",
+    "_hash": "6f3c7dbfd18b14c20302e31cb36b16bbc36d5ac397e1ee85f4b3c4317dd33b47",
     "patches": {
         "drupal/core": [
             {
@@ -13,6 +13,18 @@
                 }
             }
         ],
+        "drupal/entity_legal": [
+            {
+                "package": "drupal/entity_legal",
+                "description": "Fix missing source_module annotation key",
+                "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
+                "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
+                "depth": 1,
+                "extra": {
+                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
+                }
+            }
+        ],
         "drupal/drupal-extension": [
             {
                 "package": "drupal/drupal-extension",
@@ -22,28 +34,6 @@
                 "depth": 1,
                 "extra": {
                     "issue-tracker-url": "https://github.com/jhedstrom/drupalextension/issues/493"
-                }
-            }
-        ],
-        "drupal/entity_legal": [
-            {
-                "package": "drupal/entity_legal",
-                "description": "Automated Drupal 10 compatibility fixes",
-                "url": "https://www.drupal.org/files/issues/2022-08-22/entity_legal.3.0.x-dev.rector.patch",
-                "sha256": "7ca004f9d5a51e4ac7d98d52f154004fccefb44162c84d9b061d22f3376ae8d7",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3287248"
-                }
-            },
-            {
-                "package": "drupal/entity_legal",
-                "description": "D10 entity_storage->getQuery()->accessCheck()",
-                "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/11.patch",
-                "sha256": "dc5b0e913acce3c77daac2c8f6c7c3f12de1d4010b6eb352827681e92ced081e",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3341578"
                 }
             }
         ],
