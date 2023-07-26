@@ -110,7 +110,7 @@
         "drupal/svg_image": "^3.0",
         "drupal/transliterate_filenames": "^2.0",
         "drupal/webp": "dev-8.x-1.x",
-        "drush/drush": "^11.0",
+        "drush/drush": "^12.0",
         "oomphinc/composer-installers-extender": "^2.0"
     },
     "require-dev": {
