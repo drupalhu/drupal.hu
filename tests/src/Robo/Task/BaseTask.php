@@ -18,8 +18,8 @@ use Symfony\Component\Process\Process;
  * @todo This base class will come from drupal/marvin:2.x.
  */
 abstract class BaseTask extends RoboBaseTask implements
-    ContainerAwareInterface,
-    OutputAwareInterface {
+  ContainerAwareInterface,
+  OutputAwareInterface {
 
   use ContainerAwareTrait;
   use IO;

@@ -10261,7 +10261,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/migrate_dc.git",
-                "reference": "cab95530209a9bb8875cf27e599a28477ed83a0e"
+                "reference": "5882933c080c015c4388cf7e4577ce1ac7314fe7"
             },
             "require": {
                 "drupal/core": "^10",
@@ -10280,7 +10280,7 @@
                 },
                 "drupal": {
                     "version": "2.x-dev",
-                    "datestamp": "1677595643",
+                    "datestamp": "1687979634",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"

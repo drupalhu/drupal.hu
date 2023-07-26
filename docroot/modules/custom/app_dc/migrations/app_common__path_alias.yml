@@ -15,9 +15,10 @@ source:
   plugin: 'migrate_dc_yaml'
   fileDir: '../sites/default/content/app_common'
   fileName: 'path_alias/path_alias.yml'
-  identifier: ~
+  identifier: 'id'
   identifierDepth: 0
   fields:
+    id: 'ID'
     uuid: 'UUID'
     langcode: 'Code of language'
     path: 'The URL to be covered'

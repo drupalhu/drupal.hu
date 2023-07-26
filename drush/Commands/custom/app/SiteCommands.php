@@ -9,8 +9,8 @@ use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
 use Consolidation\SiteProcess\SiteProcess;
 use Drush\Drush;
 use Drush\SiteAlias\SiteAliasManagerAwareInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 
 class SiteCommands extends CommandsBase implements SiteAliasManagerAwareInterface {
 

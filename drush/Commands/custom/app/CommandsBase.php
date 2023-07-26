@@ -31,9 +31,9 @@ use Symfony\Component\String\UnicodeString;
  * @todo The base class will come from drupal/marvin.
  */
 class CommandsBase extends Tasks implements
-    ConfigAwareInterface,
-    LoggerAwareInterface,
-    CustomEventAwareInterface {
+  ConfigAwareInterface,
+  LoggerAwareInterface,
+  CustomEventAwareInterface {
 
   // @todo Almost every ConfigAwareTrait method is overwritten. Custom trait?
   // @todo Those methods that are not part of the ConfigAwareInterface only used
