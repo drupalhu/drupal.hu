@@ -262,7 +262,9 @@ function appHttpAuthEnable() {
     && \
     "${drush[@]}" config:set 'shield.settings' 'credentials.shield.user' "${APP_HTTP_AUTH_USER}" \
     && \
-    "${drush[@]}" config:set 'shield.settings' 'credentials.shield.pass' "${APP_HTTP_AUTH_PASS}"
+    "${drush[@]}" config:set 'shield.settings' 'credentials.shield.pass' "${APP_HTTP_AUTH_PASS}" \
+    && \
+    "${drush[@]}" config:set 'shield.settings' 'shield_enable' 'true'
 }
 
 function appMailSafetyEnable() {
