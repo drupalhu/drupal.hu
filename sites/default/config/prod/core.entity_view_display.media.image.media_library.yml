@@ -25,6 +25,8 @@ content:
     settings:
       responsive_image_style: org
       image_link: ''
+      image_loading:
+        attribute: eager
       svg_attributes:
         width: null
         height: null

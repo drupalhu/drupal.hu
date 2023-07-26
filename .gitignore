@@ -37,6 +37,7 @@
 /sites/*/private/
 /sites/*/temporary/
 /sites/*/hash_salt.txt
+/sites/*/test.sqlite
 
 /behat.*.yml
 !/behat.local.example.yml
