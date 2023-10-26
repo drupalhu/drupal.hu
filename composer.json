@@ -219,12 +219,12 @@
         ],
         "site:install:local:default": [
             "@site:install:local:empty",
-            "bin/drush --config=drush @app.local --yes migrate:import --group='app_default'",
-            "bin/drush --config=drush @app.local --yes migrate:import --group='app_common'"
+            "drush --config=drush @app.local --yes migrate:import --group='app_default'",
+            "drush --config=drush @app.local --yes migrate:import --group='app_common'"
         ],
         "site:install:local:dummy": [
             "@site:install:local:empty",
-            "bin/drush --config=drush @app.local --yes migrate:import --group='app_dummy'"
+            "drush --config=drush @app.local --yes migrate:import --group='app_dummy'"
         ],
         "lint": [
             "@lint:shellcheck"
