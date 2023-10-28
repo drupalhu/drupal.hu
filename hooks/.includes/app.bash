@@ -231,9 +231,9 @@ function appUpdateSite() {
 
     ./vendor/bin/drush site:set "${PWD}/docroot#${site}"
 
-    ./vendor/bin/drush --config='drush' --yes updatedb --no-post-updates || return 1
+    ./vendor/bin/drush --config='drush' --yes updatedb      || return 1
     ./vendor/bin/drush --config='drush' --yes config:import || return 2
-    ./vendor/bin/drush --config='drush' --yes updatedb || return 3
+    ./vendor/bin/drush --config='drush' --yes deploy:hook   || return 3
 
     ./vendor/bin/drush --config='drush' cache:rebuild
 
@@ -241,11 +241,10 @@ function appUpdateSite() {
     if [[ "${nonEnglishLangCodes}" != '' ]]; then
         ./vendor/bin/drush --config='drush' --yes locale:check  || return 4
         ./vendor/bin/drush --config='drush' --yes locale:update || return 5
+        ./vendor/bin/drush --config='drush' --yes cache:rebuild
     fi
 
     # @todo SearchAPI reindex if it is necessary.
-    ./vendor/bin/drush --config='drush' cache:rebuild
-
     ./vendor/bin/drush site:set
 }
 #endregion

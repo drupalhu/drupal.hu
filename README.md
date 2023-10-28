@@ -124,13 +124,11 @@ Ez a dokumentáció jelenleg nem add útmutatást a szükséges szoftverek telep
 
 ### Bekapcsolódás a fejlesztésbe - Local - lépések
 
-@todo Marvin parancsok jelenleg nem elérhetőek, ezért az 5. 9. és 10. lépés nem fog menni.
-
 1. `git clone https://github.com/drupalhu/drupal.hu.git`
 2. `cd drupal.hu`
 3. `composer install`
 4. `alias d='bin/drush --config=drush @app.local'`
-5. `d marvin:onboarding`
+5. `d app:onboarding`
 6. `"${EDITOR:-vi}" docroot/sites/default/settings.local.php`
    * `$databases` ellenőrzése.
    * `$config['search_api.server.general']['backend_config']['connector_config']` ellenőrzése.
@@ -138,7 +136,7 @@ Ez a dokumentáció jelenleg nem add útmutatást a szükséges szoftverek telep
    * `commands.options.uri` ellenőrzése.
 8. `"${EDITOR:-vi}" behat/behat.local.yml`
    * `default.extensions.Drupal\MinkExtension.base_url` ellenőrzése.
-9. `d marvin:build`
+9. `d app:build`
 10. `composer run site:install:prod:default`
 
 

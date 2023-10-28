@@ -65,10 +65,6 @@
             "type": "git",
             "url": "https://github.com/Sweetchuck/drupal-marvin_acquia.git"
         },
-        "drupal/webp": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/webp.git"
-        },
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
@@ -79,7 +75,7 @@
         }
     },
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-yaml": "*",
         "composer/installers": "^1.6",
         "cweagans/composer-patches": "^2.0",
@@ -109,7 +105,7 @@
         "drupal/smtp": "^1.2",
         "drupal/svg_image": "^3.0",
         "drupal/transliterate_filenames": "^2.0",
-        "drupal/webp": "dev-8.x-1.x",
+        "drupal/webp": "^1.0@RC",
         "drush/drush": "^12.0",
         "oomphinc/composer-installers-extender": "^2.0"
     },
@@ -126,7 +122,7 @@
         "kint-php/kint": "^4.0",
         "nuvoleweb/drupal-behat": "dev-feature/Drupal-10-compatibility",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.11.x-dev",
         "phpunit/phpunit": "^9.0",
         "squizlabs/php_codesniffer": "^3.7",
         "sweetchuck/dtt-core": "10.x-dev",
@@ -136,7 +132,7 @@
         "sweetchuck/robo-phpcs": "3.x-dev",
         "sweetchuck/robo-phpstan": "2.x-dev",
         "sweetchuck/robo-yarn": "3.x-dev",
-        "sweetchuck/utils": "1.x-dev",
+        "sweetchuck/utils": "2.x-dev",
         "symfony/filesystem": "^6.2",
         "symfony/phpunit-bridge": "^6.2",
         "symfony/string": "^6.2",
@@ -336,16 +332,6 @@
                     "sha256": "d8993c80ddb47477c4161d795b26005d13f4be60f9c4c8cd3a572aa843462ddb",
                     "extra": {
                         "issue-tracker-url": "https://www.drupal.org/project/mail_safety/issues/3288410"
-                    }
-                }
-            ],
-            "drupal/webp": [
-                {
-                    "description": "Drupal 10 compatibility",
-                    "url": "https://www.drupal.org/files/issues/2022-08-22/webp.1.x-dev.rector.patch",
-                    "sha256": "f8fbc6b3c83941eb7ba3a1fd1548ef6e5e7f3f5c328fb15bb68b6dfdd28af3a9",
-                    "extra": {
-                        "issue-tracker-url": "https://www.drupal.org/project/webp/issues/3290669"
                     }
                 }
             ]

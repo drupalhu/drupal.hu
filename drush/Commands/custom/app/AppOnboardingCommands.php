@@ -14,6 +14,8 @@ use Symfony\Component\Finder\SplFileInfo;
 class AppOnboardingCommands extends CommandsBase {
 
   /**
+   * Sets the required configurations.
+   *
    * @command app:onboarding
    *
    * @bootstrap none

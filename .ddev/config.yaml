@@ -15,11 +15,11 @@ name: 'local.drupal'
 type: 'drupal10'
 
 database:
-  type: 'mysql'
-  version: '5.7'
+  type: 'mariadb'
+  version: '10.8'
 
 # PHP version to use, "5.6", "7.0", "7.1", "7.2", "7.3", "7.4" "8.0", "8.1", "8.2".
-php_version: '8.1'
+php_version: '8.2'
 
 # if composer_version:"" it will use the current ddev default composer release.
 # It can also be set to "1", to get most recent composer v1
@@ -138,9 +138,9 @@ nfs_mount_enabled: false
 #  - 'php7.3-tidy'
 #  - 'php-bcmath'
 webimage_extra_packages:
-  - 'php8.1-imagick'
-  - 'php8.1-pcov'
-  - 'php8.1-yaml'
+  - 'php8.2-imagick'
+  - 'php8.2-pcov'
+  - 'php8.2-yaml'
   - 'zsh'
   - 'fzf'
   - 'build-essential'

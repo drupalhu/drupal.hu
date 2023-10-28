@@ -1,13 +1,12 @@
+_core:
+  default_config_hash: oqQElnvorzLoHb68o4B3zFkGuMV5_GQEGi7pHfUseVM
+langcode: hu
 fetcher: aggregator
 parser: aggregator
 processors:
   - aggregator
 items:
-  allowed_html: '<a> <abbr> <acronym> <blockquote> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2> <h3> <h4> <h5> <h6> <ins> <kbd> <li> <mark> <meter> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time> <ul> <ol> <wbr>'
-  teaser_length: 600
   expire: 9676800
 source:
   list_max: 10
-_core:
-  default_config_hash: oqQElnvorzLoHb68o4B3zFkGuMV5_GQEGi7pHfUseVM
-langcode: hu
+normalize_post_dates: false

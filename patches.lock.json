@@ -1,5 +1,5 @@
 {
-    "_hash": "6f3c7dbfd18b14c20302e31cb36b16bbc36d5ac397e1ee85f4b3c4317dd33b47",
+    "_hash": "5a5b0ec3472b366ddc02a531817809ad212cf1c3356b1363f3cce861fc327084",
     "patches": {
         "drupal/core": [
             {
@@ -10,18 +10,6 @@
                 "depth": 2,
                 "extra": {
                     "issue-tracker-url": "https://www.drupal.org/project/drupal/issues/3126929"
-                }
-            }
-        ],
-        "drupal/entity_legal": [
-            {
-                "package": "drupal/entity_legal",
-                "description": "Fix missing source_module annotation key",
-                "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
-                "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
                 }
             }
         ],
@@ -37,6 +25,18 @@
                 }
             }
         ],
+        "drupal/entity_legal": [
+            {
+                "package": "drupal/entity_legal",
+                "description": "Fix missing source_module annotation key",
+                "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
+                "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
+                "depth": 1,
+                "extra": {
+                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
+                }
+            }
+        ],
         "drupal/mail_safety": [
             {
                 "package": "drupal/mail_safety",
@@ -46,18 +46,6 @@
                 "depth": 1,
                 "extra": {
                     "issue-tracker-url": "https://www.drupal.org/project/mail_safety/issues/3288410"
-                }
-            }
-        ],
-        "drupal/webp": [
-            {
-                "package": "drupal/webp",
-                "description": "Drupal 10 compatibility",
-                "url": "https://www.drupal.org/files/issues/2022-08-22/webp.1.x-dev.rector.patch",
-                "sha256": "f8fbc6b3c83941eb7ba3a1fd1548ef6e5e7f3f5c328fb15bb68b6dfdd28af3a9",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://www.drupal.org/project/webp/issues/3290669"
                 }
             }
         ]

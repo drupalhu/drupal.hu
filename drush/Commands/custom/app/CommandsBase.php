@@ -19,8 +19,8 @@ use Robo\Tasks;
 use Sweetchuck\LintReport\Reporter\BaseReporter;
 use Sweetchuck\LintReport\ReporterInterface;
 use Sweetchuck\Utils\Comparer\ArrayValueComparer;
-use Sweetchuck\Utils\Filesystem as UtilsFilesystem;
-use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
+use Sweetchuck\Utils\FileSystemUtils;
+use Sweetchuck\Utils\Filter\EnabledFilter;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -77,8 +77,11 @@ class CommandsBase extends Tasks implements
 
   protected Filesystem $fs;
 
+  protected FileSystemUtils $fsUtils;
+
   public function __construct() {
     $this->fs = new Filesystem();
+    $this->fsUtils = new FileSystemUtils();
   }
 
   /**
@@ -118,7 +121,7 @@ class CommandsBase extends Tasks implements
     $vendorDir = $config->get('drush.vendor-dir');
     $composerJsonFileName = getenv('COMPOSER') ?: 'composer.json';
 
-    return UtilsFilesystem::findFileUpward($composerJsonFileName, $vendorDir);
+    return $this->fsUtils->findFileUpward($composerJsonFileName, $vendorDir);
   }
 
   protected function getDrupalRootDir(): string {
@@ -267,13 +270,13 @@ class CommandsBase extends Tasks implements
       $this->runtimeEnvironments += $items;
     }
 
-    uasort(
-      $this->runtimeEnvironments,
-      new ArrayValueComparer([
-        'weight' => 0,
-        'id' => '',
-      ]),
-    );
+    $comparer = new ArrayValueComparer();
+    $comparer->setKeys([
+      'weight' => 0,
+      'id' => '',
+    ]);
+
+    uasort($this->runtimeEnvironments, $comparer);
 
     return $this->runtimeEnvironments;
   }
@@ -290,7 +293,7 @@ class CommandsBase extends Tasks implements
   protected function getLintReporters(): array {
     $lintReporterConfigs = array_filter(
       (array) $this->getConfig()->get('marvin.lint.reporters'),
-      new ArrayFilterEnabled(),
+      new EnabledFilter(),
     );
 
     return $this->parseLintReporterConfigs($lintReporterConfigs);

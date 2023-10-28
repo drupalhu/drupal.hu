@@ -10,6 +10,8 @@ use Robo\State\Data as RoboState;
 class AppRuntimeEnvironmentSwitchCommands extends CommandsBase {
 
   /**
+   * Switches configurations for the current runtime-environment.
+   *
    * @command app:runtime-environment:switch
    */
   public function cmdAppRuntimeEnvironmentSwitchExecute(): CollectionBuilder {
