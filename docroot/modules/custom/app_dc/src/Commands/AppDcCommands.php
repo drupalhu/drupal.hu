@@ -27,6 +27,8 @@ class AppDcCommands extends DrushCommands {
   }
 
   /**
+   * Displays the current status of the defined migrations.
+   *
    * @command app:dc:report
    *
    * @bootstrap full
@@ -182,11 +184,19 @@ class AppDcCommands extends DrushCommands {
   }
 
   /**
+   * Exports the plugin definition for the given migration.
+   *
+   * @param string $migration_id
+   *   Machine-name of a migration.
+   * @param array $options
+   *   Extra CLI options.
+   *
    * @command app:dc:definition
-   * @bootstrap full
    *
    * @option string $format
    *   Default: yaml
+   *
+   * @bootstrap full
    *
    * @phpstan-param array<string, mixed> $options
    */
@@ -204,11 +214,19 @@ class AppDcCommands extends DrushCommands {
   }
 
   /**
+   * Displays the available source fields for the given migration.
+   *
+   * @param string $migration_id
+   *   Machine-name of a migration.
+   * @param array $options
+   *   Extra CLI options.
+   *
    * @command app:dc:definition-source-fields
-   * @bootstrap full
    *
    * @option string $format
    *   Default: yaml
+   *
+   * @bootstrap full
    *
    * @phpstan-param array<string, mixed> $options
    */
