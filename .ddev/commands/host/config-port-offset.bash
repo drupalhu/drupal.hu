@@ -19,10 +19,8 @@ offset=0
 yq_expressions=()
 yq_expressions+=(".router_http_port      = $(( base + offset ))"); (( offset+=1 ));
 yq_expressions+=(".router_https_port     = $(( base + offset ))"); (( offset+=1 ));
-yq_expressions+=(".mailhog_port          = $(( base + offset ))"); (( offset+=1 ));
-yq_expressions+=(".mailhog_https_port    = $(( base + offset ))"); (( offset+=1 ));
-yq_expressions+=(".phpmyadmin_port       = $(( base + offset ))"); (( offset+=1 ));
-yq_expressions+=(".phpmyadmin_https_port = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".mailpit_http_port     = $(( base + offset ))"); (( offset+=1 ));
+yq_expressions+=(".mailpit_https_port    = $(( base + offset ))"); (( offset+=1 ));
 
 ddev_config_file_name='./.ddev/config.local.yaml'
 if [[ ! -f "${ddev_config_file_name}" ]]; then

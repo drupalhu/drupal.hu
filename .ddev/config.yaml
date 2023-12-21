@@ -60,9 +60,6 @@ additional_hostnames: []
 #  - sub1.example.com
 additional_fqdns: []
 
-# Currently either "default" or "pantheon"
-provider: 'default'
-
 # If the host has internet access and the domain configured can
 # successfully be looked up, DNS will be used for hostname resolution
 # instead of editing /etc/hosts
@@ -103,11 +100,6 @@ working_dir:
 # database container will be unusable.
 #omit_containers: [db, dba, ddev-ssh-agent]
 
-mutagen_enabled: true
-nfs_mount_enabled: false
-# Great performance improvement but requires host configuration first.
-# See https://ddev.readthedocs.io/en/stable/users/performance/#using-nfs-to-mount-the-project-into-the-container
-
 # The host port binding for https can be explicitly specified. It is
 # dynamic unless otherwise specified.
 # This is not used by most people, most people use the *router* instead
@@ -123,15 +115,6 @@ nfs_mount_enabled: false
 # The host port binding for the ddev-dbserver can be explicitly specified. It is dynamic
 # unless explicitly specified.
 #host_db_port: "59002"
-
-# The PHPMyAdmin ports can be changed from the default 8036 and 8037
-#phpmyadmin_port: 8036
-#phpmyadmin_https_port: 8037
-
-# The MailHog ports can be changed from the default 8025 and 8026
-#mailhog_port: 8025
-
-#mailhog_https_port: 8026
 
 # Extra Debian packages that are needed in the webimage can be added here
 #webimage_extra_packages:
