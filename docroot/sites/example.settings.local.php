@@ -27,8 +27,6 @@
  * @var array $config
  */
 
-use Drupal\Component\Assertion\Handle;
-
 /**
  * Assertions.
  *
@@ -45,8 +43,8 @@ use Drupal\Component\Assertion\Handle;
  *
  * @see https://wiki.php.net/rfc/expectations
  */
-assert_options(ASSERT_ACTIVE, TRUE);
-Handle::register();
+assert_options(\ASSERT_ACTIVE, TRUE);
+assert_options(\ASSERT_EXCEPTION, TRUE);
 
 $is_ddev_on_host = !getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';
 $is_ddev_inside = getenv('DDEV_PHP_VERSION') && getenv('IS_DDEV_PROJECT') === 'true';

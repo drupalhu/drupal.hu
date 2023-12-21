@@ -71,7 +71,6 @@ module:
   text: 0
   token: 0
   toolbar: 0
-  transliterate_filenames: 0
   user: 0
   webp: 0
   forum: 1

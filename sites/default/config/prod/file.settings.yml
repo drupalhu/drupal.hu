@@ -1,9 +1,16 @@
+_core:
+  default_config_hash: 0aMkoXYnax5_tHI9C9zHs-K48KJ6K75PHtD9x-0nbgM
+langcode: hu
 description:
   type: textfield
   length: 128
 icon:
   directory: core/modules/file/icons
 make_unused_managed_files_temporary: false
-_core:
-  default_config_hash: 0aMkoXYnax5_tHI9C9zHs-K48KJ6K75PHtD9x-0nbgM
-langcode: hu
+filename_sanitization:
+  transliterate: true
+  replace_whitespace: true
+  replace_non_alphanumeric: true
+  deduplicate_separators: true
+  lowercase: true
+  replacement_character: '-'
