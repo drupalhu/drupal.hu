@@ -153,6 +153,7 @@ D07 => D10
 7. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 app_legacy__user__user`
 8. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 --group='app_legacy'`
 9. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 --group='app_common'`
+10. Run: `./vendor/bin/drush --config='drush' @app.local pm:uninstall app_dc migrate_dc migrate_tools migrate_plus migrate_drupal migrate`
 
 
 [Apache HTTP]: https://httpd.apache.org

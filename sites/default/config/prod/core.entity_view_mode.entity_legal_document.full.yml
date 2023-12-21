@@ -8,5 +8,6 @@ _core:
   default_config_hash: s_pkVooQXQS-ndYAHs9LZcfNaNejDoLXUFAbSkr7wPM
 id: entity_legal_document.full
 label: Teljes
+description: ''
 targetEntityType: entity_legal_document
 cache: true

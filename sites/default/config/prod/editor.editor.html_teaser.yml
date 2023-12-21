@@ -81,8 +81,10 @@ settings:
           label: XML
           language: xml
     ckeditor5_list:
-      reversed: false
-      startIndex: false
+      properties:
+        reversed: false
+        startIndex: false
+      multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags:
         - '<abbr>'

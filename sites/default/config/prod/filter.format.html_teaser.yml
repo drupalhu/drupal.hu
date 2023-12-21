@@ -8,15 +8,6 @@ name: 'HTML - Bevezető'
 format: html_teaser
 weight: -8
 filters:
-  filter_html:
-    id: filter_html
-    provider: filter
-    status: true
-    weight: -49
-    settings:
-      allowed_html: '<br> <p> <abbr> <acronym> <cite> <del> <ins> <kbd> <mark> <q> <samp> <small> <wbr> <meter value min max> <time datetime> <img src alt data-entity-type data-entity-uuid> <a hreflang href> <strong> <em> <code class="language-*"> <pre> <s> <sub> <sup> <blockquote> <ul> <ol> <li>'
-      filter_html_help: true
-      filter_html_nofollow: true
   editor_file_reference:
     id: editor_file_reference
     provider: editor
@@ -41,12 +32,15 @@ filters:
     status: false
     weight: -44
     settings: {  }
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
+  filter_html:
+    id: filter_html
     provider: filter
     status: true
-    weight: -50
-    settings: {  }
+    weight: -49
+    settings:
+      allowed_html: '<br> <p> <abbr> <acronym> <cite> <del> <ins> <kbd> <mark> <q> <samp> <small> <wbr> <meter value min max> <time datetime> <img src alt data-entity-type data-entity-uuid> <a hreflang href> <strong> <em> <code class="language-*"> <pre> <s> <sub> <sup> <blockquote> <ul> <ol> <li>'
+      filter_html_help: true
+      filter_html_nofollow: true
   filter_html_escape:
     id: filter_html_escape
     provider: filter
@@ -58,6 +52,12 @@ filters:
     provider: filter
     status: false
     weight: -42
+    settings: {  }
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: -50
     settings: {  }
   filter_url:
     id: filter_url
