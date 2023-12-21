@@ -1,5 +1,5 @@
 {
-    "_hash": "5a5b0ec3472b366ddc02a531817809ad212cf1c3356b1363f3cce861fc327084",
+    "_hash": "fb048a05bd6f5b2e056a3e5a16fd50367fbe13c7ca008b5b4e94ffea0de8ab3a",
     "patches": {
         "drupal/core": [
             {
@@ -22,18 +22,6 @@
                 "depth": 1,
                 "extra": {
                     "issue-tracker-url": "https://github.com/jhedstrom/drupalextension/issues/493"
-                }
-            }
-        ],
-        "drupal/entity_legal": [
-            {
-                "package": "drupal/entity_legal",
-                "description": "Fix missing source_module annotation key",
-                "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
-                "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
-                "depth": 1,
-                "extra": {
-                    "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
                 }
             }
         ],

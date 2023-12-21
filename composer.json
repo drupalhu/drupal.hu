@@ -315,16 +315,6 @@
                     }
                 }
             ],
-            "drupal/entity_legal": [
-                {
-                    "description": "Fix missing source_module annotation key",
-                    "url": "https://git.drupalcode.org/project/entity_legal/-/merge_requests/16.patch",
-                    "sha256": "d44434156c306e65caa2e06e194b4bf082121b1173aa81c578b935670c4c6fc1",
-                    "extra": {
-                        "issue-tracker-url": "https://www.drupal.org/project/entity_legal/issues/3377137"
-                    }
-                }
-            ],
             "drupal/mail_safety": [
                 {
                     "description": "D10 compatibility",
