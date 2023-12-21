@@ -16,8 +16,9 @@
 /commands/.gitattributes
 
 /db_snapshots/
-
 /nginx_full/nginx-site.conf
+/providers/
+/traefik/
 
 /.env
 /**/*.example

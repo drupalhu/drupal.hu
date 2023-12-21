@@ -17,7 +17,7 @@ Bekapcsolódás a fejlesztésbe [DDev local] használatával.
 * [Git] `git --version` >= 2.25.0
 * [Docker] `docker --version` >= 20.10.3
 * [Docker Compose] `docker-compose --version` >= 1.26.2
-* [DDev local] `ddev version` >= v1.21.6
+* [DDev local] `ddev version` >= v1.22.6
 * [yq] `yq --version` >= 4.0.0
 * [jq] `jq --version` >= 1.5.0
 
@@ -48,15 +48,15 @@ A legtöbb esetben az alapértelmezett értékek megfelelőek, ezért nincs
 szükség testreszabásra. \
 Azonban ha a host gépen DDev-től függetlenül futnak olyan szolgáltatások,
 amik olyan port számokat használnak, amiket a DDev is szeretne – például
-80(http), 443(https), 8025(mailhog) stb – akkor az érintett konténereket
+80(http), 443(https), 8025(mailpit) stb – akkor az érintett konténereket
 nem tudja elindítani. \
 Ilyenkor a `./.ddev/config.local.yaml` fájlban, illetve a `./.ddev/.env`
 fájlban kell a megfelelő értékeket beállítani.
 
 Például `./.ddev/config.local.yaml`:
 ```yaml
-mailhog_port: 5025
-mailhog_https_port: 5026
+mailpit_http_port: 5025
+mailpit_https_port: 5026
 ```
 
 [DDev .ddev/config.yaml options]
@@ -124,13 +124,11 @@ Ez a dokumentáció jelenleg nem add útmutatást a szükséges szoftverek telep
 
 ### Bekapcsolódás a fejlesztésbe - Local - lépések
 
-@todo Marvin parancsok jelenleg nem elérhetőek, ezért az 5. 9. és 10. lépés nem fog menni.
-
 1. `git clone https://github.com/drupalhu/drupal.hu.git`
 2. `cd drupal.hu`
 3. `composer install`
 4. `alias d='bin/drush --config=drush @app.local'`
-5. `d marvin:onboarding`
+5. `d app:onboarding`
 6. `"${EDITOR:-vi}" docroot/sites/default/settings.local.php`
    * `$databases` ellenőrzése.
    * `$config['search_api.server.general']['backend_config']['connector_config']` ellenőrzése.
@@ -138,8 +136,23 @@ Ez a dokumentáció jelenleg nem add útmutatást a szükséges szoftverek telep
    * `commands.options.uri` ellenőrzése.
 8. `"${EDITOR:-vi}" behat/behat.local.yml`
    * `default.extensions.Drupal\MinkExtension.base_url` ellenőrzése.
-9. `d marvin:build`
+9. `d app:build`
 10. `composer run site:install:prod:default`
+
+
+## Legacy migráció futtatása
+
+D07 => D10
+
+1. DB mentés beszerzése (@todo import jó helyre)
+2. files könyvtár beszerzése (@todo kicsomagolás jó helyre)
+3. Run: `composer run site:install:prod:empty`
+4. Run: `./vendor/bin/drush --config='drush' @app.local pm:enable app_dc`
+5. Run: `./vendor/bin/drush --config='drush' @app.local app:dc:report`
+6. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 app_legacy__file__public`
+7. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 app_legacy__user__user`
+8. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 --group='app_legacy'`
+9. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 --group='app_common'`
 
 
 [Apache HTTP]: https://httpd.apache.org

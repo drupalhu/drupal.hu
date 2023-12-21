@@ -281,11 +281,6 @@ parameters:
 			path: ../tests/src/FunctionalJavascript/TestBase.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\('docroot/\\.htaccess'\\|'docroot/favicon\\.ico'\\|'docroot/robots\\.txt'\\|'patches\\.lock'\\|'patches\\.lock\\.json'\\|'sites/all/assets/robots\\-additions\\.txt'\\)\\: mixed, Sweetchuck\\\\Utils\\\\Filter\\\\ArrayFilterFileSystemExists given\\.$#"
-			count: 1
-			path: ../tests/src/Robo/Task/ArtifactCollectFilesTask.php
-
-		-
 			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:addArgument\\(\\)\\.$#"
 			count: 1
 			path: ../tests/src/Robo/Task/NodeDetectorTask.php

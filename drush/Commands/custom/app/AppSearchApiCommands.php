@@ -24,6 +24,8 @@ class AppSearchApiCommands extends CommandsBase implements BuilderAwareInterface
   use AppSearchApiTaskLoader;
 
   /**
+   * Instructs the Apache Solr servers to delete all the contents.
+   *
    * @command app:search-api:index:clear
    *
    * @bootstrap configuration

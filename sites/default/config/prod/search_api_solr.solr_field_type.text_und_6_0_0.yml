@@ -3,7 +3,7 @@ langcode: hu
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: FrL7Ez-p3MiwJfBrT57VE41F4oruWiJrEWNcQGhE5bQ
+  default_config_hash: AIuCGHaAu_T6bNSUnhyegKcgELu6FNiiNEnqG3emC9g
 id: text_und_6_0_0
 label: 'Nyelvileg meghatározatlan szöveges mező'
 minimum_solr_version: 6.0.0
@@ -14,6 +14,7 @@ field_type:
   name: text_und
   class: solr.TextField
   positionIncrementGap: 100
+  storeOffsetsWithPositions: true
   analyzers:
     -
       type: index
@@ -22,7 +23,7 @@ field_type:
           class: solr.MappingCharFilterFactory
           mapping: accents_und.txt
       tokenizer:
-        class: solr.WhitespaceTokenizerFactory
+        class: solr.StandardTokenizerFactory
       filters:
         -
           class: solr.StopFilterFactory
@@ -53,7 +54,7 @@ field_type:
           class: solr.MappingCharFilterFactory
           mapping: accents_und.txt
       tokenizer:
-        class: solr.WhitespaceTokenizerFactory
+        class: solr.StandardTokenizerFactory
       filters:
         -
           class: solr.SynonymFilterFactory
@@ -87,13 +88,14 @@ spellcheck_field_type:
   name: text_spell_und
   class: solr.TextField
   positionIncrementGap: 100
+  storeOffsetsWithPositions: true
   analyzer:
     charFilters:
       -
         class: solr.MappingCharFilterFactory
         mapping: accents_und.txt
     tokenizer:
-      class: solr.WhitespaceTokenizerFactory
+      class: solr.StandardTokenizerFactory
     filters:
       -
         class: solr.LengthFilterFactory
@@ -106,7 +108,7 @@ spellcheck_field_type:
 collated_field_type:
   name: collated_und
   class: solr.ICUCollationField
-  locale: en
+  locale: null
   strength: primary
   caseLevel: false
 solr_configs:
@@ -181,7 +183,7 @@ solr_configs:
               VALUE: sm_context_tags
             -
               name: buildOnCommit
-              VALUE: 'true'
+              VALUE: 'false'
             -
               name: buildOnStartup
               VALUE: 'false'

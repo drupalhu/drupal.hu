@@ -9,6 +9,9 @@ use Sweetchuck\Utils\VersionNumber;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @todo Convert constants to enum.
+ */
 class VersionNumberBumpExtensionInfoTask extends BaseTask {
 
   const ERROR_CODE_VERSION_NUMBER_EMPTY = 1;

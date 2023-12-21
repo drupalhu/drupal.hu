@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DrupalHu\DrupalHu\Tests\Robo\Task;
 
-use Sweetchuck\Utils\Filter\ArrayFilterFileSystemExists;
+use Sweetchuck\Utils\Filter\FileSystemExistsFilter;
 use Symfony\Component\Finder\Finder;
 
 class ArtifactCollectFilesTask extends BaseTask {
@@ -174,7 +174,7 @@ class ArtifactCollectFilesTask extends BaseTask {
           'patches.lock',
           'patches.lock.json',
         ],
-        (new ArrayFilterFileSystemExists())->setBaseDir($projectDir),
+        (new FileSystemExistsFilter())->setBaseDir($projectDir),
       ),
     );
 

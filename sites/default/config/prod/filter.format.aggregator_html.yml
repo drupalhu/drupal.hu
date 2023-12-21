@@ -1,0 +1,17 @@
+uuid: c9706d8f-cd6b-4447-989c-a40c8fb5cd7c
+langcode: hu
+status: true
+dependencies: {  }
+name: 'Aggregator HTML'
+format: aggregator_html
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: 0
+    settings:
+      allowed_html: '<a> <abbr> <acronym> <blockquote> <br> <cite> <code> <del> <dd> <dl> <dt> <em> <h2> <h3> <h4> <h5> <h6> <ins> <kbd> <li> <mark> <meter> <p> <pre> <q> <s> <samp> <small> <strong> <sub> <sup> <time> <ul> <ol> <wbr>'
+      filter_html_help: true
+      filter_html_nofollow: false

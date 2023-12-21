@@ -12,6 +12,8 @@ class AppBuildCommands extends CommandsBase {
   use YarnTaskLoader;
 
   /**
+   * Installs third-party software components or generates code files.
+   *
    * @command app:build
    *
    * @bootstrap none

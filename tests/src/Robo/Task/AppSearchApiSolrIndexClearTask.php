@@ -6,9 +6,11 @@ namespace DrupalHu\DrupalHu\Tests\Robo\Task;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\ClientInterface as GuzzleHttpClientInterface;
-use Sweetchuck\Utils\Uri as UtilsUri;
+use Sweetchuck\Utils\StringUtils;
 
 class AppSearchApiSolrIndexClearTask extends BaseTask {
+
+  protected StringUtils $stringUtils;
 
   protected string $baseUrl = '';
 
@@ -59,9 +61,13 @@ class AppSearchApiSolrIndexClearTask extends BaseTask {
 
   protected GuzzleHttpClientInterface $httpClient;
 
-  public function __construct(?GuzzleHttpClientInterface $httpClient = NULL) {
-    $this->httpClient = $httpClient ?: new GuzzleHttpClient();
+  public function __construct(
+    ?GuzzleHttpClientInterface $httpClient = NULL,
+    ?StringUtils $stringUtils = NULL,
+  ) {
     $this->taskName = 'App - Search API Solr - Index - Clear';
+    $this->httpClient = $httpClient ?: new GuzzleHttpClient();
+    $this->stringUtils = $stringUtils ?: new StringUtils();
   }
 
   protected function runHeader(): static {
@@ -75,7 +81,7 @@ class AppSearchApiSolrIndexClearTask extends BaseTask {
     $index = $this->getIndex();
     $connectorConfig =& $index['server']['backend_config']['connector_config'];
 
-    $url = UtilsUri::build([
+    $url = $this->stringUtils->buildUri([
       'scheme' => $connectorConfig['scheme'],
       'host' => $connectorConfig['host'],
       'port' => $connectorConfig['port'],
