@@ -147,7 +147,7 @@ D07 => D10
 1. DB mentés beszerzése (@todo import jó helyre)
 2. files könyvtár beszerzése (@todo kicsomagolás jó helyre)
 3. Run: `composer run site:install:prod:empty`
-4. Run: `./vendor/bin/drush --config='drush' @app.local pm:enable app_dc`
+4. Run: `./vendor/bin/drush --config='drush' @app.local pm:install app_dc`
 5. Run: `./vendor/bin/drush --config='drush' @app.local app:dc:report`
 6. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 app_legacy__file__public`
 7. Run: `./vendor/bin/drush --config='drush' @app.local migrate:import --feedback=1000 app_legacy__user__user`
