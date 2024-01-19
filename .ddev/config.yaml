@@ -5,11 +5,11 @@
 # If you prefer you can change this to "ddev.local" to preserve
 # pre-v1.9 behavior.
 #project_tld: ddev.site
-project_tld: 'hu'
+project_tld: 'ddev.site'
 
 # Name of the project, automatically provides
 # http://projectname.ddev.site and https://projectname.ddev.site
-name: 'local.drupal'
+name: 'drupalhu'
 
 # drupal6/7/8, backdrop, typo3, wordpress, php
 type: 'drupal10'
